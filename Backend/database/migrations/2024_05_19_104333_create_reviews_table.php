@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('rate');
             $table->dateTime('date');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

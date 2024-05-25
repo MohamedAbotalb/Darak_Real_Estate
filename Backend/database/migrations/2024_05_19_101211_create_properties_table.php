@@ -20,12 +20,16 @@ return new class extends Migration
             $table->integer('num_of_bathrooms');
             $table->float('area');
             $table->integer('price');
-            $table->bigInteger('location_id');
-            $table->bigInteger('property_type_id');
-            $table->bigInteger('user_id');
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('property_type_id');
+            $table->unsignedBigInteger('user_id');
             $table->enum('availability', ["available", "unavailable"]);
             $table->enum("listing_type", ["renting","selling"]);
             $table->timestamps();
+
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->foreign('property_type_id')->references('id')->on('property_types')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('tour_id');
             $table->dateTime('date');
             $table->timestamps();
+
+            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
         });
     }
 
