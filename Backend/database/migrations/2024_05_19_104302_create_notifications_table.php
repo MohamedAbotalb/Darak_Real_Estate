@@ -19,6 +19,9 @@ return new class extends Migration
             $table->enum('type',['request','confirmation','cancelation']);
             $table->dateTime('date');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('landlord_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
