@@ -9,4 +9,8 @@ class TourDate extends Model
 {
     use HasFactory;
     protected $fillable = ['tour_id', 'date'];
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class);
+    }
 }
