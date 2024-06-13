@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password'), 
             'avatar' => $this->faker->imageUrl(),
             'phone_number' => $this->faker->phoneNumber,
-            'role' => $this->faker->randomElement(['admin', 'user', 'landlord']),
+            'role' => $this->faker->randomElement(['user', 'landlord']),
             'remember_token' => Str::random(10),
             
         ];
