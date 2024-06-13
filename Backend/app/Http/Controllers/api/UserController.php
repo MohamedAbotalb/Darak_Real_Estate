@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-        public function index()
+  
+    public function index()
     {
-        $users = User::all();
+        $users=UserResource::collection(User::all());
         if ($users->isEmpty()) {
             return response()->json(['message' => 'No users found'], Response::HTTP_NOT_FOUND);
         }
