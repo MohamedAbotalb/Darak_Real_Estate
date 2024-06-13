@@ -14,6 +14,14 @@ class ReportUserController extends Controller
         if ($reports->isEmpty()) {
             return response()->json(['message' => 'No reports found'],400);
         }
-        return response()->json(['message' => 'Reports fetched successfully', 'data' => $reports,],200);
+        return response()->json(['message' => 'Reports fetched successfully', 'data' => $reports],200);
+    }
+    public function deleteReport($id){
+        $report=new ReportUserResource(ReportUser::find($id));
+        if (!ReportUser::find($id)) {
+            return response()->json(['error' => 'Report not found'],400);
+        }
+        $report->delete();
+        return response()->json(['message' => 'Report deleted successfully', 'data' => $report],200);
     }
 }

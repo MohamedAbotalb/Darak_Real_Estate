@@ -12,7 +12,7 @@ class UserController extends Controller
     public function delete($id)
     {
         $user= new UserResource(User::find($id));
-        if (!$user) {
+        if (!User::find($id)) {
             return response()->json(['error' => 'User not found'],400);
         }
         $user->delete();
