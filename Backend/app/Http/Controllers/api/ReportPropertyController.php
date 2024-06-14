@@ -16,4 +16,12 @@ class ReportPropertyController extends Controller
         }
         return $reports;
     }
+    public function deleteReport($id){
+        $report=new ReportPropertyResource(ReportProperty::find($id));
+        if (!ReportProperty::find($id)) {
+            return response()->json(['error' => 'Report not found'],400);
+        }
+        $report->delete();
+        return response()->json(['message' => 'Report deleted successfully', 'data' => $report],200);
+    }
 }
