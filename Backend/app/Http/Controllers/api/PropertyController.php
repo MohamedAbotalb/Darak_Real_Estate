@@ -35,6 +35,6 @@ class PropertyController extends Controller
             return response()->json(['error' => 'There are no properties for rent in this category'],400);
         }
 
-        return response()->json(['properties' => $latestProperty]);
+        return response()->json(['message' => 'properties fetched successfully','properties' => $latestProperty],200);
     }
 }
