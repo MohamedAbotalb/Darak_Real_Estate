@@ -40,4 +40,5 @@ Route::prefix('report-properties')->group(function(){
 });
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
+    Route::get('/{id}',[PropertyController::class,'show']);
 });

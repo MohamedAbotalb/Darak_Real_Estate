@@ -17,4 +17,8 @@ class Property extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function propertyType()
+    {
+        return $this->belongsTo(PropertyType::class);
+    }
 }
