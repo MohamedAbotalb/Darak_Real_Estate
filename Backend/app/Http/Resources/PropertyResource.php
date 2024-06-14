@@ -28,8 +28,6 @@ class PropertyResource extends JsonResource
             'user_id' => $this->user_id,
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
 
             'location' => new LocationResource($this->whenLoaded('location')),
             'property_type' => new PropertyTypeResource($this->whenLoaded('property_type')),

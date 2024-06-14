@@ -16,8 +16,8 @@ class ReportPropertyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'property_id' => $this->property_id,
+            'user' => new UserResource($this->user), 
+            'property' => new PropertyResource($this->property), 
             'content' => $this->content,
         ];
     }
