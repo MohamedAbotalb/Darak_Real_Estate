@@ -35,4 +35,5 @@ Route::prefix('report-users')->group(function(){
 Route::prefix('report-properties')->group(function(){
     Route::get('/',[ReportPropertyController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
+    Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
 });
