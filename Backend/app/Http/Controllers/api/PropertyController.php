@@ -25,16 +25,30 @@ class PropertyController extends Controller
     }
     public function showLatestRent($property_type_id)
     {
-        $latestProperty = Property::where('property_type_id', $property_type_id)
+        $latestProperties = Property::where('property_type_id', $property_type_id)
             ->where('listing_type', 'renting')
             ->latest()
-            ->take(3) 
+            ->take(3)
             ->get();
 
-        if (!$latestProperty) {
-            return response()->json(['error' => 'There are no properties for rent in this category'],400);
+        if ($latestProperties->isEmpty()) {
+            return response()->json(['message' => 'No properties found for rent in this category'], 404);
         }
 
-        return response()->json(['message' => 'properties fetched successfully','properties' => $latestProperty],200);
+        return response()->json(['message' => 'properties fetched successfully', 'properties' => $latestProperties], 200);
+    }
+    public function showLatestSell($property_type_id)
+    {
+        $latestProperties = Property::where('property_type_id', $property_type_id)
+            ->where('listing_type', 'selling')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        if ($latestProperties->isEmpty()) {
+            return response()->json(['message' => 'No properties found for Sell in this category'], 404);
+        }
+
+        return response()->json(['message' => 'properties fetched successfully', 'properties' => $latestProperties], 200);
     }
 }
