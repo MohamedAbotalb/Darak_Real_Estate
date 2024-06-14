@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PropertyResource;
 use App\Http\Resources\ReportPropertyResource;
 use App\Models\Property;
 use App\Models\ReportProperty;
@@ -25,13 +26,12 @@ class ReportPropertyController extends Controller
         $report->delete();
         return response()->json(['message' => 'Report deleted successfully', 'data' => $report],200);
     }
-    public function deleteUser($id){
-        $property = new Property(Property::find($id));
-        if (!Property::find($id)) {
-            return response()->json(['error' => 'Property not found'], 404);
-        }
-        
+    public function deleteProperty($id)
+    {
+        $report = ReportProperty::findOrFail($id);
+        $property = $report->property;
         $property->delete();
-        return response()->json(['message' => 'Property deleted successfully','property'=>$property], 200);
+        $report->delete();
+        return response()->json(['message' => 'Property deleted successfully']);
     }
 }
