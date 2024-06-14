@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\ReportPropertyController;
@@ -36,4 +37,7 @@ Route::prefix('report-properties')->group(function(){
     Route::get('/',[ReportPropertyController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
+});
+Route::prefix('properties')->group(function(){
+    Route::get('/',[PropertyController::class,'index']);
 });
