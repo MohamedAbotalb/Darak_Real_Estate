@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\ReportUserController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\ReportPropertyController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,8 @@ Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportUserController::class,'deleteReport']);
     Route::delete('deleteLandlord/{id}',[ReportUserController::class,'deleteUser']);
+});
+
+Route::prefix('report-property')->group(function(){
+    Route::get('/',[ReportPropertyController::class,'index']);
 });
