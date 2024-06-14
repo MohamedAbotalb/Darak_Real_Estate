@@ -28,7 +28,7 @@ class ReportPropertyController extends Controller
     public function deleteUser($id){
         $property = new Property(Property::find($id));
         if (!Property::find($id)) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => 'Property not found'], 404);
         }
         
         $property->delete();
