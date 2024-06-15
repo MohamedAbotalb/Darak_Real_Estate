@@ -4,11 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePropertyRequest;
-use App\Http\Resources\PropertyImageResource;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
 use App\Models\PropertyImage;
-use App\Models\PropertytImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str; 
 

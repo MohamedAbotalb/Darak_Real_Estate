@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
 use App\Http\Controllers\api\UserController;
@@ -45,4 +46,7 @@ Route::prefix('properties')->group(function(){
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
     Route::post('/',[PropertyController::class,'store']);
     Route::get('/search/filter',[PropertyController::class,'search']);
+});
+Route::prefix('notifications')->group(function(){
+    Route::get('/',[NotificationController::class,'index']);
 });
