@@ -48,5 +48,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/search/filter',[PropertyController::class,'search']);
 });
 Route::prefix('notifications')->group(function(){
-    Route::get('/',[NotificationController::class,'index']);
+    Route::get('/landlord/{landlordId}',[NotificationController::class,'showLandlordNotifications']);
+    Route::get('/renter/{renterId}',[NotificationController::class,'showRenterNotifications']);
+
 });
