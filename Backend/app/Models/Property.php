@@ -21,7 +21,7 @@ class Property extends Model
     {
         return $this->belongsTo(PropertyType::class);
     }
-    public function PropertyImages(){
+    public function PropertyImage(){
         return $this->hasMany(PropertyImage::class);
     }
 }

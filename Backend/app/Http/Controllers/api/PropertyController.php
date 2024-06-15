@@ -68,4 +68,23 @@ class PropertyController extends Controller
         return response()->json(['message' => 'Property added successfully'], 201);
 
     }
+    public function search(Request $request)
+    {
+        $query = Property::query();
+        if ($request->has('property_type')) {
+            $query->where('property_type_id', $request->input('property_type'));
+        }
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+        if ($request->has('location_id')) {
+            $query->where('location_id', $request->input('location_id'));
+        }
+        
+        $properties = $query->get();
+        if ($properties->isEmpty()) {
+            return response()->json(['message' => 'No Result found'], 404);
+        }
+        return response()->json(['data' => $properties]);
+    }
 }
