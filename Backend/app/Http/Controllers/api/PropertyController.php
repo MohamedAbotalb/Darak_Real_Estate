@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePropertyRequest;
+use App\Http\Resources\PropertyImageResource;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
+use App\Models\PropertyImage;
+use App\Models\PropertytImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str; 
 
 class PropertyController extends Controller
 {
@@ -45,5 +50,22 @@ class PropertyController extends Controller
     public function showLatestSell($property_type_id)
     {
         return $this->showLatestProperties($property_type_id, 'selling');
+    }
+    public function store(StorePropertyRequest $request){
+        $slug = Str::slug($request->title);
+        $property = Property::create($request->except('images') +['slug' => $slug]);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('images/properties'), $imageName);
+                PropertyImage::create([
+                    'property_id' => $property->id,
+                    'image' => $imageName,
+                ]);
+            }
+        }
+        return response()->json(['message' => 'Property added successfully'], 201);
+
     }
 }

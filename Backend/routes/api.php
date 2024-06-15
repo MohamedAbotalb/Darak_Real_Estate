@@ -43,6 +43,5 @@ Route::prefix('properties')->group(function(){
     Route::get('/{id}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
-
-
+    Route::post('/',[PropertyController::class,'store']);
 });
