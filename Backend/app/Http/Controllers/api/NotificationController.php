@@ -33,4 +33,21 @@ class NotificationController extends Controller
 
         return response()->json(['data' => $notifications], 200);
     }
+    public function updateType(Request $request, $id)
+    {
+        $request->validate([
+            'type' => 'required|in:confirmation,cancelation',
+        ]);
+
+        $notification = Notification::find($id);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        $notification->type = $request->input('type');
+        $notification->save();
+
+        return response()->json(['message' => 'Notification type updated successfully', 'data' => new NotificationResource($notification)], 200);
+    }
 }

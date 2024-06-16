@@ -20,7 +20,6 @@ class NotificationResource extends JsonResource
             'landlord_id' => $this->landlord_id,
             'message' => $this->message,
             'type' => $this->type,
-            'date' => $this->date->toDateTimeString(),
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }

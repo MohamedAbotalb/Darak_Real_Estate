@@ -50,5 +50,5 @@ Route::prefix('properties')->group(function(){
 Route::prefix('notifications')->group(function(){
     Route::get('/landlord/{landlordId}',[NotificationController::class,'showLandlordNotifications']);
     Route::get('/renter/{renterId}',[NotificationController::class,'showRenterNotifications']);
-
+    Route::put('/{id}/type',[NotificationController::class,'updateType']);
 });
