@@ -5,6 +5,7 @@ use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\ReportPropertyController;
+use App\Http\Controllers\api\WishlistController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,4 +52,7 @@ Route::prefix('notifications')->group(function(){
     Route::get('/landlord/{landlordId}',[NotificationController::class,'showLandlordNotifications']);
     Route::get('/renter/{renterId}',[NotificationController::class,'showRenterNotifications']);
     Route::put('/{id}/type',[NotificationController::class,'updateType']);
+});
+Route::prefix('wishlist')->group(function(){
+    Route::get('/{id}',[WishlistController::class,'show']);
 });

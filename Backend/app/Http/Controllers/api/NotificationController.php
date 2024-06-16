@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    //it will edit with auth user
     public function showLandlordNotifications($landlord_id)
     {
         $notifications = Notification::where('landlord_id', $landlord_id)
