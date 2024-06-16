@@ -55,4 +55,5 @@ Route::prefix('notifications')->group(function(){
 });
 Route::prefix('wishlist')->group(function(){
     Route::get('/{id}',[WishlistController::class,'show']);
+    Route::post('/{id}',[WishlistController::class,'store']);
 });
