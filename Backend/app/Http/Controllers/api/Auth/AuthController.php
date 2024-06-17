@@ -87,7 +87,7 @@ class AuthController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
-            
+
             $isAdmin = $user->email === 'admin@example.com';
     
             return response()->json([
@@ -96,6 +96,26 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'is_admin' => $isAdmin,
             ]);
+        }
+        catch (\Throwable $th) 
+        {
+            return response()->json([
+                'success' => false,
+                'message'=> $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function profile(Request $request) 
+    {
+        try 
+        {
+            $userData = auth()->user();
+            return response()->json([
+                'success'=> true,
+                'message'=> 'Profile Information',
+                'data' => $userData,
+            ], 200);
         }
         catch (\Throwable $th) 
         {
