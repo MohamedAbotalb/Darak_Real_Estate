@@ -88,7 +88,8 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            $isAdmin = $user->email === 'admin@example.com';
+            // check if the user is admin or not
+            $isAdmin = $user->role === 'admin';
     
             return response()->json([
                 'success'=> true,
