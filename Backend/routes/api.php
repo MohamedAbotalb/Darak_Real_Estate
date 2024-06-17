@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\Auth\AuthController;
 use App\Http\Controllers\api\ReportUserController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\ReportPropertyController;
@@ -18,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Registration routes
+Route::post('register', [AuthController::class,'register']);
+
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
