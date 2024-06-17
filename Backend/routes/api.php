@@ -6,6 +6,8 @@ use App\Http\Controllers\api\ReportPropertyController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\ReviewController;
+use App\Http\Controllers\api\AmenityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::delete('/{id}', [UserController::class, 'delete']);
@@ -37,3 +40,11 @@ Route::prefix('report-properties')->group(function(){
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
 });
+////////////////////////////////////////////////////////////////////////////////
+Route::get('reviews', [ReviewController::class, 'show']);
+///////////////////////////////////////////////////////////////////////////////////////////
+
+Route::get('amenities', [AmenityController::class, 'index']);
+Route::get('amenities/{slug}', [AmenityController::class, 'show']);
+Route::put('amenities/{slug}', [AmenityController::class, 'update']);
+//////////////////////////////////////////////////////////////////////////////////////////////////
