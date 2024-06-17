@@ -15,7 +15,7 @@ class PropertyResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-        'id' => $this->id,
+            'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
@@ -24,14 +24,13 @@ class PropertyResource extends JsonResource
             'area' => $this->area,
             'price' => $this->price,
             'location_id' => $this->location_id,
-            'property_type_id' => $this->property_type_id,
-            'user_id' => $this->user_id,
+            'property_type_id' => new PropertyTypeResource($this->propertyType),
+            'user_id' => new UserResource($this->user),
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
-
             'location' => new LocationResource($this->whenLoaded('location')),
             'property_type' => new PropertyTypeResource($this->whenLoaded('property_type')),
-            'user' => new UserResource($this->whenLoaded('user')),   
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }
