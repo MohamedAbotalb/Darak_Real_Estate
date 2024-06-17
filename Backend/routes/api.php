@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ReportPropertyController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PropertyTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,6 @@ Route::prefix('report-properties')->group(function(){
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
 });
+
+Route::apiResource('property-types', PropertyTypeController::class);
+
