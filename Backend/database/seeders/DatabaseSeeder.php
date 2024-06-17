@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(UserSeeder::class);
-        \App\Models\Wishlist::factory(10)->create();
+        $this->call(PropertyTypeSeeder::class);
+        \App\Models\Wishlist::factory(10)->create();   
     }
 }

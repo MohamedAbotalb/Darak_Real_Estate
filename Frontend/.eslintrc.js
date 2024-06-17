@@ -29,7 +29,7 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/prefer-stateless-function': 'warn',
     'no-unused-vars': 'warn',
     'react/boolean-prop-naming': 'warn',
