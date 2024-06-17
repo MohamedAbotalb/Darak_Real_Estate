@@ -9,6 +9,7 @@ use App\Http\Controllers\api\WishlistController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PropertyTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::prefix('report-properties')->group(function(){
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
 });
+
+Route::apiResource('property-types', PropertyTypeController::class);
+
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
     Route::get('/{id}',[PropertyController::class,'show']);
