@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\Auth\AuthController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
@@ -23,9 +24,9 @@ use App\Http\Controllers\PropertyTypeController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Registration routes
+Route::post('register', [AuthController::class,'register']);
+
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
