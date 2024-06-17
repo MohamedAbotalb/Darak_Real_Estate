@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyTypeController;
+use App\Http\Controllers\Api\AmenityController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +72,12 @@ Route::prefix('wishlist')->group(function(){
 
 Route::prefix('dashboard')->group(function () {
     Route::get('/counts', [DashboardController::class, 'getCounts']);
+});
+
+Route::prefix('amenities')->group(function () {
+    Route::get('/', [AmenityController::class, 'index']);
+    Route::post('/', [AmenityController::class, 'store']);
+    Route::get('/{id}', [AmenityController::class, 'show']);
+    Route::put('/{id}', [AmenityController::class, 'update']);
+    Route::delete('/{id}', [AmenityController::class, 'destroy']);
 });
