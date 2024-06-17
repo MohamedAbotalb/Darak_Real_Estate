@@ -27,8 +27,15 @@ use App\Http\Controllers\Api\AmenityController;
 */
 
 // Registration routes
-Route::post('register', [AuthController::class,'register']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 
+Route::group([
+    'middleware'=> ['auth:sanctum',]
+], function () {
+    Route::get('profile', [AuthController::class, 'profile']);
+    Route::get('logout', [AuthController::class, 'logout']);
+});
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
