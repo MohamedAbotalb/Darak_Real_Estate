@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -32,7 +32,7 @@ class AuthController extends Controller
                     'success' => false,
                     'message'=> "Validation error",
                     'error' => $validateUser->errors(),
-                ], 400);
+                ], 401);
             }
 
             $user = User::create([
@@ -49,6 +49,53 @@ class AuthController extends Controller
                 'success' => true,
                 'message'=> "User created successfully",
             ], 201);
+        }
+        catch (\Throwable $th) 
+        {
+            return response()->json([
+                'success' => false,
+                'message'=> $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        try
+        {
+            // Validate the user email and password
+            $validateUser = Validator::make($request->all(), [
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
+    
+            if ($validateUser->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message'=> "Validation error",
+                    'error' => $validateUser->errors(),
+                ], 401);
+            }
+    
+            $user = User::where('email', $request->email)->first();
+    
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message'=> "Email or password is incorrect",
+                ], 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            $isAdmin = $user->email === 'admin@example.com';
+    
+            return response()->json([
+                'success'=> true,
+                'message'=> 'User logged in successfully',
+                'access_token' => $token,
+                'is_admin' => $isAdmin,
+            ]);
         }
         catch (\Throwable $th) 
         {
