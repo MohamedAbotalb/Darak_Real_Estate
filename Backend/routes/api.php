@@ -5,6 +5,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\ReportPropertyController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,4 +37,8 @@ Route::prefix('report-properties')->group(function(){
     Route::get('/',[ReportPropertyController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
+});
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/counts', [DashboardController::class, 'getCounts']);
 });
