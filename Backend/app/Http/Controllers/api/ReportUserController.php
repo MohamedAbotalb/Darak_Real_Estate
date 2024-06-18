@@ -28,7 +28,10 @@ class ReportUserController extends Controller
         return response()->json(['message' => 'Report deleted successfully', 'data' => $report],200);
     }
     public function deleteUser($id){
-        $report = ReportUser::findOrFail($id);
+        $report = ReportUser::find($id);
+        if (!ReportUser::find($id)) {
+            return response()->json(['error' => 'Report not found'],400);
+        }
         $user = User::findOrFail($report->landlord_id);
         $user->delete();
         $report->delete();
