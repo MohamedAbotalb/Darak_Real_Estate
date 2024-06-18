@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
+use App\Http\Controllers\api\ReviewController;
 
 
 /*
@@ -92,7 +93,7 @@ Route::prefix('amenities')->group(function () {
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
 });
-
+Route::get('reviews', [ReviewController::class, 'show']);
 // Admin Dashboard Routes
 Route::group([
     'middleware'=> ['auth:sanctum', 'checkTokenExpiry', 'admin']
