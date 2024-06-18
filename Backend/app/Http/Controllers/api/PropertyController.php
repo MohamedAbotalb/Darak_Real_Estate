@@ -63,6 +63,10 @@ class PropertyController extends Controller
                 ]);
             }
         }
+        
+        if ($request->has('amenities')) {
+            $property->amenities()->attach($request->input('amenities'));
+        }
         return response()->json(['message' => 'Property added successfully'], 201);
 
     }
