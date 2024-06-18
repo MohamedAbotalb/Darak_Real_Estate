@@ -8,7 +8,7 @@ class AmenityRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Ensure this is properly set based on your auth logic
+        return true;
     }
 
     public function rules()
