@@ -31,7 +31,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::group([
-    'middleware'=> ['auth:sanctum',]
+    'middleware'=> ['auth:sanctum', 'checkTokenExpiry']
 ], function () {
     Route::get('profile', [AuthController::class, 'profile']);
     Route::get('logout', [AuthController::class, 'logout']);
