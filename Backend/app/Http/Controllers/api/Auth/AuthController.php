@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -86,7 +86,13 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $tokenResult = $user->createToken('auth_token');
+            $token = $tokenResult->plainTextToken;
+
+            // Set token expiration date to 24 hours
+            $expiration = Carbon::now()->addDay();
+            $tokenResult->accessToken->expires_at = $expiration;
+            $tokenResult->accessToken->save();
 
             // check if the user is admin or not
             $isAdmin = $user->role === 'admin';

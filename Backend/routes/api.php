@@ -31,7 +31,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::group([
-    'middleware'=> ['auth:sanctum',]
+    'middleware'=> ['auth:sanctum', 'checkTokenExpiry']
 ], function () {
     Route::get('profile', [AuthController::class, 'profile']);
     Route::get('logout', [AuthController::class, 'logout']);
@@ -91,4 +91,14 @@ Route::prefix('amenities')->group(function () {
     Route::get('/{slug}', [AmenityController::class, 'show']);
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
+});
+
+// Admin Dashboard Routes
+Route::group([
+    'middleware'=> ['auth:sanctum', 'checkTokenExpiry', 'admin']
+], function () {
+    Route::prefix('admin')->group(function () {
+
+    });
+
 });
