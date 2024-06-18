@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
     //it will edit with auth user
     public function showLandlordNotifications($landlord_id)
     {
-        $notifications = Notification::where('landlord_id', $landlord_id)
+        $notifications = Notification::where('landlord_id', Auth::id())
             ->whereIn('type', ['request'])
             ->get();
 
