@@ -7,6 +7,7 @@ use App\Http\Resources\PropertyResource;
 use App\Http\Resources\ReportPropertyResource;
 use App\Models\Property;
 use App\Models\ReportProperty;
+use App\Http\Requests\CreateReportPropertyRequest;
 use Illuminate\Http\Request;
 
 class ReportPropertyController extends Controller
@@ -33,5 +34,10 @@ class ReportPropertyController extends Controller
         $property->delete();
         $report->delete();
         return response()->json(['message' => 'Property deleted successfully']);
+    }
+    public function store(CreateReportPropertyRequest $request)
+    {
+        $report = ReportProperty::create($request->validated());
+        return response()->json(['message' => 'Report created successfully', 'data' => new ReportPropertyResource($report)], 201);
     }
 }

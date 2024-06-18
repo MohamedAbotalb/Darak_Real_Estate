@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ReportUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\ReportUser;
+use App\Http\Requests\CreateReportUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -32,5 +33,10 @@ class ReportUserController extends Controller
         $user->delete();
         $report->delete();
         return response()->json(['message' => 'User deleted successfully']);
+    }
+    public function store(CreateReportUserRequest $request)
+    {
+        $report = ReportUser::create($request->validated());
+        return response()->json(['message' => 'Report created successfully', 'data' => new ReportUserResource($report)], 201);
     }
 }
