@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function getCounts()
+    public function overview()
     {
         $counts = [
             'users' => User::count(),
