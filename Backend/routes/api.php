@@ -88,3 +88,13 @@ Route::prefix('amenities')->group(function () {
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
 });
+
+// Admin Dashboard Routes
+Route::group([
+    'middleware'=> ['auth:sanctum', 'checkTokenExpiry', 'admin']
+], function () {
+    Route::prefix('admin')->group(function () {
+
+    });
+
+});
