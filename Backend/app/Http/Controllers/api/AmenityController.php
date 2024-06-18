@@ -20,22 +20,22 @@ class AmenityController extends Controller
         return response()->json($amenity, 201);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $amenity = Amenity::findOrFail($id);
+        $amenity = Amenity::findOrFail($slug);
         return response()->json($amenity);
     }
 
-    public function update(AmenityRequest $request, $id)
+    public function update(AmenityRequest $request, $slug)
     {
-        $amenity = Amenity::findOrFail($id);
+        $amenity = Amenity::findOrFail($slug);
         $amenity->update($request->validated());
         return response()->json($amenity);
     }
 
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $amenity = Amenity::findOrFail($id);
+        $amenity = Amenity::findOrFail($slug);
         $amenity->delete();
         return response()->json(null, 204);
     }

@@ -77,10 +77,12 @@ Route::prefix('wishlist')->group(function(){
     Route::post('/{id}',[WishlistController::class,'store']);
 });
 
+// Overview Admin Page ROUTE
 Route::prefix('dashboard')->group(function () {
-    Route::get('/counts', [DashboardController::class, 'getCounts']);
+    Route::get('/home', [DashboardController::class, 'overview']);
 });
 
+// Amenity Admin Page ROUTE
 Route::prefix('amenities')->group(function () {
     Route::get('/', [AmenityController::class, 'index']);
     Route::post('/', [AmenityController::class, 'store']);
