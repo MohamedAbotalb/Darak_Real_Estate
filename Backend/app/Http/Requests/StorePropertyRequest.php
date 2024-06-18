@@ -33,6 +33,8 @@ class StorePropertyRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'availability' => 'required|in:available,unavailable',
             'listing_type' => 'required|in:renting,selling',
+            'amenities' => 'array',
+            'amenities.*' => 'exists:amenities,id',
             'images' => 'required|array',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
