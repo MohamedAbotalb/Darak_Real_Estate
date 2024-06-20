@@ -29,4 +29,8 @@ class Property extends Model
     public function PropertyImage(){
         return $this->hasMany(PropertyImage::class);
     }
+    public function amenities()
+    {
+        return $this->belongsToMany(Amenity::class);
+    }
 }

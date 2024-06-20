@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\api\Auth\AuthController;
+use App\Http\Controllers\api\Auth\ForgotPasswordController;
+use App\Http\Controllers\api\Auth\ResetPasswordController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
+use App\Http\Controllers\api\ReviewController;
 
 
 /*
@@ -29,6 +32,10 @@ use App\Http\Controllers\Api\AmenityController;
 // Registration routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+
+// Forget password routes
+Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('reset-password', [ResetPasswordController::class, 'reset']);
 
 Route::group([
     'middleware' => ['auth:sanctum', 'checkTokenExpiry']
@@ -74,6 +81,8 @@ Route::prefix('wishlist')->group(function () {
     Route::get('/{id}', [WishlistController::class, 'show']);
     Route::post('/{id}', [WishlistController::class, 'store']);
 });
+
+Route::get('reviews', [ReviewController::class, 'show']);
 
 // Admin Dashboard Routes
 Route::group([

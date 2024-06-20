@@ -1,9 +1,10 @@
 import React from 'react';
+import Dashboard from './layouts/Dashboard';
 
 function App() {
   return (
     <div className="App">
-      <h1>Real Estate App</h1>
+      <Dashboard />
     </div>
   );
 }
