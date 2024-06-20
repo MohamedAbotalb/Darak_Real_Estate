@@ -10,7 +10,7 @@ class PropertyTypeController extends Controller
 {
     public function index()
     {
-        return response()->json(PropertyType::all());
+        return response()->json(PropertyTypeResource::collection(PropertyType::all()));
     }
 
     public function store(Request $request)
@@ -21,7 +21,7 @@ class PropertyTypeController extends Controller
 
         $propertyType = PropertyType::create($request->all());
 
-        return response()->json($propertyType, 201);
+        return response()->json(new PropertyTypeResource($propertyType), 201);
     }
 
     public function show($slug)
@@ -32,7 +32,7 @@ class PropertyTypeController extends Controller
             return response()->json(['error' => 'Resource not found'], 404);
         }
 
-        return response()->json($propertyType);
+        return response()->json(new PropertyTypeResource( $propertyType));
     }
 
    public function update(Request $request, $slug)
@@ -49,7 +49,7 @@ class PropertyTypeController extends Controller
 
         $propertyType->update($request->all());
 
-        return response()->json($propertyType);
+        return response()->json(new PropertyTypeResource( $propertyType));
     }
 
     public function destroy($slug)
@@ -62,6 +62,6 @@ class PropertyTypeController extends Controller
 
         $propertyType->delete();
 
-        return response()->json(null, 204);
+        return response()->json(["message"=>"property-type deleted successfully"], 204);
     }
 }
