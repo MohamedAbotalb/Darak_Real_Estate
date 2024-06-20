@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PropertyTypeController;
+use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
 use App\Http\Controllers\api\ReviewController;
 
