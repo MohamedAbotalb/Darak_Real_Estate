@@ -70,14 +70,14 @@ Route::prefix('properties')->group(function(){
     Route::post('/',[PropertyController::class,'store']);
     Route::get('/search/filter',[PropertyController::class,'search']);
 });
-Route::prefix('notifications')->group(function(){
-    Route::get('/landlord/{landlordId}',[NotificationController::class,'showLandlordNotifications']);
-    Route::get('/renter/{renterId}',[NotificationController::class,'showRenterNotifications']);
+Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
+    Route::get('/landlord',[NotificationController::class,'showLandlordNotifications']);
+    Route::get('/renter',[NotificationController::class,'showRenterNotifications']);
     Route::put('/{id}/type',[NotificationController::class,'updateType']);
 });
-Route::prefix('wishlist')->group(function(){
-    Route::get('/{id}',[WishlistController::class,'show']);
-    Route::post('/{id}',[WishlistController::class,'store']);
+Route::prefix('wishlist')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
+    Route::get('',[WishlistController::class,'show']);
+    Route::post('',[WishlistController::class,'store']);
 });
 
 // Overview Admin Page ROUTE
