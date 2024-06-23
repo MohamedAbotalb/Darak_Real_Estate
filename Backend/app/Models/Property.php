@@ -37,4 +37,8 @@ class Property extends Model
     {
         return $this->hasMany(PropertyImage::class);
     }
+    public function tours()
+    {
+        return $this->hasMany(Tour::class, 'property_id');
+    }
 }

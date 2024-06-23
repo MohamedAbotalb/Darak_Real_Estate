@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
 use App\Http\Controllers\api\ReviewController;
-
+use App\Http\Controllers\api\TourController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +98,9 @@ Route::prefix('amenities')->group(function () {
 
 Route::get('reviews', [ReviewController::class, 'show']);
 
+Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
+    Route::post('/', [TourController::class, 'send_request']);
+});
 // Admin Dashboard Routes
 Route::group([
     'middleware'=> ['auth:sanctum', 'checkTokenExpiry', 'admin']
