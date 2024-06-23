@@ -25,12 +25,12 @@ class PropertyResource extends JsonResource
             'price' => $this->price,
             'location_id' => $this->location_id,
             'property_type_id' => new PropertyTypeResource($this->propertyType),
-            'user_id' => new UserResource($this->user),
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
             'location' => new LocationResource($this->whenLoaded('location')),
             'property_type' => new PropertyTypeResource($this->whenLoaded('property_type')),
             'user' => new UserResource($this->whenLoaded('user')),
+            'images' => PropertyImageResource::collection($this->images),
         ];
     }
 }

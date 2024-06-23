@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    //it will edit with auth user
-    public function showLandlordNotifications($landlord_id)
+    public function showLandlordNotifications()
     {
         $notifications = Notification::where('landlord_id', Auth::id())
             ->whereIn('type', ['request'])
@@ -21,11 +20,11 @@ class NotificationController extends Controller
             return response()->json(['message' => 'No notifications found for the landlord'], 404);
         }
 
-        return response()->json(['data' => $notifications], 200);
+        return response()->json(['data' =>NotificationResource::collection($notifications)], 200);
     }
-    public function showRenterNotifications($renter_id)
+    public function showRenterNotifications()
     {
-        $notifications = Notification::where('user_id', $renter_id)
+        $notifications = Notification::where('user_id', Auth::id())
             ->whereIn('type', ['confirmation', 'cancelation'])
             ->get();
 
@@ -33,7 +32,7 @@ class NotificationController extends Controller
             return response()->json(['message' => 'No notifications found for the renter'], 404);
         }
 
-        return response()->json(['data' => $notifications], 200);
+        return response()->json(['data' => NotificationResource::collection($notifications)], 200);
     }
     public function updateType(Request $request, $id)
     {

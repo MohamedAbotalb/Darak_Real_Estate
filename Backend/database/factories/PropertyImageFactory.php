@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Property;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Wishlist>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PropertyImage>
  */
-class WishlistFactory extends Factory
+class PropertyImageFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,9 +18,9 @@ class WishlistFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::where('role', 'user')->pluck('id')->random(),
-            'property_id' => Property::pluck('id')->random(),
+            'property_id' => $this->faker->randomElement(Property::pluck('id')->toArray()),
+            'image' => $this->faker->imageUrl(), 
         ];
-
+        
     }
 }

@@ -18,12 +18,13 @@ class ReportPropertyFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
-            'user_id' => User::pluck('id')->random(),
-            'property_id' => Property::pluck('id')->random(),
+            'user_id' => User::where('role', 'user')->pluck('id')->random(),
+            'property_id' =>Property::pluck('id')->random(),
             'content' => $this->faker->paragraph,
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'created_at' =>$this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' =>$this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }
