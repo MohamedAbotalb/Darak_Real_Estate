@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\api\Auth\AuthController;
+use App\Http\Controllers\api\Auth\ForgotPasswordController;
+use App\Http\Controllers\api\Auth\ResetPasswordController;
 use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\PropertyController;
 use App\Http\Controllers\api\ReportUserController;
@@ -31,6 +33,10 @@ use App\Http\Controllers\api\TourController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
+// Forget password routes
+Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('reset-password', [ResetPasswordController::class, 'reset']);
+
 Route::group([
     'middleware'=> ['auth:sanctum', 'checkTokenExpiry']
 ], function () {
@@ -54,10 +60,6 @@ Route::prefix('report-properties')->group(function(){
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
     Route::post('/', [ReportPropertyController::class, 'store']);
-});
-
-Route::prefix('dashboard')->group(function () {
-    Route::get('/counts', [DashboardController::class, 'getCounts']);
 });
 
 Route::apiResource('property-types', PropertyTypeController::class);
@@ -93,6 +95,7 @@ Route::prefix('amenities')->group(function () {
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
 });
+
 Route::get('reviews', [ReviewController::class, 'show']);
 
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
