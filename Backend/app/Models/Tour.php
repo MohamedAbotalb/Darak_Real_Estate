@@ -13,4 +13,12 @@ class Tour extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function tourDates()
+    {
+        return $this->hasMany(TourDate::class);
+    }
+    public function property()
+    {
+        return $this->belongsTo(Property::class, 'property_id');
+    }
 }

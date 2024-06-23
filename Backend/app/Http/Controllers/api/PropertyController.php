@@ -15,7 +15,7 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->query('perPage', 6);
-        $properties = Property::paginate($perPage);
+        $properties = Property::with('images')->paginate($perPage);
         return response()->json(PropertyResource::collection($properties));
     }
     public function show($slug)
