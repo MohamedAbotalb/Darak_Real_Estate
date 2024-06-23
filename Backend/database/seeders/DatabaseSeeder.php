@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Location::factory(10)->create();   
         \App\Models\PropertyType::factory(10)->create();   
         \App\Models\Property::factory(10)->create();   
+        \App\Models\PropertyImage::factory(10)->create();   
         \App\Models\Notification::factory(10)->create();   
         \App\Models\Amenity::factory(10)->create();   
         \App\Models\ReportUser::factory(10)->create();   

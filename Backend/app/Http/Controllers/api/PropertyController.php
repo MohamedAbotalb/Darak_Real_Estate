@@ -20,7 +20,7 @@ class PropertyController extends Controller
     }
     public function show($slug)
     {
-        $property = new PropertyResource(Property::where('slug', $slug)->firstOrFail());
+        $property = new PropertyResource(Property::where('slug', $slug)->with('images')->firstOrFail());
         if (!Property::where('slug', $slug)->firstOrFail()) {
             return response()->json(['error' => 'Property not found'], 400);
         }

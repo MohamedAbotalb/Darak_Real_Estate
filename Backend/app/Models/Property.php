@@ -33,4 +33,8 @@ class Property extends Model
     {
         return $this->belongsToMany(Amenity::class);
     }
+    public function images()
+    {
+        return $this->hasMany(PropertyImage::class);
+    }
 }
