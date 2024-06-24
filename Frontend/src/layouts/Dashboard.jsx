@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import ReviewList from '../components/ReviewList';
 import ReportUserList from '../components/ReportUserList';
 import ReportPropertyList from '../components/ReportPropertyList';
+import PropertyType from '../pages/PropertyType';
+
 import './Dashboard.css';
 import im1 from '../assets/images/im1.PNG';
 import im2 from '../assets/images/im2.PNG';
@@ -32,6 +34,12 @@ function Dashboard() {
           <div>
             <h1>Report properties</h1>
             <ReportPropertyList />
+          </div>
+        )}
+          {activeTab === 'property-types' && (
+          <div>
+            <h1>Property Types</h1>
+            <PropertyType />
           </div>
         )}
       </div>

@@ -28,7 +28,7 @@ function Sidebar({ setActiveTab }) {
           </button>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('property_types')}>
+          <button type="button" onClick={() => setActiveTab('property-types')}>
             Property Types
           </button>
         </li>
