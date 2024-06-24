@@ -5,7 +5,7 @@ import ReviewList from 'components/ReviewList';
 import ReportUserList from 'components/ReportUserList';
 import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyType from 'pages/PropertyType';
-import Amenities from 'components/AdminDashboard/ِAmenities';
+import Amenities from 'components/AdminDashboard/Amenities';
 import im1 from 'assets/images/im1.PNG';
 import im2 from 'assets/images/im2.PNG';
 import Sidebar from './Sidebar';
