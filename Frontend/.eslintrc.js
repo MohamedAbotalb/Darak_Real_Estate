@@ -41,6 +41,8 @@ module.exports = {
     'react/jsx-fragments': ['warn', 'syntax'],
     'import/no-unresolved': 'off',
     'react/jsx-filename-extension': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'import/no-extraneous-dependencies': 'off',
     'react/destructuring-assignment': ['warn', 'always'],
     'react/self-closing-comp': 'warn',
     'react/function-component-definition': [
