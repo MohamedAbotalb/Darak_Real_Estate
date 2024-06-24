@@ -87,6 +87,7 @@ Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])
 Route::prefix('wishlist')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
     Route::get('',[WishlistController::class,'show']);
     Route::post('',[WishlistController::class,'store']);
+    Route::delete('/{id}',[WishlistController::class,'delete']);
 });
 
 // Overview Admin Page ROUTE
