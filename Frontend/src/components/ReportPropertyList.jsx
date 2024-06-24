@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -9,6 +9,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Typography from '@mui/material/Typography';
 import {
   fetchReports,
   deleteReport,
@@ -40,6 +45,12 @@ export default function ReportPropertyList() {
   const reportStatus = useSelector((state) => state.reportProperties.status);
   const error = useSelector((state) => state.reportProperties.error);
 
+  const [openContentDialog, setOpenContentDialog] = useState(false);
+  const [selectedContent, setSelectedContent] = useState('');
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteType, setDeleteType] = useState('');
+  const [deleteId, setDeleteId] = useState(null);
+
   useEffect(() => {
     if (reportStatus === 'idle') {
       dispatch(fetchReports());
@@ -47,11 +58,37 @@ export default function ReportPropertyList() {
   }, [reportStatus, dispatch]);
 
   const handleDeleteReport = (id) => {
-    dispatch(deleteReport(id));
+    setDeleteType('report');
+    setDeleteId(id);
+    setOpenDeleteDialog(true);
   };
 
   const handleDeleteProperty = (id) => {
-    dispatch(deleteProperty(id));
+    setDeleteType('property');
+    setDeleteId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteType === 'report') {
+      dispatch(deleteReport(deleteId));
+    } else if (deleteType === 'property') {
+      dispatch(deleteProperty(deleteId));
+    }
+    setOpenDeleteDialog(false);
+  };
+
+  const handleShowContent = (content) => {
+    setSelectedContent(content);
+    setOpenContentDialog(true);
+  };
+
+  const handleCloseContentDialog = () => {
+    setOpenContentDialog(false);
   };
 
   let content;
@@ -84,13 +121,20 @@ export default function ReportPropertyList() {
                   {report.property.title}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {report.content}
+                  <Button
+                    variant="text"
+                    color="primary"
+                    onClick={() => handleShowContent(report.content)}
+                  >
+                    Details
+                  </Button>
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <Button
                     variant="contained"
                     color="secondary"
                     onClick={() => handleDeleteReport(report.id)}
+                    style={{ marginRight: '7px' }}
                   >
                     Delete Report
                   </Button>
@@ -112,5 +156,36 @@ export default function ReportPropertyList() {
     content = <p>{error}</p>;
   }
 
-  return <div>{content}</div>;
+  return (
+    <div>
+      {content}
+      <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
+        <DialogTitle>Content</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">{selectedContent}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseContentDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Are you sure you want to delete this {deleteType}?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="error">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
