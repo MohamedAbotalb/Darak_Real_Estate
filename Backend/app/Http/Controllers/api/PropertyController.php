@@ -8,20 +8,21 @@ use App\Http\Resources\PropertyResource;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str; 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PropertyController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = $request->query('perPage', 6);
-        $properties = Property::with('images')->paginate($perPage);
-        return response()->json(PropertyResource::collection($properties));
+        $perPage = $request->query('perPage', 90);
+        $properties = Property::with('images')->with('location')->paginate($perPage);
+        return PropertyResource::collection($properties);
     }
     public function show($slug)
     {
-        $property = new PropertyResource(Property::where('slug', $slug)->with('images')->firstOrFail());
-        if (!Property::where('slug', $slug)->firstOrFail()) {
+        $property = new PropertyResource(Property::where('slug', $slug)->with('location')->with('images')->firstOrFail());
+        if (!Property::where('slug', $slug)->first()) {
             return response()->json(['error' => 'Property not found'], 400);
         }
         return response()->json(['message' => 'Property fetched successfully', 'data' => $property,], 200);
@@ -49,26 +50,36 @@ class PropertyController extends Controller
     {
         return $this->showLatestProperties($property_type_id, 'selling');
     }
-    public function store(StorePropertyRequest $request){
-        $slug = Str::slug($request->title);
-        $property = Property::create($request->except('images') +['slug' => $slug]);
+    public function store(StorePropertyRequest $request)
+    {
+        DB::beginTransaction();
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move(public_path('images/properties'), $imageName);
-                PropertyImage::create([
-                    'property_id' => $property->id,
-                    'image' => $imageName,
-                ]);
+        try {
+            $slug = Str::slug($request->title);
+            $property = Property::create($request->except('images') + ['slug' => $slug]);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $image->move(public_path('images/properties'), $imageName);
+                    PropertyImage::create([
+                        'property_id' => $property->id,
+                        'image' => $imageName,
+                    ]);
+                }
             }
-        }
-        
-        if ($request->has('amenities')) {
-            $property->amenities()->attach($request->input('amenities'));
-        }
-        return response()->json(['message' => 'Property added successfully'], 201);
 
+            if ($request->has('amenities')) {
+                $property->amenities()->attach($request->input('amenities'));
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Property added successfully'], 201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Failed to add property', 'error' => $e->getMessage()], 500);
+        }
     }
     public function search(Request $request)
     {
@@ -82,7 +93,7 @@ class PropertyController extends Controller
         if ($request->has('location_id')) {
             $query->where('location_id', $request->input('location_id'));
         }
-        
+
         $properties = $query->get();
         if ($properties->isEmpty()) {
             return response()->json(['message' => 'No Result found'], 404);

@@ -23,7 +23,6 @@ class PropertyResource extends JsonResource
             'num_of_bathrooms' => $this->num_of_bathrooms,
             'area' => $this->area,
             'price' => $this->price,
-            'location_id' => $this->location_id,
             'property_type_id' => new PropertyTypeResource($this->propertyType),
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
