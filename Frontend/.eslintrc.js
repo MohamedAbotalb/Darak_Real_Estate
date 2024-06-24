@@ -36,6 +36,7 @@ module.exports = {
     'react/no-deprecated': 'warn',
     'react/no-direct-mutation-state': 'error',
     'jsx-quotes': ['warn', 'prefer-double'],
+    'no-param-reassign': ['error', { props: false }],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/jsx-fragments': ['warn', 'syntax'],
