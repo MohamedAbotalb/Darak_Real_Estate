@@ -19,6 +19,9 @@ import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import PropertyListings from 'components/PropertyListings';
+import Amenities from 'components/AdminDashboard/Amenities';
+import OverView from 'components/AdminDashboard/OverView';
+import UserDetails from 'components/AdminDashboard/UserDetails';
 
 function App() {
   const router = createBrowserRouter(
