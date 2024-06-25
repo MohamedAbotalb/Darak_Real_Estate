@@ -36,7 +36,7 @@ function Dashboard() {
             <ReportPropertyList />
           </div>
         )}
-          {activeTab === 'property-types' && (
+        {activeTab === 'property-types' && (
           <div>
             <h1>Property Types</h1>
             <PropertyType />

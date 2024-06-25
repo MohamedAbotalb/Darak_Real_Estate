@@ -1,0 +1,15 @@
+/* src/components/PropertyCard.css */
+.property-card {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.property-card .MuiIconButton-root {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}

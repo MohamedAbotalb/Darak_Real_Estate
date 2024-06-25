@@ -7,7 +7,7 @@ import PropertyTypeModal from './PropertyTypeModal';
 import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditPropertyTypeButton = ({ type }) => {
+function EditPropertyTypeButton({ type }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -45,6 +45,6 @@ const EditPropertyTypeButton = ({ type }) => {
       />
     </>
   );
-};
+}
 
 export default EditPropertyTypeButton;

@@ -17,9 +17,7 @@ function ShowDetailsModal({ typeSlug, open, handleClose }) {
     if (open && typeSlug) {
       const fetchTypeDetails = async () => {
         try {
-          const response = await axios.get(
-            `/property-types/${typeSlug}`
-          );
+          const response = await axios.get(`/property-types/${typeSlug}`);
           setType(response.data);
         } catch (error) {
           console.error('Failed to fetch property type details:', error);
@@ -88,7 +86,7 @@ function ShowDetailsModal({ typeSlug, open, handleClose }) {
                 </Card>
               ))
             ) : (
-              <Typography variant="body2" >No properties available.</Typography>
+              <Typography variant="body2">No properties available.</Typography>
             )}
           </>
         ) : (

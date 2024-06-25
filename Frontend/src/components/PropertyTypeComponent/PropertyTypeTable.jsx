@@ -10,8 +10,8 @@ import {
   Paper,
   Button,
 } from '@mui/material';
-import axios from '../../axiosConfig';
 import { toast } from 'react-toastify';
+import axios from '../../axiosConfig';
 import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
 import EditPropertyTypeButton from './EditPropertyTypeButton';
 import ShowDetailsButton from './ShowDetailsButton';

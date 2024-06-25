@@ -22,7 +22,7 @@ const axiosInstance = axios.create({
 
 // Request interceptor to attach the CSRF token
 axiosInstance.interceptors.request.use(async (config) => {
-  await fetchCsrfToken();  // Ensure CSRF token is fetched before each request
+  await fetchCsrfToken(); // Ensure CSRF token is fetched before each request
   const token = getCsrfToken();
   if (token) {
     config.headers['X-CSRF-TOKEN'] = token;
