@@ -138,7 +138,7 @@ function PropertyListings({ type }) {
   }
 
   return (
-    <Box sx={{ padding: '20px', backgroundColor: '#f5f5f5' }}>
+    <Box sx={{ padding: '20px' }}>
       <Typography variant="h4" align="center" gutterBottom color="primary">
         Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
       </Typography>

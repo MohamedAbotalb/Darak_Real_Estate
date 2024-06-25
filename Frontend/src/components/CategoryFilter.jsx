@@ -82,7 +82,6 @@ CategoryFilter.propTypes = {
 };
 
 CategoryFilter.defaultProps = {
-  initialCategory: 1, // Default initialCategory to 1 (Apartement)
+  initialCategory: 1, 
 };
-
 export default CategoryFilter;

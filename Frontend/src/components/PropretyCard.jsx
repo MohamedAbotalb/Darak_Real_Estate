@@ -40,9 +40,6 @@ function PropertyCard({ property }) {
     }
   };
 
-  // Determine if "Read More" link should be shown
-  // const showReadMore = property.description.length > 10; // Adjust the length threshold as needed
-  // Truncate description by words
   const words = property.description.trim().split(' ');
   const truncatedDescription = words.slice(0, 4).join(' ');
   const remainingDescription = words.slice(9).join(' ');
@@ -56,7 +53,7 @@ function PropertyCard({ property }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: 'lightgray',
+        backgroundColor: '#ecf0f1',
       }}
     >
       <CardMedia
@@ -111,7 +108,7 @@ function PropertyCard({ property }) {
         </div>
         <Divider sx={{ mb: 1, mt: -3 }} />
         <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
-          <LocationOn fontSize="small" /> {property.location_id}
+          <LocationOn fontSize="small" /> {property.location.city}
         </Typography>
         <Grid container spacing={5} sx={{ mt: -4 }}>
           <Grid item>
@@ -149,11 +146,14 @@ PropertyCard.propTypes = {
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     rentOrSell: PropTypes.string.isRequired,
-    location_id: PropTypes.string.isRequired, // Add location_id
-    num_of_rooms: PropTypes.number.isRequired, // Add num_of_rooms
-    num_of_bathrooms: PropTypes.number.isRequired, // Add num_of_bathrooms
+    location_id: PropTypes.string.isRequired, // Adjust as needed
+    num_of_rooms: PropTypes.number.isRequired, // Adjust as needed
+    num_of_bathrooms: PropTypes.number.isRequired, // Adjust as needed
     area: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      city: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
