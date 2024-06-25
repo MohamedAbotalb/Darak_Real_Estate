@@ -10,17 +10,17 @@ class PropertyService
 {
     public function getAllProperties($perPage)
     {
-        return Property::with('images', 'location')->paginate($perPage);
+        return Property::with('images', 'location','amenities')->paginate($perPage);
     }
 
     public function getPropertyBySlug($slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images','amenities')->firstOrFail();
     }
 
     public function getLatestProperties($property_type_id, $listing_type)
     {
-        return Property::with('location', 'images')
+        return Property::with('location', 'images','amenities')
             ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()

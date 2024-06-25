@@ -30,6 +30,7 @@ class PropertyResource extends JsonResource
             'property_type' => new PropertyTypeResource($this->whenLoaded('property_type')),
             'user' => new UserResource($this->whenLoaded('user')),
             'images' => PropertyImageResource::collection($this->images),
+            'amenities' => AmenityResource::collection($this->whenLoaded('amenities'))
         ];
     }
 }

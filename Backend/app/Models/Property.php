@@ -32,7 +32,7 @@ class Property extends Model
     }
     public function amenities()
     {
-        return $this->belongsToMany(Amenity::class);
+        return $this->belongsToMany(Amenity::class );
     }
     public function images()
     {
