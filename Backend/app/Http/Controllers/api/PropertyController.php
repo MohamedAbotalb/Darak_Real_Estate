@@ -29,7 +29,7 @@ class PropertyController extends Controller
     }
     private function showLatestProperties($property_type_id, $listing_type)
     {
-        $latestProperties = Property::where('property_type_id', $property_type_id)
+        $latestProperties = Property::with('location')->with('images')->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
             ->take(3)
@@ -39,7 +39,7 @@ class PropertyController extends Controller
             return response()->json(['message' => 'No properties found for ' . $listing_type . ' in this category'], 404);
         }
 
-        return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' => $latestProperties], 200);
+        return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' =>  PropertyResource::collection( $latestProperties)], 200);
     }
     public function showLatestRent($property_type_id)
     {
