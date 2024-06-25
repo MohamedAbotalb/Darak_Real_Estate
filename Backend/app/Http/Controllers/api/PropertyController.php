@@ -19,7 +19,7 @@ class PropertyController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->query('perPage', 90);
+        $perPage = $request->query('perPage', 6);
         $properties = $this->propertyService->getAllProperties($perPage);
         return PropertyResource::collection($properties);
     }
