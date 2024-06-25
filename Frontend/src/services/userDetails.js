@@ -1,3 +1,4 @@
+// services/userDetails.js
 import axios from '../axiosConfig';
 
 const fetchUsers = async () => {
