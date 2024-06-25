@@ -23,7 +23,7 @@ export const deleteUser = createAsyncThunk(
 const userDetailsSlice = createSlice({
   name: 'userDetails',
   initialState: {
-    users: [],
+    users: [], // Ensure this is an array
     status: 'idle',
     error: null,
   },
@@ -34,8 +34,11 @@ const userDetailsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
+        console.log('Fetched users:', action.payload); // Log the payload to ensure it is an array
         state.status = 'succeeded';
-        state.users = action.payload;
+        state.users = Array.isArray(action.payload.data)
+          ? action.payload.data
+          : []; // Ensure it's an array
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = 'failed';
