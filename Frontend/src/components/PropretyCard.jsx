@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Card,
-  CardMedia,
   CardContent,
   Typography,
   IconButton,
   Grid,
   Divider,
+  Box,
+  MobileStepper,
+  Paper,
+  Button,
 } from '@mui/material';
 import {
   Favorite,
@@ -17,9 +19,15 @@ import {
   Bed,
   Bathtub,
   SquareFoot,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
 } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
 import { addToWishlist, removeFromWishlist } from '../store/wishlistSlice';
-import './PropertyCard.css'; // Additional custom styles if needed
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 function PropertyCard({ property }) {
   const dispatch = useDispatch();
@@ -27,6 +35,7 @@ function PropertyCard({ property }) {
   const isWishlisted = wishlist.some((item) => item.id === property.id);
 
   const [expanded, setExpanded] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -40,31 +49,104 @@ function PropertyCard({ property }) {
     }
   };
 
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepChange = (step) => {
+    setActiveStep(step);
+  };
+
   const words = property.description.trim().split(' ');
   const truncatedDescription = words.slice(0, 4).join(' ');
-  const remainingDescription = words.slice(9).join(' ');
+  const remainingDescription = words.slice(4).join(' ');
+
+  const images = property.images.map((image) => ({
+    id: image.id,
+    label: property.title,
+    imgPath: image.image,
+  }));
+
+  const maxSteps = images.length;
 
   return (
     <Card
       className="property-card"
       sx={{
         maxWidth: 345,
-        m: 2,
+        mb: 0,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         backgroundColor: '#ecf0f1',
       }}
     >
-      <CardMedia
-        component="img"
-        height="200"
-        image={property.image}
-        alt={property.title}
-      />
+      <Box sx={{ flexGrow: 1 }}>
+        {images.length > 0 ? (
+          <>
+            <AutoPlaySwipeableViews
+              axis="x"
+              index={activeStep}
+              onChangeIndex={handleStepChange}
+              enableMouseEvents
+            >
+              {images.map((step) => (
+                <div key={step.id}>
+                  {Math.abs(activeStep - step.id) <= 2 ? (
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 255,
+                        display: 'block',
+                        maxWidth: 400,
+                        overflow: 'hidden',
+                        width: '100%',
+                      }}
+                      src={step.imgPath}
+                      alt={step.label}
+                    />
+                  ) : null}
+                </div>
+              ))}
+            </AutoPlaySwipeableViews>
+            <MobileStepper
+              steps={maxSteps}
+              position="static"
+              activeStep={activeStep}
+              nextButton={
+                <Button
+                  size="small"
+                  onClick={handleNext}
+                  disabled={activeStep === maxSteps - 1}
+                >
+                  Next
+                  <KeyboardArrowRight />
+                </Button>
+              }
+              backButton={
+                <Button
+                  size="small"
+                  onClick={handleBack}
+                  disabled={activeStep === 0}
+                >
+                  <KeyboardArrowLeft />
+                  Back
+                </Button>
+              }
+            />
+          </>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No images available
+          </Typography>
+        )}
+      </Box>
       <CardContent
         sx={{
-          flex: '1 1 auto',
           display: 'flex',
           flexDirection: 'column',
           pb: 2,
@@ -106,11 +188,30 @@ function PropertyCard({ property }) {
             </Typography>
           )}
         </div>
-        <Divider sx={{ mb: 1, mt: -3 }} />
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 'auto' }}>
-          <LocationOn fontSize="small" /> {property.location.city}
-        </Typography>
-        <Grid container spacing={5} sx={{ mt: -4 }}>
+        <Divider sx={{ mb: 1, mt: 1 }} />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 'auto' }}
+          >
+            <LocationOn fontSize="small" /> {property.location.city}
+          </Typography>
+          <IconButton
+            onClick={handleWishlistToggle}
+            color="error"
+            sx={{ mt: 'auto' }}
+          >
+            {isWishlisted ? <Favorite /> : <FavoriteBorder />}
+          </IconButton>
+        </Box>
+        <Grid container spacing={5} sx={{ mt: -3 }}>
           <Grid item>
             <Typography variant="body2" color="text.secondary">
               <Bed fontSize="small" /> {property.num_of_rooms}
@@ -127,13 +228,6 @@ function PropertyCard({ property }) {
             </Typography>
           </Grid>
         </Grid>
-        <IconButton
-          onClick={handleWishlistToggle}
-          color="error"
-          sx={{ alignSelf: 'flex-end', mt: 1 }}
-        >
-          {isWishlisted ? <Favorite /> : <FavoriteBorder />}
-        </IconButton>
       </CardContent>
     </Card>
   );
@@ -142,18 +236,23 @@ function PropertyCard({ property }) {
 PropertyCard.propTypes = {
   property: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     rentOrSell: PropTypes.string.isRequired,
-    location_id: PropTypes.string.isRequired, // Adjust as needed
-    num_of_rooms: PropTypes.number.isRequired, // Adjust as needed
-    num_of_bathrooms: PropTypes.number.isRequired, // Adjust as needed
+    location_id: PropTypes.string.isRequired,
+    num_of_rooms: PropTypes.number.isRequired,
+    num_of_bathrooms: PropTypes.number.isRequired,
     area: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     location: PropTypes.shape({
       city: PropTypes.string.isRequired,
     }).isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        image: PropTypes.string.isRequired,
+      })
+    ).isRequired,
   }).isRequired,
 };
 

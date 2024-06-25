@@ -19,5 +19,5 @@ const reduxStore = configureStore({
     categories: categoriesReducer,
   },
 });
-
+// 
 export default reduxStore;

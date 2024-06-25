@@ -82,6 +82,6 @@ CategoryFilter.propTypes = {
 };
 
 CategoryFilter.defaultProps = {
-  initialCategory: 1, 
+  initialCategory: 1,
 };
 export default CategoryFilter;
