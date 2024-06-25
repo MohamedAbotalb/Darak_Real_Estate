@@ -1,7 +1,7 @@
-import axiosInstance from '../axiosConfig';
+import axios from '../axiosConfig';
 
 const fetchCounts = async () => {
-  const response = await axiosInstance.get('/dashboard/home');
+  const response = await axios.get('/dashboard/home');
   return response.data;
 };
 
