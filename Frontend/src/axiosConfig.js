@@ -1,14 +1,17 @@
 import axios from 'axios';
 
+// Function to get the CSRF token from meta tag
 const getCsrfToken = () => {
   const meta = document.querySelector('meta[name="csrf-token"]');
   return meta ? meta.getAttribute('content') : null;
 };
 
+// Fetch the CSRF cookie using sanctum/csrf-cookie endpoint
 const fetchCsrfToken = async () => {
   await axios.get('http://localhost:8000/sanctum/csrf-cookie');
 };
 
+// Create Axios instance
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api',
   headers: {
@@ -17,8 +20,9 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// Request interceptor to attach the CSRF token
 axiosInstance.interceptors.request.use(async (config) => {
-  await fetchCsrfToken();
+  await fetchCsrfToken(); // Ensure CSRF token is fetched before each request
   const token = getCsrfToken();
   if (token) {
     config.headers['X-CSRF-TOKEN'] = token;
@@ -26,6 +30,7 @@ axiosInstance.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Response interceptor to handle errors globally
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {

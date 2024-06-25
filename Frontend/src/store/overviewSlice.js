@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchCounts as fetchCountsService } from '../services/overview';
+import fetchCountsService from '../services/overview';
 
 export const fetchCounts = createAsyncThunk(
   'overview/fetchCounts',
