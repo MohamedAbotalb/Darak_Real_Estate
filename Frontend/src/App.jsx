@@ -14,7 +14,7 @@ import PropertyDetails from 'components/PropertyDetails';
 import PropertyTypes from 'pages/PropertyType';
 import NotFound from 'pages/NotFound';
 import 'react-toastify/dist/ReactToastify.css';
-import HomePage from 'pages/HomePage';
+import Home from 'pages/Home';
 
 function App() {
   const router = createBrowserRouter(
@@ -28,7 +28,7 @@ function App() {
           <Route path="property-types" element={<PropertyTypes />} />
         </Route>
         <Route path="*" element={<NotFound />} />
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/homepage" element={<Home />} />
       </>
     )
   );

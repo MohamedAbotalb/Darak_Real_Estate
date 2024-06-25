@@ -1,7 +1,8 @@
+// src/pages/Home.jsx
 import React from 'react';
 import PropertyListings from '../components/PropertyListings';
 
-function HomePage() {
+function Home() {
   return (
     <div>
       <PropertyListings type="rent" />
@@ -10,4 +11,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Home;
