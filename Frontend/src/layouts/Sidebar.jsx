@@ -8,7 +8,12 @@ function Sidebar({ setActiveTab }) {
       <h2>Dashboard Menu</h2>
       <ul>
         <li>
-          <button type="button" onClick={() => setActiveTab('user_details')}>
+          <button type="button" onClick={() => setActiveTab('overview')}>
+            OverView
+          </button>
+        </li>
+        <li>
+          <button type="button" onClick={() => setActiveTab('userdetails')}>
             User Details
           </button>
         </li>
@@ -30,6 +35,11 @@ function Sidebar({ setActiveTab }) {
         <li>
           <button type="button" onClick={() => setActiveTab('property-types')}>
             Property Types
+          </button>
+        </li>
+        <li>
+          <button type="button" onClick={() => setActiveTab('amenities')}>
+            Amenities
           </button>
         </li>
       </ul>
