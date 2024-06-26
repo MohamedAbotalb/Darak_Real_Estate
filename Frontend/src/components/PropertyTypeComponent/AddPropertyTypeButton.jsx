@@ -1,12 +1,10 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
+import { fetchPropertyTypes } from 'store/propertyTypesSlice';
 import axios from '../../axiosConfig';
 import PropertyTypeModal from './PropertyTypeModal';
-import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
-import 'react-toastify/dist/ReactToastify.css';
 
 function AddPropertyTypeButton() {
   const [isOpen, setOpen] = useState(false);
