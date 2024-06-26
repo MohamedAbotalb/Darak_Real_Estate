@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('property_id');
             $table->text('image');
             $table->timestamps();
-
+            $table->softDeletes();
+            
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
