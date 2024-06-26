@@ -8,13 +8,11 @@ function SharedLayout() {
   return (
     <>
       <Header />
-      {/* <Container> */}
         <Row>
           <Col>
             <Outlet />
           </Col>
         </Row>
-      {/* </Container> */}
       <Footer />
     </>
   );
