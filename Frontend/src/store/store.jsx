@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './authSlice';
 import reportUsersReducer from './reportUsersSlice';
 import reportPropertiesReducer from './reportPropertiesSlice';
 import propertyReducer from './propertySlice';
@@ -9,6 +10,7 @@ import amenitiesReducer from './amenitiesSlice';
 
 const reduxStore = configureStore({
   reducer: {
+    auth: authReducer,
     reportUsers: reportUsersReducer,
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
