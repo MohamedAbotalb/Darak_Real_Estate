@@ -66,8 +66,8 @@ class PropertyService
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
         }
-        if (isset($filters['user_id'])) {
-            $query->where('user_id', $filters['user_id']);
+        if (isset($filters['listing_type'])) {
+            $query->where('listing_type', $filters['listing_type']);
         }
         if (isset($filters['location_id'])) {
             $query->where('location_id', $filters['location_id']);
