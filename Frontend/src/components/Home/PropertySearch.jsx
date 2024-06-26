@@ -1,4 +1,3 @@
-// src/components/Home/PropertySearch.jsx
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
@@ -17,26 +16,25 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
-  // background: 'rgba(255, 255, 255, 0.8)',
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  gap: theme.spacing(2),
+  justifyContent: 'center',
+  gap: theme.spacing(2), // Adjust the gap between items if needed
   flexWrap: 'wrap',
   maxWidth: '800px',
   margin: '0 auto',
 }));
 
-const SearchSelect = styled(FormControl)(({ theme }) => ({
+const SearchFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: '200px',
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1), // Adjust margin bottom as needed
+  marginRight: theme.spacing(1), // Adjust margin right as needed
 }));
 
 const SearchButton = styled(Button)(({ theme }) => ({
   minWidth: '200px',
   height: '56px',
+  flex: '0 0 auto', // Ensure button doesn't grow
 }));
 
 const PropertySearch = () => {
@@ -58,7 +56,7 @@ const PropertySearch = () => {
 
   return (
     <SearchContainer>
-      <SearchSelect variant="outlined">
+      <SearchFormControl variant="outlined">
         <InputLabel>Rent, Sell</InputLabel>
         <Select
           value={rentOrSell}
@@ -71,9 +69,9 @@ const PropertySearch = () => {
           <MenuItem value="rent">Rent</MenuItem>
           <MenuItem value="sell">Sell</MenuItem>
         </Select>
-      </SearchSelect>
+      </SearchFormControl>
 
-      <SearchSelect variant="outlined">
+      <SearchFormControl variant="outlined">
         <InputLabel>Location</InputLabel>
         <Select
           value={locationId}
@@ -89,9 +87,9 @@ const PropertySearch = () => {
             </MenuItem>
           ))}
         </Select>
-      </SearchSelect>
+      </SearchFormControl>
 
-      <SearchSelect variant="outlined">
+      <SearchFormControl variant="outlined">
         <InputLabel>Property Type</InputLabel>
         <Select
           value={propertyType}
@@ -107,7 +105,7 @@ const PropertySearch = () => {
             </MenuItem>
           ))}
         </Select>
-      </SearchSelect>
+      </SearchFormControl>
 
       <SearchButton
         variant="contained"
