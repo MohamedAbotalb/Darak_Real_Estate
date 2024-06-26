@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('tour_id');
             $table->dateTime('date');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
             $table->softDeletes();
-
             $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
         });
     }

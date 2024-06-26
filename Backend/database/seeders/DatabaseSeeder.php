@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\ReportUser::factory(10)->create();   
         \App\Models\ReportProperty::factory(10)->create();  
         \App\Models\Wishlist::factory(10)->create();
+        \App\Models\Tour::factory(10)->create();
+        \App\Models\TourDate::factory(10)->create();
+
     }
 }
