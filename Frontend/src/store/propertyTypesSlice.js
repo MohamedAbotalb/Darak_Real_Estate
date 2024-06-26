@@ -5,9 +5,7 @@ import axios from '../axiosConfig';
 export const fetchPropertyTypes = createAsyncThunk(
   'propertyTypes/fetchPropertyTypes',
   async () => {
-    const response = await axios.get(
-      '/property-types'
-    );
+    const response = await axios.get('/property-types');
     return response.data;
   }
 );

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
 import ShowDetailsModal from './showDetailsModal';
 
 function ShowDetailsButton({ typeSlug }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   return (
     <>
@@ -19,12 +20,16 @@ function ShowDetailsButton({ typeSlug }) {
         Show
       </Button>
       <ShowDetailsModal
-        open={open}
+        isOpen={isOpen}
         handleClose={handleClose}
         typeSlug={typeSlug}
       />
     </>
   );
 }
+
+ShowDetailsButton.propTypes = {
+  typeSlug: PropTypes.string.isRequired,
+};
 
 export default ShowDetailsButton;

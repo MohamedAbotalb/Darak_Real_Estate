@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
@@ -7,8 +8,8 @@ import PropertyTypeModal from './PropertyTypeModal';
 import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditPropertyTypeButton = ({ type }) => {
-  const [open, setOpen] = useState(false);
+function EditPropertyTypeButton({ type }) {
+  const [isOpen, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
@@ -22,7 +23,6 @@ const EditPropertyTypeButton = ({ type }) => {
       handleClose();
     } catch (error) {
       toast.error('Failed to update property type.');
-      console.error('Failed to update property type:', error);
     }
   };
 
@@ -37,7 +37,7 @@ const EditPropertyTypeButton = ({ type }) => {
         Edit
       </Button>
       <PropertyTypeModal
-        open={open}
+        isOpen={isOpen}
         handleClose={handleClose}
         type={type}
         mode="edit"
@@ -45,6 +45,12 @@ const EditPropertyTypeButton = ({ type }) => {
       />
     </>
   );
+}
+
+EditPropertyTypeButton.propTypes = {
+  type: PropTypes.shape({
+    slug: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default EditPropertyTypeButton;

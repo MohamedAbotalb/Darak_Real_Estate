@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   Modal,
@@ -8,30 +9,29 @@ import {
   CardContent,
   CardActions,
 } from '@mui/material';
+import { toast } from 'react-toastify';
 import axios from '../../axiosConfig';
 
-function ShowDetailsModal({ typeSlug, open, handleClose }) {
+function ShowDetailsModal({ typeSlug, isOpen, handleClose }) {
   const [type, setType] = useState(null);
 
   useEffect(() => {
-    if (open && typeSlug) {
+    if (isOpen && typeSlug) {
       const fetchTypeDetails = async () => {
         try {
-          const response = await axios.get(
-            `/property-types/${typeSlug}`
-          );
+          const response = await axios.get(`/property-types/${typeSlug}`);
           setType(response.data);
         } catch (error) {
-          console.error('Failed to fetch property type details:', error);
+          toast.error('Failed to fetch property type details:');
         }
       };
 
       fetchTypeDetails();
     }
-  }, [open, typeSlug]);
+  }, [isOpen, typeSlug]);
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={isOpen} onClose={handleClose}>
       <Box
         sx={{
           width: '50%',
@@ -88,7 +88,7 @@ function ShowDetailsModal({ typeSlug, open, handleClose }) {
                 </Card>
               ))
             ) : (
-              <Typography variant="body2" >No properties available.</Typography>
+              <Typography variant="body2">No properties available.</Typography>
             )}
           </>
         ) : (
@@ -98,5 +98,11 @@ function ShowDetailsModal({ typeSlug, open, handleClose }) {
     </Modal>
   );
 }
+
+ShowDetailsModal.propTypes = {
+  typeSlug: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
 
 export default ShowDetailsModal;

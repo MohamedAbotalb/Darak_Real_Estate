@@ -12,6 +12,11 @@ const reduxStore = configureStore({
     property: propertyReducer,
     propertyTypes: propertyTypesReducer,
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default reduxStore;
