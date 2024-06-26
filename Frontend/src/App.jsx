@@ -39,7 +39,7 @@ function App() {
           <Route path="amenities" element={<Amenities />} />
         </Route>
         <Route path="/" element={<SharedLayout />}>
-          <Route path="homepage" element={<Home />} />
+          <Route index element={<Home />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </>

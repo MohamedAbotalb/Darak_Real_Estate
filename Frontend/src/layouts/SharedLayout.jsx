@@ -4,18 +4,19 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Header from 'components/Home/Header';
 import Footer from 'components/Home/Footer';
 
-export default function SharedLayout() {
+function SharedLayout() {
   return (
     <>
       <Header />
-      <Container>
+      {/* <Container> */}
         <Row>
           <Col>
             <Outlet />
           </Col>
         </Row>
-      </Container>
+      {/* </Container> */}
       <Footer />
     </>
   );
 }
+export default SharedLayout;
