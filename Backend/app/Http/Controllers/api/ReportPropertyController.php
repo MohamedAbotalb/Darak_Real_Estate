@@ -1,47 +1,58 @@
 <?php
-
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PropertyResource;
-use App\Http\Resources\ReportPropertyResource;
-use App\Models\Property;
-use App\Models\ReportProperty;
 use App\Http\Requests\CreateReportPropertyRequest;
-use Illuminate\Http\Request;
+use App\Http\Resources\ReportPropertyResource;
+use App\Services\ReportPropertyService;
 
 class ReportPropertyController extends Controller
 {
-    public function index(){
-        $reports= ReportPropertyResource::collection(ReportProperty::all());
-        if ($reports->isEmpty()) {
-            return response()->json(['message' => 'No reports found'],400);
-        }
-        return $reports;
-    }
-    public function deleteReport($id){
-        $report=new ReportPropertyResource(ReportProperty::find($id));
-        if (!ReportProperty::find($id)) {
-            return response()->json(['error' => 'Report not found'],400);
-        }
-        $report->delete();
-        return response()->json(['message' => 'Report deleted successfully', 'data' => $report],200);
-    }
-    public function deleteProperty($id)
+    protected $reportPropertyService;
+
+    public function __construct(ReportPropertyService $reportPropertyService)
     {
-        $report=new ReportPropertyResource(ReportProperty::find($id));
-        if (!ReportProperty::find($id)) {
-            return response()->json(['error' => 'Report not found'],400);
-        }
-        $property = ReportProperty::find($id)->property;
-        $property->delete();
-        $report->delete();
+        $this->reportPropertyService = $reportPropertyService;
+    }
+
+    public function index()
+    {
+        $reports = ReportPropertyResource::collection($this->reportPropertyService->getAllReports());
         
-        return response()->json(['message' => 'Property deleted successfully']);
+        if ($reports->isEmpty()) {
+            return response()->json(['message' => 'No reports found'], 400);
+        }
+
+        return response()->json($reports, 200);
+    }
+    public function deleteReport(int $id)
+    {
+        $report = $this->reportPropertyService->findReportById($id);
+        
+        if (!$report) {
+            return response()->json(['error' => 'Report not found'], 400);
+        }
+
+        $this->reportPropertyService->deleteReport($report);
+
+        return response()->json(['message' => 'Report deleted successfully', 'data' => new ReportPropertyResource($report)], 200);
+    }
+    public function deleteProperty(int $id)
+    {
+        $report = $this->reportPropertyService->findReportById($id);
+        
+        if (!$report) {
+            return response()->json(['error' => 'Report not found'], 400);
+        }
+
+        $this->reportPropertyService->deletePropertyAndReport($report);
+
+        return response()->json(['message' => 'Property and report deleted successfully'], 200);
     }
     public function store(CreateReportPropertyRequest $request)
     {
-        $report = ReportProperty::create($request->validated());
+        $report = $this->reportPropertyService->createReport($request->validated());
+
         return response()->json(['message' => 'Report created successfully', 'data' => new ReportPropertyResource($report)], 201);
     }
 }
