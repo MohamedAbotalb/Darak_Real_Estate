@@ -26,23 +26,23 @@ const propertiesSliceSearch = createSlice({
   initialState: {
     data: [],
     status: 'idle',
-    error: null, // Add an error field to store fetch errors
+    error: null,
   },
-  reducers: {}, // Add reducers if needed
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchProperties.pending, (state) => {
         state.status = 'loading';
-        state.error = null; // Reset error state on pending
+        state.error = null;
       })
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
-        state.error = null; // Reset error state on success
+        state.error = null;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // Store the error message
+        state.error = action.error.message;
       });
   },
 });

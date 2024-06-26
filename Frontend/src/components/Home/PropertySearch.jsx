@@ -19,7 +19,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: theme.spacing(2), // Adjust the gap between items if needed
+  gap: theme.spacing(2),
   flexWrap: 'wrap',
   maxWidth: '800px',
   margin: '0 auto',
@@ -27,14 +27,14 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 
 const SearchFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: '200px',
-  marginBottom: theme.spacing(1), // Adjust margin bottom as needed
-  marginRight: theme.spacing(1), // Adjust margin right as needed
+  marginBottom: theme.spacing(1),
+  marginRight: theme.spacing(1),
 }));
 
 const SearchButton = styled(Button)(({ theme }) => ({
   minWidth: '200px',
   height: '56px',
-  flex: '0 0 auto', // Ensure button doesn't grow
+  flex: '0 0 auto',
 }));
 
 function PropertySearch() {

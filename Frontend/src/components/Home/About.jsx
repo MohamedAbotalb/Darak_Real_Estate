@@ -24,8 +24,10 @@ const AboutUs = () => {
             />
           </Typography>
           <Typography variant="body1" paragraph>
-            Labore proident nisi fugiat nostrud sint mollit aliqua ipsum ad veniam cupidatat ullamco ullamco et.
-            Aliqua tempor do consectetur reprehenderit Lorem aliqua commodo occaecat deserunt. Do eiusmod incididunt.
+            Labore proident nisi fugiat nostrud sint mollit aliqua ipsum ad
+            veniam cupidatat ullamco ullamco et. Aliqua tempor do consectetur
+            reprehenderit Lorem aliqua commodo occaecat deserunt. Do eiusmod
+            incididunt.
           </Typography>
           <Button variant="contained" color="primary">
             Learn more

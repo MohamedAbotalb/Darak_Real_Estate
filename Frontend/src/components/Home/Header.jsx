@@ -22,7 +22,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false); // State for drawer open/close
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 

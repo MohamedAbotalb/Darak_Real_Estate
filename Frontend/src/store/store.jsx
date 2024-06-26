@@ -11,7 +11,7 @@ import categoriesReducer from './categoriesSlice';
 import overviewReducer from './overviewSlice';
 import userDetailsReducer from './userDetailsSlice';
 import amenitiesReducer from './amenitiesSlice';
-import locationsReducer from './locationsSlice'; // Ensure locations slice is imported
+import locationsReducer from './locationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -26,7 +26,7 @@ const reduxStore = configureStore({
     overview: overviewReducer,
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
-    locations: locationsReducer, // Ensure locations slice is added to the store
+    locations: locationsReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

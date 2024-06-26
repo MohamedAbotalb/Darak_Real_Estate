@@ -121,9 +121,9 @@ function PropertyCard({ property }) {
                 left: 0,
                 transform: 'translateY(-50%)',
                 color: 'white',
-                backgroundColor: 'transparent', // Ensure no background color
+                backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', // Remove background on hover
+                  backgroundColor: 'transparent',
                 },
               }}
             >
