@@ -1,17 +1,17 @@
-import axios from '../axiosConfig';
+import axiosInstance from '../axiosConfig';
 
 const fetchAmenities = async () => {
-  const response = await axios.get('/amenities');
+  const response = await axiosInstance.get('/amenities');
   return response.data;
 };
 
 const addAmenity = async (newAmenity) => {
-  const response = await axios.post('/amenities', newAmenity);
+  const response = await axiosInstance.post('/amenities', newAmenity);
   return response.data;
 };
 
 const deleteAmenity = async (amenityId) => {
-  await axios.delete(`/amenities/${amenityId}`);
+  await axiosInstance.delete(`/amenities/${amenityId}`);
   return amenityId;
 };
 

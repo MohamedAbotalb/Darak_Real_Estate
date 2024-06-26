@@ -1,0 +1,45 @@
+/* src/components/Footer.css */
+
+.footer {
+  background-color: #f8f8f8;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer h6 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.footer-links {
+  margin: 20px 0;
+}
+
+.footer-links .MuiIconButton-root {
+  margin: 0 10px;
+  color: #2c3e50;
+}
+
+.subscription {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.subscription-input {
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+.subscribe-button {
+  white-space: nowrap;
+}
+
+.footer-note {
+  margin-top: 20px;
+  color: #888888;
+}

@@ -19,6 +19,7 @@ import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import 'react-toastify/dist/ReactToastify.css';
+import Home from 'pages/Home';
 
 function App() {
   const router = createBrowserRouter(
@@ -36,10 +37,12 @@ function App() {
           <Route path="property-types" element={<PropertyTypes />} />
           <Route path="amenities" element={<Amenities />} />
         </Route>
+        <Route path="homepage" element={<Home />} />
         <Route path="*" element={<NotFoundPage />} />
       </>
     )
   );
+
   return (
     <>
       <RouterProvider router={router} />
