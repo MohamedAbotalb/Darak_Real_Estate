@@ -4,7 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPropertyTypes } from '../store/propertyTypesSlice';
 import { fetchLocations } from '../store/locationsSlice';
 import { fetchProperties } from '../store/propertiesSlice';
-import { Box, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const PropertySearch = () => {
@@ -24,7 +31,13 @@ const PropertySearch = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" gap={2} padding={2}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      gap={2}
+      padding={2}
+    >
       <FormControl variant="outlined" fullWidth>
         <InputLabel>Property Type</InputLabel>
         <Select
