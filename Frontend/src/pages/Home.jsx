@@ -6,7 +6,6 @@ import Header from '../components/Home/Header';
 import PropertySearch from '../components/Home/PropertySearch';
 import PropertyListings from '../components/Home/PropertyListings';
 import About from '../components/Home/About';
-import Footer from '../components/Home/Footer';
 
 const HeroSection = styled(Box)({
   position: 'relative',
@@ -25,7 +24,6 @@ const HeroSection = styled(Box)({
 function Home() {
   return (
     <Box className="home">
-      <Header />
       <HeroSection>
         <Box>
           <Typography variant="h2" component="h1">
@@ -41,7 +39,6 @@ function Home() {
       <PropertyListings type="rent" />
       <PropertyListings type="sell" />
       <About />
-      <Footer />
     </Box>
   );
 }
