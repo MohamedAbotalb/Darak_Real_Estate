@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
-import { fetchProperties } from '../store/propertiesSlice';
-import { fetchCategories } from '../store/categoriesSlice';
+import { fetchProperties } from '../../store/propertiesSlice';
+import { fetchCategories } from '../../store/categoriesSlice';
 import PropertyCard from './PropretyCard';
 import CategoryFilter from './CategoryFilter';
 
