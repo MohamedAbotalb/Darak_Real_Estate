@@ -1,12 +1,12 @@
 // src/pages/Home.jsx
 import React from 'react';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import Header from '../components/Home/Header';
 import PropertySearch from '../components/Home/PropertySearch';
 import PropertyListings from '../components/Home/PropertyListings';
 import About from '../components/Home/About';
 import Footer from '../components/Home/Footer';
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/system';
 
 const HeroSection = styled(Box)({
   position: 'relative',
@@ -22,7 +22,7 @@ const HeroSection = styled(Box)({
   backgroundColor: '#333', // Background color or image can be added here
 });
 
-const Home = () => {
+function Home() {
   return (
     <Box className="home">
       <Header />

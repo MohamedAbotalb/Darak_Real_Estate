@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
-import { fetchLocations } from '../../store/locationsSlice';
-import { fetchProperties } from '../../store/propertiesSlice';
 import {
   Box,
   Button,
@@ -14,6 +11,9 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
+import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
+import { fetchLocations } from '../../store/locationsSlice';
+import { fetchProperties } from '../../store/propertiesSlice';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -37,7 +37,7 @@ const SearchButton = styled(Button)(({ theme }) => ({
   flex: '0 0 auto', // Ensure button doesn't grow
 }));
 
-const PropertySearch = () => {
+function PropertySearch() {
   const dispatch = useDispatch();
   const propertyTypes = useSelector((state) => state.propertyTypes.data || []);
   const locations = useSelector((state) => state.locations.data || []);
@@ -51,6 +51,10 @@ const PropertySearch = () => {
   }, [dispatch]);
 
   const handleSearch = () => {
+    console.log('Before dispatching fetchProperties:');
+    console.log('rentOrSell:', rentOrSell);
+    console.log('propertyType:', propertyType);
+    console.log('locationId:', locationId);
     dispatch(fetchProperties({ propertyType, locationId, rentOrSell }));
   };
 
@@ -117,6 +121,6 @@ const PropertySearch = () => {
       </SearchButton>
     </SearchContainer>
   );
-};
+}
 
 export default PropertySearch;
