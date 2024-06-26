@@ -1,5 +1,6 @@
 // src/store/reduxStore.js
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './authSlice';
 import reportUsersReducer from './reportUsersSlice';
 import reportPropertiesReducer from './reportPropertiesSlice';
 import propertyReducer from './propertySlice';
@@ -14,6 +15,7 @@ import locationsReducer from './locationsSlice'; // Ensure locations slice is im
 
 const reduxStore = configureStore({
   reducer: {
+    auth: authReducer,
     reportUsers: reportUsersReducer,
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
@@ -26,6 +28,11 @@ const reduxStore = configureStore({
     amenities: amenitiesReducer,
     locations: locationsReducer, // Ensure locations slice is added to the store
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default reduxStore;

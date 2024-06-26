@@ -1,4 +1,5 @@
-import axiosInstance from '../axiosConfig';
+// services/userDetails.js
+import axios from '../axiosConfig';
 
 const fetchUsers = async () => {
   const response = await axiosInstance.get('/users');

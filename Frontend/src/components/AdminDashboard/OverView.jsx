@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Container,
+  Box,
   Card,
   CardContent,
   Typography,
@@ -87,7 +87,7 @@ function OverView() {
   }, [status, dispatch]);
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Box sx={{ mt: 4, width: '100%', px: 1 }}>
       {status === 'loading' && <CircularProgress />}
       {status === 'failed' && <Alert severity="error">{error}</Alert>}
       {status === 'succeeded' && (
@@ -97,7 +97,7 @@ function OverView() {
               <Card sx={cardStyles}>
                 {card.icon}
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontSize: 18 }}>
+                  <Typography variant="h6" sx={{ fontSize: 24 }}>
                     {card.title}
                   </Typography>
                   <Typography variant="h4" sx={{ fontSize: 32 }}>
@@ -109,7 +109,7 @@ function OverView() {
           ))}
         </Grid>
       )}
-    </Container>
+    </Box>
   );
 }
 

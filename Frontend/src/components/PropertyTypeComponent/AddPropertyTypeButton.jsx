@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
+import { fetchPropertyTypes } from 'store/propertyTypesSlice';
 import axios from '../../axiosConfig';
 import PropertyTypeModal from './PropertyTypeModal';
-import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
-import 'react-toastify/dist/ReactToastify.css';
 
 function AddPropertyTypeButton() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
@@ -22,7 +21,6 @@ function AddPropertyTypeButton() {
       handleClose();
     } catch (error) {
       toast.error('Failed to add property type.');
-      console.error('Failed to add property type:', error);
     }
   };
 
@@ -45,7 +43,7 @@ function AddPropertyTypeButton() {
         Add New Type
       </Button>
       <PropertyTypeModal
-        open={open}
+        isOpen={isOpen}
         handleClose={handleClose}
         mode="add"
         handleSubmit={handleSubmit}

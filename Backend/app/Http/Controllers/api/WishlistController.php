@@ -4,40 +4,44 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WishlistResource;
-use App\Models\Wishlist;
+use App\Services\WishlistService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
-    public function show(){
+    protected $wishlistService;
 
-        $wishlist = Wishlist::with(['user', 'property'])->where('user_id', Auth::id())->get();
+    public function __construct(WishlistService $wishlistService)
+    {
+        $this->wishlistService = $wishlistService;
+    }
+
+    public function show()
+    {
+        $wishlist = $this->wishlistService->getUserWishlist();
         return response()->json(WishlistResource::collection($wishlist));
     }
-    public function store(Request $request,){
+
+    public function store(Request $request)
+    {
         $request->validate([
             'property_id' => 'required|exists:properties,id',
         ]);
 
         $propertyId = $request->property_id;
 
-        $existingWishlistItem = Wishlist::where('user_id', Auth::id())->where('property_id', $propertyId)->first();
+        $wishlistItem = $this->wishlistService->addToWishlist($propertyId);
 
-        if ($existingWishlistItem) {
+        if (!$wishlistItem) {
             return response()->json(['message' => 'Property already in wishlist'], 200);
         }
 
-        $wishlist = Wishlist::create([
-            'user_id' => Auth::id(),
-            'property_id' => $propertyId,
-        ]);
-
-        return response()->json(['message' => 'Property added to wishlist', 'data' => $wishlist], 200);
+        return response()->json(['message' => 'Property added to wishlist', 'data' => new WishlistResource($wishlistItem)], 200);
     }
-    public function delete($id){
-        $item=Wishlist::find($id);
-        $item->delete();
-        return response()->json(['message'=>'Item deleted successfully']);
+
+    public function delete($id)
+    {
+        $this->wishlistService->removeFromWishlist($id);
+        return response()->json(['message' => 'Item deleted successfully']);
     }
 }
