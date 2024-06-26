@@ -6,8 +6,8 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Dashboard from 'layouts/Dashboard';
-import SharedLayout from 'layouts/SharedLayout';
+import AdminLayout from 'layouts/Dashboard';
+import UserLayout from 'layouts/UserLayout';
 import ReviewList from 'components/ReviewList';
 import ReportUserList from 'components/ReportUserList';
 import ReportPropertyList from 'components/ReportPropertyList';
@@ -28,7 +28,10 @@ function App() {
       <>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<Dashboard />}>
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<Home />} />
+        </Route>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route path="overview" element={<OverView />} />
           <Route path="userdetails" element={<UserDetails />} />
           <Route path="reviews" element={<ReviewList />} />
@@ -37,9 +40,6 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="property-types" element={<PropertyTypes />} />
           <Route path="amenities" element={<Amenities />} />
-        </Route>
-        <Route path="/" element={<SharedLayout />}>
-          <Route index element={<Home />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </>
