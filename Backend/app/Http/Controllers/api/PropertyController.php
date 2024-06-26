@@ -63,7 +63,7 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'user_id', 'location_id']);
+        $filters = $request->only(['property_type', 'listing_type', 'location_id']);
         $properties = $this->propertyService->searchProperties($filters);
 
         if ($properties->isEmpty()) {
