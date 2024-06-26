@@ -7,9 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class AuthController extends Controller
@@ -30,7 +28,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User created successfully',
+                'message'=> "User registered successfully",
             ], 201);
         } 
         catch (\Throwable $th) 
@@ -46,7 +44,6 @@ class AuthController extends Controller
     {
         try
         {
-            
             $user = User::where('email', $request->email)->first();
     
             if (!$user || !Hash::check($request->password, $user->password)) {
@@ -70,6 +67,7 @@ class AuthController extends Controller
             return response()->json([
                 'success'=> true,
                 'message'=> 'User logged in successfully',
+                'user'=> $user,
                 'access_token' => $token,
                 'is_admin' => $isAdmin,
             ]);

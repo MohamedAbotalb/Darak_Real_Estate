@@ -13,15 +13,26 @@ import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyDetails from 'components/PropertyDetails';
 import PropertyTypes from 'pages/PropertyType';
 import NotFound from 'pages/NotFound';
+import RegisterPage from 'pages/Auth/Register';
+import LoginPage from 'pages/Auth/Login';
 import 'react-toastify/dist/ReactToastify.css';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
+import SocialCallback from 'components/Auth/SocialCallback';
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/auth/google/callback">
+          <SocialCallback provider="google" />
+        </Route>
+        <Route path="/auth/facebook/callback">
+          <SocialCallback provider="facebook" />
+        </Route> */}
         <Route path="/" element={<Dashboard />}>
           <Route path="overview" element={<OverView />} />
           <Route path="userdetails" element={<UserDetails />} />
