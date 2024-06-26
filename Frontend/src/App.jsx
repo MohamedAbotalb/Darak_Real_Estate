@@ -20,6 +20,7 @@ import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import 'react-toastify/dist/ReactToastify.css';
 import Home from 'pages/Home';
+import { SharedLayout } from 'layouts/SharedLayout';
 
 function App() {
   const router = createBrowserRouter(
@@ -27,7 +28,7 @@ function App() {
       <>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<Dashboard />}>
+        <Route path="/admin" element={<Dashboard />}>
           <Route path="overview" element={<OverView />} />
           <Route path="userdetails" element={<UserDetails />} />
           <Route path="reviews" element={<ReviewList />} />
@@ -37,7 +38,9 @@ function App() {
           <Route path="property-types" element={<PropertyTypes />} />
           <Route path="amenities" element={<Amenities />} />
         </Route>
-        <Route path="homepage" element={<Home />} />
+        <Route path="/" element={<SharedLayout />}>
+          <Route path="homepage" element={<Home />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </>
     )
