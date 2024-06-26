@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 
-function PropertyTypeModal({ open, handleClose, type, mode, handleSubmit }) {
+function PropertyTypeModal({ isOpen, handleClose, type, mode, handleSubmit }) {
   const [formData, setFormData] = React.useState({
     name: type ? type.name : '',
     description: type ? type.description : '',
@@ -18,7 +19,7 @@ function PropertyTypeModal({ open, handleClose, type, mode, handleSubmit }) {
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={isOpen} onClose={handleClose}>
       <Box
         sx={{
           width: 400,
@@ -41,7 +42,6 @@ function PropertyTypeModal({ open, handleClose, type, mode, handleSubmit }) {
             margin="normal"
             required
           />
-
           <Box sx={{ mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
               {mode === 'edit' ? 'Update' : 'Add'}
@@ -52,5 +52,23 @@ function PropertyTypeModal({ open, handleClose, type, mode, handleSubmit }) {
     </Modal>
   );
 }
+
+PropertyTypeModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  type: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+  }),
+  mode: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
+
+PropertyTypeModal.defaultProps = {
+  type: {
+    name: '',
+    description: '',
+  },
+};
 
 export default PropertyTypeModal;

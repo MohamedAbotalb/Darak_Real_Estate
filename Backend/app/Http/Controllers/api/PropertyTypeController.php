@@ -32,7 +32,7 @@ class PropertyTypeController extends Controller
             return response()->json(['error' => 'Resource not found'], 404);
         }
 
-        return response()->json(new PropertyTypeResource( $propertyType));
+        return response()->json($propertyType);
     }
 
    public function update(Request $request, $slug)

@@ -17,6 +17,11 @@ const reduxStore = configureStore({
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default reduxStore;
