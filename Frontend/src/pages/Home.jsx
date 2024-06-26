@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import React from 'react';
 import Header from '../components/Header';
-import SearchBar from '../components/SearchBar';
+import PropertySearch from 'components/PropertySearch';
 import PropertyListings from '../components/PropertyListings';
 import About from '../components/About';
 import Footer from '../components/Footer';
@@ -18,7 +18,7 @@ function Home() {
             Aliquip fugiat ipsum nostrud ex et eu incididunt quis minim dolore
             excepteur voluptate.
           </p>
-          <SearchBar />
+          <PropertySearch />
         </div>
       </div>
       <PropertyListings type="rent" />

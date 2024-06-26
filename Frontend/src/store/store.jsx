@@ -1,3 +1,4 @@
+// src/store/reduxStore.js
 import { configureStore } from '@reduxjs/toolkit';
 import reportUsersReducer from './reportUsersSlice';
 import reportPropertiesReducer from './reportPropertiesSlice';
@@ -9,6 +10,7 @@ import categoriesReducer from './categoriesSlice';
 import overviewReducer from './overviewSlice';
 import userDetailsReducer from './userDetailsSlice';
 import amenitiesReducer from './amenitiesSlice';
+import locationsReducer from './locationsSlice'; // Ensure locations slice is imported
 
 const reduxStore = configureStore({
   reducer: {
@@ -16,13 +18,14 @@ const reduxStore = configureStore({
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
     propertyTypes: propertyTypesReducer,
-    overview: overviewReducer,
-    userDetails: userDetailsReducer,
-    amenities: amenitiesReducer,
     properties: propertiesReducer,
     wishlist: wishlistReducer,
     categories: categoriesReducer,
+    overview: overviewReducer,
+    userDetails: userDetailsReducer,
+    amenities: amenitiesReducer,
+    locations: locationsReducer, // Ensure locations slice is added to the store
   },
 });
-// 
+
 export default reduxStore;

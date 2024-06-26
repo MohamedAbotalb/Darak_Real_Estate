@@ -10,7 +10,7 @@ export const fetchProperties = createAsyncThunk(
       const url =
         category && category !== 'all'
           ? `http://localhost:8000/api/properties/${endpoint}/${category}`
-          : `http://localhost:8000/api/properties/${endpoint}/1`; 
+          : `http://localhost:8000/api/properties/${endpoint}/1`;
       const response = await axios.get(url);
       console.log(response.data);
 

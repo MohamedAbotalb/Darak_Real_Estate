@@ -1,23 +1,56 @@
-/* eslint-disable no-param-reassign */
+// /* eslint-disable no-param-reassign */
+// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// import axios from '../axiosConfig';
+
+// export const fetchPropertyTypes = createAsyncThunk(
+//   'propertyTypes/fetchPropertyTypes',
+//   async () => {
+//     const response = await axios.get('/property-types');
+//     return response.data;
+//   }
+// );
+
+// export const propertyTypesSlice = createSlice({
+//   name: 'propertyTypes',
+//   initialState: {
+//     propertyTypes: [],
+//     status: 'idle',
+//     error: null,
+//   },
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchPropertyTypes.pending, (state) => {
+//         state.status = 'loading';
+//       })
+//       .addCase(fetchPropertyTypes.fulfilled, (state, action) => {
+//         state.status = 'succeeded';
+//         state.propertyTypes = action.payload;
+//       })
+//       .addCase(fetchPropertyTypes.rejected, (state, action) => {
+//         state.status = 'failed';
+//         state.error = action.error.message;
+//       });
+//   },
+// });
+
+// export default propertyTypesSlice.reducer;
+// src/slices/propertyTypesSlice.js
+// src/slices/propertyTypesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from '../axiosConfig';
+import axios from 'axios';
 
-export const fetchPropertyTypes = createAsyncThunk(
-  'propertyTypes/fetchPropertyTypes',
-  async () => {
-    const response = await axios.get('/property-types');
-    return response.data;
-  }
-);
+export const fetchPropertyTypes = createAsyncThunk('propertyTypes/fetchPropertyTypes', async () => {
+  const response = await axios.get('http://127.0.0.1:8000/api/property-types');
+  return response.data;
+});
 
-export const propertyTypesSlice = createSlice({
+const propertyTypesSlice = createSlice({
   name: 'propertyTypes',
   initialState: {
-    propertyTypes: [],
+    data: [],
     status: 'idle',
-    error: null,
   },
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPropertyTypes.pending, (state) => {
@@ -25,11 +58,10 @@ export const propertyTypesSlice = createSlice({
       })
       .addCase(fetchPropertyTypes.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.propertyTypes = action.payload;
+        state.data = action.payload;
       })
-      .addCase(fetchPropertyTypes.rejected, (state, action) => {
+      .addCase(fetchPropertyTypes.rejected, (state) => {
         state.status = 'failed';
-        state.error = action.error.message;
       });
   },
 });

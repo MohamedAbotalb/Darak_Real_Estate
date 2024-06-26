@@ -1,36 +1,54 @@
 // src/components/Footer.jsx
 import React from 'react';
-import { Typography, TextField, Button } from '@mui/material';
+import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import './Footer.css';
 
 function Footer() {
   return (
-    <div className="footer">
+    <Box className="footer">
       <Typography variant="h6" gutterBottom>
         Real Estate
       </Typography>
-      <Typography variant="body2" paragraph>
-        Real estate can be bought, sold, leased, or rented, and can be a
-        valuable investment opportunity. The value of real estate can be...
+      <Box className="footer-links">
+        <IconButton color="inherit" href="#">
+          <FacebookIcon />
+        </IconButton>
+        <IconButton color="inherit" href="#">
+          <TwitterIcon />
+        </IconButton>
+        <IconButton color="inherit" href="#">
+          <LinkedInIcon />
+        </IconButton>
+        <IconButton color="inherit" href="#">
+          <InstagramIcon />
+        </IconButton>
+      </Box>
+      <Typography variant="body2" gutterBottom>
+        Register now to get updates on promotions.
       </Typography>
-      <div className="footer-links">
-        <Button>Facebook</Button>
-        <Button>Twitter</Button>
-        <Button>LinkedIn</Button>
-        <Button>Instagram</Button>
-      </div>
-      <div className="subscription">
-        <Typography variant="body1">
-          Register now to get updates on promotions.
-        </Typography>
-        <TextField label="Enter Email Address" variant="outlined" />
-        <Button variant="contained" color="primary">
+      <Box className="subscription">
+        <TextField
+          label="Enter Email Address"
+          variant="outlined"
+          size="small"
+          className="subscription-input"
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className="subscribe-button"
+        >
           Subscribe
         </Button>
-      </div>
-      <Typography variant="caption" display="block" gutterBottom>
+      </Box>
+      <Typography variant="body2" className="footer-note">
         All Rights Reserved © 2024 Real Estate
       </Typography>
-    </div>
+    </Box>
   );
 }
 

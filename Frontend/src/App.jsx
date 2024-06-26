@@ -13,15 +13,13 @@ import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyDetails from 'components/PropertyDetails';
 import PropertyTypes from 'pages/PropertyType';
 import NotFound from 'pages/NotFound';
-import 'react-toastify/dist/ReactToastify.css';
 import Home from 'pages/Home';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import PropertyListings from 'components/PropertyListings';
-import Amenities from 'components/AdminDashboard/Amenities';
-import OverView from 'components/AdminDashboard/OverView';
-import UserDetails from 'components/AdminDashboard/UserDetails';
+import 'react-toastify/dist/ReactToastify.css';
+import Wishlist from 'components/Wishlist';
 
 function App() {
   const router = createBrowserRouter(
