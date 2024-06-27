@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function delete($id)
+    public function delete()
     {
-        $user = new UserResource(User::find($id));
-        if (!User::find($id)) {
+        $user=User::find(Auth::id());
+        if (!$user) {
             return response()->json(['error' => 'User not found'], 400);
         }
         $user->delete();
@@ -53,5 +53,9 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Password updated successfully'], 200);
+    }
+    public function show(){
+        $user=User::find(Auth::id());
+        return response()->json(new UserResource($user));
     }
 }

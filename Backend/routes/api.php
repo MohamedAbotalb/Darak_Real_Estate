@@ -44,12 +44,12 @@ Route::group([
     Route::get('logout', [AuthController::class, 'logout']);
 });
 
-Route::prefix('users')->group(function () {
+Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::put('/updatePassword', [UserController::class, 'changePassword'])->middleware('auth:sanctum');
-    Route::put('/updateName', [UserController::class, 'updateName'])->middleware('auth:sanctum');
-    Route::delete('/{id}', [UserController::class, 'delete']);
-
+    Route::get('/details',[UserController::class, 'show']);
+    Route::put('/updatePassword', [UserController::class, 'changePassword']);
+    Route::put('/updateName', [UserController::class, 'updateName']);
+    Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
