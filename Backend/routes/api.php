@@ -51,9 +51,13 @@ Route::group([
     Route::get('logout', [AuthController::class, 'logout']);
 });
 
-Route::prefix('users')->group(function () {
+Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::delete('/{id}', [UserController::class, 'delete']);
+    Route::get('/details',[UserController::class, 'show']);
+    Route::put('/updatePassword', [UserController::class, 'updatePassword']);
+    Route::put('/updateName', [UserController::class, 'updateName']);
+    Route::put('/updatePhone', [UserController::class, 'updatePhone']);
+    Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
