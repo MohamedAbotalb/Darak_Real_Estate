@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'user', 'landlord']);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

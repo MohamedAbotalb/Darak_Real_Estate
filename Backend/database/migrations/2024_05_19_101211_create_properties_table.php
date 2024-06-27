@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->string('description');
+            $table->text('description');
             $table->integer('num_of_rooms');
             $table->integer('num_of_bathrooms');
             $table->float('area');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('availability', ["available", "unavailable"]);
             $table->enum("listing_type", ["renting","selling"]);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
             $table->foreign('property_type_id')->references('id')->on('property_types')->onDelete('cascade');
