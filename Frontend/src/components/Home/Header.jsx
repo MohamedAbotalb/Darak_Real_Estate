@@ -20,6 +20,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from 'store/Auth/authSlice';
@@ -34,7 +35,7 @@ function Header() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
+    const user = secureLocalStorage.getItem('user');
     if (user) {
       setIsLoggedIn(true);
     } else {

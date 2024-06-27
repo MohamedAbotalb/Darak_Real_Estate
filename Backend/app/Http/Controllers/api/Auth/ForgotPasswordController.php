@@ -3,48 +3,24 @@
 namespace App\Http\Controllers\api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Models\User;
 use App\Models\PasswordResetToken;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Mail;
 
 class ForgotPasswordController extends Controller
 {
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(ForgotPasswordRequest $request)
     {
         try
         {
-            // Validate the user email
-            $validateUser = Validator::make($request->all(), [
-                'email' => 'required|string|email',
-            ]);
-    
-            if ($validateUser->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message'=> "Validation error",
-                    'error' => $validateUser->errors(),
-                ], 400);
-            }
-    
             $user = User::where('email', $request->email)->first();
 
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message'=> "User not found with this email",
-                ], 404);
-            }
-
+            // Generate a random token and send it within the frontend url
             $token = Str::random(60);
-            $domain = URL::to("/");
-            $url = $domain . '/api/reset-password?token=' . $token;
-
-            // $url = config('app.frontend_url') . '/reset-password?token=' . $token;
+            $url = config('app.frontend_url') . '/reset-password?token=' . $token;
 
             $data['url'] = $url;
             $data['email'] = $request->email;
