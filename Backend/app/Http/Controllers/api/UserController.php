@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ChangePasswordRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -20,12 +24,22 @@ class UserController extends Controller
     }
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::all();
 
         if ($users->isEmpty()) {
             return response()->json(['message' => 'No users found'], 400);
         }
         return UserResource::collection($users);
-       
     }
+    public function updateName(UpdateUserRequest $request)
+    {
+        $user = User::findOrFail(Auth::id());
+        $user->update($request->validated());
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => new UserResource($user)
+        ], 200);
+    }
+    
 }

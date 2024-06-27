@@ -46,7 +46,10 @@ Route::group([
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::put('/updateName', [UserController::class, 'updateName'])->middleware('auth:sanctum');
+
     Route::delete('/{id}', [UserController::class, 'delete']);
+
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
