@@ -3,31 +3,16 @@
 namespace App\Http\Controllers\api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Models\User;
 use App\Models\PasswordResetToken;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordController extends Controller
 {
-    public function reset(Request $request)
+    public function reset(ResetPasswordRequest $request)
     {
         try {
-            // Validate the reset password request
-            $validator = Validator::make($request->all(), [
-                'token' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation error',
-                    'errors' => $validator->errors(),
-                ], 400);
-            }
-
             // Find the password reset token
             $passwordResetToken = PasswordResetToken::where('token', $request->token)->first();
             
