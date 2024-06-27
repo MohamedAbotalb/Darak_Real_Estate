@@ -19,6 +19,7 @@ import ForbiddenPage from 'pages/Forbidden';
 import RegisterPage from 'pages/Auth/Register';
 import LoginPage from 'pages/Auth/Login';
 import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
+import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
