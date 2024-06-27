@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { login, register } from 'store/Auth/authActions';
+import { login, register, forgetPassword } from 'store/Auth/authActions';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -15,7 +15,7 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      state.loading = false;
+      state.isLoading = false;
       state.user = null;
       state.token = null;
       state.error = null;
@@ -59,6 +59,19 @@ const authSlice = createSlice({
         state.token = action.payload.access_token;
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload.message;
+      })
+      .addCase(forgetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(forgetPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(forgetPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.message;
       });
