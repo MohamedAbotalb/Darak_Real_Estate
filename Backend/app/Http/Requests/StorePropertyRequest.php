@@ -36,7 +36,7 @@ class StorePropertyRequest extends FormRequest
             'street' => 'required|string|max:255',
             'amenities.*' => 'exists:amenities,id',
             'images' => 'required|array',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,jfif|max:2048',
         ];
     }
 }

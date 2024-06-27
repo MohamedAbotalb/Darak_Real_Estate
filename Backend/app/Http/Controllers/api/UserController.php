@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ChangeAvatarRequest;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\ChangePhoneNumberRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -10,13 +11,15 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function delete()
     {
-        $user=User::find(Auth::id());
+        $user = User::find(Auth::id());
         if (!$user) {
             return response()->json(['error' => 'User not found'], 400);
         }
@@ -63,8 +66,28 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Phone number updated successfully', 'user' => new UserResource($user)], 200);
     }
-    public function show(){
-        $user=User::find(Auth::id());
+    public function show()
+    {
+        $user = User::find(Auth::id());
         return response()->json(new UserResource($user));
+    }
+    public function updateAvatar(ChangeAvatarRequest $request)
+    {
+        $user = User::find(auth()->id());
+
+        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+            if ($user->avatar && File::exists(public_path($user->avatar))) {
+                File::delete(public_path($user->avatar));
+            }
+
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $fileName = time() . '_' . uniqid() . '.' . $extension;
+            $request->file('avatar')->move(public_path('images/avatars'), $fileName);
+
+            $user->avatar = 'images/avatars/' . $fileName;
+            $user->save();
+        }
+
+        return response()->json(['message' => 'Avatar updated successfully', 'user' => new UserResource($user)], 200);
     }
 }

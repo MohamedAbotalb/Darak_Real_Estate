@@ -22,7 +22,7 @@ class ChangeAvatarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,jfif|max:2048',
         ];
     }
     public function messages()
@@ -30,7 +30,7 @@ class ChangeAvatarRequest extends FormRequest
         return [
             'avatar.required' => 'The avatar image is required.',
             'avatar.image' => 'The file must be an image.',
-            'avatar.mimes' => 'The avatar must be a file of type: jpeg, png, jpg, gif.',
+            'avatar.mimes' => 'The avatar must be a file of type: jpeg, png, jpg, gif,jfif.',
             'avatar.max' => 'The avatar must not be greater than 2MB.',
         ];
     }

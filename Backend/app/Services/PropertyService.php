@@ -55,7 +55,7 @@ class PropertyService
                     $image->move(public_path('images/properties'), $imageName);
                     PropertyImage::create([
                         'property_id' => $property->id,
-                        'image' => $imageName,
+                        'image' => 'images/properties/'. $imageName,
                     ]);
                 }
             }
