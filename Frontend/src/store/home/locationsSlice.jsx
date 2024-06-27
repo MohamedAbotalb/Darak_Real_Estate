@@ -6,11 +6,13 @@ export const fetchLocations = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/properties');
+      console.log('API Response for Locations:', response.data);
       return response.data.map((property) => ({
         id: property.location.id,
         city: property.location.city,
       }));
     } catch (error) {
+      console.error('Error fetching locations:', error);
       throw Error('Failed to fetch locations');
     }
   }
@@ -21,23 +23,23 @@ const locationsSlice = createSlice({
   initialState: {
     data: [],
     status: 'idle',
-    error: null, // Add an error field to store fetch errors
+    error: null,
   },
-  reducers: {}, // Add reducers if needed
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchLocations.pending, (state) => {
         state.status = 'loading';
-        state.error = null; // Reset error state on pending
+        state.error = null;
       })
       .addCase(fetchLocations.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
-        state.error = null; // Reset error state on success
+        state.error = null;
       })
       .addCase(fetchLocations.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // Store the error message
+        state.error = action.error.message;
       });
   },
 });

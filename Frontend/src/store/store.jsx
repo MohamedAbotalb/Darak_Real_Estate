@@ -5,13 +5,14 @@ import reportUsersReducer from './reportUsersSlice';
 import reportPropertiesReducer from './reportPropertiesSlice';
 import propertyReducer from './propertySlice';
 import propertyTypesReducer from './propertyTypesSlice';
-import propertiesReducer from './propertiesSlice';
+import propertyTypeReducer from './home/propertyTypeSlice';
+import propertiesReducer from './home/propertiesSlice';
 import wishlistReducer from './wishlistSlice';
-import categoriesReducer from './categoriesSlice';
+import categoriesReducer from './home/categoriesSlice';
 import overviewReducer from './overviewSlice';
 import userDetailsReducer from './userDetailsSlice';
 import amenitiesReducer from './amenitiesSlice';
-import locationsReducer from './locationsSlice'; // Ensure locations slice is imported
+import locationsReducer from './home/locationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -20,13 +21,14 @@ const reduxStore = configureStore({
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
     propertyTypes: propertyTypesReducer,
+    propertyType: propertyTypeReducer,
     properties: propertiesReducer,
     wishlist: wishlistReducer,
     categories: categoriesReducer,
     overview: overviewReducer,
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
-    locations: locationsReducer, // Ensure locations slice is added to the store
+    locations: locationsReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
