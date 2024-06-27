@@ -1,3 +1,4 @@
+import secureLocalStorage from 'react-secure-storage';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   login,
@@ -9,8 +10,8 @@ import {
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    token: localStorage.getItem('token') || null,
+    user: JSON.parse(secureLocalStorage.getItem('user')) || null,
+    token: secureLocalStorage.getItem('token') || null,
     isAdmin: false,
     isLoading: false,
     error: null,
@@ -18,8 +19,8 @@ const authSlice = createSlice({
   },
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      secureLocalStorage.removeItem('token');
+      secureLocalStorage.removeItem('user');
       state.isLoading = false;
       state.user = null;
       state.token = null;

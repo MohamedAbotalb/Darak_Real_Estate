@@ -1,3 +1,4 @@
+import secureLocalStorage from 'react-secure-storage';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   registerApi,
@@ -23,8 +24,8 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
     const response = await loginApi(data);
 
     // store user's token and data in local storage
-    localStorage.setItem('token', response.data.access_token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+    secureLocalStorage.setItem('token', response.data.access_token);
+    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
