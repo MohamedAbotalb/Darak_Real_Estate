@@ -89,7 +89,7 @@ class AuthController extends Controller
             return response()->json([
                 'success'=> true,
                 'message'=> 'Profile Information',
-                'data' => $userData,
+                'user' => $userData,
             ], 200);
         }
         catch (\Throwable $th) 
