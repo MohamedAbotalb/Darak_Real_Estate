@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTourRequest;
+use App\Http\Requests\Tours\StoreTourRequest;
 use App\Http\Resources\TourResource;
 use App\Models\Notification;
 use App\Models\Tour;

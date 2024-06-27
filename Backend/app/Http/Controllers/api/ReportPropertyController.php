@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateReportPropertyRequest;
+use App\Http\Requests\Reports\CreateReportPropertyRequest;
 use App\Http\Resources\ReportPropertyResource;
 use App\Services\ReportPropertyService;
 

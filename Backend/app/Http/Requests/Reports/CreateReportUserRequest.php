@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Reports;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateReportPropertyRequest extends FormRequest
+class CreateReportUserRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,7 +15,7 @@ class CreateReportPropertyRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'property_id' => 'required|exists:properties,id',
+            'landlord_id' => 'required|exists:users,id',
             'content' => 'required|string|max:1000',
         ];
     }
