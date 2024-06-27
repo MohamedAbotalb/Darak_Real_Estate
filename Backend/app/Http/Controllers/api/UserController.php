@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
+use App\Http\Requests\User\ChangePhoneNumberRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -41,9 +42,9 @@ class UserController extends Controller
             'user' => new UserResource($user)
         ], 200);
     }
-    public function changePassword(ChangePasswordRequest $request)
+    public function updatePassword(ChangePasswordRequest $request)
     {
-        $user = Auth::user();
+        $user = User::find(Auth::id());
 
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json(['error' => 'Current password is incorrect'], 400);
@@ -53,6 +54,14 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Password updated successfully'], 200);
+    }
+    public function updatePhone(ChangePhoneNumberRequest $request)
+    {
+        $user = User::find(Auth::id());
+        $user->phone_number = '+2' . $request->phone_number;
+        $user->save();
+
+        return response()->json(['message' => 'Phone number updated successfully', 'user' => new UserResource($user)], 200);
     }
     public function show(){
         $user=User::find(Auth::id());

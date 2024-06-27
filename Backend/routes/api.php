@@ -47,8 +47,9 @@ Route::group([
 Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/details',[UserController::class, 'show']);
-    Route::put('/updatePassword', [UserController::class, 'changePassword']);
+    Route::put('/updatePassword', [UserController::class, 'updatePassword']);
     Route::put('/updateName', [UserController::class, 'updateName']);
+    Route::put('/updatePhone', [UserController::class, 'updatePhone']);
     Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
