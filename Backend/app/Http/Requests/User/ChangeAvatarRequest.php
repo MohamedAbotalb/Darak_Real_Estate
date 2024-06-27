@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChangePhoneNumberRequest extends FormRequest
+class ChangeAvatarRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,16 @@ class ChangePhoneNumberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone_number' => 'required|string|regex:/^01[0125][0-9]{8}$/',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'avatar.required' => 'The avatar image is required.',
+            'avatar.image' => 'The file must be an image.',
+            'avatar.mimes' => 'The avatar must be a file of type: jpeg, png, jpg, gif.',
+            'avatar.max' => 'The avatar must not be greater than 2MB.',
         ];
     }
 }
