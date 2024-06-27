@@ -23,7 +23,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import { addToWishlist, removeFromWishlist } from '../../store/wishlistSlice';
+import { addToWishlist, removeFromWishlist } from 'store/wishlistSlice';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 

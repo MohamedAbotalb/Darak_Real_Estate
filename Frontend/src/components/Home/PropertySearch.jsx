@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
-import { fetchPropertyTypes } from '../../store/home/propertyTypeSlice';
-import { fetchLocations } from '../../store/home/locationsSlice';
-import { fetchProperties } from '../../store/home/propertiesSliceSearch';
+import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
+import { fetchLocations } from 'store/home/locationsSlice';
+import { fetchProperties } from 'store/home/propertiesSliceSearch';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
