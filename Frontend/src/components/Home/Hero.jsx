@@ -1,8 +1,8 @@
 import React from 'react';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Box, Typography } from '@mui/material';
 import PropertySearch from 'components/Home/PropertySearch';
+import { Carousel } from 'react-responsive-carousel';
 
 function Hero() {
   return (
