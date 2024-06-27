@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchWishlist } from 'store/wishlistSlice';
+import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from './PropretyCard';
 
 function Wishlist() {

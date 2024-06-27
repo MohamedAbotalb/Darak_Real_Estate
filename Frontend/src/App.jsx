@@ -23,6 +23,7 @@ import UserDetails from 'components/AdminDashboard/UserDetails';
 import Home from 'pages/Home';
 import ProtectedRoute from 'ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
+import Wishlist from 'components/Home/Wishlist';
 
 function App() {
   const router = createBrowserRouter(
@@ -33,6 +34,7 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
+          <Route path="wishlist" element={<Wishlist />} />
         </Route>
         {/* authenticated admin dashboard routes */}
         <Route

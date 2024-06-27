@@ -16,7 +16,6 @@ export const fetchPropertyTypes = createAsyncThunk(
     }
   }
 );
-console.log('ranaf', fetchPropertyTypes);
 
 const propertyTypeSlice = createSlice({
   name: 'propertyTypes',
