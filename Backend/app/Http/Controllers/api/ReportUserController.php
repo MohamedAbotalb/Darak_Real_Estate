@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateReportUserRequest;
+use App\Http\Requests\Reports\CreateReportUserRequest;
 use App\Http\Resources\ReportUserResource;
 use App\Services\ReportUserService;
 use Illuminate\Http\JsonResponse;

@@ -13,7 +13,11 @@ export const addProperty = createAsyncThunk(
   'property/addProperty',
   async (propertyData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/properties', propertyData);
+      const response = await axios.post('/properties', propertyData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message || error.message);

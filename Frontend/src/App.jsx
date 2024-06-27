@@ -23,7 +23,8 @@ import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
-import Home from 'pages/Home';
+import HomePage from 'pages/Home';
+import AddPropertyPage from 'pages/AddProperty';
 import ProtectedRoute from 'ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -36,9 +37,10 @@ function App() {
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<HomePage />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
+          <Route path="add-property" element={<AddPropertyPage />} />
         </Route>
         {/* authenticated admin dashboard routes */}
         <Route

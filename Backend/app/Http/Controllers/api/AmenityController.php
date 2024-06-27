@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AmenityRequest;
+use App\Http\Requests\Amenities\AmenityRequest;
 use App\Http\Resources\AmenityResource;
 use App\Models\Amenity;
 use Illuminate\Http\Request;

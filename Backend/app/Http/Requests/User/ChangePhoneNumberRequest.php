@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTourRequest extends FormRequest
+class ChangePhoneNumberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,7 @@ class StoreTourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'property_id' => 'required|exists:properties,id',
-            'status' => 'required|in:pending,approved,declined',
-            'dates' => 'required|array',
-            'dates.*' => 'required|date_format:Y-m-d H:i:s',
+            'phone_number' => 'required|string|regex:/^01[0125][0-9]{8}$/',
         ];
     }
 }
