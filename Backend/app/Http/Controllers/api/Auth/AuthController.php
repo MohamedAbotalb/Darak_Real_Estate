@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,7 @@ class AuthController extends Controller
     {
         try 
         {
-            $user = User::create([
+            User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
@@ -60,16 +61,12 @@ class AuthController extends Controller
             $expiration = Carbon::now()->addDay();
             $tokenResult->accessToken->expires_at = $expiration;
             $tokenResult->accessToken->save();
-
-            // check if the user is admin or not
-            $isAdmin = $user->role === 'admin';
     
             return response()->json([
                 'success'=> true,
                 'message'=> 'User logged in successfully',
-                'user'=> $user,
+                'user'=> new UserResource($user),
                 'access_token' => $token,
-                'is_admin' => $isAdmin,
             ]);
         }
         catch (\Throwable $th) 
@@ -89,7 +86,7 @@ class AuthController extends Controller
             return response()->json([
                 'success'=> true,
                 'message'=> 'Profile Information',
-                'user' => $userData,
+                'user' => new UserResource($userData),
             ], 200);
         }
         catch (\Throwable $th) 
