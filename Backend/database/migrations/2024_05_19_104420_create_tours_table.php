@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('property_id');
             $table->enum('status',['pending','approved','declined']);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');

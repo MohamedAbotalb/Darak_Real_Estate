@@ -1,4 +1,3 @@
-// propertiesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -23,11 +22,9 @@ export const fetchProperties = createAsyncThunk(
   }
 );
 
-// propertiesSlice.js
-
 const initialState = {
-  rent: [], // Initialize as empty array
-  sell: [], // Initialize as empty array
+  rent: [],
+  sell: [],
   status: 'idle',
   error: null,
 };
@@ -45,7 +42,7 @@ const propertiesSlice = createSlice({
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
         const { type } = action.meta.arg;
-        state[type] = action.payload.properties; // Update state[type] with action.payload.properties
+        state[type] = action.payload.properties;
         state.error = null;
       })
       .addCase(fetchProperties.rejected, (state, action) => {

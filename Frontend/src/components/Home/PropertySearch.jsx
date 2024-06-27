@@ -6,20 +6,19 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel,
   Typography,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
-import { fetchPropertyTypes } from '../../store/propertyTypesSlice';
-import { fetchLocations } from '../../store/locationsSlice';
-import { fetchProperties } from '../../store/propertiesSlice';
+import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
+import { fetchLocations } from 'store/home/locationsSlice';
+import { fetchProperties } from 'store/home/propertiesSliceSearch';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: theme.spacing(2), // Adjust the gap between items if needed
+  gap: theme.spacing(2),
   flexWrap: 'wrap',
   maxWidth: '800px',
   margin: '0 auto',
@@ -27,20 +26,41 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 
 const SearchFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: '200px',
-  marginBottom: theme.spacing(1), // Adjust margin bottom as needed
-  marginRight: theme.spacing(1), // Adjust margin right as needed
+  marginBottom: theme.spacing(1),
+  marginRight: theme.spacing(1),
+  '& .MuiInputBase-root': {
+    backgroundColor: '#fff',
+    color: '#000',
+    height: '56px',
+  },
 }));
 
 const SearchButton = styled(Button)(({ theme }) => ({
-  minWidth: '200px',
+  minWidth: '56px',
   height: '56px',
-  flex: '0 0 auto', // Ensure button doesn't grow
+  padding: 0,
+  flex: '0 0 auto',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  '& .MuiButton-startIcon': {
+    margin: 0,
+  },
+}));
+
+const CustomTypography = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
 }));
 
 function PropertySearch() {
   const dispatch = useDispatch();
   const propertyTypes = useSelector((state) => state.propertyTypes.data || []);
   const locations = useSelector((state) => state.locations.data || []);
+  const locationsStatus = useSelector((state) => state.locations.status);
+  const propertyTypesStatus = useSelector(
+    (state) => state.propertyTypes.status
+  );
+
   const [rentOrSell, setRentOrSell] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [locationId, setLocationId] = useState('');
@@ -51,24 +71,21 @@ function PropertySearch() {
   }, [dispatch]);
 
   const handleSearch = () => {
-    console.log('Before dispatching fetchProperties:');
-    console.log('rentOrSell:', rentOrSell);
-    console.log('propertyType:', propertyType);
-    console.log('locationId:', locationId);
-    dispatch(fetchProperties({ propertyType, locationId, rentOrSell }));
+    dispatch(
+      fetchProperties({ propertyType, locationId, listingType: rentOrSell })
+    );
   };
 
   return (
     <SearchContainer>
       <SearchFormControl variant="outlined">
-        <InputLabel>Rent, Sell</InputLabel>
         <Select
           value={rentOrSell}
           onChange={(e) => setRentOrSell(e.target.value)}
-          label="Rent, Sell"
+          displayEmpty
         >
-          <MenuItem value="">
-            <em>None</em>
+          <MenuItem value="" disabled>
+            <em>Rent, Sell</em>
           </MenuItem>
           <MenuItem value="rent">Rent</MenuItem>
           <MenuItem value="sell">Sell</MenuItem>
@@ -76,14 +93,13 @@ function PropertySearch() {
       </SearchFormControl>
 
       <SearchFormControl variant="outlined">
-        <InputLabel>Location</InputLabel>
         <Select
           value={locationId}
           onChange={(e) => setLocationId(e.target.value)}
-          label="Location"
+          displayEmpty
         >
-          <MenuItem value="">
-            <em>None</em>
+          <MenuItem value="" disabled>
+            <em>Location</em>
           </MenuItem>
           {locations.map((location) => (
             <MenuItem key={location.id} value={location.id}>
@@ -93,15 +109,14 @@ function PropertySearch() {
         </Select>
       </SearchFormControl>
 
-      <SearchFormControl variant="outlined">
-        <InputLabel>Property Type</InputLabel>
+      <SearchFormControl>
         <Select
           value={propertyType}
           onChange={(e) => setPropertyType(e.target.value)}
-          label="Property Type"
+          displayEmpty
         >
-          <MenuItem value="">
-            <em>None</em>
+          <MenuItem value="" disabled>
+            <em>Property Type</em>
           </MenuItem>
           {propertyTypes.map((type) => (
             <MenuItem key={type.id} value={type.id}>
@@ -116,9 +131,14 @@ function PropertySearch() {
         color="primary"
         onClick={handleSearch}
         startIcon={<SearchIcon />}
-      >
-        Search
-      </SearchButton>
+      />
+
+      <CustomTypography variant="body1">
+        {locationsStatus === 'loading' && 'Loading locations...'}
+        {propertyTypesStatus === 'loading' && 'Loading property types...'}
+        {locationsStatus === 'failed' && 'Failed to load locations'}
+        {propertyTypesStatus === 'failed' && 'Failed to load property types'}
+      </CustomTypography>
     </SearchContainer>
   );
 }

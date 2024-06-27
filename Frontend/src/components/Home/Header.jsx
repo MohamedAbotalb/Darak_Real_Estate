@@ -22,10 +22,9 @@ import { Link, useNavigate } from 'react-router-dom';
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false); // State for drawer open/close
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
   const navigate = useNavigate();
 
   const handleProfileClick = (event) => {
@@ -50,9 +49,19 @@ function Header() {
   };
 
   return (
-    <AppBar position="static" className="header">
+    <AppBar
+      position="static"
+      className="header"
+      sx={{ backgroundColor: '#2b3d4f' }}
+    >
       <Toolbar>
-        <Typography variant="h6" className="title">
+        <Typography
+          variant="h6"
+          className="title"
+          component={Link}
+          to="/"
+          sx={{ color: '#cdd0d8', textDecoration: 'none' }}
+        >
           RentEZ
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
@@ -62,16 +71,36 @@ function Header() {
           </IconButton>
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button component={Link} to="/" color="inherit">
+            <Button
+              component={Link}
+              to="/"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               Home
             </Button>
-            <Button component={Link} to="/rent" color="inherit">
+            <Button
+              component={Link}
+              to="/rent"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               Rent
             </Button>
-            <Button component={Link} to="/buy" color="inherit">
+            <Button
+              component={Link}
+              to="/buy"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               Buy
             </Button>
-            <Button component={Link} to="/about" color="inherit">
+            <Button
+              component={Link}
+              to="/about"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               About
             </Button>
           </Box>
@@ -100,10 +129,20 @@ function Header() {
           </Box>
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button component={Link} to="/signin" color="inherit">
+            <Button
+              component={Link}
+              to="/signin"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               Sign In
             </Button>
-            <Button component={Link} to="/signup" color="inherit">
+            <Button
+              component={Link}
+              to="/signup"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
               Sign Up
             </Button>
           </Box>

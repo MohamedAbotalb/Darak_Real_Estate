@@ -23,7 +23,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import { addToWishlist, removeFromWishlist } from '../../store/wishlistSlice';
+import { addToWishlist, removeFromWishlist } from 'store/wishlistSlice';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -121,9 +121,9 @@ function PropertyCard({ property }) {
                 left: 0,
                 transform: 'translateY(-50%)',
                 color: 'white',
-                backgroundColor: 'transparent', // Ensure no background color
+                backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', // Remove background on hover
+                  backgroundColor: 'transparent',
                 },
               }}
             >

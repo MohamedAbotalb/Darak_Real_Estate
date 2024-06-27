@@ -12,7 +12,7 @@ const CustomButton = styled(Button)(({ active }) => ({
     backgroundColor: active ? '#115293' : '#e0e0e0',
   },
   flex: 1,
-  margin: '0', // Adjust margin to create a slight separation between buttons
+  margin: '0',
   padding: '10px 30px',
   lineHeight: '1.5',
   zIndex: 1,
@@ -25,7 +25,7 @@ const CustomButtonGroup = styled(ButtonGroup)({
   marginBottom: '20px',
   borderRadius: '8px',
   overflow: 'hidden',
-  border: '1px solid #1976d2', // Border around the button group
+  border: '1px solid #1976d2',
   padding: '0',
 });
 
@@ -35,13 +35,13 @@ const Container = styled('div')({
 });
 
 function CategoryFilter({ categories, setCategory, initialCategory }) {
-  const [activeCategory, setActiveCategory] = useState(1); // Default active category to ID 1 (Apartement)
+  const [activeCategory, setActiveCategory] = useState(1);
 
   useEffect(() => {
     if (initialCategory !== undefined && initialCategory !== null) {
       setActiveCategory(initialCategory);
     } else {
-      setActiveCategory(1); // Fallback to default if initialCategory is not provided
+      setActiveCategory(1);
     }
   }, [initialCategory]);
 

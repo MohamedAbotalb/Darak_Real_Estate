@@ -4,13 +4,14 @@ import reportUsersReducer from 'store/reportUsersSlice';
 import reportPropertiesReducer from 'store/reportPropertiesSlice';
 import propertyReducer from 'store/propertySlice';
 import propertyTypesReducer from 'store/propertyTypesSlice';
-import propertiesReducer from 'store/propertiesSlice';
+import propertyTypeReducer from 'store/home/propertyTypeSlice';
+import propertiesReducer from 'store/home/propertiesSlice';
 import wishlistReducer from 'store/wishlistSlice';
-import categoriesReducer from 'store/categoriesSlice';
+import categoriesReducer from 'store/home/categoriesSlice';
 import overviewReducer from 'store/overviewSlice';
 import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
-import locationsReducer from 'store/locationsSlice';
+import locationsReducer from 'store/home/locationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ const reduxStore = configureStore({
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
     propertyTypes: propertyTypesReducer,
+    propertyType: propertyTypeReducer,
     properties: propertiesReducer,
     wishlist: wishlistReducer,
     categories: categoriesReducer,

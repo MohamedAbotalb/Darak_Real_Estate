@@ -109,6 +109,9 @@ Route::get('reviews', [ReviewController::class, 'show']);
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
 });
+Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);
+Route::post('/tours/{id}/decline', [TourController::class, 'declineTour']);
+
 // Admin Dashboard Routes
 Route::group([
     'middleware'=> ['auth:sanctum', 'checkTokenExpiry', 'admin']
@@ -118,3 +121,5 @@ Route::group([
     });
 
 });
+
+
