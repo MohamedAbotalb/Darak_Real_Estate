@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -14,10 +14,15 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Badge,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from 'store/Auth/authSlice';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,6 +31,16 @@ function Header() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,6 +59,7 @@ function Header() {
   };
 
   const handleLogout = () => {
+    dispatch(logout());
     setIsLoggedIn(false);
     navigate('/');
   };
@@ -108,6 +124,14 @@ function Header() {
         <Box sx={{ flexGrow: 1 }} />
         {isLoggedIn ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit" component={Link} to="/wishlist">
+              <FavoriteIcon />
+            </IconButton>
             <IconButton
               edge="end"
               color="inherit"
@@ -131,19 +155,19 @@ function Header() {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button
               component={Link}
-              to="/signin"
+              to="/login"
               color="inherit"
               sx={{ color: '#cdd0d8', textTransform: 'none' }}
             >
-              Sign In
+              Log In
             </Button>
             <Button
               component={Link}
-              to="/signup"
+              to="/register"
               color="inherit"
               sx={{ color: '#cdd0d8', textTransform: 'none' }}
             >
-              Sign Up
+              Register
             </Button>
           </Box>
         )}
@@ -186,18 +210,18 @@ function Header() {
               <ListItem
                 button
                 component={Link}
-                to="/signin"
+                to="/login"
                 onClick={handleDrawerClose}
               >
-                <ListItemText primary="Sign In" />
+                <ListItemText primary="Log In" />
               </ListItem>
               <ListItem
                 button
                 component={Link}
-                to="/signup"
+                to="/register"
                 onClick={handleDrawerClose}
               >
-                <ListItemText primary="Sign Up" />
+                <ListItemText primary="Register" />
               </ListItem>
             </>
           )}
