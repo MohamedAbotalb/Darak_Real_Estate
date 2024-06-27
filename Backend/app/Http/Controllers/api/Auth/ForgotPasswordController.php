@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Models\User;
 use App\Models\PasswordResetToken;
 use Illuminate\Support\Str;
