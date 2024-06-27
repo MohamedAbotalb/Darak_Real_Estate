@@ -46,8 +46,8 @@ Route::group([
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::put('/updatePassword', [UserController::class, 'changePassword'])->middleware('auth:sanctum');
     Route::put('/updateName', [UserController::class, 'updateName'])->middleware('auth:sanctum');
-
     Route::delete('/{id}', [UserController::class, 'delete']);
 
 });
