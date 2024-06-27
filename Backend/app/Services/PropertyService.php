@@ -1,8 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Models\Location;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -33,8 +35,19 @@ class PropertyService
         DB::beginTransaction();
 
         try {
+            $location = Location::firstOrCreate(
+                [
+                    'city' => $data['city'],
+                    'state' => $data['state'],
+                    'street' => $data['street']
+                ],
+                $data
+            );
+            $data['availability'] = 'available';
+            $data['user_id'] =Auth::id();
             $slug = Str::slug($data['title']);
-            $property = Property::create($data + ['slug' => $slug]);
+            $property = Property::create($data + ['slug' => $slug, 'location_id' => $location->id]);
+    
 
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
@@ -50,6 +63,8 @@ class PropertyService
             if (isset($data['amenities'])) {
                 $property->amenities()->attach($data['amenities']);
             }
+
+            $property->load('location', 'propertyType', 'user', 'images', 'amenities');
 
             DB::commit();
             return $property;

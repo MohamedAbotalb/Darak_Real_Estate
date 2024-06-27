@@ -12,4 +12,8 @@ class Location extends Model
     use SoftDeletes;
     protected $fillable = ['city', 'state','street'];
     protected $dates=['deleted_at'];
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
 }
