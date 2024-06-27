@@ -19,10 +19,10 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
-import { login, clearState } from 'store/authSlice';
+import { clearState } from 'store/Auth/authSlice';
+import { login } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import LoginSchema from 'components/Auth/Validation/LoginSchema';
-import SocialButtons from 'components/Auth/SocialButtons';
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -35,8 +35,9 @@ function LoginForm() {
     resolver: yupResolver(LoginSchema),
   });
 
-  const { isLoading, error, successMessage, token, isAdmin, user } =
-    useSelector((state) => state.auth);
+  const { isLoading, error, successMessage, user } = useSelector(
+    (state) => state.auth
+  );
 
   const [showPassword, toggleShowPassword] = useToggle(false);
 
@@ -45,19 +46,30 @@ function LoginForm() {
   };
 
   useEffect(() => {
-    if (token) navigate('/');
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    }
     if (error) {
       toast.error(error, { position: 'top-right' });
     }
 
     if (successMessage) {
       toast.success(successMessage, { position: 'top-right' });
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
 
     return () => {
       dispatch(clearState());
     };
-  }, [error, successMessage, isAdmin, token, user, navigate, dispatch]);
+  }, [error, successMessage, user, navigate, dispatch]);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -128,10 +140,6 @@ function LoginForm() {
         >
           Login
         </Button>
-        <Typography sx={{ my: 3, textAlign: 'center', color: 'gray' }}>
-          OR
-        </Typography>
-        <SocialButtons />
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
           Don&apos;t have an account?{' '}
           <Link

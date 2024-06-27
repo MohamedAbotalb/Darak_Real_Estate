@@ -23,10 +23,10 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
-import { register, clearState } from 'store/authSlice';
+import { clearState } from 'store/Auth/authSlice';
+import { register } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import RegisterSchema from 'components/Auth/Validation/RegisterSchema';
-import SocialButtons from 'components/Auth/SocialButtons';
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -43,14 +43,20 @@ function RegisterForm() {
     },
   });
 
-  const { isLoading, error, token, successMessage } = useSelector(
+  const { isLoading, error, user, successMessage } = useSelector(
     (state) => state.auth
   );
   const [showPassword, toggleShowPassword] = useToggle(false);
   const [showConfirmPassword, toggleShowConfirmPassword] = useToggle(false);
 
   useEffect(() => {
-    if (token) navigate('/');
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    }
     if (error) toast.error(error, { position: 'top-right' });
     if (successMessage) {
       toast.success(successMessage, { position: 'top-right' });
@@ -59,7 +65,7 @@ function RegisterForm() {
     return () => {
       dispatch(clearState());
     };
-  }, [error, successMessage, token, navigate, dispatch]);
+  }, [error, successMessage, user, navigate, dispatch]);
 
   const onSubmit = (data) => {
     const formData = {
@@ -217,10 +223,6 @@ function RegisterForm() {
         >
           Register
         </Button>
-        <Typography sx={{ my: 3, textAlign: 'center', color: 'gray' }}>
-          OR
-        </Typography>
-        <SocialButtons />
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
           Already have an account?{' '}
           <Link

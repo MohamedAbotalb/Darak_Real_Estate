@@ -14,12 +14,14 @@ import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyDetails from 'components/PropertyDetails';
 import PropertyTypes from 'pages/PropertyType';
 import NotFoundPage from 'pages/NotFound';
+import ForbiddenPage from 'pages/Forbidden';
 import RegisterPage from 'pages/Auth/Register';
 import LoginPage from 'pages/Auth/Login';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import Home from 'pages/Home';
+import ProtectedRoute from 'ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -30,17 +32,24 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
+          <Route path="properties/:slug" element={<PropertyDetails />} />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* authenticated admin dashboard routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute element={<AdminLayout />} roles={['admin']} />
+          }
+        >
           <Route path="overview" element={<OverView />} />
           <Route path="userdetails" element={<UserDetails />} />
           <Route path="reviews" element={<ReviewList />} />
           <Route path="report-users" element={<ReportUserList />} />
           <Route path="report-properties" element={<ReportPropertyList />} />
-          <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="property-types" element={<PropertyTypes />} />
           <Route path="amenities" element={<Amenities />} />
         </Route>
+        <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </>
     )

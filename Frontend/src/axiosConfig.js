@@ -26,6 +26,7 @@ axiosInstance.interceptors.request.use(async (config) => {
   const token = getCsrfToken();
   if (token) {
     config.headers['X-CSRF-TOKEN'] = token;
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });

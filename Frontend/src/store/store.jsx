@@ -1,18 +1,17 @@
-// src/store/reduxStore.js
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
-import reportUsersReducer from './reportUsersSlice';
-import reportPropertiesReducer from './reportPropertiesSlice';
-import propertyReducer from './propertySlice';
-import propertyTypesReducer from './propertyTypesSlice';
-import propertyTypeReducer from './home/propertyTypeSlice';
-import propertiesReducer from './home/propertiesSlice';
-import wishlistReducer from './wishlistSlice';
-import categoriesReducer from './home/categoriesSlice';
-import overviewReducer from './overviewSlice';
-import userDetailsReducer from './userDetailsSlice';
-import amenitiesReducer from './amenitiesSlice';
-import locationsReducer from './home/locationsSlice';
+import authReducer from 'store/Auth/authSlice';
+import reportUsersReducer from 'store/reportUsersSlice';
+import reportPropertiesReducer from 'store/reportPropertiesSlice';
+import propertyReducer from 'store/propertySlice';
+import propertyTypesReducer from 'store/propertyTypesSlice';
+import propertyTypeReducer from 'store/home/propertyTypeSlice';
+import propertiesReducer from 'store/home/propertiesSlice';
+import wishlistReducer from 'store/wishlistSlice';
+import categoriesReducer from 'store/home/categoriesSlice';
+import overviewReducer from 'store/overviewSlice';
+import userDetailsReducer from 'store/userDetailsSlice';
+import amenitiesReducer from 'store/amenitiesSlice';
+import locationsReducer from 'store/home/locationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
