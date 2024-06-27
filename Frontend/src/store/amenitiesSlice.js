@@ -9,7 +9,7 @@ export const fetchAmenities = createAsyncThunk(
   'amenities/fetchAmenities',
   async () => {
     const response = await fetchAmenitiesService();
-    return response;
+    return response.data;
   }
 );
 

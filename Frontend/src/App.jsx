@@ -24,6 +24,7 @@ import Home from 'pages/Home';
 import ProtectedRoute from 'ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import Wishlist from 'components/Home/Wishlist';
+import AddProperty from 'pages/AddProperty';
 
 function App() {
   const router = createBrowserRouter(
@@ -51,6 +52,7 @@ function App() {
           <Route path="property-types" element={<PropertyTypes />} />
           <Route path="amenities" element={<Amenities />} />
         </Route>
+        <Route path="add-property" element={<AddProperty />} />
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </>
