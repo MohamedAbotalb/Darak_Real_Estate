@@ -15,6 +15,7 @@ function PropertyListings({ type }) {
   const categoriesStatus = useSelector((state) => state.categories.status);
 
   const [category, setCategory] = useState(null);
+  console.log(category, 'cat', properties.length, propertiesStatus);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -41,7 +42,7 @@ function PropertyListings({ type }) {
     );
   }
 
-  if (propertiesStatus === 'failed' || categoriesStatus === 'failed') {
+  if (categoriesStatus === 'failed') {
     return (
       <Grid
         container
@@ -49,20 +50,7 @@ function PropertyListings({ type }) {
         alignItems="center"
         style={{ minHeight: '100vh' }}
       >
-        <Alert severity="error">Error loading data</Alert>
-      </Grid>
-    );
-  }
-
-  if (!Array.isArray(properties)) {
-    return (
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        style={{ minHeight: '100vh' }}
-      >
-        <Alert severity="error">Error: Properties data is not an array.</Alert>
+        <Alert severity="error">Error loading categories</Alert>
       </Grid>
     );
   }
@@ -77,18 +65,28 @@ function PropertyListings({ type }) {
       >
         Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
       </Typography>
-      <CategoryFilter
-        categories={categories}
-        setCategory={setCategory}
-        initialCategory={category}
-      />
-      <Grid container spacing={3} justifyContent="center">
-        {properties.slice(0, 3).map((property) => (
-          <Grid item xs={12} sm={6} md={4} key={property.id}>
-            <PropertyCard property={property} />
-          </Grid>
-        ))}
-      </Grid>
+      <Box display="flex" justifyContent="center" mb={3}>
+        <CategoryFilter
+          categories={categories}
+          setCategory={setCategory}
+          initialCategory={category}
+        />
+      </Box>
+      {propertiesStatus === 'failed' ? (
+        <Typography variant="body1" align="center">
+          No properties found for the selected category.
+        </Typography>
+      ) : (
+        <Grid container spacing={3} justifyContent="center">
+          {properties.map((property) => (
+            <Grid item xs={12} sm={6} md={4} key={property.id}>
+              <Box display="flex" justifyContent="center">
+                <PropertyCard property={property} />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 }

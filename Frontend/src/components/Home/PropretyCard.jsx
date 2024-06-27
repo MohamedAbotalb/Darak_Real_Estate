@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -8,7 +8,6 @@ import {
   Grid,
   Divider,
   Box,
-  Button,
 } from '@mui/material';
 import {
   Favorite,
@@ -17,27 +16,16 @@ import {
   Bed,
   Bathtub,
   SquareFoot,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
-import { addToWishlist, removeFromWishlist } from 'store/wishlistSlice';
-
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+import { addToWishlist, removeFromWishlist } from 'store/home/wishlistSlice';
+import { Link as RouterLink } from 'react-router-dom';
+import defaultImage from 'assets/images/image1.jpg';
 
 function PropertyCard({ property }) {
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.list);
   const isWishlisted = wishlist.some((item) => item.id === property.id);
-
-  const [expanded, setExpanded] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
 
   const handleWishlistToggle = () => {
     if (isWishlisted) {
@@ -47,29 +35,8 @@ function PropertyCard({ property }) {
     }
   };
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStepChange = (step) => {
-    setActiveStep(step);
-  };
-
   const words = property.description.trim().split(' ');
   const truncatedDescription = words.slice(0, 4).join(' ');
-  const remainingDescription = words.slice(4).join(' ');
-
-  const images = property.images.map((image) => ({
-    id: image.id,
-    label: property.title,
-    imgPath: image.image,
-  }));
-
-  const maxSteps = images.length;
 
   return (
     <Card
@@ -84,75 +51,19 @@ function PropertyCard({ property }) {
       }}
     >
       <Box sx={{ flexGrow: 1, position: 'relative' }}>
-        {images.length > 0 ? (
-          <>
-            <AutoPlaySwipeableViews
-              axis="x"
-              index={activeStep}
-              onChangeIndex={handleStepChange}
-              enableMouseEvents
-            >
-              {images.map((step, index) => (
-                <div key={step.id}>
-                  {Math.abs(activeStep - index) <= 2 ? (
-                    <Box
-                      component="img"
-                      sx={{
-                        height: 255,
-                        display: 'block',
-                        maxWidth: 400,
-                        overflow: 'hidden',
-                        width: '100%',
-                      }}
-                      src={step.imgPath}
-                      alt={step.label}
-                    />
-                  ) : null}
-                </div>
-              ))}
-            </AutoPlaySwipeableViews>
-            <IconButton
-              size="small"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: 0,
-                transform: 'translateY(-50%)',
-                color: 'white',
-                backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent',
-                },
-              }}
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                right: 0,
-                transform: 'translateY(-50%)',
-                color: 'white',
-                backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent',
-                },
-              }}
-            >
-              <KeyboardArrowRight />
-            </IconButton>
-          </>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No images available
-          </Typography>
-        )}
+        <img
+          style={{
+            height: 255,
+            display: 'block',
+            maxWidth: 400,
+            overflow: 'hidden',
+            width: '100%',
+          }}
+          src={
+            property.images.length > 0 ? property.images[0].image : defaultImage
+          }
+          alt={property.title}
+        />
       </Box>
       <CardContent
         sx={{
@@ -169,33 +80,23 @@ function PropertyCard({ property }) {
             {property.price} EGP/ month
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            {expanded ? property.description : truncatedDescription}
-            {!expanded && words.length > 4 && (
-              <Typography
-                component="span"
-                variant="body2"
-                color="primary"
-                sx={{ cursor: 'pointer', ml: 1 }}
-                onClick={toggleExpanded}
+            {truncatedDescription}{' '}
+            {words.length > 4 && (
+              <RouterLink
+                to={`/properties/${property.title}`}
+                style={{ textDecoration: 'none' }}
               >
-                Read More
-              </Typography>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="primary"
+                  sx={{ cursor: 'pointer' }}
+                >
+                  Read More
+                </Typography>
+              </RouterLink>
             )}
           </Typography>
-          {expanded && words.length > 4 && (
-            <Typography variant="body2" color="text.secondary">
-              {remainingDescription}
-              <Typography
-                component="span"
-                variant="body2"
-                color="primary"
-                sx={{ cursor: 'pointer', ml: 1 }}
-                onClick={toggleExpanded}
-              >
-                Read Less
-              </Typography>
-            </Typography>
-          )}
         </div>
         <Divider sx={{ mb: 1, mt: 1 }} />
         <Box
@@ -247,7 +148,6 @@ PropertyCard.propTypes = {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
-    rentOrSell: PropTypes.string.isRequired,
     location_id: PropTypes.string.isRequired,
     num_of_rooms: PropTypes.number.isRequired,
     num_of_bathrooms: PropTypes.number.isRequired,

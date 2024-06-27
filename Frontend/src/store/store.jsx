@@ -6,7 +6,7 @@ import propertyReducer from 'store/propertySlice';
 import propertyTypesReducer from 'store/propertyTypesSlice';
 import propertyTypeReducer from 'store/home/propertyTypeSlice';
 import propertiesReducer from 'store/home/propertiesSlice';
-import wishlistReducer from 'store/wishlistSlice';
+import wishlistReducer from 'store/home/wishlistSlice';
 import categoriesReducer from 'store/home/categoriesSlice';
 import overviewReducer from 'store/overviewSlice';
 import userDetailsReducer from 'store/userDetailsSlice';

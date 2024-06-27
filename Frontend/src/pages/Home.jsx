@@ -1,9 +1,7 @@
 // src/pages/Home.jsx
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Box } from '@mui/material';
 import Hero from 'components/Home/Hero';
-import PropertySearch from '../components/Home/PropertySearch';
 import PropertyListings from '../components/Home/PropertyListings';
 import About from '../components/Home/About';
 
