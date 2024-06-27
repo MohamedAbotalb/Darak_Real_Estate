@@ -12,19 +12,72 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import SendIcon from '@mui/icons-material/Send';
-import './Footer.css';
 
 function Footer() {
   const handleSubscribe = () => {
-    // Add subscribe logic here
     console.log('Subscribing...');
   };
 
   return (
-    <Box className="footer">
+    <Box
+      className="footer"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '20px',
+        backgroundColor: '#2b3d4f',
+        color: '#cdd0d8',
+        '& .footer-content': {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          marginBottom: '20px',
+          textAlign: 'center',
+          color: '#cdd0d8',
+        },
+        '& .footer-links': {
+          display: 'flex',
+          gap: '10px',
+          marginBottom: '10px',
+          justifyContent: 'center',
+          color: '#cdd0d8',
+        },
+        '& .subscription': {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '10px',
+          marginBottom: '20px',
+        },
+        '& .subscription-input': {
+          flex: '1',
+          backgroundColor: '#fff',
+          '&:hover': {
+            backgroundColor: '#fff',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#bdbdbd',
+          },
+        },
+        '& .subscribe-button': {
+          height: '40px',
+          color: '#fff',
+          '&:hover': {
+            backgroundColor: '#1976d2',
+          },
+        },
+        '& .footer-note': {
+          marginTop: '20px',
+          textAlign: 'center',
+          color: '#fff',
+        },
+      }}
+    >
       <Grid container spacing={6} justifyContent="center">
         <Grid item xs={12} sm={6}>
-          <Box>
+          <Box className="footer-content">
             <Typography variant="h6" gutterBottom>
               Real Estate
             </Typography>
@@ -34,7 +87,7 @@ function Footer() {
               natus nulla impedit tempore sapiente ut eos dolore veritatis
               quaerat beatae animi.
             </Typography>
-            <Box display="flex" justifyContent="left" marginBottom={2}>
+            <Box className="footer-links">
               <IconButton color="inherit" href="#">
                 <FacebookIcon />
               </IconButton>
@@ -51,7 +104,7 @@ function Footer() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Box alignItems="center" justifyContent="center">
+          <Box className="subscription">
             <Typography variant="body2" gutterBottom>
               Register now to get updates on promotions.
             </Typography>
@@ -77,12 +130,7 @@ function Footer() {
           </Box>
         </Grid>
       </Grid>
-      <Typography
-        variant="body2"
-        className="footer-note"
-        align="center"
-        style={{ marginTop: '20px' }}
-      >
+      <Typography variant="body2" className="footer-note">
         All Rights Reserved © 2024 Real Estate
       </Typography>
     </Box>

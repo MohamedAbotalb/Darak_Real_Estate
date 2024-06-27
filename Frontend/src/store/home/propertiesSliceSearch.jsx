@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const fetchProperties = createAsyncThunk(
   'properties/fetchProperties',
-  async ({ propertyType, locationId }) => {
+  async ({ propertyType, locationId, listingType }) => {
     try {
       const response = await axios.get(
         'http://127.0.0.1:8000/api/properties/search/filter',
@@ -11,11 +11,14 @@ export const fetchProperties = createAsyncThunk(
           params: {
             property_type: propertyType,
             location_id: locationId,
+            listing_type: listingType,
           },
         }
       );
+      console.log('API Response for Properties:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Error fetching properties:', error);
       throw Error('Failed to fetch properties');
     }
   }

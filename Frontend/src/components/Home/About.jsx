@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Container, Grid } from '@mui/material';
 
-const AboutUs = () => {
+function AboutUs() {
   return (
     <Container sx={{ my: 8 }}>
       <Grid container spacing={4} alignItems="center">
@@ -72,6 +72,6 @@ const AboutUs = () => {
       </Grid>
     </Container>
   );
-};
+}
 
 export default AboutUs;

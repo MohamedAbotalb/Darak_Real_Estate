@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
-import { fetchProperties } from '../../store/propertiesSlice';
-import { fetchCategories } from '../../store/categoriesSlice';
+import { fetchProperties } from '../../store/home/propertiesSlice';
+import { fetchCategories } from '../../store/home/categoriesSlice';
 import PropertyCard from './PropretyCard';
 import CategoryFilter from './CategoryFilter';
 
@@ -69,7 +69,12 @@ function PropertyListings({ type }) {
 
   return (
     <Box sx={{ padding: '20px' }}>
-      <Typography variant="h4" align="center" gutterBottom color="primary">
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ color: '#2b3d4f' }}
+      >
         Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
       </Typography>
       <CategoryFilter
