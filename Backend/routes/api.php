@@ -52,12 +52,12 @@ Route::group([
 
 Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::delete('/', [UserController::class, 'delete']);
     Route::get('/details',[UserController::class, 'show']);
     Route::put('/updatePassword', [UserController::class, 'updatePassword']);
     Route::put('/updateName', [UserController::class, 'updateName']);
     Route::put('/updatePhone', [UserController::class, 'updatePhone']);
     Route::put('/updateAvatar', [UserController::class, 'updateAvatar']);
-    Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
