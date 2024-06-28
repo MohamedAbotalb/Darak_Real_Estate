@@ -1,22 +1,21 @@
 <?php
 
-use App\Http\Controllers\api\Auth\AuthController;
-use App\Http\Controllers\api\Auth\ForgotPasswordController;
-use App\Http\Controllers\api\Auth\ResetPasswordController;
-use App\Http\Controllers\api\NotificationController;
-use App\Http\Controllers\api\PropertyController;
-use App\Http\Controllers\api\ReportUserController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\ReportPropertyController;
-use App\Http\Controllers\api\WishlistController;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\SocialLoginController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\ReportUserController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ReportPropertyController;
+use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\DashboardController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
-use App\Http\Controllers\api\ReviewController;
-use App\Http\Controllers\api\TourController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\TourController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +35,12 @@ Route::post('login', [AuthController::class, 'login']);
 // Forget password routes
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('reset-password', [ResetPasswordController::class, 'reset']);
+
+// Social login routes
+Route::get('/auth/google', [SocialLoginController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback']);
+Route::get('/auth/facebook', [SocialLoginController::class, 'redirectToFacebook']);
+Route::get('/auth/facebook/callback', [SocialLoginController::class, 'handleFacebookCallback']);
 
 Route::group([
     'middleware'=> ['auth:sanctum', 'checkTokenExpiry']

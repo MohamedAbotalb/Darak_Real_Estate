@@ -11,16 +11,14 @@
 
 .main-content {
   flex: 1;
+  width: 100%;
   padding: 20px;
 
   background: #e9ecef;
 }
-.dashboard {
-  display: flex;
-}
 
 .dashboard-logo {
-  width: 50px; /* Adjust the size as needed */
+  width: 50%;
   height: auto;
 }
 
@@ -28,13 +26,13 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 220px;
+  width: 210px;
   height: 100px;
 }
 
 .im2 {
   position: absolute;
   left: 20px;
-  bottom: 20px;
+  bottom: 50px;
   width: 200px;
 }
