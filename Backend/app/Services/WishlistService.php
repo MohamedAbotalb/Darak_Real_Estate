@@ -9,7 +9,7 @@ class WishlistService
 {
     public function getUserWishlist()
     {
-        return Wishlist::with(['user', 'property'])->where('user_id', Auth::id())->get();
+        return Wishlist::with(['user', 'property.location'])->where('user_id', Auth::id())->get();
     }
 
     public function addToWishlist($propertyId)
