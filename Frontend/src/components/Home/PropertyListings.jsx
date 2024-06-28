@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchCategories } from 'store/home/categoriesSlice';
+import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from 'components/Home/PropertyCard';
 import CategoryFilter from 'components/Home/CategoryFilter';
 
@@ -19,6 +20,7 @@ function PropertyListings({ type }) {
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchWishlist());
   }, [dispatch]);
 
   useEffect(() => {
