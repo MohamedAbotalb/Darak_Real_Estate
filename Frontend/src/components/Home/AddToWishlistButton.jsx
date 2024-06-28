@@ -11,25 +11,29 @@ function AddToWishlistButton({ property }) {
 
   useEffect(() => {
     if (property) {
-      const wishlistItem = wishlist.find((item) => item.property && item.property.id === property.id);
+      const wishlistItem = wishlist.find(
+        (item) => item.property && item.property.id === property.id
+      );
       setIsWishlisted(!!wishlistItem);
     }
   }, [wishlist, property]);
 
- const handleWishlistToggle = async () => {
-  if (property) {
-    if (isWishlisted) {
-      const wishlistItem = wishlist.find((item) => item.property && item.property.id === property.id);
-      if (wishlistItem) {
-        dispatch(removeFromWishlist(wishlistItem.id));
-        setIsWishlisted(false);
+  const handleWishlistToggle = async () => {
+    if (property) {
+      if (isWishlisted) {
+        const wishlistItem = wishlist.find(
+          (item) => item.property && item.property.id === property.id
+        );
+        if (wishlistItem) {
+          dispatch(removeFromWishlist(wishlistItem.id));
+          setIsWishlisted(false);
+        }
+      } else {
+        dispatch(addToWishlist(property));
+        setIsWishlisted(true);
       }
-    } else {
-       dispatch(addToWishlist(property));
-      setIsWishlisted(true);
     }
-  }
-};
+  };
 
   return (
     <IconButton onClick={handleWishlistToggle} color="error">
@@ -37,10 +41,10 @@ function AddToWishlistButton({ property }) {
     </IconButton>
   );
 }
-AddToWishlistButton.propTypes = {
-  property: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-  }).isRequired,
-};
+// AddToWishlistButton.propTypes = {
+//   property: PropTypes.shape({
+//     id: PropTypes.string.isRequired,
+//   })
+// };
 
 export default AddToWishlistButton;
