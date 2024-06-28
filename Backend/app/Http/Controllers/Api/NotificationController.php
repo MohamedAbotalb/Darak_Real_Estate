@@ -4,29 +4,32 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\NotificationResource;
-use App\Models\Notification;
-use Illuminate\Http\Request;
+use App\Repositories\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    protected $notificationRepository;
+
+    public function __construct(NotificationRepositoryInterface $notificationRepository)
+    {
+        $this->notificationRepository = $notificationRepository;
+    }
+
     public function showLandlordNotifications()
     {
-        $notifications = Notification::where('landlord_id', Auth::id())
-            ->whereIn('type', ['request'])
-            ->get();
+        $notifications = $this->notificationRepository->getLandlordNotifications(Auth::id());
 
         if ($notifications->isEmpty()) {
             return response()->json(['message' => 'No notifications found for the landlord'], 404);
         }
 
-        return response()->json(['data' =>NotificationResource::collection($notifications)], 200);
+        return response()->json(['data' => NotificationResource::collection($notifications)], 200);
     }
+
     public function showRenterNotifications()
     {
-        $notifications = Notification::where('user_id', Auth::id())
-            ->whereIn('type', ['confirmation', 'cancelation'])
-            ->get();
+        $notifications = $this->notificationRepository->getRenterNotifications(Auth::id());
 
         if ($notifications->isEmpty()) {
             return response()->json(['message' => 'No notifications found for the renter'], 404);
@@ -34,5 +37,4 @@ class NotificationController extends Controller
 
         return response()->json(['data' => NotificationResource::collection($notifications)], 200);
     }
-  
 }

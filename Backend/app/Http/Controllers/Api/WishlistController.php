@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WishlistResource;
-use App\Services\WishlistService;
+use App\Repositories\WishlistRepositoryInterface;
 use Illuminate\Http\Request;
-
 class WishlistController extends Controller
 {
-    protected $wishlistService;
+    protected $wishlistRepository;
 
-    public function __construct(WishlistService $wishlistService)
+    public function __construct(WishlistRepositoryInterface $wishlistRepository)
     {
-        $this->wishlistService = $wishlistService;
+        $this->wishlistRepository = $wishlistRepository;
     }
 
     public function show()
     {
-        $wishlist = $this->wishlistService->getUserWishlist();
+        $userId = auth()->id();
+        $wishlist = $this->wishlistRepository->getUserWishlist($userId);
         return response()->json(WishlistResource::collection($wishlist));
     }
 
@@ -28,9 +28,10 @@ class WishlistController extends Controller
             'property_id' => 'required|exists:properties,id',
         ]);
 
+        $userId = auth()->id();
         $propertyId = $request->property_id;
 
-        $wishlistItem = $this->wishlistService->addToWishlist($propertyId);
+        $wishlistItem = $this->wishlistRepository->addToWishlist($userId, $propertyId);
 
         if (!$wishlistItem) {
             return response()->json(['message' => 'Property already in wishlist'], 200);
@@ -41,7 +42,7 @@ class WishlistController extends Controller
 
     public function delete($id)
     {
-        $this->wishlistService->removeFromWishlist($id);
+        $wishlistItem =$this->wishlistRepository->removeFromWishlist($id);
         return response()->json(['message' => 'Item deleted successfully']);
     }
 }
