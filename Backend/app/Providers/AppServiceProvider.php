@@ -6,6 +6,8 @@ use App\Repositories\NotificationRepository;
 use App\Repositories\NotificationRepositoryInterface;
 use App\Repositories\PropertyRepository;
 use App\Repositories\PropertyRepositoryInterface;
+use App\Repositories\ReportPropertyRepository;
+use App\Repositories\ReportPropertyRepositoryInterface;
 use App\Repositories\TourRepository;
 use App\Repositories\TourRepositoryInterface;
 use App\Repositories\UserRepository;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PropertyRepositoryInterface::class, PropertyRepository::class);
         $this->app->bind(NotificationRepositoryInterface::class, NotificationRepository::class);
         $this->app->bind(TourRepositoryInterface::class, TourRepository::class);
+        $this->app->bind(ReportPropertyRepositoryInterface::class, ReportPropertyRepository::class);
 
     }
 
