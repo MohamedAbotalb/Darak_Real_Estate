@@ -4,38 +4,28 @@ import {
   Card,
   CardContent,
   Typography,
-  IconButton,
-  Grid,
   Divider,
   Box,
+  Grid,
 } from '@mui/material';
-import {
-  Favorite,
-  FavoriteBorder,
-  LocationOn,
-  Bed,
-  Bathtub,
-  SquareFoot,
-} from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToWishlist, removeFromWishlist } from 'store/home/wishlistSlice';
+import { LocationOn, Bed, Bathtub, SquareFoot } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import defaultImage from 'assets/images/image1.jpg';
+import AddToWishlistButton from './AddToWishlistButton';
 
 function PropertyCard({ property }) {
-  const dispatch = useDispatch();
-  const wishlist = useSelector((state) => state.wishlist.list);
-  const isWishlisted = wishlist.some((item) => item.id === property.id);
+  if (!property) {
+    return null;
+  }
 
-  const handleWishlistToggle = () => {
-    if (isWishlisted) {
-      dispatch(removeFromWishlist(property.id));
-    } else {
-      dispatch(addToWishlist(property));
-    }
-  };
+  const locationCity = property.location ? property.location.city : 'Unknown';
 
-  const words = property.description.trim().split(' ');
+  const images = property.images || [];
+  const imageSrc = images.length > 0 ? images[0].image : defaultImage;
+
+  const words = property.description
+    ? property.description.trim().split(' ')
+    : [];
   const truncatedDescription = words.slice(0, 4).join(' ');
 
   return (
@@ -43,7 +33,7 @@ function PropertyCard({ property }) {
       className="property-card"
       sx={{
         maxWidth: 345,
-        mb: 0,
+        mb: 2,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -59,9 +49,7 @@ function PropertyCard({ property }) {
             overflow: 'hidden',
             width: '100%',
           }}
-          src={
-            property.images.length > 0 ? property.images[0].image : defaultImage
-          }
+          src={imageSrc}
           alt={property.title}
         />
       </Box>
@@ -111,15 +99,9 @@ function PropertyCard({ property }) {
             color="text.secondary"
             sx={{ mt: 'auto' }}
           >
-            <LocationOn fontSize="small" /> {property.location.city}
+            <LocationOn fontSize="small" /> {locationCity}
           </Typography>
-          <IconButton
-            onClick={handleWishlistToggle}
-            color="error"
-            sx={{ mt: 'auto' }}
-          >
-            {isWishlisted ? <Favorite /> : <FavoriteBorder />}
-          </IconButton>
+          <AddToWishlistButton property={property} />
         </Box>
         <Grid container spacing={5} sx={{ mt: -3 }}>
           <Grid item>
@@ -152,16 +134,16 @@ PropertyCard.propTypes = {
     num_of_rooms: PropTypes.number.isRequired,
     num_of_bathrooms: PropTypes.number.isRequired,
     area: PropTypes.number.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     location: PropTypes.shape({
       city: PropTypes.string.isRequired,
-    }).isRequired,
+    }),
     images: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
         image: PropTypes.string.isRequired,
       })
-    ).isRequired,
+    ),
   }).isRequired,
 };
 

@@ -64,7 +64,7 @@ function PropertySearch() {
   const [rentOrSell, setRentOrSell] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [locationId, setLocationId] = useState('');
-
+  console.log(locationId);
   useEffect(() => {
     dispatch(fetchPropertyTypes());
     dispatch(fetchLocations());
