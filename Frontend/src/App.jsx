@@ -12,18 +12,21 @@ import ReviewList from 'components/ReviewList';
 import ReportUserList from 'components/ReportUserList';
 import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyDetails from 'components/PropertyDetails';
+import Wishlist from 'components/Home/Wishlist';
 import PropertyTypes from 'pages/PropertyType';
 import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
 import RegisterPage from 'pages/Auth/Register';
 import LoginPage from 'pages/Auth/Login';
+import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
+import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import Amenities from 'components/AdminDashboard/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
-import Home from 'pages/Home';
+import HomePage from 'pages/Home';
+import AddPropertyPage from 'pages/AddProperty';
 import ProtectedRoute from 'ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
-import Wishlist from 'components/Home/Wishlist';
 
 function App() {
   const router = createBrowserRouter(
@@ -31,10 +34,13 @@ function App() {
       <>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forget-password" element={<ForgetPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/" element={<UserLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<HomePage />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
+          <Route path="add-property" element={<AddPropertyPage />} />
         </Route>
         {/* authenticated admin dashboard routes */}
         <Route

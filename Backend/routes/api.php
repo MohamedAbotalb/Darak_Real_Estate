@@ -1,23 +1,21 @@
 <?php
 
-use App\Http\Controllers\api\Auth\AuthController;
-use App\Http\Controllers\api\Auth\ForgotPasswordController;
-use App\Http\Controllers\api\Auth\ResetPasswordController;
-use App\Http\Controllers\api\Auth\SocialLoginController;
-use App\Http\Controllers\api\NotificationController;
-use App\Http\Controllers\api\PropertyController;
-use App\Http\Controllers\api\ReportUserController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\ReportPropertyController;
-use App\Http\Controllers\api\WishlistController;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\SocialLoginController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\ReportUserController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ReportPropertyController;
+use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\DashboardController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
-use App\Http\Controllers\api\ReviewController;
-use App\Http\Controllers\api\TourController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\TourController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,9 +49,14 @@ Route::group([
     Route::get('logout', [AuthController::class, 'logout']);
 });
 
-Route::prefix('users')->group(function () {
+Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
-    Route::delete('/{id}', [UserController::class, 'delete']);
+    Route::get('/details',[UserController::class, 'show']);
+    Route::put('/updatePassword', [UserController::class, 'updatePassword']);
+    Route::put('/updateName', [UserController::class, 'updateName']);
+    Route::put('/updatePhone', [UserController::class, 'updatePhone']);
+    Route::put('/updateAvatar', [UserController::class, 'updateAvatar']);
+    Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
@@ -76,7 +79,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/{slug}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
-    Route::post('/',[PropertyController::class,'store']);
+    Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
 });
 Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
