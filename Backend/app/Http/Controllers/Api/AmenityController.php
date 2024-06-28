@@ -1,29 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Amenities\AmenityRequest;
 use App\Http\Resources\AmenityResource;
-use App\Models\Amenity;
+use App\Repositories\AmenityRepositoryInterface;
 use Illuminate\Http\Request;
 
 class AmenityController extends Controller
 {
+    protected $amenityRepository;
+
+    public function __construct(AmenityRepositoryInterface $amenityRepository)
+    {
+        $this->amenityRepository = $amenityRepository;
+    }
+
     public function index()
     {
-        return AmenityResource::collection(Amenity::all());
+        $amenities = $this->amenityRepository->getAllAmenities();
+        return AmenityResource::collection($amenities);
     }
 
     public function store(AmenityRequest $request)
     {
-        $amenity = Amenity::create($request->validated());
+        $amenity = $this->amenityRepository->createAmenity($request->validated());
         return response()->json(new AmenityResource($amenity), 201);
     }
 
     public function show($slug)
     {
-        $amenity = Amenity::where('slug', $slug)->first();
+        $amenity = $this->amenityRepository->findAmenityBySlug($slug);
 
         if (!$amenity) {
             return response()->json(['error' => 'Amenity not found'], 404);
@@ -32,26 +40,25 @@ class AmenityController extends Controller
         return response()->json(new AmenityResource($amenity));
     }
 
-
     public function update(AmenityRequest $request, $slug)
     {
-        $amenity = Amenity::where('slug', $slug)->first();
+        $amenity = $this->amenityRepository->updateAmenity($slug, $request->validated());
 
         if (!$amenity) {
             return response()->json(['error' => 'Amenity not found'], 404);
         }
-        $amenity->update($request->validated());
+
         return response()->json(new AmenityResource($amenity));
     }
 
     public function destroy($slug)
     {
-        $amenity = Amenity::where('slug', $slug)->first();
+        $deleted = $this->amenityRepository->deleteAmenity($slug);
 
-        if (!$amenity) {
+        if (!$deleted) {
             return response()->json(['error' => 'Amenity not found'], 404);
         }
-        $amenity->delete();
+
         return response()->json(["message" => "Amenity deleted successfully"]);
     }
 }
