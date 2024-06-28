@@ -3,9 +3,14 @@ import axios from 'axios';
 
 export const fetchWishlist = createAsyncThunk(
   'wishlist/fetchWishlist',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
+    const { token } = getState().auth;
     try {
-      const response = await axios.get('http://localhost:8000/api/wishlist');
+      const response = await axios.get('http://localhost:8000/api/wishlist', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -15,11 +20,17 @@ export const fetchWishlist = createAsyncThunk(
 
 export const addToWishlist = createAsyncThunk(
   'wishlist/addToWishlist',
-  async (property, { rejectWithValue }) => {
+  async (property, { rejectWithValue, getState }) => {
+    const { token } = getState().auth;
     try {
       const response = await axios.post(
         'http://127.0.0.1:8000/api/wishlist',
-        property
+        { property_id: property.id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -30,10 +41,16 @@ export const addToWishlist = createAsyncThunk(
 
 export const removeFromWishlist = createAsyncThunk(
   'wishlist/removeFromWishlist',
-  async (propertyId, { rejectWithValue }) => {
+  async (wishlistItemId, { rejectWithValue, getState }) => {
+    const { token } = getState().auth;
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/wishlist/${propertyId}`
+        `http://localhost:8000/api/wishlist/${wishlistItemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

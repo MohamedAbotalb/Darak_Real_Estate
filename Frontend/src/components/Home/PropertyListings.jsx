@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchCategories } from 'store/home/categoriesSlice';
-import PropertyCard from 'components/Home/PropretyCard';
+import PropertyCard from 'components/Home/PropertyCard';
 import CategoryFilter from 'components/Home/CategoryFilter';
 
 function PropertyListings({ type }) {
@@ -13,9 +13,9 @@ function PropertyListings({ type }) {
   const propertiesStatus = useSelector((state) => state.properties.status);
   const categories = useSelector((state) => state.categories.list);
   const categoriesStatus = useSelector((state) => state.categories.status);
-
+  const wishlist = useSelector((state) => state.wishlist.list);
   const [category, setCategory] = useState(null);
-  console.log(category, 'cat', properties.length, propertiesStatus);
+  console.log(wishlist, 'wishlistpropretylistting');
 
   useEffect(() => {
     dispatch(fetchCategories());
