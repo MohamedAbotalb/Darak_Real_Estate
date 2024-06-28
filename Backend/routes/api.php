@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
@@ -111,9 +112,13 @@ Route::get('reviews', [ReviewController::class, 'show']);
 
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
+    Route::get('/', [TourController::class, 'getUserTours']);
+
 });
 Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);
 Route::post('/tours/{id}/decline', [TourController::class, 'declineTour']);
+
+Route::get('locations',[LocationController::class,'index']);
 
 // Admin Dashboard Routes
 Route::group([

@@ -10,6 +10,7 @@ use App\Models\Tour;
 use App\Models\TourDate;
 use App\Services\TourService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TourController extends Controller
 {
@@ -85,5 +86,15 @@ class TourController extends Controller
         ]);
 
         return response()->json(['message' => 'Tour cancelled successfully'], 200);
+    }
+    public function getUserTours()
+    {
+        $tours = Tour::where('user_id', auth()->id())
+            ->with(['user', 'property', 'tourDates'])
+            ->get();
+
+        return response()->json([
+            'tours' => TourResource::collection($tours),
+        ], 200);
     }
 }
