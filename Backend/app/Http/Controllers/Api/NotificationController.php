@@ -37,4 +37,14 @@ class NotificationController extends Controller
 
         return response()->json(['data' => NotificationResource::collection($notifications)], 200);
     }
+    public function deleteNotification($id)
+    {
+        $result = $this->notificationRepository->deleteNotification($id);
+
+        if ($result) {
+            return response()->json(['message' => 'Notification deleted successfully'], 200);
+        } else {
+            return response()->json(['error' => 'Notification not found'], 404);
+        }
+    }
 }

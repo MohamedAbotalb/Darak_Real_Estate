@@ -18,6 +18,8 @@ class PropertyTypeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'properties' => PropertyResource::collection($this->whenLoaded('properties')),
+
         ];
     }
 }

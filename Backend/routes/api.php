@@ -90,6 +90,7 @@ Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])
     Route::get('/landlord',[NotificationController::class,'showLandlordNotifications']);
     Route::get('/renter',[NotificationController::class,'showRenterNotifications']);
     Route::put('/{id}/type',[NotificationController::class,'updateType']);
+    Route::delete('/{id}',[NotificationController::class,'deleteNotification']);
 });
 Route::prefix('wishlist')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
     Route::get('',[WishlistController::class,'show']);

@@ -35,6 +35,7 @@ class TourRepository implements TourRepositoryInterface
                 Notification::create([
                     'user_id' => Auth::id(),
                     'landlord_id' => $landlord_id,
+                    'tour_id' => $tour->id,
                     'message' => 'Tour request for property: ' . $property->title,
                     'type' => 'request',
                     'date' => now(),
@@ -82,6 +83,7 @@ class TourRepository implements TourRepositoryInterface
         Notification::create([
             'user_id' => $tour->user_id,
             'landlord_id' => $property->user_id,
+            'tour_id' => $tour->id,
             'message' => 'Tour request for property ' . $property->title . ' has been approved',
             'type' => 'confirmation',
             'date' => now(),
@@ -108,6 +110,7 @@ class TourRepository implements TourRepositoryInterface
         Notification::create([
             'user_id' => $tour->user_id,
             'landlord_id' => $property->user_id,
+            'tour_id' => $tour->id,
             'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
             'type' => 'cancelation',
             'date' => now(),
