@@ -26,10 +26,10 @@ class PropertyResource extends JsonResource
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
             'location' => new LocationResource($this->whenLoaded('location')),
-            'property_type' => new PropertyTypeResource($this->whenLoaded('property_type')),
+            'property_type' => new PropertyTypeResource($this->whenLoaded('propertyType')),
             'user' => new UserResource($this->whenLoaded('user')),
             'images' => PropertyImageResource::collection($this->images),
-            'amenities' => AmenityResource::collection($this->whenLoaded('amenities'))
+            'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
         ];
     }
 }
