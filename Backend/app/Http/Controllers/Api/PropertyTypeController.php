@@ -3,14 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Resources\PropertyTypeResource;
-use App\Models\PropertyType;
+use App\Repositories\PropertyTypeRepositoryInterface;
+use Illuminate\Http\Request;
+
 class PropertyTypeController extends Controller
 {
+    protected $propertyTypeRepository;
+
+    public function __construct(PropertyTypeRepositoryInterface $propertyTypeRepository)
+    {
+        $this->propertyTypeRepository = $propertyTypeRepository;
+    }
+
     public function index()
     {
-        return response()->json(PropertyTypeResource::collection(PropertyType::all()));
+        $propertyTypes = $this->propertyTypeRepository->getAllPropertyTypes();
+        return response()->json(PropertyTypeResource::collection($propertyTypes));
     }
 
     public function store(Request $request)
@@ -19,25 +28,25 @@ class PropertyTypeController extends Controller
             'name' => 'required|unique:property_types|max:255',
         ]);
 
-        $propertyType = PropertyType::create($request->all());
+        $propertyType = $this->propertyTypeRepository->createPropertyType($request->all());
 
         return response()->json(new PropertyTypeResource($propertyType), 201);
     }
 
     public function show($slug)
     {
-        $propertyType = PropertyType::where('slug', $slug)->with('properties')->first();
+        $propertyType = $this->propertyTypeRepository->findPropertyTypeBySlug($slug);
 
         if (!$propertyType) {
             return response()->json(['error' => 'Resource not found'], 404);
         }
 
-        return response()->json($propertyType);
+        return response()->json(new PropertyTypeResource($propertyType));
     }
 
-   public function update(Request $request, $slug)
+    public function update(Request $request, $slug)
     {
-        $propertyType = PropertyType::where('slug', $slug)->first();
+        $propertyType = $this->propertyTypeRepository->findPropertyTypeBySlug($slug);
 
         if (!$propertyType) {
             return response()->json(['error' => 'Resource not found'], 404);
@@ -47,21 +56,19 @@ class PropertyTypeController extends Controller
             'name' => 'required|unique:property_types,name,' . $propertyType->id . '|max:255',
         ]);
 
-        $propertyType->update($request->all());
+        $updatedPropertyType = $this->propertyTypeRepository->updatePropertyType($slug, $request->all());
 
-        return response()->json(new PropertyTypeResource( $propertyType));
+        return response()->json(new PropertyTypeResource($updatedPropertyType));
     }
 
     public function destroy($slug)
     {
-        $propertyType = PropertyType::where('slug', $slug)->first();
+        $deleted = $this->propertyTypeRepository->deletePropertyType($slug);
 
-        if (!$propertyType) {
-            return response()->json(['error' => 'Resource not found'], 404);
+        if (!$deleted) {
+            return response()->json(['error' => 'property-type not found'], 404);
         }
 
-        $propertyType->delete();
-
-        return response()->json(["message"=>"property-type deleted successfully"], 204);
+        return response()->json(["message" => "property-type deleted successfully"], 204);
     }
 }
