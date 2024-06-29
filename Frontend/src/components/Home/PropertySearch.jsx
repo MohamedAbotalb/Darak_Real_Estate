@@ -7,6 +7,7 @@ import {
   Select,
   FormControl,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
@@ -35,7 +36,7 @@ const SearchFormControl = styled(FormControl)(({ theme }) => ({
   },
 }));
 
-const SearchButton = styled(Button)(({ theme }) => ({
+const SearchButton = styled(Button)(() => ({
   minWidth: '56px',
   height: '56px',
   padding: 0,
@@ -43,9 +44,6 @@ const SearchButton = styled(Button)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  '& .MuiButton-startIcon': {
-    margin: 0,
-  },
 }));
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
@@ -64,7 +62,7 @@ function PropertySearch() {
   const [rentOrSell, setRentOrSell] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [locationId, setLocationId] = useState('');
-  console.log(locationId);
+
   useEffect(() => {
     dispatch(fetchPropertyTypes());
     dispatch(fetchLocations());
@@ -87,51 +85,56 @@ function PropertySearch() {
           <MenuItem value="" disabled>
             <em>Rent, Sell</em>
           </MenuItem>
-          <MenuItem value="rent">Rent</MenuItem>
-          <MenuItem value="sell">Sell</MenuItem>
+          <MenuItem value="renting">Rent</MenuItem>
+          <MenuItem value="selling">Sell</MenuItem>
         </Select>
       </SearchFormControl>
 
       <SearchFormControl variant="outlined">
-        <Select
-          value={locationId}
-          onChange={(e) => setLocationId(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>
-            <em>Location</em>
-          </MenuItem>
-          {locations.map((location) => (
-            <MenuItem key={location.id} value={location.id}>
-              {location.city}
+        {locationsStatus === 'loading' ? (
+          <CircularProgress size={24} />
+        ) : (
+          <Select
+            value={locationId}
+            onChange={(e) => setLocationId(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              <em>Location</em>
             </MenuItem>
-          ))}
-        </Select>
+            {locations.map((location) => (
+              <MenuItem key={location.id} value={location.id}>
+                {location.city}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
       </SearchFormControl>
 
       <SearchFormControl>
-        <Select
-          value={propertyType}
-          onChange={(e) => setPropertyType(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>
-            <em>Property Type</em>
-          </MenuItem>
-          {propertyTypes.map((type) => (
-            <MenuItem key={type.id} value={type.id}>
-              {type.name}
+        {propertyTypesStatus === 'loading' ? (
+          <CircularProgress size={24} />
+        ) : (
+          <Select
+            value={propertyType}
+            onChange={(e) => setPropertyType(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              <em>Property Type</em>
             </MenuItem>
-          ))}
-        </Select>
+            {propertyTypes.map((type) => (
+              <MenuItem key={type.id} value={type.id}>
+                {type.name}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
       </SearchFormControl>
 
-      <SearchButton
-        variant="contained"
-        color="primary"
-        onClick={handleSearch}
-        startIcon={<SearchIcon />}
-      />
+      <SearchButton variant="contained" color="primary" onClick={handleSearch}>
+        <SearchIcon />
+      </SearchButton>
 
       <CustomTypography variant="body1">
         {locationsStatus === 'loading' && 'Loading locations...'}
