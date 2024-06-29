@@ -21,11 +21,16 @@ class TourController extends Controller
     {
         try {
             $tour = $this->tourRepository->createTour($request->validated());
+            if($tour){
+                return response()->json([
+                    'message' => 'Tour created successfully and Notification sent.',
+                    'tour' => new TourResource($tour)
+                ], 201);
+            }else{
+                return response()->json(["message"=>"Tour already created"]);
+            }
 
-            return response()->json([
-                'message' => 'Tour created successfully and Notification sent.',
-                'tour' => new TourResource($tour)
-            ], 201);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to create tour and send notification.',
@@ -42,11 +47,7 @@ class TourController extends Controller
 
         $success = $this->tourRepository->approveTour($id, $request->tour_date);
         if (!$success) {
-            return response()->json(['error' => 'Tour not found'], 404);
-        }
-
-        if (!$success) {
-            return response()->json(['error' => 'Selected tour date not found for this tour'], 404);
+            return response()->json(['error' => 'Tour request already approved'], 404);
         }
 
         return response()->json(['message' => 'Tour approved successfully'], 200);
@@ -56,7 +57,7 @@ class TourController extends Controller
     {
         $success = $this->tourRepository->declineTour($id);
         if (!$success) {
-            return response()->json(['error' => 'Tour not found'], 404);
+            return response()->json(['error' => 'Tour request already declined'], 404);
         }
 
         return response()->json(['message' => 'Tour cancelled successfully'], 200);
