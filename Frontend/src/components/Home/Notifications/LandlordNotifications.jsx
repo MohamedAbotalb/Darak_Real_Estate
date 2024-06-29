@@ -288,12 +288,14 @@ import {
   fetchLandlordNotifications,
   approveDate,
   declineTour,
-} from 'store/notfications/notificationsSlice'; 
+} from 'store/notifications/notificationsSlice'; 
 import {
   Box,
   CircularProgress,
   List,
   ListItem,
+  ListItemAvatar,
+  Avatar,
   ListItemText,
   Button,
   Typography,
@@ -311,7 +313,10 @@ import {
   HighlightOff as DeclineIcon,
 } from '@mui/icons-material';
 
-function LandlordNotifications() {
+// Placeholder image for user profile (replace with actual data if available)
+
+
+const LandlordNotifications = () => {
   const dispatch = useDispatch();
   const { notifications, status, error } = useSelector(
     (state) => state.notifications
@@ -381,26 +386,6 @@ function LandlordNotifications() {
     ? notifications.slice(startIndex, startIndex + notificationsPerPage)
     : [];
 
-  useEffect(() => {
-    if (notifications && notifications.length > 0) {
-      notifications.forEach((notification) => {
-        switch (notification.type) {
-          case 'cancellation':
-            // Handle cancellation type notification
-            break;
-          case 'confirmation':
-            // Handle confirmation type notification
-            break;
-          case 'request':
-            // Handle request type notification
-            break;
-          default:
-            break;
-        }
-      });
-    }
-  }, [notifications]);
-
   if (status === 'loading') {
     return <CircularProgress />;
   }
@@ -429,41 +414,40 @@ function LandlordNotifications() {
                 textAlign: 'left',
                 maxWidth: '600px',
                 margin: '16px auto',
-                backgroundColor: getNotificationBgColor(notification.type),
+                backgroundColor: '#fff',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'flex-start',
+                alignItems: 'stretch', // Stretch items vertically
               }}
+              
             >
-              <ListItemText
-                primary={notification.message}
-                secondary={
-                  <>
-                    {notification.dates && notification.dates.map((date) => (
-                      <span
-                        key={date}
-                        style={{
-                          color:
-                            notification.approvedDate === date
-                              ? 'green'
-                              : 'inherit',
-                          fontWeight:
-                            notification.approvedDate === date
-                              ? 'bold'
-                              : 'normal',
-                        }}
-                      >
-                        {date}
-                        {notification.approvedDate === date &&
-                          ' (Approved)'}
-                        {notification.dates.indexOf(date) <
-                          notification.dates.length - 1 &&
-                          ', '}
-                      </span>
-                    ))}
-                  </>
-                }
+               <div
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  backgroundColor: getNotificationCircleColor(notification.type),
+                  position: 'absolute',
+                  top: '8px',
+                 left: '8px',
+                 bottom:'8px',
+                }}
               />
+              <Box display="flex" alignItems="center" marginBottom="8px">
+                {/* Circle indicator based on notification type */}
+                
+                <ListItemAvatar>
+                  <Avatar alt="User Profile" src={notification.user.avatar} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`${notification.user.first_name} ${notification.user.last_name}`}
+                  secondary={
+                    <Typography variant="body2" color="textSecondary">
+                      {notification.message}
+                    </Typography>
+                  }
+                />
+              </Box>
               {notification.approvedDate && (
                 <Typography
                   variant="body2"
@@ -474,7 +458,7 @@ function LandlordNotifications() {
               )}
               <Box
                 display="flex"
-                justifyContent="space-between"
+                justifyContent="center"
                 width="100%"
                 marginTop="16px"
               >
@@ -484,6 +468,7 @@ function LandlordNotifications() {
                   disabled={notification.type === 'cancellation'}
                   color="error"
                   startIcon={<DeclineIcon />}
+                  style={{ marginRight: '16px' }}
                 >
                   Decline
                 </Button>
@@ -581,10 +566,10 @@ function LandlordNotifications() {
       </Dialog>
     </Box>
   );
-}
+};
 
-// Function to get background color based on notification type
-const getNotificationBgColor = (type) => {
+// Function to get circle color based on notification type
+const getNotificationCircleColor = (type) => {
   switch (type) {
     case 'cancellation':
       return '#FFCCCC'; // Light red for cancellation
@@ -593,7 +578,7 @@ const getNotificationBgColor = (type) => {
     case 'request':
       return '#FFFFCC'; // Light yellow for request
     default:
-      return '#FFFFFF'; // Default white background
+      return '#FFFFFF'; // Default white circle
   }
 };
 

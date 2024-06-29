@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import fetchRenterNotifications from 'store/notfications/notificationsSlice';
+import fetchRenterNotifications from 'store/notifications/notificationsSlice';
 
 function RenterNotifications() {
   const dispatch = useDispatch();
