@@ -8,7 +8,7 @@ class PropertyTypeRepository implements PropertyTypeRepositoryInterface
 {
     public function getAllPropertyTypes()
     {
-        return PropertyType::all();
+        return PropertyType::with('properties')->get();
     }
 
     public function createPropertyType(array $data)
