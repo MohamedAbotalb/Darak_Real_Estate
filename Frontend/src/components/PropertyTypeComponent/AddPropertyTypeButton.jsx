@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { fetchPropertyTypes } from 'store/propertyTypesSlice';
 import axios from 'services/axiosConfig';
-import PropertyTypeModal from './PropertyTypeModal';
+import PropertyTypeModal from 'components/PropertyTypeComponent/PropertyTypeModal';
 
 function AddPropertyTypeButton() {
   const [isOpen, setOpen] = useState(false);

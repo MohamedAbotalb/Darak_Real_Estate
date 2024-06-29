@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { IconButton } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { addToWishlist, removeFromWishlist } from 'store/home/wishlistSlice';
@@ -43,10 +44,11 @@ function AddToWishlistButton({ property }) {
     </IconButton>
   );
 }
-// AddToWishlistButton.propTypes = {
-//   property: PropTypes.shape({
-//     id: PropTypes.string.isRequired,
-//   })
-// };
+
+AddToWishlistButton.propTypes = {
+  property: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default AddToWishlistButton;
