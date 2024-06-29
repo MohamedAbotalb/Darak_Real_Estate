@@ -8,7 +8,7 @@ class WishlistRepository implements WishlistRepositoryInterface
 {
     public function getUserWishlist(int $userId)
     {
-        return Wishlist::with(['user', 'property.location'])->where('user_id', $userId)->get();
+        return Wishlist::with(['user', 'property.location','property.propertyType'])->where('user_id', $userId)->get();
     }
 
     public function addToWishlist(int $userId, int $propertyId)
