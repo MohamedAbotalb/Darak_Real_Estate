@@ -27,6 +27,9 @@ import HomePage from 'pages/Home';
 import AddPropertyPage from 'pages/AddProperty';
 import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
+import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
+import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const router = createBrowserRouter(
@@ -41,6 +44,8 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="add-property" element={<AddPropertyPage />} />
+          <Route path="/renter-notifications" element={<RenterNotifications />} />
+          <Route path="/landlord-notifications" element={<LandlordNotifications/>} />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}

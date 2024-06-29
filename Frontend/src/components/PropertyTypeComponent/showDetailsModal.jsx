@@ -10,7 +10,7 @@ import {
   CardActions,
 } from '@mui/material';
 import { toast } from 'react-toastify';
-import axios from '../../services/axiosConfig';
+import axios from 'services/axiosConfig';
 
 function ShowDetailsModal({ typeSlug, isOpen, handleClose }) {
   const [type, setType] = useState(null);

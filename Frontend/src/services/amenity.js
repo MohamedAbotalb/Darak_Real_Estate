@@ -1,4 +1,4 @@
-import axios from './axiosConfig';
+import axios from 'services/axiosConfig';
 
 const fetchAmenities = async () => {
   const response = await axios.get('/amenities');

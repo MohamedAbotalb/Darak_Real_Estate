@@ -1,5 +1,5 @@
 import secureLocalStorage from 'react-secure-storage';
-import axios from './axiosConfig';
+import axios from 'services/axiosConfig';
 
 const fetchUsers = async () => {
   const response = await axios.get('/users');
