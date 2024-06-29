@@ -13,17 +13,17 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties(int $perPage)
     {
-        return Property::with('images', 'location', 'amenities')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities','propertyType')->paginate($perPage);
     }
 
     public function getPropertyBySlug(string $slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images', 'amenities')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images', 'amenities','propertyType')->firstOrFail();
     }
 
     public function getLatestProperties(int $property_type_id, string $listing_type)
     {
-        return Property::with('location', 'images', 'amenities')
+        return Property::with('location', 'images', 'amenities','propertyType')
             ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
