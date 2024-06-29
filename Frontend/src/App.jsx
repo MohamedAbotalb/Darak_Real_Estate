@@ -25,9 +25,8 @@ import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import HomePage from 'pages/Home';
 import AddPropertyPage from 'pages/AddProperty';
+import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
-import 'react-toastify/dist/ReactToastify.css';
-import Profile from 'pages/Profile';
 
 function App() {
   const router = createBrowserRouter(
@@ -43,7 +42,7 @@ function App() {
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="add-property" element={<AddPropertyPage />} />
         </Route>
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"
