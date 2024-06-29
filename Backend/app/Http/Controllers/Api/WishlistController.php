@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Wishlists\StoreWishlistRequest;
 use App\Http\Resources\WishlistResource;
 use App\Repositories\WishlistRepositoryInterface;
 use Illuminate\Http\Request;
@@ -22,11 +23,8 @@ class WishlistController extends Controller
         return response()->json(["data"=>WishlistResource::collection($wishlist)]);
     }
 
-    public function store(Request $request)
+    public function store(StoreWishlistRequest $request)
     {
-        $request->validate([
-            'property_id' => 'required|exists:properties,id',
-        ]);
 
         $userId = auth()->id();
         $propertyId = $request->property_id;

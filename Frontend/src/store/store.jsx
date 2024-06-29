@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from 'store/Auth/authSlice';
+import userReducer from 'store/userSlice';
 import reportUsersReducer from 'store/reportUsersSlice';
 import reportPropertiesReducer from 'store/reportPropertiesSlice';
 import propertyReducer from 'store/propertySlice';
@@ -12,10 +13,12 @@ import overviewReducer from 'store/overviewSlice';
 import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
+import notificationsReducer from 'store/notfications/notificationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
     auth: authReducer,
+    user: userReducer,
     reportUsers: reportUsersReducer,
     reportProperties: reportPropertiesReducer,
     property: propertyReducer,
@@ -28,6 +31,7 @@ const reduxStore = configureStore({
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
     locations: locationsReducer,
+    notifications: notificationsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
