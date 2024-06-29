@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -9,26 +9,19 @@ import {
   CardContent,
   CardActions,
 } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import axios from 'services/axiosConfig';
+import { fetchPropertyTypeDetails } from 'store/propertyTypesSlice';
 
 function ShowDetailsModal({ typeSlug, isOpen, handleClose }) {
-  const [type, setType] = useState(null);
+  const dispatch = useDispatch();
+  const type = useSelector((state) => state.propertyTypes.propertyTypeDetails);
 
   useEffect(() => {
     if (isOpen && typeSlug) {
-      const fetchTypeDetails = async () => {
-        try {
-          const response = await axios.get(`/property-types/${typeSlug}`);
-          setType(response.data);
-        } catch (error) {
-          toast.error('Failed to fetch property type details:');
-        }
-      };
-
-      fetchTypeDetails();
+      dispatch(fetchPropertyTypeDetails(typeSlug));
     }
-  }, [isOpen, typeSlug]);
+  }, [dispatch, isOpen, typeSlug]);
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
