@@ -9,7 +9,7 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         return Notification::where('landlord_id', $landlordId)
             ->whereIn('type', ['request'])
-            ->with(['user', 'landlord','tour'])
+            ->with(['user', 'landlord','tour', 'tour.tourDates'])
             ->get();
     }
 
@@ -17,7 +17,7 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         return Notification::where('user_id', $userId)
             ->whereIn('type', ['confirmation', 'cancelation'])
-            ->with(['user', 'landlord'])
+            ->with(['user', 'landlord','tour','tour.tourDates'])
             ->get();
     }
     public function deleteNotification(int $id)
