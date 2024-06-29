@@ -12,6 +12,7 @@ import overviewReducer from 'store/overviewSlice';
 import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
+import userReducer from 'store/userSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ const reduxStore = configureStore({
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
     locations: locationsReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

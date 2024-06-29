@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import { fetchPropertyTypes } from 'store/propertyTypesSlice';
+import axios from '../../services/axiosConfig';
 import EditPropertyTypeButton from './EditPropertyTypeButton';
 import ShowDetailsButton from './ShowDetailsButton';
-import axios from '../../axiosConfig';
 
 function PropertyTypeTable() {
   const dispatch = useDispatch();

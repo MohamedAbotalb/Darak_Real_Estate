@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Header from 'components/Home/Header';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
@@ -18,16 +19,17 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import {
-  getUser,
+  fetchUser,
   updateUser,
   updatePassword,
   deleteUser,
-} from 'store/Auth/authActions';
+} from 'store/userSlice';
 import { setCredentials, logout } from 'store/Auth/authSlice';
 
 function Profile() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
 
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
@@ -44,7 +46,7 @@ function Profile() {
   const [phone, setPhone] = useState('');
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(fetchUser());
   }, [dispatch]);
 
   useEffect(() => {
@@ -155,7 +157,7 @@ function Profile() {
       await dispatch(deleteUser());
       dispatch(logout());
       toast.success('Account deleted successfully');
-      setOpenDeleteDialog(false);
+      navigate('/');
     } catch (error) {
       toast.error('Failed to delete account');
     }
@@ -193,9 +195,7 @@ function Profile() {
               <Box
                 sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
               >
-                <Typography>
-                  {user.role === 'user' ? 'Tours' : 'Properties'}
-                </Typography>
+                <Typography>Tours / Properties</Typography>
                 <Button variant="contained">Show</Button>
               </Box>
               <Box
