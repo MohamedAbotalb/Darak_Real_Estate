@@ -19,7 +19,7 @@ class WishlistController extends Controller
     {
         $userId = auth()->id();
         $wishlist = $this->wishlistRepository->getUserWishlist($userId);
-        return response()->json(WishlistResource::collection($wishlist));
+        return response()->json(["data"=>WishlistResource::collection($wishlist)]);
     }
 
     public function store(Request $request)
