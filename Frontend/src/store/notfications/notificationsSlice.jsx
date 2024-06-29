@@ -1,85 +1,96 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from 'services/axiosConfig';
 
-// Mock data for notifications
-const mockNotifications = [
-  {
-    id: 1,
-    message: 'Notification 1: Lorem ipsum dolor sit amet.',
-    dates: ['2024-07-01', '2024-07-05', '2024-07-10'],
-  },
-  {
-    id: 2,
-    message: 'Notification 2: Consectetur adipiscing elit.',
-    dates: ['2024-07-02', '2024-07-06', '2024-07-11'],
-  },
-];
+const initialState = {
+  notifications: [],
+  status: 'idle',
+  error: null,
+};
 
-// Thunk to fetch notifications for the landlord (mocked)
-export const fetchLandlordNotifications = createAsyncThunk(
-  'notifications/fetchLandlord',
+export const fetchRenterNotifications = createAsyncThunk(
+  'notifications/fetchRenterNotifications',
   async () => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return mockNotifications; // Replace with actual API call
+    const response = await axiosInstance.get('/notifications/renter');
+    console.log( response.data.data)
+    return response.data.data; // Accessing the 'data' array
   }
 );
 
-// Thunk to approve a date (mocked)
-export const approveDate = createAsyncThunk(
-  'notifications/approveDate',
-  async ({ tourId, selectedDate }) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { tourId, selectedDate }; // Replace with actual API call
+export const fetchLandlordNotifications = createAsyncThunk(
+  'notifications/fetchLandlordNotifications',
+  async () => {
+    const response = await axiosInstance.get('/notifications/landlord');
+        console.log( response.data.data)
+
+    return response.data.data; // Accessing the 'data' array
   }
 );
 
-// Thunk to decline a tour (mocked)
 export const declineTour = createAsyncThunk(
   'notifications/declineTour',
   async (tourId) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { tourId }; // Replace with actual API call
+    const response = await axiosInstance.post(`/tours/13/decline`);
+    return response.data;
+  }
+);
+
+export const approveDate = createAsyncThunk(
+  'notifications/approveDate',
+  async ({ tourId, selectedDate }) => {
+    const response = await axiosInstance.post(`/tours/${tourId}/approve`, { selectedDate });
+    return response.data;
   }
 );
 
 const notificationsSlice = createSlice({
   name: 'notifications',
-  initialState: {
-    landlordNotifications: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchRenterNotifications.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchRenterNotifications.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.notifications = action.payload; // Assuming action.payload is an array of notification objects
+      })
+      .addCase(fetchRenterNotifications.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
       .addCase(fetchLandlordNotifications.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchLandlordNotifications.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.landlordNotifications = action.payload;
+        state.notifications = action.payload; // Assuming action.payload is an array of notification objects
       })
       .addCase(fetchLandlordNotifications.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(approveDate.fulfilled, (state, action) => {
-        // Update notification status on approval (mocked)
-        state.landlordNotifications = state.landlordNotifications.map((notification) =>
-          notification.id === action.payload.tourId
-            ? { ...notification, status: 'approved', approvedDate: action.payload.selectedDate }
-            : notification
-        );
+      .addCase(declineTour.pending, (state) => {
+        state.status = 'loading';
       })
       .addCase(declineTour.fulfilled, (state, action) => {
-        // Update notification status on decline (mocked)
-        state.landlordNotifications = state.landlordNotifications.map((notification) =>
-          notification.id === action.payload.tourId
-            ? { ...notification, status: 'declined' }
-            : notification
-        );
+        state.status = 'declined';
+        // Handle updating notifications state after declining tour if needed
+      })
+      .addCase(declineTour.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(approveDate.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(approveDate.fulfilled, (state, action) => {
+        state.status = 'approved';
+        // Handle updating notifications state after approving date if needed
+      })
+      .addCase(approveDate.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });

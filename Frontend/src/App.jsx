@@ -44,8 +44,14 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="add-property" element={<AddPropertyPage />} />
-          <Route path="/renter-notifications" element={<RenterNotifications />} />
-          <Route path="/landlord-notifications" element={<LandlordNotifications/>} />
+          <Route
+            path="/renter-notifications"
+            element={<RenterNotifications />}
+          />
+          <Route
+            path="/landlord-notifications"
+            element={<LandlordNotifications />}
+          />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}

@@ -25,14 +25,12 @@ function AddToWishlistButton({ property }) {
           (item) => item.property && item.property.id === property.id
         );
         if (wishlistItem) {
-           setIsWishlisted(false);
+          setIsWishlisted(false);
           dispatch(removeFromWishlist(wishlistItem.id));
-         
         }
       } else {
         setIsWishlisted(true);
         dispatch(addToWishlist(property));
-        
       }
     }
   };

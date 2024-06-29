@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import  fetchRenterNotifications  from 'store/notfications/notificationsSlice';
+import fetchRenterNotifications from 'store/notfications/notificationsSlice';
 
-const RenterNotifications = () => {
+function RenterNotifications() {
   const dispatch = useDispatch();
-  const { renterNotifications, status, error } = useSelector((state) => state.notifications);
+  const { renterNotifications, status, error } = useSelector(
+    (state) => state.notifications
+  );
 
   useEffect(() => {
     dispatch(fetchRenterNotifications());
@@ -28,6 +30,6 @@ const RenterNotifications = () => {
       </ul>
     </div>
   );
-};
+}
 
 export default RenterNotifications;
