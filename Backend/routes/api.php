@@ -116,6 +116,7 @@ Route::get('reviews', [ReviewController::class, 'show']);
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);
+    Route::get('/{status}', [TourController::class, 'getToursByStatus']);
 
 });
 Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);

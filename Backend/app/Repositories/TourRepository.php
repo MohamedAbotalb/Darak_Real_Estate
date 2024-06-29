@@ -123,4 +123,11 @@ class TourRepository implements TourRepositoryInterface
             ->with(['user', 'property', 'tourDates'])
             ->get();
     }
+    public function getToursByStatus($status,$userId)
+    {
+        return Tour::where('status', $status)
+            ->where('user_id',$userId)
+            ->with(['user', 'property', 'tourDates'])
+            ->get();
+    }
 }

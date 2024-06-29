@@ -6,6 +6,7 @@ use App\Http\Requests\Tours\StoreTourRequest;
 use App\Http\Resources\TourResource;
 use App\Repositories\TourRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TourController extends Controller
 {
@@ -60,13 +61,19 @@ class TourController extends Controller
 
         return response()->json(['message' => 'Tour cancelled successfully'], 200);
     }
-
-    public function getUserTours()
-    {
-        $tours = $this->tourRepository->getUserTours(auth()->id());
-
+    public function getUserTours(){
+        $tours = $this->tourRepository->getUserTours(Auth::id());
         return response()->json([
             'tours' => TourResource::collection($tours),
         ], 200);
     }
+
+    public function getToursByStatus($status)
+    {
+        $tours = $this->tourRepository->getToursByStatus($status,Auth::id());
+        return response()->json([
+            'tours' => TourResource::collection($tours),
+        ], 200);
+    }
+
 }
