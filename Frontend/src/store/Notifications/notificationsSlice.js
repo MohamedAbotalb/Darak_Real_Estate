@@ -19,7 +19,9 @@ export const fetchLandlordNotifications = createAsyncThunk(
   'notifications/fetchLandlord',
   async () => {
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
     return mockNotifications; // Replace with actual API call
   }
 );
@@ -29,7 +31,9 @@ export const approveDate = createAsyncThunk(
   'notifications/approveDate',
   async ({ tourId, selectedDate }) => {
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
     return { tourId, selectedDate }; // Replace with actual API call
   }
 );
@@ -39,7 +43,9 @@ export const declineTour = createAsyncThunk(
   'notifications/declineTour',
   async (tourId) => {
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
     return { tourId }; // Replace with actual API call
   }
 );
@@ -67,18 +73,24 @@ const notificationsSlice = createSlice({
       })
       .addCase(approveDate.fulfilled, (state, action) => {
         // Update notification status on approval (mocked)
-        state.landlordNotifications = state.landlordNotifications.map((notification) =>
-          notification.id === action.payload.tourId
-            ? { ...notification, status: 'approved', approvedDate: action.payload.selectedDate }
-            : notification
+        state.landlordNotifications = state.landlordNotifications.map(
+          (notification) =>
+            notification.id === action.payload.tourId
+              ? {
+                  ...notification,
+                  status: 'approved',
+                  approvedDate: action.payload.selectedDate,
+                }
+              : notification
         );
       })
       .addCase(declineTour.fulfilled, (state, action) => {
         // Update notification status on decline (mocked)
-        state.landlordNotifications = state.landlordNotifications.map((notification) =>
-          notification.id === action.payload.tourId
-            ? { ...notification, status: 'declined' }
-            : notification
+        state.landlordNotifications = state.landlordNotifications.map(
+          (notification) =>
+            notification.id === action.payload.tourId
+              ? { ...notification, status: 'declined' }
+              : notification
         );
       });
   },
