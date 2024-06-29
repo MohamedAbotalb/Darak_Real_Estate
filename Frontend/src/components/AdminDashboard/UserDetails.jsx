@@ -45,7 +45,7 @@ function UserDetails() {
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
 
   useEffect(() => {
     if (status === 'idle') {
