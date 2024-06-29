@@ -64,8 +64,19 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'listing_type', 'location_id']);
+        $filters = $request->only(['property_type', 'listing_type', 'city']);
         $properties = $this->propertyRepository->searchProperties($filters);
+
+        if ($properties->isEmpty()) {
+            return response()->json(['message' => 'No Result found'], 404);
+        }
+
+        return response()->json(['data' => PropertyResource::collection($properties)]);
+    }
+    public function searchAdvanced(Request $request)
+    {
+        $filters = $request->only(['property_type', 'listing_type','num_of_rooms','num_of_bathrooms','price','city']);
+        $properties = $this->propertyRepository->searchPropertiesAdvanced($filters);
 
         if ($properties->isEmpty()) {
             return response()->json(['message' => 'No Result found'], 404);
