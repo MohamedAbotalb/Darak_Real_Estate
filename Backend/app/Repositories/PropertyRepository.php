@@ -1,5 +1,6 @@
 <?php
-namespace App\Services;
+
+namespace App\Repositories;
 
 use App\Models\Location;
 use App\Models\Property;
@@ -8,21 +9,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
-class PropertyService
+class PropertyRepository implements PropertyRepositoryInterface
 {
-    public function getAllProperties($perPage)
+    public function getAllProperties(int $perPage)
     {
-        return Property::with('images', 'location','amenities')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities','propertyType')->paginate($perPage);
     }
 
-    public function getPropertyBySlug($slug)
+    public function getPropertyBySlug(string $slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images','amenities')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images', 'amenities','propertyType')->firstOrFail();
     }
 
-    public function getLatestProperties($property_type_id, $listing_type)
+    public function getLatestProperties(int $property_type_id, string $listing_type)
     {
-        return Property::with('location', 'images','amenities')
+        return Property::with('location', 'images', 'amenities','propertyType')
             ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
@@ -30,7 +31,7 @@ class PropertyService
             ->get();
     }
 
-    public function createProperty($data)
+    public function createProperty(array $data)
     {
         DB::beginTransaction();
 
@@ -44,10 +45,9 @@ class PropertyService
                 $data
             );
             $data['availability'] = 'available';
-            $data['user_id'] =Auth::id();
+            $data['user_id'] = Auth::id();
             $slug = Str::slug($data['title']);
             $property = Property::create($data + ['slug' => $slug, 'location_id' => $location->id]);
-    
 
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
@@ -55,7 +55,7 @@ class PropertyService
                     $image->move(public_path('images/properties'), $imageName);
                     PropertyImage::create([
                         'property_id' => $property->id,
-                        'image' => 'images/properties/'. $imageName,
+                        'image' => 'images/properties/' . $imageName,
                     ]);
                 }
             }
@@ -74,7 +74,7 @@ class PropertyService
         }
     }
 
-    public function searchProperties($filters)
+    public function searchProperties(array $filters)
     {
         $query = Property::query();
 
@@ -89,5 +89,8 @@ class PropertyService
         }
 
         return $query->get();
+    }
+    public function showUserProperties(int $id){
+        return Property::where('user_id',$id)->with('images', 'location', 'amenities', 'propertyType')->get();
     }
 }

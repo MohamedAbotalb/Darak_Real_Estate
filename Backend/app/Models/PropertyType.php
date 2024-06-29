@@ -36,5 +36,6 @@ class PropertyType extends Model
     {
         return $this->hasMany(Property::class);
     }
+    
 }
 

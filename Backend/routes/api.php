@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
@@ -51,12 +52,12 @@ Route::group([
 
 Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::delete('/', [UserController::class, 'delete']);
     Route::get('/details',[UserController::class, 'show']);
     Route::put('/updatePassword', [UserController::class, 'updatePassword']);
     Route::put('/updateName', [UserController::class, 'updateName']);
     Route::put('/updatePhone', [UserController::class, 'updatePhone']);
     Route::put('/updateAvatar', [UserController::class, 'updateAvatar']);
-    Route::delete('/', [UserController::class, 'delete']);
 });
 Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
@@ -76,6 +77,7 @@ Route::apiResource('property-types', PropertyTypeController::class);
 
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
+    Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
     Route::get('/{slug}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
@@ -111,9 +113,13 @@ Route::get('reviews', [ReviewController::class, 'show']);
 
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
+    Route::get('/', [TourController::class, 'getUserTours']);
+
 });
 Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);
 Route::post('/tours/{id}/decline', [TourController::class, 'declineTour']);
+
+Route::get('locations',[LocationController::class,'index']);
 
 // Admin Dashboard Routes
 Route::group([

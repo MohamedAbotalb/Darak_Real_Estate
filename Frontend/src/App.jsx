@@ -25,6 +25,7 @@ import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import HomePage from 'pages/Home';
 import AddPropertyPage from 'pages/AddProperty';
+import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
@@ -46,6 +47,7 @@ function App() {
           <Route path="/renter-notifications" element={<RenterNotifications />} />
           <Route path="/landlord-notifications" element={<LandlordNotifications/>} />
         </Route>
+        <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"

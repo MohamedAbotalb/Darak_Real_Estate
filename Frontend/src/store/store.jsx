@@ -31,7 +31,6 @@ const reduxStore = configureStore({
     locations: locationsReducer,
     notifications: notificationsReducer,
   },
-
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

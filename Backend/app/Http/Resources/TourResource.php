@@ -16,13 +16,12 @@ class TourResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'property_id' => $this->property_id,
+            'property' => new PropertyResource($this->whenLoaded('property')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'status' => $this->status,
             'dates' => $this->whenLoaded('tourDates', function () {
                 return $this->tourDates->pluck('date');
             }),
-            'property' => new PropertyResource($this->whenLoaded('property')),
         ];
     }
 }
