@@ -13,17 +13,17 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties(int $perPage)
     {
-        return Property::with('images', 'location', 'amenities','propertyType')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType')->paginate($perPage);
     }
 
     public function getPropertyBySlug(string $slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images', 'amenities','propertyType')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType')->firstOrFail();
     }
 
     public function getLatestProperties(int $property_type_id, string $listing_type)
     {
-        return Property::with('location', 'images', 'amenities','propertyType')
+        return Property::with('location', 'images', 'amenities', 'propertyType')
             ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
@@ -84,13 +84,42 @@ class PropertyRepository implements PropertyRepositoryInterface
         if (isset($filters['listing_type'])) {
             $query->where('listing_type', $filters['listing_type']);
         }
-        if (isset($filters['location_id'])) {
-            $query->where('location_id', $filters['location_id']);
+        if (isset($filters['city'])) {
+            $query->join('locations', 'properties.location_id', '=', 'locations.id');
+            $query->where('locations.city', $filters['city']);
         }
 
         return $query->get();
     }
-    public function showUserProperties(int $id){
-        return Property::where('user_id',$id)->with('images', 'location', 'amenities', 'propertyType')->get();
+    public function searchPropertiesAdvanced(array $filters)
+    {
+        $query = Property::query();
+
+
+        if (isset($filters['property_type'])) {
+            $query->where('property_type_id', $filters['property_type']);
+        }
+        if (isset($filters['listing_type'])) {
+            $query->where('listing_type', $filters['listing_type']);
+        }
+        if (isset($filters['num_of_rooms'])) {
+            $query->where('num_of_rooms', $filters['num_of_rooms']);
+        }
+        if (isset($filters['num_of_bathrooms'])) {
+            $query->where('num_of_bathrooms', $filters['num_of_bathrooms']);
+        }
+        if (isset($filters['price'])) {
+            $query->where('price', $filters['price']);
+        }
+        if (isset($filters['city'])) {
+            $query->join('locations', 'properties.location_id', '=', 'locations.id');
+            $query->where('locations.city', $filters['city']);
+        }
+
+        return $query->get();
+    }
+    public function showUserProperties(int $id)
+    {
+        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType')->get();
     }
 }

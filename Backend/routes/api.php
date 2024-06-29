@@ -83,6 +83,8 @@ Route::prefix('properties')->group(function(){
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
+    Route::get('/search/filter/Advanced',[PropertyController::class,'searchAdvanced']);
+
 });
 Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
     Route::get('/landlord',[NotificationController::class,'showLandlordNotifications']);
@@ -114,6 +116,7 @@ Route::get('reviews', [ReviewController::class, 'show']);
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);
+    Route::get('/{status}', [TourController::class, 'getToursByStatus']);
 
 });
 Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);

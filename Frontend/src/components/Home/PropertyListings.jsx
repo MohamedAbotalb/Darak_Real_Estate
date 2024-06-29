@@ -14,9 +14,7 @@ function PropertyListings({ type }) {
   const propertiesStatus = useSelector((state) => state.properties.status);
   const categories = useSelector((state) => state.categories.list);
   const categoriesStatus = useSelector((state) => state.categories.status);
-  const wishlist = useSelector((state) => state.wishlist.list);
   const [category, setCategory] = useState(null);
-  console.log(wishlist, 'wishlistpropretylistting');
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -58,7 +56,7 @@ function PropertyListings({ type }) {
   }
 
   return (
-    <Box sx={{ padding: '20px' }}>
+    <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
       <Typography
         variant="h4"
         align="center"
@@ -79,7 +77,7 @@ function PropertyListings({ type }) {
           No properties found for the selected category.
         </Typography>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center">
           {properties.map((property) => (
             <Grid item xs={12} sm={6} md={4} key={property.id}>
               <Box display="flex" justifyContent="center">

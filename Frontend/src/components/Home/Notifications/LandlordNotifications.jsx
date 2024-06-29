@@ -311,7 +311,7 @@ import {
   HighlightOff as DeclineIcon,
 } from '@mui/icons-material';
 
-const LandlordNotifications = () => {
+function LandlordNotifications() {
   const dispatch = useDispatch();
   const { notifications, status, error } = useSelector(
     (state) => state.notifications
@@ -581,7 +581,7 @@ const LandlordNotifications = () => {
       </Dialog>
     </Box>
   );
-};
+}
 
 // Function to get background color based on notification type
 const getNotificationBgColor = (type) => {

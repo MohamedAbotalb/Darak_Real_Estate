@@ -1,127 +1,138 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  CardContent,
-  Typography,
-  Divider,
-  Box,
-  Grid,
-} from '@mui/material';
-import { LocationOn, Bed, Bathtub, SquareFoot } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Carousel } from 'react-responsive-carousel';
+import { Card, CardContent, Typography, Box } from '@mui/material';
+import { styled } from '@mui/system';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import BedIcon from '@mui/icons-material/Bed';
+import BathtubIcon from '@mui/icons-material/Bathtub';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import defaultImage from 'assets/images/image1.jpg';
-import AddToWishlistButton from './AddToWishlistButton';
+import AddToWishlistButton from 'components/Home/AddToWishlistButton';
+
+const StyledCard = styled(Card)({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '16px auto',
+  borderRadius: '16px',
+  overflow: 'hidden',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  position: 'relative',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  color: 'inherit',
+});
+
+const SliderWrapper = styled(Box)({
+  position: 'relative',
+});
+
+const StyledImage = styled('img')({
+  height: 300,
+  width: '100%',
+  objectFit: 'cover',
+});
+
+const WishlistButtonWrapper = styled(Box)({
+  position: 'absolute',
+  top: '8px',
+  right: '8px',
+  zIndex: 1,
+  backgroundColor: 'white',
+  borderRadius: '50%',
+});
+
+const CardLink = styled(Link)({
+  textDecoration: 'none',
+  color: 'inherit',
+  flexGrow: 1,
+});
 
 function PropertyCard({ property }) {
-  if (!property) {
-    return null;
-  }
-
-  const locationCity = property.location ? property.location.city : 'Unknown';
-
   const images = property.images || [];
-  const imageSrc = images.length > 0 ? images[0].image : defaultImage;
 
-  const words = property.description
-    ? property.description.trim().split(' ')
-    : [];
-  const truncatedDescription = words.slice(0, 4).join(' ');
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const getPriceDisplay = () => {
+    if (property.listing_type === 'renting') {
+      return `${formatPrice(property.price)} EGP/month`;
+    }
+    return `${formatPrice(property.price)} EGP`;
+  };
 
   return (
-    <Card
-      className="property-card"
-      sx={{
-        maxWidth: 345,
-        mb: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        backgroundColor: '#ecf0f1',
-      }}
-    >
-      <Box sx={{ flexGrow: 1, position: 'relative' }}>
-        <img
-          style={{
-            height: 255,
-            display: 'block',
-            maxWidth: 400,
-            overflow: 'hidden',
-            width: '100%',
-          }}
-          src={imageSrc}
-          alt={property.title}
-        />
-      </Box>
-      <CardContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pb: 2,
-        }}
-      >
-        <div style={{ flex: '1 1 auto' }}>
-          <Typography variant="body2" color="text.secondary">
-            {property.title}
-          </Typography>
-          <Typography variant="h6" component="div">
-            {property.price} EGP/ month
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            {truncatedDescription}{' '}
-            {words.length > 4 && (
-              <RouterLink
-                to={`/properties/${property.title}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Typography
-                  component="span"
-                  variant="body2"
-                  color="primary"
-                  sx={{ cursor: 'pointer' }}
-                >
-                  Read More
-                </Typography>
-              </RouterLink>
-            )}
-          </Typography>
-        </div>
-        <Divider sx={{ mb: 1, mt: 1 }} />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 'auto' }}
-          >
-            <LocationOn fontSize="small" /> {locationCity}
-          </Typography>
+    <StyledCard>
+      <SliderWrapper>
+        <WishlistButtonWrapper>
           <AddToWishlistButton property={property} />
-        </Box>
-        <Grid container spacing={5} sx={{ mt: -3 }}>
-          <Grid item>
-            <Typography variant="body2" color="text.secondary">
-              <Bed fontSize="small" /> {property.num_of_rooms}
+        </WishlistButtonWrapper>
+        <Carousel
+          showThumbs={false}
+          showStatus={false}
+          showArrows={false}
+          showIndicators={false}
+          infiniteLoop
+          autoPlay
+          interval={2000}
+        >
+          {images.length > 0 ? (
+            images.map((img) => (
+              <StyledImage key={img.id} src={img.image} alt={property.title} />
+            ))
+          ) : (
+            <StyledImage src={defaultImage} alt={property.title} />
+          )}
+        </Carousel>
+      </SliderWrapper>
+      <CardContent style={{ height: '100%' }}>
+        <CardLink to={`/properties/${property.slug}`}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="body2" color="text.secondary" mb={1}>
+              {property.property_type.name}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" color="text.secondary">
-              <Bathtub fontSize="small" /> {property.num_of_bathrooms}
+          </Box>
+          <Typography gutterBottom variant="h5" component="div" mb={2}>
+            {getPriceDisplay()}
+          </Typography>
+          <Typography variant="body2">{property.title}</Typography>
+          <Box display="flex" alignItems="center" my={4}>
+            <LocationOnIcon color="action" />
+            <Typography variant="body2" color="text.secondary" ml={0.5}>
+              {property.location.street}, {property.location.state},{' '}
+              {property.location.city}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" color="text.secondary">
-              <SquareFoot fontSize="small" /> {property.area} sqm
-            </Typography>
-          </Grid>
-        </Grid>
+          </Box>
+          <Box display="flex" mt={2}>
+            <Box display="flex" alignItems="center" mr={2}>
+              <BedIcon color="action" />
+              <Typography variant="body2" color="text.secondary" ml={0.5}>
+                {property.num_of_rooms}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" mx={2}>
+              <BathtubIcon color="action" />
+              <Typography variant="body2" color="text.secondary" ml={0.5}>
+                {property.num_of_bathrooms}
+              </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" ml={2}>
+              <SquareFootIcon color="action" />
+              <Typography variant="body2" color="text.secondary" ml={0.5}>
+                {Number.parseInt(property.area, 10)} sqm
+              </Typography>
+            </Box>
+          </Box>
+        </CardLink>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 }
 
@@ -129,14 +140,18 @@ PropertyCard.propTypes = {
   property: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
+    listing_type: PropTypes.string.isRequired,
+    property_type: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     location_id: PropTypes.string.isRequired,
     num_of_rooms: PropTypes.number.isRequired,
     num_of_bathrooms: PropTypes.number.isRequired,
     area: PropTypes.number.isRequired,
-    description: PropTypes.string,
     location: PropTypes.shape({
       city: PropTypes.string.isRequired,
+      state: PropTypes.string.isRequired,
+      street: PropTypes.string.isRequired,
     }),
     images: PropTypes.arrayOf(
       PropTypes.shape({

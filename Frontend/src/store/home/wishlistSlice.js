@@ -1,60 +1,42 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import {
+  fetchWishlistApi,
+  addToWishlistApi,
+  removeFromWishlistApi,
+} from 'services/wishlistService';
 
 export const fetchWishlist = createAsyncThunk(
   'wishlist/fetchWishlist',
-  async (_, { rejectWithValue, getState }) => {
-    const { token } = getState().auth;
+  async (thunkAPI) => {
     try {
-      const response = await axios.get('http://localhost:8000/api/wishlist', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetchWishlistApi();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
 export const addToWishlist = createAsyncThunk(
   'wishlist/addToWishlist',
-  async (property, { rejectWithValue, getState }) => {
-    const { token } = getState().auth;
+  async (property, thunkAPI) => {
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/api/wishlist',
-        { property_id: property.id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await addToWishlistApi({ property_id: property.id });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
 export const removeFromWishlist = createAsyncThunk(
   'wishlist/removeFromWishlist',
-  async (wishlistItemId, { rejectWithValue, getState }) => {
-    const { token } = getState().auth;
+  async (id, thunkAPI) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/wishlist/${wishlistItemId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await removeFromWishlistApi(id);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -75,7 +57,7 @@ const wishlistSlice = createSlice({
       })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.list = action.payload;
+        state.list = action.payload.data;
         state.error = null;
       })
       .addCase(fetchWishlist.rejected, (state, action) => {
@@ -86,7 +68,7 @@ const wishlistSlice = createSlice({
         state.list.push(action.payload);
       })
       .addCase(removeFromWishlist.fulfilled, (state, action) => {
-        state.list = state.list.filter((item) => item.id !== action.meta.arg);
+        state.list = state.list.filter((item) => item.id !== action.payload);
       });
   },
 });
