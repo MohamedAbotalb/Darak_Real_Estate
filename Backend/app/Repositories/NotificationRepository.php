@@ -20,4 +20,13 @@ class NotificationRepository implements NotificationRepositoryInterface
             ->with(['user', 'landlord'])
             ->get();
     }
+    public function deleteNotification(int $id)
+    {
+        $notification = Notification::find($id);
+        if ($notification) {
+            $notification->delete();
+            return true;
+        }
+        return false;
+    }
 }
