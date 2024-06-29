@@ -29,7 +29,6 @@ const reduxStore = configureStore({
     amenities: amenitiesReducer,
     locations: locationsReducer,
   },
-
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

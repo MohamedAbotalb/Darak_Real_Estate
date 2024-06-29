@@ -3,6 +3,7 @@ import {
   fetchAmenities as fetchAmenitiesService,
   addAmenity as addAmenityService,
   deleteAmenity as deleteAmenityService,
+  updateAmenity as updateAmenityService,
 } from '../services/amenity';
 
 export const fetchAmenities = createAsyncThunk(
@@ -17,7 +18,7 @@ export const addAmenity = createAsyncThunk(
   'amenities/addAmenity',
   async (newAmenity) => {
     const response = await addAmenityService(newAmenity);
-    return response;
+    return response.data;
   }
 );
 
@@ -25,14 +26,22 @@ export const deleteAmenity = createAsyncThunk(
   'amenities/deleteAmenity',
   async (amenityId) => {
     const response = await deleteAmenityService(amenityId);
-    return response;
+    return response.data;
+  }
+);
+
+export const updateAmenity = createAsyncThunk(
+  'amenities/updateAmenity',
+  async ({ id, name }) => {
+    const response = await updateAmenityService(id, name);
+    return response.data;
   }
 );
 
 const amenitiesSlice = createSlice({
   name: 'amenities',
   initialState: {
-    amenities: [],
+    amenities: {},
     status: 'idle',
     error: null,
   },
@@ -51,12 +60,13 @@ const amenitiesSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addAmenity.fulfilled, (state, action) => {
-        state.amenities.push(action.payload);
+        state.amenities[action.payload.id] = action.payload;
       })
       .addCase(deleteAmenity.fulfilled, (state, action) => {
-        state.amenities = state.amenities.filter(
-          (amenity) => amenity.id !== action.payload
-        );
+        delete state.amenities[action.payload];
+      })
+      .addCase(updateAmenity.fulfilled, (state, action) => {
+        state.amenities[action.payload.id] = action.payload;
       });
   },
 });
