@@ -7,6 +7,7 @@ use App\Http\Requests\Properties\StorePropertyRequest;
 use App\Http\Resources\PropertyResource;
 use App\Repositories\PropertyRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
@@ -70,6 +71,14 @@ class PropertyController extends Controller
             return response()->json(['message' => 'No Result found'], 404);
         }
 
-        return response()->json(['data' => $properties]);
+        return response()->json(['data' => PropertyResource::collection($properties)]);
+    }
+    public function showUserProperties(){
+        $properties=$this->propertyRepository->showUserProperties(Auth::id());
+        if ($properties->isEmpty()) {
+            return response()->json(['message' => 'No Result found'], 404);
+        }
+        return response()->json(['data' => PropertyResource::collection($properties)]);
+
     }
 }

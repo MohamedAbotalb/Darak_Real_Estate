@@ -90,4 +90,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
         return $query->get();
     }
+    public function showUserProperties(int $id){
+        return Property::where('user_id',$id)->with('images', 'location', 'amenities', 'propertyType')->get();
+    }
 }
