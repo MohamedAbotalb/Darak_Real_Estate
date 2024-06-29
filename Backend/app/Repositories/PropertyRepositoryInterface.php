@@ -9,4 +9,5 @@ interface PropertyRepositoryInterface
     public function getLatestProperties(int $property_type_id, string $listing_type);
     public function createProperty(array $data);
     public function searchProperties(array $filters);
+    public function showUserProperties(int $id);
 }
