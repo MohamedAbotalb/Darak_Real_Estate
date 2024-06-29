@@ -6,7 +6,7 @@ import {
   forgetPasswordApi,
   resetPasswordApi,
 } from 'services/authService';
-import axios from 'axiosConfig';
+import axios from 'services/axiosConfig';
 
 export const register = createAsyncThunk(
   'auth/register',

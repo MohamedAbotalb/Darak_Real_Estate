@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { fetchPropertyTypes } from 'store/propertyTypesSlice';
-import axios from '../../axiosConfig';
+import axios from 'services/axiosConfig';
 import PropertyTypeModal from './PropertyTypeModal';
 
 function EditPropertyTypeButton({ type }) {
