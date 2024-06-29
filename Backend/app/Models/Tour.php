@@ -10,7 +10,7 @@ class Tour extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'property_id', 'status'];
+    protected $fillable = ['user_id', 'property_id', 'status','tour_id' ];
     protected $dates=['deleted_at'];
     public function user()
     {

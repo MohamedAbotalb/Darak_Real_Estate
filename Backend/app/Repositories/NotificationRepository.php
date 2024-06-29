@@ -9,7 +9,7 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         return Notification::where('landlord_id', $landlordId)
             ->whereIn('type', ['request'])
-            ->with(['user', 'landlord'])
+            ->with(['user', 'landlord','tour'])
             ->get();
     }
 
