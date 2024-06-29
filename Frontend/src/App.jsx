@@ -12,7 +12,7 @@ import ReviewList from 'components/ReviewList';
 import ReportUserList from 'components/ReportUserList';
 import ReportPropertyList from 'components/ReportPropertyList';
 import PropertyDetails from 'components/PropertyDetails';
-import Wishlist from 'components/Home/Wishlist';
+import WishlistPage from 'pages/Wishlist';
 import PropertyTypes from 'pages/PropertyType';
 import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
@@ -43,7 +43,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
-          <Route path="wishlist" element={<Wishlist />} />
+          <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
           <Route
             path="/renter-notifications"
