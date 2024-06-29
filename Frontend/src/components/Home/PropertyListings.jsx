@@ -56,7 +56,7 @@ function PropertyListings({ type }) {
   }
 
   return (
-    <Box sx={{ padding: '20px' }}>
+    <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
       <Typography
         variant="h4"
         align="center"
