@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\AmenityRepository;
 use App\Repositories\AmenityRepositoryInterface;
+use App\Repositories\ImageRepository;
+use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\NotificationRepository;
 use App\Repositories\NotificationRepositoryInterface;
 use App\Repositories\PropertyRepository;
@@ -38,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ReportUserRepositoryInterface::class, ReportUserRepository::class);
         $this->app->bind(AmenityRepositoryInterface::class, AmenityRepository::class);
         $this->app->bind(PropertyTypeRepositoryInterface::class, PropertyTypeRepository::class);
+        $this->app->bind(ImageRepositoryInterface::class, ImageRepository::class);
+
     }
 
     /**

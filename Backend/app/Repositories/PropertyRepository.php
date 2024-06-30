@@ -122,4 +122,49 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType')->get();
     }
+    public function updateProperty(array $data, int $propertyId)
+{
+    DB::beginTransaction();
+
+    try {
+        $property = Property::findOrFail($propertyId);
+        $property->update($data);
+        if (isset($data['city']) && isset($data['state']) && isset($data['street'])) {
+            $location = Location::updateOrCreate(
+                [
+                    'city' => $data['city'],
+                    'state' => $data['state'],
+                    'street' => $data['street']
+                ],
+                $data  
+            );
+
+            $property->location_id = $location->id;
+        }
+
+        if (isset($data['images'])) {
+            foreach ($data['images'] as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('images/properties'), $imageName);
+                PropertyImage::create([
+                    'property_id' => $property->id,
+                    'image' => 'images/properties/' . $imageName,
+                ]);
+            }
+        }
+
+        if (isset($data['amenities'])) {
+            $property->amenities()->sync($data['amenities']);
+        }
+
+        $property->load('location', 'propertyType', 'user', 'images', 'amenities');
+
+        DB::commit();
+        return $property;
+    } catch (\Exception $e) {
+        DB::rollback();
+        throw new \Exception('Failed to update property: ' . $e->getMessage());
+    }
+}
+
 }
