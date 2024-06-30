@@ -6,7 +6,6 @@ import {
   MenuItem,
   Select,
   FormControl,
-  Typography,
   CircularProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -63,7 +62,7 @@ function PropertySearch() {
 
   const [rentOrBuy, setRentOrBuy] = useState('renting');
   const [propertyType, setPropertyType] = useState('');
-  const [locationId, setLocationId] = useState('');
+  const [city, setCity] = useState('');
 
   const isLoading =
     locationsStatus === 'loading' || propertyTypesStatus === 'loading';
@@ -74,9 +73,7 @@ function PropertySearch() {
   }, [dispatch]);
 
   const handleSearch = () => {
-    dispatch(
-      fetchProperties({ propertyType, locationId, listingType: rentOrBuy })
-    );
+    dispatch(fetchProperties({ propertyType, city, listingType: rentOrBuy }));
   };
 
   return (
@@ -101,15 +98,15 @@ function PropertySearch() {
 
           <SearchFormControl variant="outlined">
             <Select
-              value={locationId}
-              onChange={(e) => setLocationId(e.target.value)}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
               displayEmpty
             >
               <MenuItem value="" disabled>
                 <em>Location</em>
               </MenuItem>
               {locations.map((location) => (
-                <MenuItem key={location.id} value={location.id}>
+                <MenuItem key={location.id} value={location.city}>
                   {location.city}
                 </MenuItem>
               ))}
