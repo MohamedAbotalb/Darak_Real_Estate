@@ -16,6 +16,7 @@ import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
 import notificationsReducer from 'store/Notifications/notificationsSlice';
 import tourRequestReducer from 'store/tourRequestSlice';
+import propertiesSearchReducer from 'store/propertySearchSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ const reduxStore = configureStore({
     propertyTypes: propertyTypesReducer,
     propertyType: propertyTypeReducer,
     properties: propertiesReducer,
+    propertiesSearch: propertiesSearchReducer,
     wishlist: wishlistReducer,
     categories: categoriesReducer,
     overview: overviewReducer,
