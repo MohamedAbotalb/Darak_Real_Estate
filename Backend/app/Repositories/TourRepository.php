@@ -63,7 +63,7 @@ class TourRepository implements TourRepositoryInterface
         if (!$tour) {
             return false;
         }
-
+        
         $tourDate = TourDate::where('id', $tourDateId)
             ->where('tour_id', $id)
             ->first();
@@ -77,6 +77,10 @@ class TourRepository implements TourRepositoryInterface
 
         $tourDate->approved = true;
         $tourDate->save();
+
+        $oldNotification = Notification::where('tour_id',$id)->first();
+        $oldNotification->status='approved';
+        $oldNotification->save();
 
         $property = $tour->property;
         if (!$property) {
@@ -112,6 +116,9 @@ class TourRepository implements TourRepositoryInterface
         if (!$tour) {
             return false;
         }
+        $oldNotification = Notification::where('tour_id',$id)->first();
+        $oldNotification->status='declined';
+        $oldNotification->save();
 
         $property = $tour->property;
         if (!$property) {
