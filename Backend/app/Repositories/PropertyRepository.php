@@ -77,7 +77,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function searchProperties(array $filters)
     {
-        $query = Property::query();
+        $query = Property::with('images', 'location', 'amenities', 'propertyType');
 
 
         if (isset($filters['property_type'])) {
