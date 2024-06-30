@@ -32,6 +32,7 @@ import ProtectedRoute from 'ProtectedRoute';
 // import MyTours from 'pages/MyTours';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(

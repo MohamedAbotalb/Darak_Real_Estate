@@ -4,11 +4,7 @@ import {
   fetchRenterNotificationsAsync,
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
-import {
-  
-  CircularProgress,
- 
-} from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
@@ -16,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { green, red, orange, grey } from '@mui/material/colors';
-import moment from 'moment'; 
+import moment from 'moment';
 import Pagination from '@mui/material/Pagination';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,13 +21,13 @@ import InputLabel from '@mui/material/InputLabel';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 
-const RenterNotifications = () => {
+function RenterNotifications() {
   const dispatch = useDispatch();
-  const { notifications, status, error } = useSelector(
-    (state) => state.notifications
-  );
+  const notificationsState = useSelector((state) => state.notifications);
+  const { notifications, status, error } = notificationsState; // Destructuring here
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState('all'); 
+  const [filter, setFilter] = useState('all');
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
   const [hoveredNotification, setHoveredNotification] = useState(null);
@@ -43,7 +39,7 @@ const RenterNotifications = () => {
 
   const handleDeleteNotification = (id) => {
     dispatch(deleteNotificationAsync(id));
-    setDeleteConfirmationOpen(false); 
+    setDeleteConfirmationOpen(false);
   };
 
   const openDeleteConfirmation = (notification) => {
@@ -62,18 +58,38 @@ const RenterNotifications = () => {
     const diffInHours = now.diff(notificationTime, 'hours');
 
     if (diffInHours < 3) {
-      return notificationTime.fromNow(); 
-    } else {
-      return notificationTime.format('MMMM DD, YYYY hh:mm A'); 
+      return notificationTime.fromNow();
     }
+    return notificationTime.format('MMMM DD, YYYY hh:mm A');
+  };
+
+  const getBorderColor = (notificationStatus) => {
+    switch (notificationStatus) {
+      case 'approved':
+        return green[500];
+      case 'declined':
+        return red[500];
+      default:
+        return orange[500];
+    }
+  };
+  const handleMouseEnter = (e, color) => {
+    e.currentTarget.style.color = color;
+  };
+
+  const handleMouseLeave = (e, color) => {
+    e.currentTarget.style.color = color;
   };
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredNotifications = filter === 'all'
-    ? notifications
-    : notifications.filter(notification => notification.tour.status === filter);
+  const filteredNotifications =
+    filter === 'all'
+      ? notifications
+      : notifications.filter(
+          (notification) => notification.tour.status === filter
+        );
   const currentNotifications = filteredNotifications.slice(
     indexOfFirstItem,
     indexOfLastItem
@@ -91,7 +107,8 @@ const RenterNotifications = () => {
   };
 
   if (status === 'loading') {
-    return  <Box
+    return (
+      <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -99,22 +116,36 @@ const RenterNotifications = () => {
       >
         <CircularProgress />
       </Box>
+    );
   }
 
   if (status === 'failed') {
-    return <Box
+    return (
+      <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         height="100vh"
       >
-       Error: {error}
-      </Box>;
+        Error: {error}
+      </Box>
+    );
   }
 
   return (
-    <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: 3, marginLeft: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+    <Box
+      sx={{
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginRight: 3,
+        marginLeft: 3,
+      }}
+    >
+      <Box
+        sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
+      >
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="filter-label">Filter</InputLabel>
           <Select
@@ -131,7 +162,12 @@ const RenterNotifications = () => {
         </FormControl>
       </Box>
       {currentNotifications.length === 0 ? (
-        <Typography variant="body1" align="center" height={"100vh"} sx={{ marginTop: 4 }}>
+        <Typography
+          variant="body1"
+          align="center"
+          height="100vh"
+          sx={{ marginTop: 4 }}
+        >
           No notifications found.
         </Typography>
       ) : (
@@ -141,7 +177,10 @@ const RenterNotifications = () => {
             sx={{
               marginBottom: 2,
               transition: 'transform 0.3s ease',
-              transform: hoveredNotification === notification.id ? 'scale(1.03)' : 'scale(1)',
+              transform:
+                hoveredNotification === notification.id
+                  ? 'scale(1.03)'
+                  : 'scale(1)',
             }}
             onMouseEnter={() => setHoveredNotification(notification.id)}
             onMouseLeave={() => setHoveredNotification(null)}
@@ -151,17 +190,10 @@ const RenterNotifications = () => {
                 padding: 2,
                 borderRadius: 4,
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                borderLeftWidth: '5px',
-                borderLeftStyle: 'solid',
-                borderLeftColor:
-                  notification.tour.status === 'approved'
-                    ? green[500]
-                    : notification.tour.status === 'declined'
-                    ? red[500]
-                    : orange[500],
+                borderLeft: `5px solid ${getBorderColor(notification.tour.status)}`,
                 display: 'flex',
                 alignItems: 'center',
-                position: 'relative', 
+                position: 'relative',
               }}
             >
               <Avatar
@@ -175,15 +207,13 @@ const RenterNotifications = () => {
                 <Typography variant="body2" color="textSecondary">
                   {getTimeDisplay(notification.created_at)}
                 </Typography>
-                <Typography variant="body1">
-                  {notification.message}
-                </Typography>
+                <Typography variant="body1">{notification.message}</Typography>
               </Box>
               <IconButton
                 aria-label="delete notification"
                 onClick={() => openDeleteConfirmation(notification)}
-                onMouseEnter={(e) => e.currentTarget.style.color = red[500]} 
-                onMouseLeave={(e) => e.currentTarget.style.color = grey[500]} 
+                onMouseEnter={(e) => handleMouseEnter(e, red[500])}
+                onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
                 sx={{ position: 'absolute', top: 5, right: 5 }}
               >
                 <CloseIcon />
@@ -220,17 +250,30 @@ const RenterNotifications = () => {
             p: 4,
           }}
         >
-          <Typography id="delete-notification-modal-title" variant="h6" component="h2" sx={{ marginBottom: 2 }}>
+          <Typography
+            id="delete-notification-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ marginBottom: 2 }}
+          >
             Confirm Delete
           </Typography>
-          <Typography id="delete-notification-modal-description" variant="body1" sx={{ marginBottom: 2 }}>
+          <Typography
+            id="delete-notification-modal-description"
+            variant="body1"
+            sx={{ marginBottom: 2 }}
+          >
             Are you sure you want to delete this notification?
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={closeDeleteConfirmation} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => handleDeleteNotification(notificationToDelete?.id)} variant="contained" color="error">
+            <Button
+              onClick={() => handleDeleteNotification(notificationToDelete?.id)}
+              variant="contained"
+              color="error"
+            >
               Delete
             </Button>
           </Box>
@@ -238,6 +281,6 @@ const RenterNotifications = () => {
       </Modal>
     </Box>
   );
-};
+}
 
 export default RenterNotifications;

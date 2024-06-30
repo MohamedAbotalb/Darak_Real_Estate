@@ -51,7 +51,7 @@ function Header() {
       setIsLoggedIn(false);
     }
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (user) {
       if (user.role === 'user') {

@@ -15,7 +15,8 @@ import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
 import tourRequestReducer from 'store/tourRequestSlice';
-import notificationsReducer from 'store/Notifications/notificationsSlice'
+import notificationsReducer from 'store/Notifications/notificationsSlice';
+
 const reduxStore = configureStore({
   reducer: {
     auth: authReducer,
