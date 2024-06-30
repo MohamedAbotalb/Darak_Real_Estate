@@ -1,3 +1,4 @@
+import secureLocalStorage from 'react-secure-storage';
 import axios from './axiosConfig';
 
 export const getUserDetails = () => {
@@ -17,7 +18,9 @@ export const updateUserPhone = (phoneData) => {
 };
 
 export const updateUserAvatar = (avatarData) => {
-  return axios.put('/users/updateAvatar', avatarData);
+  return axios.put('/users/updateAvatar', avatarData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
 };
 
 export const deleteUserAccount = () => {
