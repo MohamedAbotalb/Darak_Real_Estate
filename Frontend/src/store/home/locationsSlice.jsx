@@ -1,18 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from 'services/axiosConfig';
 
 export const fetchLocations = createAsyncThunk(
   'locations/fetchLocations',
   async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/properties');
-      console.log('API Response for Locations:', response.data);
-      return response.data.map((property) => ({
+      const response = await axios.get('/properties');
+      return response.data.data.map((property) => ({
         id: property.location.id,
         city: property.location.city,
       }));
     } catch (error) {
-      console.error('Error fetching locations:', error);
       throw Error('Failed to fetch locations');
     }
   }

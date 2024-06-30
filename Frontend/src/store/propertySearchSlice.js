@@ -1,19 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'services/axiosConfig';
+import getPropertiesSearch from 'services/propertySearchService';
 
 export const fetchProperties = createAsyncThunk(
   'propertiesSearch/fetchProperties',
   async ({ propertyType, locationId, listingType, beds, baths, price }) => {
     try {
-      console.log({
-        propertyType,
-        locationId,
-        listingType,
-        beds,
-        baths,
-        price,
-      });
-      const response = await axios.get('/properties/search/filter/Advanced', {
+      const response = await getPropertiesSearch({
         params: {
           property_type: propertyType || null,
           location_id: locationId || null,
@@ -25,6 +17,7 @@ export const fetchProperties = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
+      console.error('Error fetching properties:', error);
       throw Error('Failed to fetch properties');
     }
   }

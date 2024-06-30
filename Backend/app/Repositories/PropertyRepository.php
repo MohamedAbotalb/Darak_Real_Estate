@@ -74,24 +74,8 @@ class PropertyRepository implements PropertyRepositoryInterface
         }
     }
 
+
     public function searchProperties(array $filters)
-    {
-        $query = Property::query();
-
-        if (isset($filters['property_type'])) {
-            $query->where('property_type_id', $filters['property_type']);
-        }
-        if (isset($filters['listing_type'])) {
-            $query->where('listing_type', $filters['listing_type']);
-        }
-        if (isset($filters['city'])) {
-            $query->join('locations', 'properties.location_id', '=', 'locations.id');
-            $query->where('locations.city', $filters['city']);
-        }
-
-        return $query->get();
-    }
-    public function searchPropertiesAdvanced(array $filters)
     {
         $query = Property::query();
 
@@ -114,6 +98,13 @@ class PropertyRepository implements PropertyRepositoryInterface
         if (isset($filters['city'])) {
             $query->join('locations', 'properties.location_id', '=', 'locations.id');
             $query->where('locations.city', $filters['city']);
+        }
+        if (isset($filters['min_price']) && isset($filters['max_price'])) {
+            $query->whereBetween('price', [$filters['min_price'], $filters['max_price']]);
+        } elseif (isset($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        } elseif (isset($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
         }
 
         return $query->get();
