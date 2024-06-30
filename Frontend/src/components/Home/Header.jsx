@@ -73,7 +73,7 @@ function Header() {
     <AppBar
       position="static"
       className="header"
-      sx={{ backgroundColor: '#2b3d4f' }}
+      sx={{ backgroundColor: '#2C3E50' }}
     >
       <Toolbar>
         <Typography
@@ -232,7 +232,6 @@ function Header() {
                   </Badge>
                 </ListItemIcon>
               </ListItem>
-
               <ListItem
                 button
                 component={Link}

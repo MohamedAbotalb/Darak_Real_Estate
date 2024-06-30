@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Container, Grid } from '@mui/material';
+import { toast } from 'react-toastify';
 import Header from 'components/Home/Header';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
@@ -8,28 +10,57 @@ import PasswordDialog from 'components/UserProfile/PasswordDialog';
 import AvatarDialog from 'components/UserProfile/AvatarDialog';
 import PhoneDialog from 'components/UserProfile/PhoneDialog';
 import DeleteDialog from 'components/UserProfile/DeleteDialog';
-import {
-  Container,
-  Box,
-  Typography,
-  Button,
-  Divider,
-  Grid,
-  Paper,
-} from '@mui/material';
-import { toast } from 'react-toastify';
+import ProfileDetails from 'components/UserProfile/ProfileDetails';
 import {
   fetchUser,
   updateUser,
   updatePassword,
+  updatePhone,
+  updateAvatar,
   deleteUser,
 } from 'store/userSlice';
 import { setCredentials, logout } from 'store/Auth/authSlice';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('First Name is required')
+    .min(3, 'First Name should be more than 2 characters')
+    .matches(
+      /^[A-Za-z]+$/,
+      'First Name should contain only alphabetic characters'
+    ),
+  lastName: Yup.string()
+    .required('Last Name is required')
+    .min(3, 'Last Name should be more than 2 characters')
+    .matches(
+      /^[A-Za-z]+$/,
+      'Last Name should contain only alphabetic characters'
+    ),
+  newPassword: Yup.string()
+    .min(8, 'Password must be at least 8 characters long')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number')
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      'Password must contain at least one special character'
+    ),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('newPassword'), null], 'Passwords do not match')
+    .required('Password confirmation is required'),
+  phone: Yup.string()
+    .required('Phone Number is required')
+    .matches(
+      /^01[0125][0-9]{8}$/,
+      'Phone Number must be a valid Egyptian phone number'
+    ),
+});
 
 function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.auth);
 
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
@@ -37,83 +68,145 @@ function Profile() {
   const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [editField, setEditField] = useState('');
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [avatar, setAvatar] = useState('../assets/images/defaultprofile.png');
   const [phone, setPhone] = useState('');
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
-
+  console.log(user);
   useEffect(() => {
     if (user) {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setAvatar(user.avatar);
-      setPhone(user.phone);
+      setPhone(user.phone_number);
     }
   }, [user]);
 
   const handleEditClick = (field) => {
+    setEditField(field);
     if (field === 'Password') {
       setOpenPasswordDialog(true);
     } else if (field === 'Phone') {
       setOpenPhoneDialog(true);
     } else {
-      setEditField(field);
       setOpenEditDialog(true);
     }
   };
 
   const handleDialogClose = () => {
     setOpenEditDialog(false);
-    setEditField('');
-    setFirstName(user.first_name);
-    setLastName(user.last_name);
-  };
-
-  const handlePasswordDialogClose = () => {
     setOpenPasswordDialog(false);
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-  };
-
-  const handleAvatarDialogClose = () => {
-    setOpenAvatarDialog(false);
-  };
-
-  const handlePhoneDialogClose = () => {
     setOpenPhoneDialog(false);
-    setPhone(user.phone);
-  };
-
-  const handleDeleteDialogClose = () => {
     setOpenDeleteDialog(false);
   };
 
-  const handleSave = async () => {
-    try {
-      await dispatch(
-        updateUser({ first_name: firstName, last_name: lastName })
-      );
-      toast.success(`${editField} updated successfully`);
-      dispatch(
-        setCredentials({ ...user, first_name: firstName, last_name: lastName })
-      );
-      handleDialogClose();
-    } catch (error) {
-      toast.error('Failed to update profile');
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          await dispatch(updateAvatar({ avatar: e.target.result }));
+          dispatch(setCredentials({ ...user, avatar: e.target.result }));
+          toast.success('Avatar updated successfully');
+          setOpenAvatarDialog(false);
+        } catch (error) {
+          toast.error('Failed to update avatar');
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleChangePassword = async () => {
-    if (newPassword === confirmPassword) {
-      try {
+  const handleDeleteAccount = async () => {
+    try {
+      await dispatch(deleteUser(user.id));
+      dispatch(logout());
+      toast.success('Account deleted successfully');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Failed to delete account');
+    }
+  };
+
+  const handleSave = async () => {
+    let valid = true;
+
+    const validate = async () => {
+      if (editField === 'Name') {
+        const schema = validationSchema.pick(['firstName', 'lastName']);
+        try {
+          await schema.validate({ firstName, lastName }, { abortEarly: false });
+          setErrors({});
+        } catch (err) {
+          const validationErrors = {};
+          err.inner.forEach((error) => {
+            validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+          valid = false;
+        }
+      } else if (editField === 'Password') {
+        const schema = validationSchema.pick([
+          'newPassword',
+          'confirmPassword',
+        ]);
+        try {
+          await schema.validate(
+            { newPassword, confirmPassword },
+            { abortEarly: false }
+          );
+          setErrors({});
+        } catch (err) {
+          const validationErrors = {};
+          err.inner.forEach((error) => {
+            validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+          valid = false;
+        }
+      } else if (editField === 'Phone') {
+        const schema = validationSchema.pick(['phone']);
+        try {
+          await schema.validate({ phone }, { abortEarly: false });
+          setErrors({});
+        } catch (err) {
+          const validationErrors = {};
+          err.inner.forEach((error) => {
+            validationErrors[error.path] = error.message;
+          });
+          setErrors(validationErrors);
+          valid = false;
+        }
+      }
+    };
+
+    await validate();
+
+    if (!valid) return;
+
+    try {
+      if (editField === 'Name') {
+        await dispatch(
+          updateUser({ first_name: firstName, last_name: lastName })
+        );
+        dispatch(
+          setCredentials({
+            ...user,
+            first_name: firstName,
+            last_name: lastName,
+          })
+        );
+        toast.success('Profile updated successfully');
+      } else if (editField === 'Password') {
         await dispatch(
           updatePassword({
             current_password: currentPassword,
@@ -121,45 +214,14 @@ function Profile() {
           })
         );
         toast.success('Password changed successfully');
-        handlePasswordDialogClose();
-      } catch (error) {
-        toast.error('Failed to change password');
+      } else if (editField === 'Phone') {
+        await dispatch(updatePhone({ phone_number: phone }));
+        dispatch(setCredentials({ ...user, phone_number: phone }));
+        toast.success('Phone number updated successfully');
       }
-    } else {
-      toast.error('Passwords do not match');
-    }
-  };
-
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatar(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSavePhone = async () => {
-    try {
-      await dispatch(updateUser({ phone }));
-      toast.success('Phone number updated successfully');
-      dispatch(setCredentials({ ...user, phone }));
-      handlePhoneDialogClose();
+      handleDialogClose();
     } catch (error) {
-      toast.error('Failed to update phone number');
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    try {
-      await dispatch(deleteUser());
-      dispatch(logout());
-      toast.success('Account deleted successfully');
-      navigate('/');
-    } catch (error) {
-      toast.error('Failed to delete account');
+      toast.error('Failed to update profile');
     }
   };
 
@@ -170,68 +232,17 @@ function Profile() {
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
             <ProfileHeader
-              avatar={avatar}
+              avatar={user?.avatar || '../assets/images/defaultprofile.png'}
               user={user}
               onEditAvatar={() => setOpenAvatarDialog(true)}
             />
           </Grid>
           <Grid item xs={12} sm={8}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <Typography variant="h5" component="div" sx={{ mb: 2 }}>
-                Profile
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
-              >
-                <Typography>Name</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => handleEditClick('Name')}
-                >
-                  Edit
-                </Button>
-              </Box>
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
-              >
-                <Typography>Tours / Properties</Typography>
-                <Button variant="contained">Show</Button>
-              </Box>
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
-              >
-                <Typography>Phone</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => handleEditClick('Phone')}
-                >
-                  Edit
-                </Button>
-              </Box>
-              <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
-              >
-                <Typography>Password</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => handleEditClick('Password')}
-                >
-                  Edit
-                </Button>
-              </Box>
-              <Typography variant="h5" component="div" sx={{ mb: 2 }}>
-                Manage Account
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <Button
-                color="error"
-                variant="contained"
-                onClick={() => setOpenDeleteDialog(true)}
-              >
-                Delete Account
-              </Button>
-            </Paper>
+            <ProfileDetails
+              user={user}
+              onEditClick={handleEditClick}
+              onDeleteClick={() => setOpenDeleteDialog(true)}
+            />
           </Grid>
         </Grid>
         <EditDialog
@@ -242,33 +253,36 @@ function Profile() {
           setFirstName={setFirstName}
           setLastName={setLastName}
           onSave={handleSave}
+          errors={errors}
         />
         <PasswordDialog
           isOpen={openPasswordDialog}
-          onClose={handlePasswordDialogClose}
+          onClose={handleDialogClose}
           currentPassword={currentPassword}
           newPassword={newPassword}
           confirmPassword={confirmPassword}
           setCurrentPassword={setCurrentPassword}
           setNewPassword={setNewPassword}
           setConfirmPassword={setConfirmPassword}
-          onSave={handleChangePassword}
+          onSave={handleSave}
+          errors={errors}
         />
         <AvatarDialog
           isOpen={openAvatarDialog}
-          onClose={handleAvatarDialogClose}
+          onClose={handleDialogClose}
           onChange={handleAvatarChange}
         />
         <PhoneDialog
           isOpen={openPhoneDialog}
-          onClose={handlePhoneDialogClose}
+          onClose={handleDialogClose}
           phone={phone}
           setPhone={setPhone}
-          onSave={handleSavePhone}
+          onSave={handleSave}
+          errors={errors}
         />
         <DeleteDialog
           isOpen={openDeleteDialog}
-          onClose={handleDeleteDialogClose}
+          onClose={handleDialogClose}
           onDelete={handleDeleteAccount}
         />
       </Container>
