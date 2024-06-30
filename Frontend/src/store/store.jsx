@@ -3,6 +3,7 @@ import authReducer from 'store/Auth/authSlice';
 import userReducer from 'store/userSlice';
 import reportUsersReducer from 'store/reportUsersSlice';
 import reportPropertiesReducer from 'store/reportPropertiesSlice';
+import propertyDetailsReducer from 'store/propertyDetailsSlice';
 import propertyReducer from 'store/propertySlice';
 import propertyTypesReducer from 'store/propertyTypesSlice';
 import propertyTypeReducer from 'store/home/propertyTypeSlice';
@@ -14,6 +15,7 @@ import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
 import notificationsReducer from 'store/Notifications/notificationsSlice';
+import tourRequestReducer from 'store/tourRequestSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -21,7 +23,9 @@ const reduxStore = configureStore({
     user: userReducer,
     reportUsers: reportUsersReducer,
     reportProperties: reportPropertiesReducer,
+    propertyDetails: propertyDetailsReducer,
     property: propertyReducer,
+    tourRequest: tourRequestReducer,
     propertyTypes: propertyTypesReducer,
     propertyType: propertyTypeReducer,
     properties: propertiesReducer,
