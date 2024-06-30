@@ -26,10 +26,9 @@ import UserDetails from 'components/AdminDashboard/UserDetails';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
+import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
-import Myproperties from 'pages/Myproperties';
-import MyTours from 'pages/MyTours';
 
 function App() {
   const router = createBrowserRouter(
@@ -45,10 +44,9 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
+          <Route path="search" element={<SearchPage />} />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/myproperties" element={<Myproperties />} />
-        <Route path="/mytours" element={<MyTours />} />
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"

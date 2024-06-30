@@ -1,17 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from 'services/axiosConfig';
 
 export const fetchPropertyTypes = createAsyncThunk(
   'propertyTypes/fetchPropertyTypes',
   async () => {
     try {
-      const response = await axios.get(
-        'http://127.0.0.1:8000/api/property-types'
-      );
-      console.log('API Response for Property Types:', response.data);
+      const response = await axios.get('/property-types');
       return response.data;
     } catch (error) {
-      console.error('Error fetching property types:', error);
       throw new Error('Failed to fetch property types');
     }
   }
