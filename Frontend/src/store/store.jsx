@@ -14,7 +14,6 @@ import overviewReducer from 'store/overviewSlice';
 import userDetailsReducer from 'store/userDetailsSlice';
 import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
-import notificationsReducer from 'store/Notifications/notificationsSlice';
 import tourRequestReducer from 'store/tourRequestSlice';
 
 const reduxStore = configureStore({

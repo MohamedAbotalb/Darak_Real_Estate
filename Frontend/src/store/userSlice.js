@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import secureLocalStorage from 'react-secure-storage';
 import {
   getUserDetails,
   updateUserDetails,
@@ -17,6 +18,7 @@ export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (userData) => {
     const response = await updateUserDetails(userData);
+    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
 );
@@ -25,6 +27,7 @@ export const updatePassword = createAsyncThunk(
   'user/updatePassword',
   async (passwordData) => {
     const response = await updateUserPassword(passwordData);
+    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
 );
@@ -33,6 +36,7 @@ export const updatePhone = createAsyncThunk(
   'user/updatePhone',
   async (phoneData) => {
     const response = await updateUserPhone(phoneData);
+    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
 );
@@ -41,6 +45,7 @@ export const updateAvatar = createAsyncThunk(
   'user/updateAvatar',
   async (avatarData) => {
     const response = await updateUserAvatar(avatarData);
+    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
 );
