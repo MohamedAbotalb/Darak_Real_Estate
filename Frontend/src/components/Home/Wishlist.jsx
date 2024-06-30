@@ -64,7 +64,6 @@ function Wishlist() {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      justifyContent="center"
       minHeight="100vh"
       mx={{ xs: 2, sm: 4 }}
       px={{ xs: 2, sm: 4 }}
