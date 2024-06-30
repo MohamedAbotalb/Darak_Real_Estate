@@ -84,7 +84,7 @@ Route::prefix('properties')->group(function(){
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::get('/search/filter/Advanced',[PropertyController::class,'searchAdvanced']);
-
+    Route::put('/{id}',[PropertyController::class,'update']);
 });
 Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
     Route::get('/landlord',[NotificationController::class,'showLandlordNotifications']);

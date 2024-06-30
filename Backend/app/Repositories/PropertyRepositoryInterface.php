@@ -12,4 +12,5 @@ interface PropertyRepositoryInterface
     public function searchPropertiesAdvanced(array $filters);
 
     public function showUserProperties(int $id);
+    public function updateProperty(array $data, int $propertyId);
 }
