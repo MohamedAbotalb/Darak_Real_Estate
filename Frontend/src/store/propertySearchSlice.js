@@ -3,21 +3,29 @@ import getPropertiesSearch from 'services/propertySearchService';
 
 export const fetchProperties = createAsyncThunk(
   'propertiesSearch/fetchProperties',
-  async ({ propertyType, locationId, listingType, beds, baths, price }) => {
+  async ({
+    propertyType,
+    city,
+    listingType,
+    bedrooms,
+    bathrooms,
+    minPrice,
+    maxPrice,
+  }) => {
     try {
       const response = await getPropertiesSearch({
         params: {
           property_type: propertyType || null,
-          location_id: locationId || null,
+          city: city || null,
           listing_type: listingType || null,
-          num_of_bedrooms: beds || null,
-          num_of_bathrooms: baths || null,
-          price: price || null,
+          num_of_bedrooms: bedrooms || null,
+          num_of_bathrooms: bathrooms || null,
+          min_price: minPrice || null,
+          max_price: maxPrice || null,
         },
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching properties:', error);
       throw Error('Failed to fetch properties');
     }
   }
@@ -40,7 +48,6 @@ const propertiesSliceSearch = createSlice({
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
-        console.log(state.data);
         state.error = null;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
