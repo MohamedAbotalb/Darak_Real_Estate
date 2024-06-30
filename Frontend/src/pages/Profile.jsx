@@ -81,7 +81,7 @@ function Profile() {
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
-
+  console.log(user);
   useEffect(() => {
     if (user) {
       setFirstName(user.first_name);

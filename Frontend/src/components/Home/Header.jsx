@@ -232,11 +232,10 @@ function Header() {
                   </Badge>
                 </ListItemIcon>
               </ListItem>
-
               <ListItem
                 button
                 component={Link}
-                to="profile"
+                to="/profile"
                 onClick={handleDrawerClose}
               >
                 <ListItemIcon>
