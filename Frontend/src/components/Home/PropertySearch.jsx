@@ -76,7 +76,7 @@ function PropertySearch() {
 
   return (
     <SearchContainer>
-      <SearchFormControl variant="outlined" marginBottom="0">
+      <SearchFormControl variant="outlined">
         <Select
           value={rentOrSell}
           onChange={(e) => setRentOrSell(e.target.value)}
