@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   AppBar,
@@ -19,13 +20,16 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
+import {
+  fetchRenterNotifications,
+  fetchLandlordNotifications,
+} from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from './Notifications/NotificationDropdown';
 
 function Header() {
@@ -37,17 +41,27 @@ function Header() {
   const wishlist = useSelector((state) => state.wishlist.list);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-const { user } = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth);
+
   useEffect(() => {
-    const user = secureLocalStorage.getItem('user');
-    if (user) {
+    const storedUser = secureLocalStorage.getItem('user');
+    if (storedUser) {
       setIsLoggedIn(true);
       dispatch(fetchWishlist());
     } else {
       setIsLoggedIn(false);
     }
   }, [dispatch]);
-
+  
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'user') {
+        dispatch(fetchRenterNotifications());
+      } else if (user.role === 'landlord') {
+        dispatch(fetchLandlordNotifications());
+      }
+    }
+  }, [dispatch, user]);
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -74,7 +88,7 @@ const { user } = useSelector((state) => state.auth)
     <AppBar
       position="static"
       className="header"
-      sx={{ backgroundColor: '#2b3d4f' }}
+      sx={{ backgroundColor: '#2C3E50' }}
     >
       <Toolbar>
         <Typography
@@ -127,9 +141,7 @@ const { user } = useSelector((state) => state.auth)
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton color="inherit">
-             
-                <NotificationDropdown role={user.role}/>
-             
+              {user && <NotificationDropdown role={user.role} />}
             </IconButton>
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
@@ -217,7 +229,7 @@ const { user } = useSelector((state) => state.auth)
               <ListItem button onClick={handleDrawerClose}>
                 <ListItemIcon>
                   <Badge badgeContent={4} color="error">
-                    <NotificationDropdown/>
+                    {user && <NotificationDropdown role={user.role} />}
                   </Badge>
                 </ListItemIcon>
               </ListItem>
@@ -233,7 +245,6 @@ const { user } = useSelector((state) => state.auth)
                   </Badge>
                 </ListItemIcon>
               </ListItem>
-
               <ListItem
                 button
                 component={Link}

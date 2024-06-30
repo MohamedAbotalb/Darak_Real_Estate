@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -7,7 +8,7 @@ export const fetchReports = createAsyncThunk(
     const response = await axios.get(
       'http://localhost:8000/api/report-properties'
     );
-    return response.data.data;
+    return response.data;
   }
 );
 

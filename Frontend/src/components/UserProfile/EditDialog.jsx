@@ -19,6 +19,7 @@ function EditDialog({
   setFirstName,
   setLastName,
   onSave,
+  errors,
 }) {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -44,6 +45,8 @@ function EditDialog({
           variant="outlined"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          error={Boolean(errors.firstName)}
+          helperText={errors.firstName}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -54,6 +57,8 @@ function EditDialog({
           variant="outlined"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          error={Boolean(errors.lastName)}
+          helperText={errors.lastName}
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
@@ -81,6 +86,10 @@ EditDialog.propTypes = {
   setFirstName: PropTypes.func.isRequired,
   setLastName: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  errors: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+  }).isRequired,
 };
 
 export default EditDialog;

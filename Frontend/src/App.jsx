@@ -28,9 +28,10 @@ import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
+// import Myproperties from 'pages/Myproperties';
+// import MyTours from 'pages/MyTours';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
-
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -55,6 +56,8 @@ function App() {
           />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
+        {/* <Route path="/myproperties" element={<Myproperties />} /> */}
+        {/* <Route path="/mytours" element={<MyTours />} /> */}
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"

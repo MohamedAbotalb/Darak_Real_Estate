@@ -10,7 +10,7 @@ class Notification extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'landlord_id', 'tour_id','message', 'type', 'date'];
+    protected $fillable = ['user_id', 'landlord_id', 'tour_id','message', 'type', 'date','status',];
     protected $dates=['deleted_at'];
 
     public function user()

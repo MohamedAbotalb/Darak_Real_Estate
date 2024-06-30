@@ -9,19 +9,37 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
       elevation={3}
       sx={{ p: 2, textAlign: 'center', position: 'relative' }}
     >
-      <Avatar
-        sx={{ width: 100, height: 100, mx: 'auto', mb: 2 }}
-        src={avatar}
-      />
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <Avatar
+          sx={{ width: 100, height: 100, mx: 'auto', mb: 3 }}
+          src={avatar}
+        />
+        <IconButton
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            bgcolor: 'white',
+            border: '2px solid white',
+            '&:hover': {
+              bgcolor: 'primary.main',
+              color: 'white',
+            },
+          }}
+          onClick={onEditAvatar}
+        >
+          <EditIcon />
+        </IconButton>
+      </div>
       <Typography variant="h6" component="div">
         {`${user?.first_name} ${user?.last_name}`}
       </Typography>
-      <IconButton
-        sx={{ mt: 1, position: 'absolute', top: 16, right: 16 }}
-        onClick={onEditAvatar}
-      >
-        <EditIcon />
-      </IconButton>
+      <Typography variant="body1" component="div">
+        {user?.phone_number}
+      </Typography>
+      <Typography variant="body1" component="div">
+        {user?.email}
+      </Typography>
     </Paper>
   );
 }
@@ -32,7 +50,8 @@ ProfileHeader.propTypes = {
     first_name: PropTypes.string,
     last_name: PropTypes.string,
     avatar: PropTypes.string,
-    phone: PropTypes.string,
+    phone_number: PropTypes.string,
+    email: PropTypes.string,
   }).isRequired,
   onEditAvatar: PropTypes.func.isRequired,
 };
