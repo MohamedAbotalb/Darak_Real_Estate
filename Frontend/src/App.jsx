@@ -29,8 +29,6 @@ import AddPropertyPage from 'pages/AddProperty';
 import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
-import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
-import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
 
 function App() {
   const router = createBrowserRouter(
@@ -47,14 +45,6 @@ function App() {
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
           <Route path="search" element={<SearchPage />} />
-          <Route
-            path="/renter-notifications"
-            element={<RenterNotifications />}
-          />
-          <Route
-            path="/landlord-notifications"
-            element={<LandlordNotifications />}
-          />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}

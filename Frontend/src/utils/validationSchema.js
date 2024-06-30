@@ -28,8 +28,10 @@ const validationSchema = yup.object().shape({
     .typeError('Price is required')
     .required('Price is required')
     .positive('Price must be positive'),
-  property_type_id: yup.string().required('Type is required'),
-  type: yup.string().typeError('type is required').required('type is required'),
+  property_type_id: yup
+    .string()
+    .typeError('Type is required')
+    .required('Type is required'),
 
   num_of_rooms: yup
     .number()

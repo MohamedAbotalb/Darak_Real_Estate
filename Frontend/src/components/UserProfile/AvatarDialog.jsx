@@ -36,14 +36,28 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
-        <Button onClick={onClose} color="primary">
+        <Button
+          onClick={onClose}
+          sx={{
+            color: '#0185B7',
+            borderColor: '#0185B7',
+            '&:hover': {
+              borderColor: '#0185B7',
+              backgroundColor: '#f0f0f0',
+            },
+          }}
+        >
           Cancel
         </Button>
         <Button
           onClick={onClose}
-          color="primary"
           variant="contained"
-          sx={{ backgroundColor: '#70B5F9' }}
+          sx={{
+            backgroundColor: '#0185B7',
+            '&:hover': {
+              backgroundColor: '#016a92',
+            },
+          }}
         >
           Apply
         </Button>

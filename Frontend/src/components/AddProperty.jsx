@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   TextField,
@@ -63,6 +63,7 @@ function AddProperty() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -261,32 +262,40 @@ function AddProperty() {
                   <InputLabel id="type-label" htmlFor="property_type_id">
                     Type
                   </InputLabel>
-                  <Select
-                    labelId="type-label"
-                    id="property_type_id"
-                    {...register('property_type_id')}
-                    label="Type"
+                  <Controller
+                    name="property_type_id"
+                    control={control}
                     defaultValue=""
-                  >
-                    {propertyTypesStatus === 'loading' && (
-                      <MenuItem value="" disabled>
-                        Loading types...
-                      </MenuItem>
+                    render={({ field }) => (
+                      <Select
+                        labelId="type-label"
+                        id="property_type_id"
+                        {...field}
+                        label="Type"
+                      >
+                        {propertyTypesStatus === 'loading' && (
+                          <MenuItem value="" disabled>
+                            Loading types...
+                          </MenuItem>
+                        )}
+                        {propertyTypesStatus === 'failed' && (
+                          <MenuItem value="" disabled>
+                            Error loading types
+                          </MenuItem>
+                        )}
+                        {propertyTypesStatus === 'succeeded' &&
+                          propertyTypes.map((type) => (
+                            <MenuItem key={type.id} value={type.id}>
+                              {type.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
                     )}
-                    {propertyTypesStatus === 'failed' && (
-                      <MenuItem value="" disabled>
-                        Error loading types
-                      </MenuItem>
-                    )}
-                    {propertyTypesStatus === 'succeeded' &&
-                      propertyTypes.map((type) => (
-                        <MenuItem key={type.id} value={type.id}>
-                          {type.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                  {errors.type && (
-                    <Typography color="error">{errors.type.message}</Typography>
+                  />
+                  {errors.property_type_id && (
+                    <Typography color="error">
+                      {errors.property_type_id.message}
+                    </Typography>
                   )}
                 </FormControl>
               </Grid>

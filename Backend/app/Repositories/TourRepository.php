@@ -12,22 +12,24 @@ class TourRepository implements TourRepositoryInterface
 {
     public function createTour(array $data)
     {
-        DB::beginTransaction();
-
-        try {
+        return DB::transaction(function () use ($data) {
             $existingTour = Tour::where('user_id', Auth::id())
+                ->where('property_id', $data['property_id'])
                 ->where('status', $data['status'])
-                ->first();
+                ->exists();
 
             if ($existingTour) {
-                return null;
+                return null; 
             }
+
+            // Create the tour
             $tour = Tour::create([
                 'user_id' => Auth::id(),
                 'property_id' => $data['property_id'],
                 'status' => $data['status'],
             ]);
 
+            // Create tour dates
             foreach ($data['dates'] as $date) {
                 TourDate::create([
                     'tour_id' => $tour->id,
@@ -35,30 +37,22 @@ class TourRepository implements TourRepositoryInterface
                 ]);
             }
 
+            // Notify the landlord
             $property = $tour->property;
-            if ($property) {
-                $landlord_id = $property->user_id;
+            $landlord_id = $property->user_id;
 
-                Notification::create([
-                    'user_id' => Auth::id(),
-                    'landlord_id' => $landlord_id,
-                    'tour_id' => $tour->id,
-                    'message' => 'Tour request for property: ' . $property->title,
-                    'type' => 'request',
-                    'status'=>'pending',
-                    'date' => now(),
-                ]);
-            } else {
-                return null;
-            }
-
-            DB::commit();
+            Notification::create([
+                'user_id' => Auth::id(),
+                'landlord_id' => $landlord_id,
+                'tour_id' => $tour->id,
+                'message' => 'Tour request for property: ' . $property->title,
+                'type' => 'request',
+                'status' => 'pending',
+                'date' => now(),
+            ]);
 
             return $tour->load('tourDates', 'property');
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw $e;
-        }
+        });
     }
 
 
@@ -102,7 +96,7 @@ class TourRepository implements TourRepositoryInterface
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been approved',
                 'type' => 'confirmation',
-                'status'=>'approved',
+                'status' => 'approved',
                 'date' => now(),
             ]);
             return true;
@@ -140,15 +134,13 @@ class TourRepository implements TourRepositoryInterface
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
                 'type' => 'cancelation',
-                'status'=>'declined',
+                'status' => 'declined',
                 'date' => now(),
             ]);
             return true;
-
-        }else{
+        } else {
             return null;
         }
-
     }
 
 

@@ -17,26 +17,22 @@ class TourController extends Controller
         $this->tourRepository = $tourRepository;
     }
 
-    public function send_request(StoreTourRequest $request)
+    public function send_Request(StoreTourRequest $request)
     {
-        try {
-            $tour = $this->tourRepository->createTour($request->validated());
-            if($tour){
-                return response()->json([
-                    'message' => 'Tour created successfully and Notification sent.',
-                    'tour' => new TourResource($tour)
-                ], 201);
-            }else{
-                return response()->json(["message"=>"Tour already created"]);
-            }
+        $tour = $this->tourRepository->createTour([
+            'property_id' => $request->input('property_id'),
+            'status' => $request->input('status'),
+            'dates' => $request->dates,
+        ]);
 
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to create tour and send notification.',
-                'error' => $e->getMessage()
-            ], 500);
+        if (is_null($tour)) {
+            return response()->json(['message' => 'Tour already created'], 409); 
         }
+
+        return response()->json([
+            'message' => 'Tour created successfully and Notification sent.',
+            'tour' => new TourResource($tour),
+        ], 201);
     }
 
     public function approveTour(Request $request, $id)

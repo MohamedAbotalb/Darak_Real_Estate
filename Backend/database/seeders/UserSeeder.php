@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
         $faker = Faker::create();
         $roles = ['user', 'landlord'];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             // Egyptian phone number
             $phonePrefix = $faker->randomElement(['0', '1', '2', '5']); 
             $phoneNumber = '+201' . $phonePrefix . $faker->numberBetween(10000000, 99999999);

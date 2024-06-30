@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -9,8 +9,11 @@ import {
   Button,
   DialogContentText,
   IconButton,
+  InputAdornment,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 function PasswordDialog({
   isOpen,
@@ -22,7 +25,21 @@ function PasswordDialog({
   setNewPassword,
   setConfirmPassword,
   onSave,
+  errors,
 }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword(!showConfirmPassword);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -42,22 +59,52 @@ function PasswordDialog({
           autoFocus
           margin="dense"
           label="Current password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
+          error={Boolean(errors.currentPassword)}
+          helperText={errors.currentPassword}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           margin="dense"
           label="New password"
-          type="password"
+          type={showNewPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
+          error={Boolean(errors.newPassword)}
+          helperText={errors.newPassword}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowNewPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <DialogContentText sx={{ mb: 2 }}>
           At least 8 characters <br />
@@ -68,11 +115,26 @@ function PasswordDialog({
         <TextField
           margin="dense"
           label="Confirm password"
-          type="password"
+          type={showConfirmPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          error={Boolean(errors.confirmPassword)}
+          helperText={errors.confirmPassword}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowConfirmPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
@@ -102,6 +164,11 @@ PasswordDialog.propTypes = {
   setNewPassword: PropTypes.func.isRequired,
   setConfirmPassword: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  errors: PropTypes.shape({
+    currentPassword: PropTypes.string,
+    newPassword: PropTypes.string,
+    confirmPassword: PropTypes.string,
+  }).isRequired,
 };
 
 export default PasswordDialog;
