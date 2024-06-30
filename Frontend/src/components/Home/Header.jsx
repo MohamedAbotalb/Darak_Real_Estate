@@ -19,17 +19,13 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
-import {
-  fetchRenterNotificationsAsync,
-  fetchLandlordNotificationsAsync,
-} from 'store/Notifications/notificationsSlice';
-import NotificationDropdown from './Notifications/NotificationDropdown';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,27 +36,17 @@ function Header() {
   const wishlist = useSelector((state) => state.wishlist.list);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const storedUser = secureLocalStorage.getItem('user');
-    if (storedUser) {
+    const user = secureLocalStorage.getItem('user');
+    if (user) {
       setIsLoggedIn(true);
       dispatch(fetchWishlist());
     } else {
       setIsLoggedIn(false);
     }
   }, [dispatch]);
-  
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'user') {
-        dispatch(fetchRenterNotificationsAsync());
-      } else if (user.role === 'landlord') {
-        dispatch(fetchLandlordNotificationsAsync());
-      }
-    }
-  }, [dispatch, user]);
+
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -140,7 +126,9 @@ function Header() {
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton color="inherit">
-              {user && <NotificationDropdown role={user.role} />}
+              <Badge badgeContent={4} color="error">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
@@ -228,7 +216,7 @@ function Header() {
               <ListItem button onClick={handleDrawerClose}>
                 <ListItemIcon>
                   <Badge badgeContent={4} color="error">
-                    {user && <NotificationDropdown role={user.role} />}
+                    <NotificationsIcon />
                   </Badge>
                 </ListItemIcon>
               </ListItem>
