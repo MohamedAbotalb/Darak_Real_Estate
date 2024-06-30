@@ -22,6 +22,7 @@ class NotificationResource extends JsonResource
             'tour' => new TourResource($this->whenLoaded('tour')),
             'message' => $this->message,
             'type' => $this->type,
+            'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
