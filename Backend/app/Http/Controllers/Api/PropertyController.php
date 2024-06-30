@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Properties\StorePropertyRequest;
+use App\Http\Requests\properties\UpdatePropertyRequest;
 use App\Http\Resources\PropertyResource;
 use App\Repositories\PropertyRepositoryInterface;
 use Illuminate\Http\Request;
@@ -91,5 +92,17 @@ class PropertyController extends Controller
         }
         return response()->json(['data' => PropertyResource::collection($properties)]);
 
+    }
+    public function update(UpdatePropertyRequest $request, $propertyId)
+    {
+        try {
+            $validatedData = $request->validated(); 
+    
+            $property = $this->propertyRepository->updateProperty($validatedData, $propertyId);
+    
+            return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
+        }
     }
 }
