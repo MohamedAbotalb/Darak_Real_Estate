@@ -15,6 +15,13 @@ class TourRepository implements TourRepositoryInterface
         DB::beginTransaction();
 
         try {
+            $existingTour = Tour::where('user_id', Auth::id())
+                ->where('status', $data['status'])
+                ->first();
+
+            if ($existingTour) {
+                return null;
+            }
             $tour = Tour::create([
                 'user_id' => Auth::id(),
                 'property_id' => $data['property_id'],
@@ -53,6 +60,7 @@ class TourRepository implements TourRepositoryInterface
         }
     }
 
+
     public function approveTour(int $id, int $tourDateId)
     {
         $tour = Tour::find($id);
@@ -80,17 +88,27 @@ class TourRepository implements TourRepositoryInterface
             return null;
         }
 
-        Notification::create([
-            'user_id' => $tour->user_id,
-            'landlord_id' => $property->user_id,
-            'tour_id' => $tour->id,
-            'message' => 'Tour request for property ' . $property->title . ' has been approved',
-            'type' => 'confirmation',
-            'date' => now(),
-        ]);
+        $existingNotification = Notification::where('user_id', $tour->user_id)
+            ->where('landlord_id', $property->user_id)
+            ->where('tour_id', $tour->id)
+            ->where('type', 'confirmation')
+            ->exists();
 
-        return true;
+        if (!$existingNotification) {
+            Notification::create([
+                'user_id' => $tour->user_id,
+                'landlord_id' => $property->user_id,
+                'tour_id' => $tour->id,
+                'message' => 'Tour request for property ' . $property->title . ' has been approved',
+                'type' => 'confirmation',
+                'date' => now(),
+            ]);
+            return true;
+        } else {
+            return null;
+        }
     }
+
     public function declineTour(int $id)
     {
         $tour = Tour::find($id);
@@ -107,16 +125,27 @@ class TourRepository implements TourRepositoryInterface
         $tour->status = 'declined';
         $tour->save();
 
-        Notification::create([
-            'user_id' => $tour->user_id,
-            'landlord_id' => $property->user_id,
-            'tour_id' => $tour->id,
-            'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
-            'type' => 'cancelation',
-            'date' => now(),
-        ]);
+        $existingNotification = Notification::where('user_id', $tour->user_id)
+            ->where('landlord_id', $property->user_id)
+            ->where('tour_id', $tour->id)
+            ->where('type', 'cancelation')
+            ->exists();
 
-        return true;
+        if (!$existingNotification) {
+            Notification::create([
+                'user_id' => $tour->user_id,
+                'landlord_id' => $property->user_id,
+                'tour_id' => $tour->id,
+                'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
+                'type' => 'cancelation',
+                'date' => now(),
+            ]);
+            return true;
+
+        }else{
+            return null;
+        }
+
     }
 
 
@@ -126,10 +155,10 @@ class TourRepository implements TourRepositoryInterface
             ->with(['user', 'property', 'tourDates'])
             ->get();
     }
-    public function getToursByStatus($status,$userId)
+    public function getToursByStatus($status, $userId)
     {
         return Tour::where('status', $status)
-            ->where('user_id',$userId)
+            ->where('user_id', $userId)
             ->with(['user', 'property', 'tourDates'])
             ->get();
     }
