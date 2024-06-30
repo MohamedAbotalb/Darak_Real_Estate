@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  fetchRenterNotifications,
-  fetchLandlordNotifications,
+  fetchRenterNotificationsAsync,
+  fetchLandlordNotificationsAsync,
 } from 'store/Notifications/notificationsSlice';
 import {
   Badge,
@@ -31,9 +31,9 @@ const NotificationDropdown = ({ role }) => {
 
   useEffect(() => {
     if (role === 'user') {
-      dispatch(fetchRenterNotifications());
+      dispatch(fetchRenterNotificationsAsync());
     } else if (role === 'landlord') {
-      dispatch(fetchLandlordNotifications());
+      dispatch(fetchLandlordNotificationsAsync());
     }
   }, [dispatch, role]);
 
@@ -49,20 +49,20 @@ const NotificationDropdown = ({ role }) => {
   };
 
   const handleNotificationClick = (notification) => {
-    handleMenuClose(); // Close the menu
+    handleMenuClose();
     if (role === 'user') {
-      navigate('/renter-notifications'); // Navigate to renter notifications page
+      navigate('/renter-notifications'); 
     } else if (role === 'landlord') {
-      navigate('/landlord-notifications'); // Navigate to landlord notifications page
+      navigate('/landlord-notifications'); 
     }
   };
 
   const handleShowAllNotifications = () => {
-    handleMenuClose(); // Close the menu
+    handleMenuClose(); 
     if (role === 'user') {
-      navigate('/renter-notifications'); // Navigate to renter notifications page
+      navigate('/renter-notifications'); 
     } else if (role === 'landlord') {
-      navigate('/landlord-notifications'); // Navigate to landlord notifications page
+      navigate('/landlord-notifications'); 
     }
   };
 

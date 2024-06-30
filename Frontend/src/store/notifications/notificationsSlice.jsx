@@ -1,6 +1,11 @@
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from 'services/axiosConfig';
+import {
+  fetchRenterNotifications,
+  fetchLandlordNotifications,
+  declineTourRequest,
+  approveTourDate,
+  deleteNotification,
+} from 'services/NotificationService';
 
 const initialState = {
   notifications: [],
@@ -8,64 +13,45 @@ const initialState = {
   error: null,
 };
 
-export const fetchRenterNotifications = createAsyncThunk(
+export const fetchRenterNotificationsAsync = createAsyncThunk(
   'notifications/fetchRenterNotifications',
   async () => {
-    const response = await axiosInstance.get('/notifications/renter');
-    return response.data.data; // Accessing the 'data' array
+    return fetchRenterNotifications();
   }
 );
 
-export const fetchLandlordNotifications = createAsyncThunk(
+export const fetchLandlordNotificationsAsync = createAsyncThunk(
   'notifications/fetchLandlordNotifications',
   async () => {
-    const response = await axiosInstance.get('/notifications/landlord');
-    return response.data.data; // Accessing the 'data' array
+    return fetchLandlordNotifications();
   }
 );
 
-export const declineTour = createAsyncThunk(
+export const declineTourAsync = createAsyncThunk(
   'notifications/declineTour',
   async (tourId) => {
-    const response = await axiosInstance.post(`/tours/${tourId}/decline`);
-    return response.data;
+    return declineTourRequest(tourId);
   }
 );
 
-export const approveDate = createAsyncThunk(
+export const approveDateAsync = createAsyncThunk(
   'notifications/approveDate',
   async ({ tourId, selectedDate }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`/tours/${tourId}/approve`, {
-        tour_date: selectedDate.id,
-      });
-      return response.data;
+      return approveTourDate({ tourId, selectedDate });
     } catch (error) {
-      if (error.response) {
-        return rejectWithValue(error.response.data);
-      } else if (error.request) {
-        return rejectWithValue(error.request);
-      } else {
-        return rejectWithValue(error.message);
-      }
+      return rejectWithValue(error);
     }
   }
 );
 
-export const deleteNotification = createAsyncThunk(
+export const deleteNotificationAsync = createAsyncThunk(
   'notifications/deleteNotification',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/notifications/${id}`);
-      return { id };
+      return deleteNotification(id);
     } catch (error) {
-      if (error.response) {
-        return rejectWithValue(error.response.data);
-      } else if (error.request) {
-        return rejectWithValue(error.request);
-      } else {
-        return rejectWithValue(error.message);
-      }
+      return rejectWithValue(error);
     }
   }
 );
@@ -76,58 +62,58 @@ const notificationsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRenterNotifications.pending, (state) => {
+      .addCase(fetchRenterNotificationsAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchRenterNotifications.fulfilled, (state, action) => {
+      .addCase(fetchRenterNotificationsAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.notifications = action.payload;
       })
-      .addCase(fetchRenterNotifications.rejected, (state, action) => {
+      .addCase(fetchRenterNotificationsAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(fetchLandlordNotifications.pending, (state) => {
+      .addCase(fetchLandlordNotificationsAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchLandlordNotifications.fulfilled, (state, action) => {
+      .addCase(fetchLandlordNotificationsAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.notifications = action.payload;
       })
-      .addCase(fetchLandlordNotifications.rejected, (state, action) => {
+      .addCase(fetchLandlordNotificationsAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(declineTour.pending, (state) => {
+      .addCase(declineTourAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(declineTour.fulfilled, (state, action) => {
+      .addCase(declineTourAsync.fulfilled, (state) => {
         state.status = 'declined';
       })
-      .addCase(declineTour.rejected, (state, action) => {
+      .addCase(declineTourAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(approveDate.pending, (state) => {
+      .addCase(approveDateAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(approveDate.fulfilled, (state, action) => {
+      .addCase(approveDateAsync.fulfilled, (state) => {
         state.status = 'approved';
       })
-      .addCase(approveDate.rejected, (state, action) => {
+      .addCase(approveDateAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(deleteNotification.pending, (state) => {
+      .addCase(deleteNotificationAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(deleteNotification.fulfilled, (state, action) => {
+      .addCase(deleteNotificationAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.notifications = state.notifications.filter(
           (notification) => notification.id !== action.payload.id
         );
       })
-      .addCase(deleteNotification.rejected, (state, action) => {
+      .addCase(deleteNotificationAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

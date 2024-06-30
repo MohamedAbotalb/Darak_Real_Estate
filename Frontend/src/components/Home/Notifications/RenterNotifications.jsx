@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchRenterNotifications,
-  deleteNotification,
+  fetchRenterNotificationsAsync,
+  deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
 import {
   
@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { green, red, orange, grey } from '@mui/material/colors';
-import moment from 'moment'; // Assuming you've installed moment
+import moment from 'moment'; 
 import Pagination from '@mui/material/Pagination';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,19 +31,19 @@ const RenterNotifications = () => {
     (state) => state.notifications
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState('all'); // 'all', 'declined', 'approved'
+  const [filter, setFilter] = useState('all'); 
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const itemsPerPage = 5;
 
   useEffect(() => {
-    dispatch(fetchRenterNotifications());
+    dispatch(fetchRenterNotificationsAsync());
   }, [dispatch]);
 
   const handleDeleteNotification = (id) => {
-    dispatch(deleteNotification(id));
-    setDeleteConfirmationOpen(false); // Close modal after deleting
+    dispatch(deleteNotificationAsync(id));
+    setDeleteConfirmationOpen(false); 
   };
 
   const openDeleteConfirmation = (notification) => {
@@ -62,9 +62,9 @@ const RenterNotifications = () => {
     const diffInHours = now.diff(notificationTime, 'hours');
 
     if (diffInHours < 3) {
-      return notificationTime.fromNow(); // Display time from now (e.g., "2 hours ago")
+      return notificationTime.fromNow(); 
     } else {
-      return notificationTime.format('MMMM DD, YYYY hh:mm A'); // Display exact date and time
+      return notificationTime.format('MMMM DD, YYYY hh:mm A'); 
     }
   };
 
@@ -161,7 +161,7 @@ const RenterNotifications = () => {
                     : orange[500],
                 display: 'flex',
                 alignItems: 'center',
-                position: 'relative', // Ensure position relative for absolute positioning of delete icon
+                position: 'relative', 
               }}
             >
               <Avatar
@@ -182,8 +182,8 @@ const RenterNotifications = () => {
               <IconButton
                 aria-label="delete notification"
                 onClick={() => openDeleteConfirmation(notification)}
-                onMouseEnter={(e) => e.currentTarget.style.color = red[500]} // Change icon color on hover
-                onMouseLeave={(e) => e.currentTarget.style.color = grey[500]} // Restore icon color on leave
+                onMouseEnter={(e) => e.currentTarget.style.color = red[500]} 
+                onMouseLeave={(e) => e.currentTarget.style.color = grey[500]} 
                 sx={{ position: 'absolute', top: 5, right: 5 }}
               >
                 <CloseIcon />

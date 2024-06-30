@@ -27,8 +27,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
-  fetchRenterNotifications,
-  fetchLandlordNotifications,
+  fetchRenterNotificationsAsync,
+  fetchLandlordNotificationsAsync,
 } from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from './Notifications/NotificationDropdown';
 
@@ -56,9 +56,9 @@ function Header() {
   useEffect(() => {
     if (user) {
       if (user.role === 'user') {
-        dispatch(fetchRenterNotifications());
+        dispatch(fetchRenterNotificationsAsync());
       } else if (user.role === 'landlord') {
-        dispatch(fetchLandlordNotifications());
+        dispatch(fetchLandlordNotificationsAsync());
       }
     }
   }, [dispatch, user]);
