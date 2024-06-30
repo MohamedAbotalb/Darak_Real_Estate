@@ -45,6 +45,7 @@ class TourRepository implements TourRepositoryInterface
                     'tour_id' => $tour->id,
                     'message' => 'Tour request for property: ' . $property->title,
                     'type' => 'request',
+                    'status'=>'pending',
                     'date' => now(),
                 ]);
             } else {
@@ -101,6 +102,7 @@ class TourRepository implements TourRepositoryInterface
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been approved',
                 'type' => 'confirmation',
+                'status'=>'approved',
                 'date' => now(),
             ]);
             return true;
@@ -138,6 +140,7 @@ class TourRepository implements TourRepositoryInterface
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
                 'type' => 'cancelation',
+                'status'=>'declined',
                 'date' => now(),
             ]);
             return true;
