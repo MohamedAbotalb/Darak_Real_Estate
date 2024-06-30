@@ -26,6 +26,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
+import NotificationDropdown from './Notifications/NotificationDropdown';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,7 +37,7 @@ function Header() {
   const wishlist = useSelector((state) => state.wishlist.list);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+const { user } = useSelector((state) => state.auth)
   useEffect(() => {
     const user = secureLocalStorage.getItem('user');
     if (user) {
@@ -126,9 +127,9 @@ function Header() {
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="error">
-                <NotificationsIcon />
-              </Badge>
+             
+                <NotificationDropdown role={user.role}/>
+             
             </IconButton>
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
@@ -216,7 +217,7 @@ function Header() {
               <ListItem button onClick={handleDrawerClose}>
                 <ListItemIcon>
                   <Badge badgeContent={4} color="error">
-                    <NotificationsIcon />
+                    <NotificationDropdown/>
                   </Badge>
                 </ListItemIcon>
               </ListItem>

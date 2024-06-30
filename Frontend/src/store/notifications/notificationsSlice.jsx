@@ -29,7 +29,7 @@ export const fetchLandlordNotifications = createAsyncThunk(
 export const declineTour = createAsyncThunk(
   'notifications/declineTour',
   async (tourId) => {
-    const response = await axiosInstance.post(`/tours/13/decline`);
+    const response = await axiosInstance.post(`/tours/${tourId}/decline`);
     return response.data;
   }
 );

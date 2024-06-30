@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import fetchRenterNotifications from 'store/notifications/notificationsSlice';
+import { fetchRenterNotifications } from 'store/notifications/notificationsSlice'; // Adjust the path based on your project structure
 
 function RenterNotifications() {
   const dispatch = useDispatch();
-  const { renterNotifications, status, error } = useSelector(
-    (state) => state.notifications
-  );
+  const { notifications, status, error } = useSelector((state) => state.notifications);
 
   useEffect(() => {
     dispatch(fetchRenterNotifications());
@@ -24,7 +22,7 @@ function RenterNotifications() {
     <div>
       <h2>Renter Notifications</h2>
       <ul>
-        {renterNotifications.map((notification) => (
+        {notifications.map((notification) => (
           <li key={notification.id}>{notification.message}</li>
         ))}
       </ul>
