@@ -26,6 +26,7 @@ import UserDetails from 'components/AdminDashboard/UserDetails';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
+import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
@@ -45,6 +46,7 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
+          <Route path="search" element={<SearchPage />} />
           <Route
             path="/renter-notifications"
             element={<RenterNotifications />}
