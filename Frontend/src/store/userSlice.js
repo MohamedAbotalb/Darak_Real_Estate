@@ -3,6 +3,8 @@ import {
   getUserDetails,
   updateUserDetails,
   updateUserPassword,
+  updateUserPhone,
+  updateUserAvatar,
   deleteUserAccount,
 } from 'services/userService';
 
@@ -23,6 +25,22 @@ export const updatePassword = createAsyncThunk(
   'user/updatePassword',
   async (passwordData) => {
     const response = await updateUserPassword(passwordData);
+    return response.data;
+  }
+);
+
+export const updatePhone = createAsyncThunk(
+  'user/updatePhone',
+  async (phoneData) => {
+    const response = await updateUserPhone(phoneData);
+    return response.data;
+  }
+);
+
+export const updateAvatar = createAsyncThunk(
+  'user/updateAvatar',
+  async (avatarData) => {
+    const response = await updateUserAvatar(avatarData);
     return response.data;
   }
 );
@@ -80,6 +98,30 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(updatePassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updatePhone.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updatePhone.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(updatePhone.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateAvatar.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateAvatar.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateAvatar.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })

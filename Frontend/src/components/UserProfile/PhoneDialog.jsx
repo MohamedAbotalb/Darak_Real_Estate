@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave }) {
+function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave, errors }) {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -38,6 +38,8 @@ function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave }) {
           variant="outlined"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          error={Boolean(errors.phone)}
+          helperText={errors.phone}
           sx={{ mb: 2 }}
         />
       </DialogContent>
@@ -64,6 +66,9 @@ PhoneDialog.propTypes = {
   phone: PropTypes.string.isRequired,
   setPhone: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  errors: PropTypes.shape({
+    phone: PropTypes.string,
+  }).isRequired,
 };
 
 export default PhoneDialog;

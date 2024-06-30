@@ -35,7 +35,6 @@ const reduxStore = configureStore({
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
     locations: locationsReducer,
-    notifications: notificationsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
