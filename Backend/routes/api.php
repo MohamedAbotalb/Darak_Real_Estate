@@ -84,7 +84,6 @@ Route::prefix('properties')->group(function(){
     Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
-    Route::get('/search/filter/Advanced',[PropertyController::class,'searchAdvanced']);
     Route::put('/{id}',[PropertyController::class,'update']);
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
