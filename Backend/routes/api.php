@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TourController;
@@ -86,6 +87,8 @@ Route::prefix('properties')->group(function(){
     Route::get('/search/filter/Advanced',[PropertyController::class,'searchAdvanced']);
     Route::put('/{id}',[PropertyController::class,'update']);
 });
+Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
+
 Route::prefix('notifications')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function(){
     Route::get('/landlord',[NotificationController::class,'showLandlordNotifications']);
     Route::get('/renter',[NotificationController::class,'showRenterNotifications']);
