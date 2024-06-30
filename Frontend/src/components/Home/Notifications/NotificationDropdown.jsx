@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchRenterNotifications, fetchLandlordNotifications } from 'store/notifications/notificationsSlice';
+import { fetchRenterNotifications, fetchLandlordNotifications } from 'store/Notifications/notificationsSlice';
 import {
   Badge,
   IconButton,

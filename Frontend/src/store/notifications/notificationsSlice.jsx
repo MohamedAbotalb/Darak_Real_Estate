@@ -11,7 +11,7 @@ export const fetchRenterNotifications = createAsyncThunk(
   'notifications/fetchRenterNotifications',
   async () => {
     const response = await axiosInstance.get('/notifications/renter');
-    console.log( response.data.data)
+    console.log(response.data.data);
     return response.data.data; // Accessing the 'data' array
   }
 );
@@ -20,8 +20,7 @@ export const fetchLandlordNotifications = createAsyncThunk(
   'notifications/fetchLandlordNotifications',
   async () => {
     const response = await axiosInstance.get('/notifications/landlord');
-        console.log( response.data.data)
-
+    console.log(response.data.data);
     return response.data.data; // Accessing the 'data' array
   }
 );
@@ -36,12 +35,24 @@ export const declineTour = createAsyncThunk(
 
 export const approveDate = createAsyncThunk(
   'notifications/approveDate',
-  async ({ tourId, selectedDate }) => {
-    const response = await axiosInstance.post(`/tours/${tourId}/approve`, { selectedDate });
-    return response.data;
+  async ({ tourId, selectedDate }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`/tours/${tourId}/approve`, { tour_date: selectedDate.id });
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.log('Error Response:', error.response.data);
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log('Error Request:', error.request);
+        return rejectWithValue(error.request);
+      } else {
+        console.log('Error Message:', error.message);
+        return rejectWithValue(error.message);
+      }
+    }
   }
 );
-
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,

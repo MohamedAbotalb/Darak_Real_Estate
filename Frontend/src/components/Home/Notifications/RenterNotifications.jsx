@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRenterNotifications } from 'store/notifications/notificationsSlice'; // Adjust the path based on your project structure
+import { fetchRenterNotifications } from 'store/Notifications/notificationsSlice'; // Adjust the path based on your project structure
 
 function RenterNotifications() {
   const dispatch = useDispatch();
