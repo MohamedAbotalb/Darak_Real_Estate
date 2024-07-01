@@ -94,4 +94,13 @@ class PropertyController extends Controller
             return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
         }
     }
+    public function deleteProperty($propertyId){
+        $deleted=$this->propertyRepository->delete($propertyId);
+        if($deleted){
+            return response()->json(['message' => 'property deleted successfuly'], 200);
+        }
+        else{
+            return response()->json(['message' => 'property not found'], 200);
+        }
+    }
 }

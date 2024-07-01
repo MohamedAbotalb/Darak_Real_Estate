@@ -165,4 +165,12 @@ class PropertyRepository implements PropertyRepositoryInterface
             throw new \Exception('Failed to update property: ' . $e->getMessage());
         }
     }
+    public function delete(int $id){
+        $property=Property::find($id);
+        if(!$property){
+            return null;
+        }
+        $property->delete();
+        return true;
+    }
 }

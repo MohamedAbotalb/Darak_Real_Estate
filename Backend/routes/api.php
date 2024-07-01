@@ -85,6 +85,8 @@ Route::prefix('properties')->group(function(){
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update']);
+    Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
+
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 
