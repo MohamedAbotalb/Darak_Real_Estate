@@ -14,12 +14,12 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties(int $perPage)
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType','user')->paginate($perPage);
     }
 
     public function getPropertyBySlug(string $slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType','user')->firstOrFail();
     }
 
     public function getLatestProperties(int $property_type_id, string $listing_type)
@@ -77,7 +77,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function searchProperties(array $filters)
     {
-        $query = Property::with('images', 'location', 'amenities', 'propertyType');
+        $query = Property::with('images', 'location', 'amenities', 'propertyType','user');
 
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
@@ -119,7 +119,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function showUserProperties(int $id)
     {
-        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType')->get();
+        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType','user')->get();
     }
     public function updateProperty(array $data, int $propertyId)
     {
@@ -155,7 +155,7 @@ class PropertyRepository implements PropertyRepositoryInterface
                 $property->amenities()->sync($data['amenities']);
             }
 
-            $property->load('location', 'propertyType', 'user', 'images', 'amenities');
+            $property->load('location', 'propertyType', 'user', 'images', 'amenities','user');
 
             DB::commit();
             return $property;
