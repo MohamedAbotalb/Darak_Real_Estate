@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Location;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -50,12 +51,11 @@ class PropertyRepository implements PropertyRepositoryInterface
             $property = Property::create($data + ['slug' => $slug, 'location_id' => $location->id]);
 
             if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    $imageName = time() . '_' . $image->getClientOriginalName();
-                    $image->move(public_path('images/properties'), $imageName);
+                $uploadedImages = ImageUpload::uploadImages($data['images'], 'images/properties');
+                foreach ($uploadedImages as $uploadedImage) {
                     PropertyImage::create([
                         'property_id' => $property->id,
-                        'image' => 'images/properties/' . $imageName,
+                        'image' => $uploadedImage,
                     ]);
                 }
             }
@@ -142,12 +142,11 @@ class PropertyRepository implements PropertyRepositoryInterface
             }
 
             if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    $imageName = time() . '_' . $image->getClientOriginalName();
-                    $image->move(public_path('images/properties'), $imageName);
+                $uploadedImages = ImageUpload::uploadImages($data['images'], 'images/properties');
+                foreach ($uploadedImages as $uploadedImage) {
                     PropertyImage::create([
                         'property_id' => $property->id,
-                        'image' => 'images/properties/' . $imageName,
+                        'image' => $uploadedImage,
                     ]);
                 }
             }
