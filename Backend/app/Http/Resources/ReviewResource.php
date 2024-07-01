@@ -20,7 +20,8 @@ class ReviewResource extends JsonResource
             'property_id' => $this->property_id,
             'content' => $this->content,
             'rate' => $this->rate,
-            'date' => $this->date
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

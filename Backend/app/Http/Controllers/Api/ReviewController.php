@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Reviews\StoreReviewRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Review;
 use App\Repositories\ReviewRepositoryInterface;
@@ -21,6 +22,16 @@ class ReviewController extends Controller
             return response()->json(['data'=>ReviewResource::collection($reviews)]);
         }else{
             return response()->json(['message'=>'Reviews is empty']);
+        }
+    }
+    public function store(StoreReviewRequest $request)
+    {
+        
+        $review = $this->reviewRepository->storeReview($request->validated());
+        if ($review) {
+            return response()->json(['data' => new ReviewResource($review)], 201);
+        } else {
+            return response()->json(['message' => 'Failed to create review'], 400);
         }
     }
 }
