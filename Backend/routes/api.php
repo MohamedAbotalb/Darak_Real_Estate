@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\ReasonReportController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TourController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,11 @@ Route::prefix('report-properties')->group(function(){
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
     Route::post('/', [ReportPropertyController::class, 'store']);
+});
+
+Route::prefix('reason-report')->group(function(){
+    Route::post('/', [ReasonReportController::class, 'store']);
+    Route::get('/property', [ReasonReportController::class, 'showReasonProperties']);
 });
 
 Route::apiResource('property-types', PropertyTypeController::class);
