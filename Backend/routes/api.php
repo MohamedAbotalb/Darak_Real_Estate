@@ -91,7 +91,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
     Route::get('/{slug}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
-    Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
+    Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestBuy']);
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update']);
