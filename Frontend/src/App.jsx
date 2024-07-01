@@ -22,6 +22,9 @@ import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
+import MyProperties from 'pages/Myproperties';
+import MyTours from 'pages/MyTours';
+import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
 import SharedLayout from 'layouts/SharedLayout-Dashboard';
@@ -51,6 +54,8 @@ function App() {
           />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/myproperties" element={<MyProperties />} />
+        <Route path="/mytours" element={<MyTours />} />
         {/* authenticated admin dashboard routes */}
         <Route path="/admin" element={<SharedLayout />} roles={['admin']}>
           <Route path="*" element={<AdminRoutes />} />

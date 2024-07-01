@@ -65,14 +65,14 @@ Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportUserController::class,'deleteReport']);
     Route::delete('deleteLandlord/{id}',[ReportUserController::class,'deleteUser']);
-    Route::post('/', [ReportUserController::class, 'store']);
+    Route::post('/', [ReportUserController::class, 'store'])->middleware('auth:sanctum');
 });
 
 Route::prefix('report-properties')->group(function(){
     Route::get('/',[ReportPropertyController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
-    Route::post('/', [ReportPropertyController::class, 'store']);
+    Route::post('/', [ReportPropertyController::class, 'store'])->middleware('auth:sanctum');
 });
 
 Route::prefix('reason-report')->group(function(){
@@ -91,7 +91,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
     Route::get('/{slug}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
-    Route::get('latest-sell/{typeId}',[PropertyController::class,'showLatestSell']);
+    Route::get('latest-buy/{typeId}',[PropertyController::class,'showLatestBuy']);
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update']);
@@ -126,8 +126,11 @@ Route::prefix('amenities')->group(function () {
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
 });
 
-Route::get('reviews', [ReviewController::class, 'show']);
-
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewController::class, 'show']);
+    Route::post('/',[ReviewController::class, 'store']);
+    Route::put('/{id}', [ReviewController::class, 'update']);
+});
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);

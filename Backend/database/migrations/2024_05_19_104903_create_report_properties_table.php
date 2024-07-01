@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('property_id');
-            $table->unsignedBigInteger('reason_id');
+            $table->unsignedBigInteger('reason_id')->nullable();
             $table->text('content');
             $table->timestamps();
             $table->softDeletes();

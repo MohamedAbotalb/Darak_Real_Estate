@@ -34,12 +34,12 @@ class PropertyController extends Controller
 
     public function showLatestRent($property_type_id)
     {
-        return $this->showLatestProperties($property_type_id, 'renting');
+        return $this->showLatestProperties($property_type_id, 'rent');
     }
 
-    public function showLatestSell($property_type_id)
+    public function showLatestBuy($property_type_id)
     {
-        return $this->showLatestProperties($property_type_id, 'selling');
+        return $this->showLatestProperties($property_type_id, 'buy');
     }
 
     private function showLatestProperties($property_type_id, $listing_type)

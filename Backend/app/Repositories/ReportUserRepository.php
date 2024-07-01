@@ -46,6 +46,8 @@ class ReportUserRepository implements ReportUserRepositoryInterface
 
     public function createReport(array $data)
     {
-        return ReportUser::create($data);
+        $report = ReportUser::create($data);
+        $report->load('reason'); 
+        return $report;
     }
 }

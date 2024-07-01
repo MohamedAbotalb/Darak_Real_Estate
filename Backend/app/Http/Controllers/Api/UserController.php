@@ -9,6 +9,7 @@ use App\Http\Requests\User\ChangePhoneNumberRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\UserRepositoryInterface;
+use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -92,13 +93,11 @@ class UserController extends Controller
                 File::delete(public_path($user->avatar));
             }
 
-            $extension = $request->file('avatar')->getClientOriginalExtension();
-            $fileName = time() . '_' . uniqid() . '.' . $extension;
-            $request->file('avatar')->move(public_path('images/avatars'), $fileName);
+            $avatarPath = ImageUpload::uploadImage($request->file('avatar'), 'images/avatars');
 
             $user = $this->userRepository->update([
                 'id' => Auth::id(),
-                'avatar' => 'images/avatars/' . $fileName,
+                'avatar' => $avatarPath,
             ]);
         }
 

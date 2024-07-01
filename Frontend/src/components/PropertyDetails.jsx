@@ -9,7 +9,6 @@ import {
   CardContent,
   Typography,
   CircularProgress,
-  Fab,
   Button,
   Box,
   AppBar,
@@ -17,7 +16,6 @@ import {
   IconButton,
 } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
@@ -27,8 +25,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SpaIcon from '@mui/icons-material/Spa';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import { fetchProperty } from '../store/propertyDetailsSlice';
-import TourRequestForm from './TourRequestForm';
+import { fetchProperty } from 'store/propertyDetailsSlice';
+import AddToWishlistButton from 'components/Home/AddToWishlistButton';
+import TourRequestForm from 'components/TourRequestForm';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -37,7 +36,6 @@ function PropertyDetails() {
   const status = useSelector((state) => state.property.status);
   const error = useSelector((state) => state.property.error);
   const [isTourFormOpen, setIsTourFormOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -69,13 +67,8 @@ function PropertyDetails() {
     setIsTourFormOpen(false);
   };
 
-  const handleLikeClick = () => {
-    setIsLiked(!isLiked);
-  };
-
   return (
     <Container
-      maxWidth="xl"
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -88,7 +81,6 @@ function PropertyDetails() {
       <Card
         sx={{
           width: '100%',
-          maxWidth: '900px',
           mt: 4,
           boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.1)',
           overflow: 'hidden',
@@ -119,18 +111,7 @@ function PropertyDetails() {
           </Toolbar>
         </AppBar>
 
-        <Fab
-          aria-label="like"
-          sx={{
-            position: 'absolute',
-            top: '60px',
-            right: '10px',
-            zIndex: 1000,
-          }}
-          onClick={handleLikeClick}
-        >
-          <FavoriteIcon sx={{ color: isLiked ? 'red' : 'gray' }} />
-        </Fab>
+        <AddToWishlistButton property={property} />
 
         <CardContent>
           <div className="property-image">
@@ -456,6 +437,7 @@ function PropertyDetails() {
           isOpen={isTourFormOpen}
           onClose={handleTourFormClose}
           propertyId={property.id}
+          slug={property.slug}
         />
       )}
     </Container>
