@@ -10,7 +10,7 @@ class ReportProperty extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'property_id', 'content'];
+    protected $fillable = ['user_id', 'property_id', 'content','reason_id'];
     protected $dates=['deleted_at'];
 
     public function user()
@@ -20,6 +20,10 @@ class ReportProperty extends Model
     public function property()
     {
         return $this->belongsTo(Property::class);
+    }
+    public function reason()
+    {
+        return $this->belongsTo(ReasonReport::class, 'reason_id');
     }
 
 }

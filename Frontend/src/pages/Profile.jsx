@@ -81,12 +81,16 @@ function Profile() {
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
-  console.log(user);
+
   useEffect(() => {
     if (user) {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setPhone(user.phone_number);
+      if (user.phone_number.startsWith('+2')) {
+        setPhone(user.phone_number.slice(2));
+      } else {
+        setPhone(user.phone_number);
+      }
     }
   }, [user]);
 
@@ -215,8 +219,8 @@ function Profile() {
         );
         toast.success('Password changed successfully');
       } else if (editField === 'Phone') {
-        await dispatch(updatePhone({ phone_number: phone }));
-        dispatch(setCredentials({ ...user, phone_number: phone }));
+        await dispatch(updatePhone({ phone_number: `+2${phone}` }));
+        dispatch(setCredentials({ ...user, phone_number: `+2${phone}` }));
         toast.success('Phone number updated successfully');
       }
       handleDialogClose();
@@ -228,8 +232,8 @@ function Profile() {
   return (
     <div>
       <Header />
-      <Container sx={{ mt: 4 }}>
-        <Grid container spacing={4}>
+      <Container maxWidth="xlg" sx={{ mt: 4, mb: 4 }}>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <ProfileHeader
               avatar={user?.avatar || '../assets/images/defaultprofile.png'}

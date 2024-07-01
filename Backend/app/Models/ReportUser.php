@@ -10,7 +10,7 @@ class ReportUser extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'landlord_id', 'content'];
+    protected $fillable = ['user_id', 'landlord_id', 'content','reason_id'];
     protected $dates=['deleted_at'];
     public function user()
     {
@@ -19,5 +19,9 @@ class ReportUser extends Model
     public function landlord()
     {
         return $this->belongsTo(User::class, 'landlord_id');
+    }
+    public function reason()
+    {
+        return $this->belongsTo(ReasonReport::class, 'reason_id');
     }
 }

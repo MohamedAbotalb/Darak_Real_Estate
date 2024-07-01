@@ -15,13 +15,13 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
-      <Typography variant="h5" component="div" sx={{ mb: 2 }}>
+    <Paper elevation={3} sx={{ p: 4 }}>
+      <Typography variant="h4" component="div" sx={{ mb: 3 }}>
         Profile
       </Typography>
-      <Divider sx={{ mb: 2 }} />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography>Name</Typography>
+      <Divider sx={{ mb: 3 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h6">Name</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Name')}
@@ -35,9 +35,9 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           Edit
         </Button>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography>
-          {user && user.role === 'user' ? 'Tours' : 'Properties'}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h6">
+          {user && user.role === 'user' ? 'My Tours' : 'My Properties'}
         </Typography>
         <Button
           variant="contained"
@@ -52,8 +52,8 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           Show
         </Button>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography>Phone</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h6">Phone</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Phone')}
@@ -67,8 +67,8 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           Edit
         </Button>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography>Password</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Typography variant="h6">Password</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Password')}
@@ -82,10 +82,10 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           Edit
         </Button>
       </Box>
-      <Typography variant="h5" component="div" sx={{ mb: 2 }}>
+      <Typography variant="h4" component="div" sx={{ mb: 3 }}>
         Manage Account
       </Typography>
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 3 }} />
       <Button color="error" variant="contained" onClick={onDeleteClick}>
         Delete Account
       </Button>

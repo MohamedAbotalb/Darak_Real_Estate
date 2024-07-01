@@ -72,5 +72,17 @@ class TourController extends Controller
             'tours' => TourResource::collection($tours),
         ], 200);
     }
+    public function deleteTour($id){
+        $tour= $this->tourRepository->deleteTour($id);
+        if($tour){
+            return response()->json([
+                'message'=>'tour cancelled successfully',
+            ], 200);
+        }else{
+            return response()->json([
+                'message'=>'tour not found',
+            ], 200);
+        }
+    }
 
 }

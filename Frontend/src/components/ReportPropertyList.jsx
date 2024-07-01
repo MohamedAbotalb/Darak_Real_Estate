@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
-import Box from '@mui/material/Box';
+
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Pagination,
+  InputBase,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import {
   fetchReports,
   deleteReport,
@@ -45,15 +49,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: '20%',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
     width: 'auto',
   },
 }));
@@ -92,11 +97,7 @@ export default function ReportPropertyList() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteType, setDeleteType] = useState('');
   const [deleteId, setDeleteId] = useState(null);
-  const [searchTerms, setSearchTerms] = useState({
-    user: '',
-    property: '',
-  });
-
+  const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
 
@@ -228,7 +229,7 @@ export default function ReportPropertyList() {
                       color="primary"
                       onClick={() => handleShowContent(report.content)}
                     >
-                      View_Content
+                      View Content
                     </Button>
                   </StyledTableCell>
                   <StyledTableCell align="center">
@@ -277,7 +278,27 @@ export default function ReportPropertyList() {
   }
 
   return (
-    <div>
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            Report Property List
+          </Typography>
+        </Box>
+      </Box>
       {content}
       <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
         <DialogTitle>Content</DialogTitle>
@@ -306,6 +327,6 @@ export default function ReportPropertyList() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

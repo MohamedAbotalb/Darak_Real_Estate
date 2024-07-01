@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Reports\CreateReportPropertyRequest;
 use App\Http\Resources\ReportPropertyResource;
 use App\Repositories\ReportPropertyRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class ReportPropertyController extends Controller
 {
@@ -51,8 +52,9 @@ class ReportPropertyController extends Controller
 
     public function store(CreateReportPropertyRequest $request)
     {
-        $report = $this->reportPropertyRepository->createReport($request->validated());
-
+        $data = $request->validated() ;
+        $data['user_id']=Auth::id();
+        $report = $this->reportPropertyRepository->createReport($data);
         return response()->json(['message' => 'Report created successfully', 'data' => new ReportPropertyResource($report)], 201);
     }
 }

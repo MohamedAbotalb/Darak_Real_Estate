@@ -29,7 +29,7 @@ class StorePropertyRequest extends FormRequest
             'area' => 'required|numeric',
             'price' => 'required|integer',
             'property_type_id' => 'required|exists:property_types,id',
-            'listing_type' => 'required|in:renting,selling',
+            'listing_type' => 'required|in:rent,buy',
             'amenities' => 'array',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',

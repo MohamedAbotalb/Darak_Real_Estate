@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('property_id');
             $table->text('content');
             $table->integer('rate');
-            $table->dateTime('date');
             $table->timestamps();
             $table->softDeletes();
 

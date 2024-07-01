@@ -12,10 +12,14 @@ use App\Repositories\PropertyRepository;
 use App\Repositories\PropertyRepositoryInterface;
 use App\Repositories\PropertyTypeRepository;
 use App\Repositories\PropertyTypeRepositoryInterface;
+use App\Repositories\ReasonReportRepository;
+use App\Repositories\ReasonReportRepositoryInterface;
 use App\Repositories\ReportPropertyRepository;
 use App\Repositories\ReportPropertyRepositoryInterface;
 use App\Repositories\ReportUserRepository;
 use App\Repositories\ReportUserRepositoryInterface;
+use App\Repositories\ReviewRepository;
+use App\Repositories\ReviewRepositoryInterface;
 use App\Repositories\TourRepository;
 use App\Repositories\TourRepositoryInterface;
 use App\Repositories\UserRepository;
@@ -41,7 +45,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AmenityRepositoryInterface::class, AmenityRepository::class);
         $this->app->bind(PropertyTypeRepositoryInterface::class, PropertyTypeRepository::class);
         $this->app->bind(ImageRepositoryInterface::class, ImageRepository::class);
-
+        $this->app->bind(ReasonReportRepositoryInterface::class, ReasonReportRepository::class);
+        $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
     }
 
     /**

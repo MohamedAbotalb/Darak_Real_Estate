@@ -18,6 +18,7 @@ class ReportPropertyResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->user), 
             'property' => new PropertyResource($this->property), 
+            'reason' => new ReasonReportResource($this->whenLoaded('reason')),
             'content' => $this->content,
         ];
     }

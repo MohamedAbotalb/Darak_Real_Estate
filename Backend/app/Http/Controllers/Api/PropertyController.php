@@ -34,12 +34,12 @@ class PropertyController extends Controller
 
     public function showLatestRent($property_type_id)
     {
-        return $this->showLatestProperties($property_type_id, 'renting');
+        return $this->showLatestProperties($property_type_id, 'rent');
     }
 
-    public function showLatestSell($property_type_id)
+    public function showLatestBuy($property_type_id)
     {
-        return $this->showLatestProperties($property_type_id, 'selling');
+        return $this->showLatestProperties($property_type_id, 'buy');
     }
 
     private function showLatestProperties($property_type_id, $listing_type)
@@ -65,7 +65,7 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'listing_type', 'city']);
+        $filters = $request->only(['property_type', 'listing_type', 'city','num_of_rooms','num_of_bathrooms','min_price','max_price']);
         $properties = $this->propertyRepository->searchProperties($filters);
 
         if ($properties->isEmpty()) {
@@ -92,6 +92,15 @@ class PropertyController extends Controller
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
+        }
+    }
+    public function deleteProperty($propertyId){
+        $deleted=$this->propertyRepository->delete($propertyId);
+        if($deleted){
+            return response()->json(['message' => 'property deleted successfuly'], 200);
+        }
+        else{
+            return response()->json(['message' => 'property not found'], 200);
         }
     }
 }
