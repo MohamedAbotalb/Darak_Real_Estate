@@ -13,4 +13,13 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
         return Review::create($data);
     }
+    public function updateReview(int $id, array $data)
+    {
+        $review = Review::find($id);
+        if ($review) {
+            $review->update($data);
+            return $review;
+        }
+        return null;
+    }
 }
