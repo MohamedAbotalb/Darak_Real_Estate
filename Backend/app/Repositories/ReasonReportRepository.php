@@ -27,4 +27,7 @@ class ReasonReportRepository implements ReasonReportRepositoryInterface
         $reason->delete();
         return true;
     }
+    public function showAllReasons(){
+        return ReasonReport::all();
+    }
 }
