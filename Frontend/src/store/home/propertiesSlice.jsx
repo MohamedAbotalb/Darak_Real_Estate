@@ -5,7 +5,7 @@ export const fetchProperties = createAsyncThunk(
   'properties/fetchProperties',
   async ({ type, category }, { rejectWithValue }) => {
     try {
-      const endpoint = type === 'rent' ? 'latest-rent' : 'latest-sell';
+      const endpoint = type === 'rent' ? 'latest-rent' : 'latest-buy';
       const url =
         category && category !== 'all'
           ? `/properties/${endpoint}/${category}`
@@ -22,7 +22,7 @@ export const fetchProperties = createAsyncThunk(
 
 const initialState = {
   rent: [],
-  sell: [],
+  buy: [],
   status: 'idle',
   error: null,
 };
