@@ -6,7 +6,6 @@ export const fetchAllProperties = createAsyncThunk(
   async ({ rejectWithValue }) => {
     try {
       const data = await getAllProperties();
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
