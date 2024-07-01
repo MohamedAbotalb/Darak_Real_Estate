@@ -23,8 +23,6 @@ import {
   Typography,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
