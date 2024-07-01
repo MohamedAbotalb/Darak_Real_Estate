@@ -16,6 +16,7 @@ import amenitiesReducer from 'store/amenitiesSlice';
 import locationsReducer from 'store/home/locationsSlice';
 import tourRequestReducer from 'store/tourRequestSlice';
 import propertySearchReducer from 'store/propertySearchSlice';
+import notificationsReducer from 'store/Notifications/notificationsSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -36,6 +37,7 @@ const reduxStore = configureStore({
     userDetails: userDetailsReducer,
     amenities: amenitiesReducer,
     locations: locationsReducer,
+    notifications: notificationsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
