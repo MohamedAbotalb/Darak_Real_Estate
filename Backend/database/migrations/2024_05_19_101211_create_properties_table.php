@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('property_type_id');
             $table->unsignedBigInteger('user_id');
             $table->enum('availability', ["available", "unavailable"]);
-            $table->enum("listing_type", ["renting","selling"]);
+            $table->enum("listing_type", ["rent","buy"]);
             $table->timestamps();
             $table->softDeletes();
 
