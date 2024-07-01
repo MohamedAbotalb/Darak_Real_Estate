@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import getPropertiesSearch from 'services/propertySearchService';
+import getPropertiesSearch from 'services/propertySearchService';
 
 export const fetchProperties = createAsyncThunk(
   'propertiesSearch/fetchProperties',

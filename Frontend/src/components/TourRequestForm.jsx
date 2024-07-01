@@ -13,10 +13,11 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import formatDate from 'utils/formatDate';
 import { fetchProperty } from 'store/propertySlice';
 import { submitTourRequest } from 'store/tourRequestSlice';
 
-function TourRequestForm({ isOpen, onClose, propertyId }) {
+function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.tourRequest);
 
@@ -54,9 +55,10 @@ function TourRequestForm({ isOpen, onClose, propertyId }) {
   });
 
   const onSubmit = async (data) => {
-    dispatch(submitTourRequest({ propertyId, dates: data.dates }))
+    const formattedDates = data.dates.map(formatDate);
+    dispatch(submitTourRequest({ propertyId, dates: formattedDates }))
       .then(() => {
-        dispatch(fetchProperty(propertyId));
+        dispatch(fetchProperty(slug));
         onClose();
       })
       .catch(() => {});
@@ -126,6 +128,7 @@ TourRequestForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   propertyId: PropTypes.number.isRequired,
+  slug: PropTypes.string.isRequired,
 };
 
 export default TourRequestForm;
