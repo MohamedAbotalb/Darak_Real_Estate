@@ -21,5 +21,9 @@ class ReportProperty extends Model
     {
         return $this->belongsTo(Property::class);
     }
+    public function reason()
+    {
+        return $this->belongsTo(ReasonReport::class, 'reason_id');
+    }
 
 }
