@@ -36,13 +36,13 @@ import {
 const getNotificationCircleColor = (type) => {
   switch (type) {
     case 'declined':
-      return '#FFCCCC'; // Light red for cancellation
+      return '#FFCCCC';
     case 'approve':
-      return '#CCFFCC'; // Light green for confirmation
+      return '#CCFFCC';
     case 'pending':
-      return '#FFFFCC'; // Light yellow for request
+      return '#FFFFCC';
     default:
-      return '#FFFFFF'; // Default white circle
+      return '#FFFFFF';
   }
 };
 

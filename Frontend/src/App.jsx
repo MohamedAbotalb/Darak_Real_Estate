@@ -26,8 +26,8 @@ import UserDetails from 'components/AdminDashboard/UserDetails';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
-// import SearchPage from 'pages/Search';
-// import ProfilePage from 'pages/Profile';
+import SearchPage from 'pages/Search';
+import ProfilePage from 'pages/Profile';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
@@ -46,7 +46,7 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
-          {/* <Route path="search" element={<SearchPage />} /> */}
+          <Route path="search" element={<SearchPage />} />
           <Route
             path="landlord-notifications"
             element={<LandlordNotifications />}
@@ -56,7 +56,7 @@ function App() {
             element={<RenterNotifications />}
           />
         </Route>
-        {/* <Route path="/profile" element={<ProfilePage />} /> */}
+        <Route path="/profile" element={<ProfilePage />} />
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"
