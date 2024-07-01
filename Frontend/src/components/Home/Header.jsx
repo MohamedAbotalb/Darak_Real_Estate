@@ -28,6 +28,7 @@ import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
   fetchRenterNotificationsAsync,
   fetchLandlordNotificationsAsync,
+  clearNotifications,
 } from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from './Notifications/NotificationDropdown';
 
@@ -47,20 +48,17 @@ function Header() {
     if (storedUser) {
       setIsLoggedIn(true);
       dispatch(fetchWishlist());
+      dispatch(clearNotifications());
+      if (storedUser.role === 'user') {
+        dispatch(fetchRenterNotificationsAsync());
+      } else if (storedUser.role === 'landlord') {
+        dispatch(fetchLandlordNotificationsAsync());
+      }
     } else {
       setIsLoggedIn(false);
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'user') {
-        dispatch(fetchRenterNotificationsAsync());
-      } else if (user.role === 'landlord') {
-        dispatch(fetchLandlordNotificationsAsync());
-      }
-    }
-  }, [dispatch, user]);
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -102,184 +100,142 @@ function Header() {
         <Box sx={{ flexGrow: 1 }} />
         {!isSmallScreen && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button
-              component={Link}
-              to="/"
-              color="inherit"
-              sx={{ color: '#cdd0d8', textTransform: 'none' }}
-            >
-              Home
-            </Button>
-            <Button
-              component={Link}
-              to="/rent"
-              color="inherit"
-              sx={{ color: '#cdd0d8', textTransform: 'none' }}
-            >
-              Rent
-            </Button>
-            <Button
-              component={Link}
-              to="/buy"
-              color="inherit"
-              sx={{ color: '#cdd0d8', textTransform: 'none' }}
-            >
-              Buy
-            </Button>
-            <Button
-              component={Link}
-              to="/about"
-              color="inherit"
-              sx={{ color: '#cdd0d8', textTransform: 'none' }}
-            >
-              About
-            </Button>
-          </Box>
-        )}
-        <Box sx={{ flexGrow: 1 }} />
-        {isLoggedIn && !isSmallScreen ? (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit">
-              {user && <NotificationDropdown role={user.role} />}
-            </IconButton>
-            <IconButton color="inherit" component={Link} to="/wishlist">
-              <Badge badgeContent={wishlist.length} color="error">
-                <FavoriteIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleProfileClick}
-              aria-controls="profile-menu"
-              aria-haspopup="true"
-            >
-              <AccountCircleIcon />
-            </IconButton>
-            <Menu
-              id="profile-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </Box>
-        ) : (
-          !isSmallScreen && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                component={Link}
-                to="/register"
-                color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
-              >
-                Register
-              </Button>
-              <Button
-                component={Link}
-                to="/login"
-                color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
-              >
-                Log in
-              </Button>
-            </Box>
-          )
-        )}
-        {isSmallScreen && (
-          <IconButton color="inherit" onClick={handleDrawerOpen}>
-            <MenuIcon />
-          </IconButton>
-        )}
-      </Toolbar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
-        <List>
-          <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/rent"
-            onClick={handleDrawerClose}
-          >
-            <ListItemText primary="Rent" />
-          </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/buy"
-            onClick={handleDrawerClose}
-          >
-            <ListItemText primary="Buy" />
-          </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/about"
-            onClick={handleDrawerClose}
-          >
-            <ListItemText primary="About" />
-          </ListItem>
-          {isLoggedIn ? (
-            <>
-              <ListItem button onClick={handleDrawerClose}>
-                <ListItemIcon>
-                  <Badge badgeContent={4} color="error">
-                    {user && <NotificationDropdown role={user.role} />}
-                  </Badge>
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/wishlist"
-                onClick={handleDrawerClose}
-              >
-                <ListItemIcon>
+            {isLoggedIn ? (
+              <>
+                <NotificationDropdown role={user?.role} />
+                <IconButton component={Link} to="/wishlist" color="inherit">
                   <Badge badgeContent={wishlist.length} color="error">
                     <FavoriteIcon />
                   </Badge>
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/profile"
-                onClick={handleDrawerClose}
-              >
-                <ListItemIcon>
+                </IconButton>
+                <IconButton
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                  onClick={handleProfileClick}
+                  color="inherit"
+                >
                   <AccountCircleIcon />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem button onClick={handleLogout}>
-                <ListItemText primary="Logout" />
-              </ListItem>
-            </>
-          ) : (
-            <>
-              <ListItem
-                button
-                component={Link}
-                to="/login"
-                onClick={handleDrawerClose}
-              >
-                <ListItemText primary="Log In" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/register"
-                onClick={handleDrawerClose}
-              >
-                <ListItemText primary="Register" />
-              </ListItem>
-            </>
-          )}
-        </List>
-      </Drawer>
+                </IconButton>
+
+                <Menu
+                  id="profile-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/profile"
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/my-properties"
+                  >
+                    My Properties
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button color="inherit" component={Link} to="/register">
+                  Register
+                </Button>
+                <Button color="inherit" component={Link} to="/login">
+                  Login
+                </Button>
+              </>
+            )}
+          </Box>
+        )}
+        {isSmallScreen && (
+          <>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={handleDrawerClose}
+            >
+              <List>
+                {isLoggedIn ? (
+                  <>
+                    <ListItem button onClick={handleDrawerClose}>
+                      <NotificationDropdown role={user?.role} />
+                    </ListItem>
+                    <ListItem
+                      button
+                      component={Link}
+                      to="/wishlist"
+                      onClick={handleDrawerClose}
+                    >
+                      <ListItemIcon>
+                        <FavoriteIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Wishlist" />
+                    </ListItem>
+
+                    <ListItem
+                      button
+                      component={Link}
+                      to="/profile"
+                      onClick={handleDrawerClose}
+                    >
+                      <ListItemIcon>
+                        <AccountCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </ListItem>
+                    <ListItem
+                      button
+                      component={Link}
+                      to="/my-properties"
+                      onClick={handleDrawerClose}
+                    >
+                      <ListItemIcon>
+                        <AccountCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="My Properties" />
+                    </ListItem>
+                    <ListItem button onClick={handleLogout}>
+                      <ListItemText primary="Logout" />
+                    </ListItem>
+                  </>
+                ) : (
+                  <>
+                    <ListItem
+                      button
+                      component={Link}
+                      to="/register"
+                      onClick={handleDrawerClose}
+                    >
+                      <ListItemText primary="Register" />
+                    </ListItem>
+                    <ListItem
+                      button
+                      component={Link}
+                      to="/login"
+                      onClick={handleDrawerClose}
+                    >
+                      <ListItemText primary="Login" />
+                    </ListItem>
+                  </>
+                )}
+              </List>
+            </Drawer>
+          </>
+        )}
+      </Toolbar>
     </AppBar>
   );
 }

@@ -59,7 +59,11 @@ export const deleteNotificationAsync = createAsyncThunk(
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotifications: (state) => {
+      state.list = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRenterNotificationsAsync.pending, (state) => {
@@ -119,5 +123,5 @@ const notificationsSlice = createSlice({
       });
   },
 });
-
+export const { clearNotifications } = notificationsSlice.actions;
 export default notificationsSlice.reducer;
