@@ -122,7 +122,7 @@ Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(f
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);
     Route::get('/{status}', [TourController::class, 'getToursByStatus']);
-
+    Route::delete('/{tourId}', [TourController::class, 'deleteTour']);
 });
 Route::post('/tours/{id}/approve', [TourController::class, 'approveTour']);
 Route::post('/tours/{id}/decline', [TourController::class, 'declineTour']);

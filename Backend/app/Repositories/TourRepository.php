@@ -149,7 +149,14 @@ class TourRepository implements TourRepositoryInterface
             return null;
         }
     }
-
+    public function deleteTour(int $id){
+        $tour=Tour::find($id);
+        if(!$tour){
+            return null;
+        }
+        $tour->delete();
+        return true;
+    }
 
     public function getUserTours(int $userId)
     {
