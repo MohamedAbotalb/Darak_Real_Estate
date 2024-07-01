@@ -20,4 +20,8 @@ class ReportUser extends Model
     {
         return $this->belongsTo(User::class, 'landlord_id');
     }
+    public function reason()
+    {
+        return $this->belongsTo(ReasonReport::class, 'reason_id');
+    }
 }
