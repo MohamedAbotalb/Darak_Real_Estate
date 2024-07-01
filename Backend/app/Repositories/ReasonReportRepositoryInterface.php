@@ -9,6 +9,6 @@ interface ReasonReportRepositoryInterface
     public function showUsersReportReasons();
     public function deleteReportReason(int $id);
     public function showAllReasons();
-
+    public function updateReason($id, array $data);
 
 }

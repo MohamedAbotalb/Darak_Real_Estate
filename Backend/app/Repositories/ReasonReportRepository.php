@@ -30,4 +30,13 @@ class ReasonReportRepository implements ReasonReportRepositoryInterface
     public function showAllReasons(){
         return ReasonReport::all();
     }
+    public function updateReason($id, array $data)
+    {
+        $reason = ReasonReport::find($id);
+        if (!$reason) {
+            return null;
+        }
+        $reason->update($data);
+        return $reason;
+    }
 }

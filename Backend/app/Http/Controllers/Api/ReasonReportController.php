@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reasons\StoreReasonRequest;
+use App\Http\Requests\Reasons\UpdateReasonRequest;
 use App\Http\Resources\ReasonReportResource;
 use App\Repositories\ReasonReportRepositoryInterface;
 use Illuminate\Http\Request;
@@ -54,6 +55,15 @@ class ReasonReportController extends Controller
             return response()->json(['data'=>ReasonReportResource::collection($reasons)], 201); 
         }else{
             return response()->json(['message' => 'Reasons not found'], 400);
+        }
+    }
+    public function update(UpdateReasonRequest $request, $id)
+    {
+        $reason = $this->ReasonReportRepository->updateReason($id, $request->all());
+        if ($reason) {
+            return response()->json(['message' => 'Reason updated successfully', 'data' => new ReasonReportResource($reason)], 200); 
+        } else {
+            return response()->json(['message' => 'Reason not found'], 404);
         }
     }
 }
