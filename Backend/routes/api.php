@@ -65,14 +65,14 @@ Route::prefix('report-users')->group(function(){
     Route::get('/',[ReportUserController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportUserController::class,'deleteReport']);
     Route::delete('deleteLandlord/{id}',[ReportUserController::class,'deleteUser']);
-    Route::post('/', [ReportUserController::class, 'store']);
+    Route::post('/', [ReportUserController::class, 'store'])->middleware('auth:sanctum');
 });
 
 Route::prefix('report-properties')->group(function(){
     Route::get('/',[ReportPropertyController::class,'index']);
     Route::delete('deleteReport/{id}',[ReportPropertyController::class,'deleteReport']);
     Route::delete('deleteProperty/{id}',[ReportPropertyController::class,'deleteProperty']);
-    Route::post('/', [ReportPropertyController::class, 'store']);
+    Route::post('/', [ReportPropertyController::class, 'store'])->middleware('auth:sanctum');
 });
 
 Route::prefix('reason-report')->group(function(){

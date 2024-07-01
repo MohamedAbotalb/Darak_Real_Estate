@@ -25,7 +25,7 @@ class ReportPropertyRepository implements ReportPropertyRepositoryInterface
             return $report->delete();
         }
 
-        return false; 
+        return false;
     }
 
     public function deletePropertyAndReportById(int $id)
@@ -40,12 +40,14 @@ class ReportPropertyRepository implements ReportPropertyRepositoryInterface
                 return $report->delete();
             }
 
-            return false; 
+            return false;
         });
     }
 
     public function createReport(array $data)
     {
-        return ReportProperty::create($data);
+        $report = ReportProperty::create($data);
+        $report->load('reason'); 
+        return $report;
     }
 }
