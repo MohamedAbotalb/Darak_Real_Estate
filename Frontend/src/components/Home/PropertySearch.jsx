@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
-  Button,
+  IconButton,
   MenuItem,
   Select,
   FormControl,
-  Typography,
+  CircularProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
-import { fetchProperties } from 'store/home/propertiesSliceSearch';
+import { fetchProperties } from 'store/propertySearchSlice';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,7 +26,6 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 
 const SearchFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: '200px',
-  marginBottom: theme.spacing(1),
   marginRight: theme.spacing(1),
   '& .MuiInputBase-root': {
     backgroundColor: '#fff',
@@ -35,35 +34,38 @@ const SearchFormControl = styled(FormControl)(({ theme }) => ({
   },
 }));
 
-const SearchButton = styled(Button)(({ theme }) => ({
-  minWidth: '56px',
+const SearchButton = styled(IconButton)({
   height: '56px',
-  padding: 0,
-  flex: '0 0 auto',
+  width: '56px',
+  padding: '0 16px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  '& .MuiButton-startIcon': {
-    margin: 0,
+  backgroundColor: '#1976d2',
+  color: '#fff',
+  '&:hover': {
+    backgroundColor: '#115293',
   },
-}));
-
-const CustomTypography = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-}));
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
+});
 
 function PropertySearch() {
   const dispatch = useDispatch();
-  const propertyTypes = useSelector((state) => state.propertyTypes.data || []);
+  const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
   const locations = useSelector((state) => state.locations.data || []);
   const locationsStatus = useSelector((state) => state.locations.status);
   const propertyTypesStatus = useSelector(
     (state) => state.propertyTypes.status
   );
 
-  const [rentOrSell, setRentOrSell] = useState('');
+  const [rentOrBuy, setRentOrBuy] = useState('renting');
   const [propertyType, setPropertyType] = useState('');
-  const [locationId, setLocationId] = useState('');
+  const [city, setCity] = useState('');
+
+  const isLoading =
+    locationsStatus === 'loading' || propertyTypesStatus === 'loading';
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -71,74 +73,72 @@ function PropertySearch() {
   }, [dispatch]);
 
   const handleSearch = () => {
-    dispatch(
-      fetchProperties({ propertyType, locationId, listingType: rentOrSell })
-    );
+    dispatch(fetchProperties({ propertyType, city, listingType: rentOrBuy }));
   };
 
   return (
     <SearchContainer>
-      <SearchFormControl variant="outlined">
-        <Select
-          value={rentOrSell}
-          onChange={(e) => setRentOrSell(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>
-            <em>Rent, Sell</em>
-          </MenuItem>
-          <MenuItem value="rent">Rent</MenuItem>
-          <MenuItem value="sell">Sell</MenuItem>
-        </Select>
-      </SearchFormControl>
+      {isLoading ? (
+        <CircularProgress size={50} />
+      ) : (
+        <>
+          <SearchFormControl variant="outlined">
+            <Select
+              value={rentOrBuy}
+              onChange={(e) => setRentOrBuy(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Rent, Buy</em>
+              </MenuItem>
+              <MenuItem value="renting">Rent</MenuItem>
+              <MenuItem value="selling">Buy</MenuItem>
+            </Select>
+          </SearchFormControl>
 
-      <SearchFormControl variant="outlined">
-        <Select
-          value={locationId}
-          onChange={(e) => setLocationId(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>
-            <em>Location</em>
-          </MenuItem>
-          {locations.map((location) => (
-            <MenuItem key={location.id} value={location.id}>
-              {location.city}
-            </MenuItem>
-          ))}
-        </Select>
-      </SearchFormControl>
+          <SearchFormControl variant="outlined">
+            <Select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Location</em>
+              </MenuItem>
+              {locations.map((location) => (
+                <MenuItem key={location.id} value={location.city}>
+                  {location.city}
+                </MenuItem>
+              ))}
+            </Select>
+          </SearchFormControl>
 
-      <SearchFormControl>
-        <Select
-          value={propertyType}
-          onChange={(e) => setPropertyType(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>
-            <em>Property Type</em>
-          </MenuItem>
-          {propertyTypes.map((type) => (
-            <MenuItem key={type.id} value={type.id}>
-              {type.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </SearchFormControl>
+          <SearchFormControl>
+            <Select
+              value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Property Type</em>
+              </MenuItem>
+              {propertyTypes.map((type) => (
+                <MenuItem key={type.id} value={type.id}>
+                  {type.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </SearchFormControl>
 
-      <SearchButton
-        variant="contained"
-        color="primary"
-        onClick={handleSearch}
-        startIcon={<SearchIcon />}
-      />
-
-      <CustomTypography variant="body1">
-        {locationsStatus === 'loading' && 'Loading locations...'}
-        {propertyTypesStatus === 'loading' && 'Loading property types...'}
-        {locationsStatus === 'failed' && 'Failed to load locations'}
-        {propertyTypesStatus === 'failed' && 'Failed to load property types'}
-      </CustomTypography>
+          <SearchButton
+            variant="contained"
+            color="primary"
+            onClick={handleSearch}
+          >
+            <SearchIcon />
+          </SearchButton>
+        </>
+      )}
     </SearchContainer>
   );
 }

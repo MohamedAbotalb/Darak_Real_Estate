@@ -11,29 +11,45 @@ const validationSchema = yup.object().shape({
     .string()
     .required('Description is required')
     .min(20, 'Description must be at least 20 characters'),
-  state: yup.string().required('State is required'),
-  city: yup.string().required('City is required'),
+  state: yup
+    .string()
+    .typeError('State is required')
+    .required('State is required'),
+  city: yup.string().typeError('City is required').required('City is required'),
+
   street: yup.string().required('Street is required'),
   area: yup
     .number()
+    .typeError('Area is required')
     .required('Area is required')
     .positive('Area must be positive'),
   price: yup
     .number()
+    .typeError('Price is required')
     .required('Price is required')
     .positive('Price must be positive'),
-  property_type_id: yup.string().required('Type is required'),
+  property_type_id: yup
+    .string()
+    .typeError('Type is required')
+    .required('Type is required'),
+
   num_of_rooms: yup
     .number()
+    .typeError('Number of rooms is required')
     .required('Number of rooms is required')
     .positive('Must be positive')
     .integer('Must be an integer'),
   num_of_bathrooms: yup
     .number()
+    .typeError('Number of bathrooms is required')
     .required('Number of bathrooms is required')
     .positive('Must be positive')
     .integer('Must be an integer'),
-  amenities: yup.array().of(yup.string()),
+  amenities: yup
+    .array()
+    .of(yup.string())
+    .typeError('Amenities are required')
+    .required('Amenities are required'),
   listing_type: yup.string().required('Listing Type is required'),
   images: yup
     .mixed()

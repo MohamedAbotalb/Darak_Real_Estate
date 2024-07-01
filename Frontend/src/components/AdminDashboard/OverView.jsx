@@ -8,7 +8,9 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Container,
 } from '@mui/material';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -87,29 +89,51 @@ function OverView() {
   }, [status, dispatch]);
 
   return (
-    <Box sx={{ mt: 4, width: '100%', px: 1 }}>
-      {status === 'loading' && <CircularProgress />}
-      {status === 'failed' && <Alert severity="error">{error}</Alert>}
-      {status === 'succeeded' && (
-        <Grid container spacing={3}>
-          {cardsData.map((card) => (
-            <Grid item xs={12} sm={6} md={4} key={card.key}>
-              <Card sx={cardStyles}>
-                {card.icon}
-                <CardContent>
-                  <Typography variant="h6" sx={{ fontSize: 24 }}>
-                    {card.title}
-                  </Typography>
-                  <Typography variant="h4" sx={{ fontSize: 32 }}>
-                    {counts[card.countKey]}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
-    </Box>
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            Overview
+          </Typography>
+        </Box>
+      </Box>
+      <Box sx={{ mt: 4, width: '100%', px: 1 }}>
+        {status === 'loading' && <CircularProgress />}
+        {status === 'failed' && <Alert severity="error">{error}</Alert>}
+        {status === 'succeeded' && (
+          <Grid container spacing={3}>
+            {cardsData.map((card) => (
+              <Grid item xs={12} sm={6} md={4} key={card.key}>
+                <Card sx={cardStyles}>
+                  {card.icon}
+                  <CardContent>
+                    <Typography variant="h6" sx={{ fontSize: 24 }}>
+                      {card.title}
+                    </Typography>
+                    <Typography variant="h4" sx={{ fontSize: 32 }}>
+                      {counts[card.countKey]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </>
   );
 }
 

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Box, Typography, Button, Container, Grid } from '@mui/material';
+import logo from 'assets/images/logo-auth.png';
 
 function AboutUs() {
   return (
     <Container sx={{ my: 8 }}>
       <Grid container spacing={4} alignItems="center">
+        {/* Left Content */}
         <Grid item xs={12} md={6}>
           <Typography variant="overline" display="block" gutterBottom>
             Dolore dolore voluptate aliqua ut mi
@@ -33,38 +35,26 @@ function AboutUs() {
             Learn more
           </Button>
         </Grid>
+
+        {/* Right Image */}
         <Grid item xs={12} md={6}>
           <Box
             sx={{
-              position: 'relative',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              height: '100%',
+              justifyContent: { xs: 'center', md: 'flex-end' },
+              height: '70%',
             }}
           >
             <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: '25%',
-                width: '50%',
-                height: '100%',
-                borderRadius: '0 50% 50% 0',
-                backgroundColor: '#f0f4fa',
-                zIndex: -1,
-              }}
-            />
-            <Box
               component="img"
-              src="https://via.placeholder.com/400"
+              src={logo}
               alt="About Us"
               sx={{
-                width: '70%',
-                height: '70%',
+                maxWidth: '60%',
+                height: 'auto',
                 objectFit: 'cover',
                 borderRadius: 2,
+                marginBottom: { xs: '20px', md: 0 }, // Add margin bottom only on small screens
               }}
             />
           </Box>

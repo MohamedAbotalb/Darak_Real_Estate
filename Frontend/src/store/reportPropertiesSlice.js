@@ -8,7 +8,7 @@ export const fetchReports = createAsyncThunk(
     const response = await axios.get(
       'http://localhost:8000/api/report-properties'
     );
-    return response.data.data;
+    return response.data;
   }
 );
 

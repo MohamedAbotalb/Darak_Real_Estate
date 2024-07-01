@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   TextField,
@@ -24,6 +24,7 @@ import {
   Box,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -42,11 +43,27 @@ const FormWrapper = styled('div')({
   padding: '50px 0',
 });
 
+const ImageContainer = styled('div')({
+  position: 'relative',
+  width: '100%',
+});
+
+const DeleteButton = styled(IconButton)({
+  position: 'absolute',
+  top: '-3px',
+  right: '0px',
+  backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+  },
+});
+
 function AddProperty() {
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
     watch,
@@ -134,9 +151,15 @@ function AddProperty() {
     setValue('images', [...selectedImages, ...files]);
   };
 
+  const handleRemoveImage = (index) => {
+    const updatedImages = selectedImages.filter((_, i) => i !== index);
+    setSelectedImages(updatedImages);
+    setValue('images', updatedImages);
+  };
+
   return (
     <FormWrapper>
-      <Card sx={{ maxWidth: 600, width: '100%', boxShadow: 5 }}>
+      <Card sx={{ maxWidth: 700, width: '100%', boxShadow: 5 }}>
         <Typography variant="h4" gutterBottom align="center" padding={3}>
           Add Property
         </Typography>
@@ -163,7 +186,7 @@ function AddProperty() {
                   helperText={errors.description?.message}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.state}>
                   <InputLabel id="state-label" htmlFor="state">
                     State
@@ -188,7 +211,7 @@ function AddProperty() {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.city}>
                   <InputLabel id="city-label" htmlFor="city">
                     City
@@ -212,7 +235,7 @@ function AddProperty() {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   label="Street"
                   id="street"
@@ -222,7 +245,7 @@ function AddProperty() {
                   helperText={errors.street?.message}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   label="Area"
                   type="number"
@@ -234,41 +257,49 @@ function AddProperty() {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.property_type_id}>
                   <InputLabel id="type-label" htmlFor="property_type_id">
                     Type
                   </InputLabel>
-                  <Select
-                    labelId="type-label"
-                    id="property_type_id"
-                    {...register('property_type_id')}
-                    label="Type"
+                  <Controller
+                    name="property_type_id"
+                    control={control}
                     defaultValue=""
-                  >
-                    {propertyTypesStatus === 'loading' && (
-                      <MenuItem value="" disabled>
-                        Loading types...
-                      </MenuItem>
+                    render={({ field }) => (
+                      <Select
+                        labelId="type-label"
+                        id="property_type_id"
+                        {...field}
+                        label="Type"
+                      >
+                        {propertyTypesStatus === 'loading' && (
+                          <MenuItem value="" disabled>
+                            Loading types...
+                          </MenuItem>
+                        )}
+                        {propertyTypesStatus === 'failed' && (
+                          <MenuItem value="" disabled>
+                            Error loading types
+                          </MenuItem>
+                        )}
+                        {propertyTypesStatus === 'succeeded' &&
+                          propertyTypes.map((type) => (
+                            <MenuItem key={type.id} value={type.id}>
+                              {type.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
                     )}
-                    {propertyTypesStatus === 'failed' && (
-                      <MenuItem value="" disabled>
-                        Error loading types
-                      </MenuItem>
-                    )}
-                    {propertyTypesStatus === 'succeeded' &&
-                      propertyTypes.map((type) => (
-                        <MenuItem key={type.id} value={type.id}>
-                          {type.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                  {errors.type && (
-                    <Typography color="error">{errors.type.message}</Typography>
+                  />
+                  {errors.property_type_id && (
+                    <Typography color="error">
+                      {errors.property_type_id.message}
+                    </Typography>
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   label="Rooms"
                   type="number"
@@ -279,7 +310,7 @@ function AddProperty() {
                   helperText={errors.num_of_rooms?.message}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   label="Bathrooms"
                   type="number"
@@ -386,23 +417,31 @@ function AddProperty() {
                       Selected Images:
                     </Typography>
                     <Grid container spacing={2}>
-                      {selectedImages.map((image) => (
-                        <Grid item key={image.name} xs={4}>
-                          <Card>
-                            <CardMedia
-                              component="img"
-                              height="100"
-                              image={URL.createObjectURL(image)}
-                              alt={image.name}
-                            />
-                          </Card>
+                      {selectedImages.map((image, index) => (
+                        <Grid item key={image.name} xs={12} md={4}>
+                          <ImageContainer>
+                            <Card>
+                              <CardMedia
+                                component="img"
+                                height="200"
+                                image={URL.createObjectURL(image)}
+                                alt={image.name}
+                              />
+                              <DeleteButton
+                                color="secondary"
+                                onClick={() => handleRemoveImage(index)}
+                              >
+                                <RemoveCircleOutline />
+                              </DeleteButton>
+                            </Card>
+                          </ImageContainer>
                         </Grid>
                       ))}
-                      <Grid item xs={4}>
+                      <Grid item xs={12} md={4}>
                         <label htmlFor="image-upload">
                           <Card
                             sx={{
-                              height: '100px',
+                              height: '200px',
                               display: 'flex',
                               justifyContent: 'center',
                               alignItems: 'center',

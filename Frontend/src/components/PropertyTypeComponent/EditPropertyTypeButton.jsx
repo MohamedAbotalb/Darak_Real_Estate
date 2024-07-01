@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
-import { fetchPropertyTypes } from 'store/propertyTypesSlice';
-import axios from '../../axiosConfig';
-import PropertyTypeModal from './PropertyTypeModal';
+import { editPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
+import PropertyTypeModal from 'components/PropertyTypeComponent/PropertyTypeModal';
 
 function EditPropertyTypeButton({ type }) {
   const [isOpen, setOpen] = useState(false);
@@ -16,9 +15,8 @@ function EditPropertyTypeButton({ type }) {
 
   const handleSubmit = async (data) => {
     try {
-      await axios.put(`/property-types/${type.slug}`, data);
-      dispatch(fetchPropertyTypes());
-      toast.success('Property type updated successfully!');
+      await dispatch(editPropertyType({ slug: type.slug, data }));
+      await dispatch(fetchPropertyTypes());
       handleClose();
     } catch (error) {
       toast.error('Failed to update property type.');

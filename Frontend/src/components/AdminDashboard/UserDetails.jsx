@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import {
-  Container,
   Table,
   TableBody,
   TableCell,
@@ -11,12 +10,16 @@ import {
   TableRow,
   tableCellClasses,
   Paper,
-  IconButton,
+  Button,
   CircularProgress,
   Alert,
   Pagination,
+  Typography,
+  Box,
+  InputBase,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import SearchIcon from '@mui/icons-material/Search';
 import { toast } from 'react-toastify';
 import { fetchUsers, deleteUser } from 'store/userDetailsSlice';
 
@@ -39,13 +42,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
+
 function UserDetails() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.userDetails.users);
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (status === 'idle') {
@@ -68,13 +111,21 @@ function UserDetails() {
     setPage(newPage);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   let content;
 
   if (status === 'loading') {
     content = <CircularProgress />;
   } else if (status === 'succeeded') {
     if (Array.isArray(users)) {
-      const paginatedUsers = users.slice(
+      const paginatedUsers = filteredUsers.slice(
         (page - 1) * rowsPerPage,
         (page - 1) * rowsPerPage + rowsPerPage
       );
@@ -115,12 +166,14 @@ function UserDetails() {
                       {user.role}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      <IconButton
-                        color="error"
+                      <Button
+                        variant="contained"
+                        color="secondary"
                         onClick={() => handleDelete(user.id)}
+                        sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
                       >
-                        <DeleteIcon />
-                      </IconButton>
+                        Delete
+                      </Button>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -128,9 +181,12 @@ function UserDetails() {
             </Table>
           </TableContainer>
           <Pagination
-            count={Math.ceil(users.length / rowsPerPage)}
+            count={Math.ceil(filteredUsers.length / rowsPerPage)}
             page={page}
             onChange={handleChangePage}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
             sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
           />
         </>
@@ -142,7 +198,44 @@ function UserDetails() {
     content = <Alert severity="error">{error}</Alert>;
   }
 
-  return <Container maxWidth={false}>{content}</Container>;
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            User Details
+          </Typography>
+        </Box>
+        <Box display="flex" justifyContent="center" mb={2}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search by First Name"
+              inputProps={{ 'aria-label': 'search' }}
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </Search>
+        </Box>
+      </Box>
+      {content}
+    </>
+  );
 }
 
 export default UserDetails;

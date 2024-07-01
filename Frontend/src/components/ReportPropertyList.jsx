@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import { styled, alpha } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
+
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Pagination,
+  InputBase,
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import {
   fetchReports,
   deleteReport,
@@ -39,6 +47,45 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
+
 export default function ReportPropertyList() {
   const dispatch = useDispatch();
   const reports = useSelector((state) => state.reportProperties.reports);
@@ -50,6 +97,9 @@ export default function ReportPropertyList() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteType, setDeleteType] = useState('');
   const [deleteId, setDeleteId] = useState(null);
+  const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -91,73 +141,164 @@ export default function ReportPropertyList() {
     setOpenContentDialog(false);
   };
 
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  const handleSearchChange = (event, fieldName) => {
+    setSearchTerms({
+      ...searchTerms,
+      [fieldName]: event.target.value,
+    });
+  };
+
+  const filteredReports = reports.filter((report) => {
+    const userFullName = `${report.user.first_name.toLowerCase()} ${report.user.last_name.toLowerCase()}`;
+    const propertyTitle = report.property.title.toLowerCase();
+
+    return (
+      (searchTerms.user === '' ||
+        userFullName.includes(searchTerms.user.toLowerCase())) &&
+      (searchTerms.property === '' ||
+        propertyTitle.includes(searchTerms.property.toLowerCase()))
+    );
+  });
+
+  const paginatedReports = filteredReports.slice(
+    (page - 1) * rowsPerPage,
+    (page - 1) * rowsPerPage + rowsPerPage
+  );
+
   let content;
 
   if (reportStatus === 'loading') {
     content = <p>Loading...</p>;
   } else if (reportStatus === 'succeeded') {
     content = (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell align="center">User</StyledTableCell>
-              <StyledTableCell align="center">Property</StyledTableCell>
-              <StyledTableCell align="center">Content</StyledTableCell>
-              <StyledTableCell align="center">Actions</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {reports.map((report) => (
-              <StyledTableRow key={report.id}>
-                <StyledTableCell component="th" scope="row">
-                  {report.id}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {`${report.user.first_name} ${report.user.last_name}`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {report.property.title}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <Button
-                    variant="text"
-                    color="primary"
-                    onClick={() => handleShowContent(report.content)}
-                  >
-                    Details
-                  </Button>
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDeleteReport(report.id)}
-                    style={{ marginRight: '7px' }}
-                  >
-                    Delete Report
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleDeleteProperty(report.property.id)}
-                  >
-                    Delete Property
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <div>
+        <Box display="flex" justifyContent="center" mb={2}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search User"
+              inputProps={{ 'aria-label': 'search user' }}
+              value={searchTerms.user}
+              onChange={(e) => handleSearchChange(e, 'user')}
+            />
+          </Search>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search Property"
+              inputProps={{ 'aria-label': 'search property' }}
+              value={searchTerms.property}
+              onChange={(e) => handleSearchChange(e, 'property')}
+            />
+          </Search>
+        </Box>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell align="center">User</StyledTableCell>
+                <StyledTableCell align="center">Property</StyledTableCell>
+                <StyledTableCell align="center">Content</StyledTableCell>
+                <StyledTableCell align="center">Actions</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedReports.map((report) => (
+                <StyledTableRow key={report.id}>
+                  <StyledTableCell component="th" scope="row">
+                    {report.id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {`${report.user.first_name} ${report.user.last_name}`}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {report.property.title}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Button
+                      variant="text"
+                      color="primary"
+                      onClick={() => handleShowContent(report.content)}
+                    >
+                      View Content
+                    </Button>
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleDeleteReport(report.id)}
+                      style={{ marginRight: '7px' }}
+                    >
+                      Delete Report
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDeleteProperty(report.property.id)}
+                    >
+                      Delete Property
+                    </Button>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '10px 20px',
+          }}
+        >
+          <Pagination
+            count={Math.ceil(filteredReports.length / rowsPerPage)}
+            page={page}
+            onChange={handleChangePage}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+          />
+        </div>
+      </div>
     );
   } else if (reportStatus === 'failed') {
     content = <p>{error}</p>;
   }
 
   return (
-    <div>
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            Report Property List
+          </Typography>
+        </Box>
+      </Box>
       {content}
       <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
         <DialogTitle>Content</DialogTitle>
@@ -186,6 +327,6 @@ export default function ReportPropertyList() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchCategories } from 'store/home/categoriesSlice';
-import PropertyCard from 'components/Home/PropretyCard';
+import { fetchWishlist } from 'store/home/wishlistSlice';
+import PropertyCard from 'components/Home/PropertyCard';
 import CategoryFilter from 'components/Home/CategoryFilter';
 
 function PropertyListings({ type }) {
@@ -13,12 +14,11 @@ function PropertyListings({ type }) {
   const propertiesStatus = useSelector((state) => state.properties.status);
   const categories = useSelector((state) => state.categories.list);
   const categoriesStatus = useSelector((state) => state.categories.status);
-
   const [category, setCategory] = useState(null);
-  console.log(category, 'cat', properties.length, propertiesStatus);
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchWishlist());
   }, [dispatch]);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function PropertyListings({ type }) {
   }
 
   return (
-    <Box sx={{ padding: '20px' }}>
+    <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
       <Typography
         variant="h4"
         align="center"
@@ -77,7 +77,7 @@ function PropertyListings({ type }) {
           No properties found for the selected category.
         </Typography>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center">
           {properties.map((property) => (
             <Grid item xs={12} sm={6} md={4} key={property.id}>
               <Box display="flex" justifyContent="center">
