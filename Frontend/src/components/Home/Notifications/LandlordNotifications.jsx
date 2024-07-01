@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchLandlordNotifications,
-  approveDate,
-  declineTour,
+  fetchLandlordNotificationsAsync,
+  approveDateAsync,
+  declineTourAsync,
+  deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
 import {
   Box,
   CircularProgress,
   List,
   ListItem,
+  ListItemAvatar,
+  Avatar,
   ListItemText,
   Button,
   Typography,
@@ -21,27 +24,46 @@ import {
   DialogContent,
   DialogTitle,
   Pagination,
+  IconButton,
+  Paper,
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
+  HighlightOffOutlined as DeleteIcon,
   HighlightOff as DeclineIcon,
 } from '@mui/icons-material';
 
+const getNotificationCircleColor = (type) => {
+  switch (type) {
+    case 'declined':
+      return '#FFCCCC';
+    case 'approve':
+      return '#CCFFCC';
+    case 'pending':
+      return '#FFFFCC';
+    default:
+      return '#FFFFFF';
+  }
+};
+
 function LandlordNotifications() {
   const dispatch = useDispatch();
-  const { landlordNotifications, status, error } = useSelector(
+  const { notifications, status, error } = useSelector(
     (state) => state.notifications
   );
+
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [openDeclineConfirmation, setOpenDeclineConfirmation] = useState(false); // State for decline confirmation
+  const [openDeclineConfirmation, setOpenDeclineConfirmation] = useState(false);
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+
   const notificationsPerPage = 5;
 
   useEffect(() => {
-    dispatch(fetchLandlordNotifications());
+    dispatch(fetchLandlordNotificationsAsync());
   }, [dispatch]);
 
   const handleApprove = (notification) => {
@@ -56,37 +78,81 @@ function LandlordNotifications() {
 
   const handleDecline = () => {
     if (selectedNotification) {
-      dispatch(declineTour(selectedNotification.id));
-      setOpenDeclineConfirmation(false);
+      setSubmitting(true);
+      dispatch(declineTourAsync(selectedNotification.tour_id))
+        .then((response) => {
+          if (response.error) {
+            // Handle the error
+          } else {
+            // Optionally handle state update or UI interaction after declining
+          }
+          setSubmitting(false);
+          setOpenDeclineConfirmation(false);
+        })
+        .catch((declineError) => {
+          // Handle the error
+          setSubmitting(false);
+          setOpenDeclineConfirmation(false);
+        });
     }
   };
 
   const handleApproveDate = () => {
     if (selectedNotification && selectedDate) {
       setSubmitting(true);
-      dispatch(approveDate({ tourId: selectedNotification.id, selectedDate }))
-        .then(() => {
-          setSelectedNotification(null);
-          setSelectedDate(null);
+      dispatch(
+        approveDateAsync({ tourId: selectedNotification.tour_id, selectedDate })
+      )
+        .then((response) => {
+          if (response.error) {
+            // Handle the error
+          } else {
+            setSelectedNotification((prev) => ({
+              ...prev,
+              tour: {
+                ...prev.tour,
+                dates: prev.tour.dates.map((date) =>
+                  date.id === selectedDate.id ? { ...date, approved: 1 } : date
+                ),
+              },
+            }));
+            setSelectedDate(null);
+          }
           setSubmitting(false);
           setOpenModal(false);
         })
-        .catch(() => {
+        .catch((approveError) => {
+          // Handle the error
           setSubmitting(false);
           setOpenModal(false);
         });
     }
   };
 
+  const handleDelete = (notificationId) => {
+    setSelectedNotification(notificationId);
+    setOpenDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedNotification) {
+      dispatch(deleteNotificationAsync(selectedNotification)).catch(
+        (deleteError) => {
+          // Handle the error
+        }
+      );
+      setOpenDeleteConfirmation(false);
+    }
+  };
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-
+  console.log(notifications);
   const startIndex = (currentPage - 1) * notificationsPerPage;
-  const currentNotifications = landlordNotifications.slice(
-    startIndex,
-    startIndex + notificationsPerPage
-  );
+  const currentNotifications = notifications
+    ? notifications.slice(startIndex, startIndex + notificationsPerPage)
+    : [];
 
   if (status === 'loading') {
     return <CircularProgress />;
@@ -102,97 +168,128 @@ function LandlordNotifications() {
         Landlord Notifications
       </Typography>
       <Divider />
-      <List>
-        {currentNotifications.map((notification) => (
-          <ListItem
-            key={notification.id}
-            style={{
-              marginBottom: '16px',
-              border: '1px solid #ccc',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              borderRadius: '8px',
-              padding: '16px',
-              textAlign: 'left',
-              maxWidth: '600px',
-              margin: '16px auto',
-              backgroundColor: '#fff',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
-            <ListItemText
-              primary={notification.message}
-              secondary={
-                <>
-                  {notification.dates.map((date) => (
-                    <span
-                      key={date}
+      {currentNotifications.length > 0 ? (
+        <List>
+          {currentNotifications.map((notification) => (
+            <Paper
+              key={notification.id}
+              elevation={3}
+              style={{ marginBottom: '16px' }}
+            >
+              <ListItem
+                style={{
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  textAlign: 'left',
+                  maxWidth: '600px',
+                  margin: '16px auto',
+                  backgroundColor: '#fff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'stretch',
+                  position: 'relative',
+                }}
+              >
+                <IconButton
+                  onClick={() => handleDelete(notification.id)}
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    color: '#f44336',
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <Box
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    backgroundColor: getNotificationCircleColor(
+                      notification.status
+                    ),
+                    position: 'absolute',
+                    top: '8px',
+                    left: '8px',
+                    bottom: '8px',
+                  }}
+                />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  marginTop="16px"
+                  marginLeft="20px"
+                  marginBottom="8px"
+                >
+                  <ListItemAvatar>
+                    <Avatar alt="User Profile" src={notification.user.avatar} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${notification.user.first_name} ${notification.user.last_name}`}
+                    secondary={
+                      <Typography variant="body2" color="textSecondary">
+                        {notification.message}
+                      </Typography>
+                    }
+                  />
+                </Box>
+                {notification.tour &&
+                  notification.tour.dates.map((date) => (
+                    <ListItem
+                      key={date.id}
                       style={{
-                        color:
-                          notification.approvedDate === date
-                            ? 'green'
-                            : 'inherit',
-                        fontWeight:
-                          notification.approvedDate === date
-                            ? 'bold'
-                            : 'normal',
+                        color: date.approved === 1 ? 'green' : 'inherit',
                       }}
                     >
-                      {date}
-                      {notification.approvedDate === date && ' (Approved)'}
-                      {notification.dates.indexOf(date) <
-                        notification.dates.length - 1 && ', '}
-                    </span>
+                      {date.date}
+                    </ListItem>
                   ))}
-                </>
-              }
-            />
-            {notification.approvedDate && (
-              <Typography
-                variant="body2"
-                style={{ color: 'green', marginBottom: '8px' }}
-              >
-                Approved Date: {notification.approvedDate}
-              </Typography>
-            )}
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              width="100%"
-              marginTop="16px"
-            >
-              <Button
-                variant="contained"
-                onClick={() => handleDeclineConfirmation(notification)}
-                disabled={
-                  notification.status === 'declined' ||
-                  notification.status === 'approved'
-                }
-                color="error"
-                startIcon={<DeclineIcon />}
-              >
-                Decline
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleApprove(notification)}
-                disabled={
-                  notification.status === 'approved' ||
-                  notification.status === 'declined'
-                }
-                color="success"
-                startIcon={<ApproveIcon />}
-              >
-                Approve
-              </Button>
-            </Box>
-          </ListItem>
-        ))}
-      </List>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  width="100%"
+                  marginTop="16px"
+                >
+                  <Button
+                    variant="contained"
+                    onClick={() => handleDeclineConfirmation(notification)}
+                    disabled={
+                      notification.status === 'declined' ||
+                      notification.status === 'approve'
+                    }
+                    color="error"
+                    startIcon={<DeclineIcon />}
+                    style={{ marginRight: '16px' }}
+                  >
+                    Decline
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleApprove(notification)}
+                    disabled={
+                      notification.status === 'approve' ||
+                      notification.status === 'declined'
+                    }
+                    color="success"
+                    startIcon={<ApproveIcon />}
+                  >
+                    Approve
+                  </Button>
+                </Box>
+              </ListItem>
+            </Paper>
+          ))}
+        </List>
+      ) : (
+        <Typography>No notifications available.</Typography>
+      )}
       <Box display="flex" justifyContent="center" marginTop="16px">
         <Pagination
-          count={Math.ceil(landlordNotifications.length / notificationsPerPage)}
+          count={Math.ceil(
+            (notifications ? notifications.length : 0) / notificationsPerPage
+          )}
           page={currentPage}
           onChange={handlePageChange}
           variant="outlined"
@@ -204,20 +301,21 @@ function LandlordNotifications() {
         <DialogContent>
           {selectedNotification && (
             <List>
-              {selectedNotification.dates.map((date) => (
-                <ListItem key={date}>
-                  <FormControlLabel
-                    control={
-                      <Radio
-                        checked={selectedDate === date}
-                        onChange={() => setSelectedDate(date)}
-                        value={date}
-                      />
-                    }
-                    label={date}
-                  />
-                </ListItem>
-              ))}
+              {selectedNotification.tour &&
+                selectedNotification.tour.dates.map((date) => (
+                  <ListItem key={date.id}>
+                    <FormControlLabel
+                      control={
+                        <Radio
+                          checked={selectedDate?.id === date.id}
+                          onChange={() => setSelectedDate(date)}
+                          value={date.id}
+                        />
+                      }
+                      label={date.date}
+                    />
+                  </ListItem>
+                ))}
             </List>
           )}
         </DialogContent>
@@ -228,36 +326,53 @@ function LandlordNotifications() {
           <Button
             onClick={handleApproveDate}
             color="primary"
-            disabled={submitting || !selectedDate}
+            disabled={!selectedDate || submitting}
           >
-            Submit
+            Approve
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog
         open={openDeclineConfirmation}
         onClose={() => setOpenDeclineConfirmation(false)}
-        disableBackdropClick // Prevent dismissing by clicking outside the dialog
-        disableEscapeKeyDown // Prevent dismissing by pressing the Escape key
       >
-        <DialogTitle>Confirm Decline</DialogTitle>
+        <DialogTitle>Decline Tour</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to decline this tour?</Typography>
+          <Typography>
+            Are you sure you want to decline this tour request?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => setOpenDeclineConfirmation(false)}
-            color="secondary"
+            color="primary"
           >
             Cancel
           </Button>
+          <Button onClick={handleDecline} color="primary" disabled={submitting}>
+            Decline
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDeleteConfirmation}
+        onClose={() => setOpenDeleteConfirmation(false)}
+      >
+        <DialogTitle>Delete Notification</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this notification?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
           <Button
-            onClick={handleDecline}
-            color="secondary"
-            variant="contained"
-            disabled={!selectedNotification}
+            onClick={() => setOpenDeleteConfirmation(false)}
+            color="primary"
           >
-            Confirm Decline
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary">
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

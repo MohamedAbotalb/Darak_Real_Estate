@@ -74,27 +74,10 @@ class PropertyRepository implements PropertyRepositoryInterface
         }
     }
 
+
     public function searchProperties(array $filters)
     {
-        $query = Property::query();
-
-        if (isset($filters['property_type'])) {
-            $query->where('property_type_id', $filters['property_type']);
-        }
-        if (isset($filters['listing_type'])) {
-            $query->where('listing_type', $filters['listing_type']);
-        }
-        if (isset($filters['city'])) {
-            $query->join('locations', 'properties.location_id', '=', 'locations.id');
-            $query->where('locations.city', $filters['city']);
-        }
-
-        return $query->get();
-    }
-    public function searchPropertiesAdvanced(array $filters)
-    {
-        $query = Property::query();
-
+        $query = Property::with('images', 'location', 'amenities', 'propertyType');
 
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
@@ -103,10 +86,18 @@ class PropertyRepository implements PropertyRepositoryInterface
             $query->where('listing_type', $filters['listing_type']);
         }
         if (isset($filters['num_of_rooms'])) {
-            $query->where('num_of_rooms', $filters['num_of_rooms']);
+            if ($filters['num_of_rooms'] >= 7) {
+                $query->where('num_of_rooms', '>=', 7);
+            } else {
+                $query->where('num_of_rooms', $filters['num_of_rooms']);
+            }
         }
         if (isset($filters['num_of_bathrooms'])) {
-            $query->where('num_of_bathrooms', $filters['num_of_bathrooms']);
+            if ($filters['num_of_bathrooms'] >= 7) {
+                $query->where('num_of_bathrooms', '>=', 7);
+            } else {
+                $query->where('num_of_bathrooms', $filters['num_of_bathrooms']);
+            }
         }
         if (isset($filters['price'])) {
             $query->where('price', $filters['price']);
@@ -115,11 +106,71 @@ class PropertyRepository implements PropertyRepositoryInterface
             $query->join('locations', 'properties.location_id', '=', 'locations.id');
             $query->where('locations.city', $filters['city']);
         }
+        if (isset($filters['min_price']) && isset($filters['max_price'])) {
+            $query->whereBetween('price', [$filters['min_price'], $filters['max_price']]);
+        } elseif (isset($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        } elseif (isset($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
+        }
 
         return $query->get();
     }
+
     public function showUserProperties(int $id)
     {
         return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType')->get();
+    }
+    public function updateProperty(array $data, int $propertyId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $property = Property::findOrFail($propertyId);
+            $property->update($data);
+            if (isset($data['city']) && isset($data['state']) && isset($data['street'])) {
+                $location = Location::updateOrCreate(
+                    [
+                        'city' => $data['city'],
+                        'state' => $data['state'],
+                        'street' => $data['street']
+                    ],
+                    $data
+                );
+
+                $property->location_id = $location->id;
+            }
+
+            if (isset($data['images'])) {
+                foreach ($data['images'] as $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $image->move(public_path('images/properties'), $imageName);
+                    PropertyImage::create([
+                        'property_id' => $property->id,
+                        'image' => 'images/properties/' . $imageName,
+                    ]);
+                }
+            }
+
+            if (isset($data['amenities'])) {
+                $property->amenities()->sync($data['amenities']);
+            }
+
+            $property->load('location', 'propertyType', 'user', 'images', 'amenities');
+
+            DB::commit();
+            return $property;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception('Failed to update property: ' . $e->getMessage());
+        }
+    }
+    public function delete(int $id){
+        $property=Property::find($id);
+        if(!$property){
+            return null;
+        }
+        $property->delete();
+        return true;
     }
 }

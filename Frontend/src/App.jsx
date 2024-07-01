@@ -20,6 +20,7 @@ import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
+import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
@@ -39,13 +40,14 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
+          <Route path="search" element={<SearchPage />} />
           <Route
-            path="/renter-notifications"
-            element={<RenterNotifications />}
+            path="landlord-notifications"
+            element={<LandlordNotifications />}
           />
           <Route
-            path="/landlord-notifications"
-            element={<LandlordNotifications />}
+            path="renter-notifications"
+            element={<RenterNotifications />}
           />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />

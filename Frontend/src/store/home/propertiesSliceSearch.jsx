@@ -1,24 +1,30 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from 'services/axiosConfig';
 
 export const fetchProperties = createAsyncThunk(
-  'properties/fetchProperties',
-  async ({ propertyType, locationId, listingType }) => {
+  'propertiesSearch/fetchProperties',
+  async ({ propertyType, locationId, listingType, beds, baths, price }) => {
     try {
-      const response = await axios.get(
-        'http://127.0.0.1:8000/api/properties/search/filter',
-        {
-          params: {
-            property_type: propertyType,
-            location_id: locationId,
-            listing_type: listingType,
-          },
-        }
-      );
-      console.log('API Response for Properties:', response.data);
+      console.log({
+        propertyType,
+        locationId,
+        listingType,
+        beds,
+        baths,
+        price,
+      });
+      const response = await axios.get('/properties/search/filter/Advanced', {
+        params: {
+          property_type: propertyType || null,
+          location_id: locationId || null,
+          listing_type: listingType || null,
+          num_of_bedrooms: beds || null,
+          num_of_bathrooms: baths || null,
+          price: price || null,
+        },
+      });
       return response.data;
     } catch (error) {
-      console.error('Error fetching properties:', error);
       throw Error('Failed to fetch properties');
     }
   }
@@ -41,6 +47,7 @@ const propertiesSliceSearch = createSlice({
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
+        console.log(state.data);
         state.error = null;
       })
       .addCase(fetchProperties.rejected, (state, action) => {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Properties\StorePropertyRequest;
+use App\Http\Requests\properties\UpdatePropertyRequest;
 use App\Http\Resources\PropertyResource;
 use App\Repositories\PropertyRepositoryInterface;
 use Illuminate\Http\Request;
@@ -64,19 +65,8 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'listing_type', 'city']);
+        $filters = $request->only(['property_type', 'listing_type', 'city','num_of_rooms','num_of_bathrooms','min_price','max_price']);
         $properties = $this->propertyRepository->searchProperties($filters);
-
-        if ($properties->isEmpty()) {
-            return response()->json(['message' => 'No Result found'], 404);
-        }
-
-        return response()->json(['data' => PropertyResource::collection($properties)]);
-    }
-    public function searchAdvanced(Request $request)
-    {
-        $filters = $request->only(['property_type', 'listing_type','num_of_rooms','num_of_bathrooms','price','city']);
-        $properties = $this->propertyRepository->searchPropertiesAdvanced($filters);
 
         if ($properties->isEmpty()) {
             return response()->json(['message' => 'No Result found'], 404);
@@ -91,5 +81,26 @@ class PropertyController extends Controller
         }
         return response()->json(['data' => PropertyResource::collection($properties)]);
 
+    }
+    public function update(UpdatePropertyRequest $request, $propertyId)
+    {
+        try {
+            $validatedData = $request->validated(); 
+    
+            $property = $this->propertyRepository->updateProperty($validatedData, $propertyId);
+    
+            return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
+        }
+    }
+    public function deleteProperty($propertyId){
+        $deleted=$this->propertyRepository->delete($propertyId);
+        if($deleted){
+            return response()->json(['message' => 'property deleted successfuly'], 200);
+        }
+        else{
+            return response()->json(['message' => 'property not found'], 200);
+        }
     }
 }

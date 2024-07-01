@@ -27,7 +27,7 @@ class PropertyFactory extends Factory
             'num_of_rooms' => $this->faker->numberBetween(1, 10),
             'num_of_bathrooms' => $this->faker->numberBetween(1, 5),
             'area' => $this->faker->randomFloat(2, 50, 500),
-            'price' => $this->faker->numberBetween(100000, 10000000),
+            'price' => $this->faker->numberBetween(10000, 10000000),
             'location_id' => Location::pluck('id')->random(),
             'property_type_id' => PropertyType::pluck('id')->random(),
             'user_id' => User::pluck('id')->random(),
