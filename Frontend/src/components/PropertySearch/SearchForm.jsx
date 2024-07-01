@@ -20,12 +20,11 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   gap: theme.spacing(2),
   flexWrap: 'wrap',
-  maxWidth: '800px',
-  margin: '0 auto',
+  margin: '20px auto',
 }));
 
 const SearchFormControl = styled(FormControl)(({ theme }) => ({
-  minWidth: '200px',
+  minWidth: '130px',
   marginRight: theme.spacing(1),
   '& .MuiInputBase-root': {
     backgroundColor: '#fff',
@@ -60,9 +59,13 @@ function PropertySearch() {
     (state) => state.propertyTypes.status
   );
 
-  const [rentOrBuy, setRentOrBuy] = useState('renting');
+  const [rentOrBuy, setRentOrBuy] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [city, setCity] = useState('');
+  const [bedrooms, setBedrooms] = useState('');
+  const [bathrooms, setBathrooms] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const isLoading =
     locationsStatus === 'loading' || propertyTypesStatus === 'loading';
@@ -73,7 +76,17 @@ function PropertySearch() {
   }, [dispatch]);
 
   const handleSearch = () => {
-    dispatch(fetchProperties({ propertyType, city, listingType: rentOrBuy }));
+    dispatch(
+      fetchProperties({
+        propertyType,
+        city,
+        listingType: rentOrBuy,
+        bedrooms,
+        bathrooms,
+        minPrice,
+        maxPrice,
+      })
+    );
   };
 
   return (
@@ -127,6 +140,82 @@ function PropertySearch() {
                   {type.name}
                 </MenuItem>
               ))}
+            </Select>
+          </SearchFormControl>
+
+          <SearchFormControl>
+            <Select
+              value={bedrooms}
+              onChange={(e) => setBedrooms(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Bedrooms</em>
+              </MenuItem>
+              <MenuItem value="1">1</MenuItem>
+              <MenuItem value="2">2</MenuItem>
+              <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4</MenuItem>
+              <MenuItem value="5">5</MenuItem>
+            </Select>
+          </SearchFormControl>
+
+          <SearchFormControl>
+            <Select
+              value={bathrooms}
+              onChange={(e) => setBathrooms(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Bathrooms</em>
+              </MenuItem>
+              <MenuItem value="1">1</MenuItem>
+              <MenuItem value="2">2</MenuItem>
+              <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4</MenuItem>
+              <MenuItem value="5">5</MenuItem>
+            </Select>
+          </SearchFormControl>
+
+          <SearchFormControl>
+            <Select
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Min Price</em>
+              </MenuItem>
+              <MenuItem value="100000">100,000</MenuItem>
+              <MenuItem value="200000">200,000</MenuItem>
+              <MenuItem value="300000">300,000</MenuItem>
+              <MenuItem value="400000">400,000</MenuItem>
+              <MenuItem value="500000">500,000</MenuItem>
+              <MenuItem value="1000000">1,000,000</MenuItem>
+              <MenuItem value="2000000">2,000,000</MenuItem>
+              <MenuItem value="5000000">5,000,000</MenuItem>
+              <MenuItem value="10000000">10,000,000</MenuItem>
+            </Select>
+          </SearchFormControl>
+
+          <SearchFormControl>
+            <Select
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                <em>Max Price</em>
+              </MenuItem>
+              <MenuItem value="100000">100,000</MenuItem>
+              <MenuItem value="200000">200,000</MenuItem>
+              <MenuItem value="300000">300,000</MenuItem>
+              <MenuItem value="400000">400,000</MenuItem>
+              <MenuItem value="500000">500,000</MenuItem>
+              <MenuItem value="1000000">1,000,000</MenuItem>
+              <MenuItem value="2000000">2,000,000</MenuItem>
+              <MenuItem value="5000000">5,000,000</MenuItem>
+              <MenuItem value="10000000">10,000,000</MenuItem>
             </Select>
           </SearchFormControl>
 
