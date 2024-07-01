@@ -23,6 +23,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Wishlist::factory(10)->create();
         \App\Models\Tour::factory(10)->create();
         \App\Models\TourDate::factory(10)->create();
-
+        \App\Models\Review::factory(30)->create();
     }
 }
