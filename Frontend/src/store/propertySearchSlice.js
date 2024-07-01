@@ -3,15 +3,18 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchProperties = createAsyncThunk(
   'propertiesSearch/fetchProperties',
-  async ({
-    propertyType,
-    city,
-    listingType,
-    bedrooms,
-    bathrooms,
-    minPrice,
-    maxPrice,
-  }) => {
+  async (
+    {
+      propertyType,
+      city,
+      listingType,
+      bedrooms,
+      bathrooms,
+      minPrice,
+      maxPrice,
+    },
+    thunkAPI
+  ) => {
     try {
       const response = await getPropertiesSearch({
         params: {
@@ -26,15 +29,15 @@ export const fetchProperties = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      throw Error('Failed to fetch properties');
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-const propertiesSliceSearch = createSlice({
-  name: 'propertiesSearch',
+const propertySearchSlice = createSlice({
+  name: 'propertySearch',
   initialState: {
-    data: [],
+    properties: [],
     status: 'idle',
     error: null,
   },
@@ -47,7 +50,7 @@ const propertiesSliceSearch = createSlice({
       })
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = action.payload;
+        state.properties = action.payload;
         state.error = null;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
@@ -57,4 +60,4 @@ const propertiesSliceSearch = createSlice({
   },
 });
 
-export default propertiesSliceSearch.reducer;
+export default propertySearchSlice.reducer;
