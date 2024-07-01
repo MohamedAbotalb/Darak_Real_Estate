@@ -32,4 +32,12 @@ class ReasonReportController extends Controller
             return response()->json(['message' => 'Reason not found'], 400);
         }
     }
+    public function showReasonUser(){
+        $reasons=$this->ReasonReportRepository->showUsersReportReasons();
+        if($reasons){
+            return response()->json(['data'=>ReasonReportResource::collection($reasons)], 201); 
+        }else{
+            return response()->json(['message' => 'Reason not found'], 400);
+        }
+    }
 }

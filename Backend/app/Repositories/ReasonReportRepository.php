@@ -6,10 +6,16 @@ use App\Models\ReasonReport;
 
 class ReasonReportRepository implements ReasonReportRepositoryInterface
 {
-    public function storeReason(array $data){
+    public function storeReason(array $data)
+    {
         return ReasonReport::create($data);
     }
-   public function showPropertiesReportReasons(){
-        return ReasonReport::where('type','report-property')->get();
-   }
+    public function showPropertiesReportReasons()
+    {
+        return ReasonReport::where('type', 'report-property')->get();
+    }
+    public function showUsersReportReasons()
+    {
+        return ReasonReport::where('type', 'report-user')->get();
+    }
 }

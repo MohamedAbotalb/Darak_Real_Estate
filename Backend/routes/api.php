@@ -78,6 +78,7 @@ Route::prefix('report-properties')->group(function(){
 Route::prefix('reason-report')->group(function(){
     Route::post('/', [ReasonReportController::class, 'store']);
     Route::get('/property', [ReasonReportController::class, 'showReasonProperties']);
+    Route::get('/landlord', [ReasonReportController::class, 'showReasonProperties']);
 });
 
 Route::apiResource('property-types', PropertyTypeController::class);
