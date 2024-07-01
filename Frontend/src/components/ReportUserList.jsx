@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
+import { Container, Box, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -13,11 +14,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-import Box from '@mui/material/Box';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import {
   fetchReports,
   deleteReport,
@@ -175,30 +175,6 @@ export default function ReportUserList() {
   } else if (reportStatus === 'succeeded') {
     content = (
       <div>
-        <Box display="flex" justifyContent="center" mb={2}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search User"
-              inputProps={{ 'aria-label': 'search user' }}
-              value={searchTerms.user}
-              onChange={(e) => handleSearchChange(e, 'user')}
-            />
-          </Search>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search Landlord"
-              inputProps={{ 'aria-label': 'search landlord' }}
-              value={searchTerms.landlord}
-              onChange={(e) => handleSearchChange(e, 'landlord')}
-            />
-          </Search>
-        </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -277,7 +253,51 @@ export default function ReportUserList() {
   }
 
   return (
-    <div>
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            Report User
+          </Typography>
+        </Box>
+        <Box display="flex" justifyContent="between">
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search User"
+              inputProps={{ 'aria-label': 'search user' }}
+              value={searchTerms.user}
+              onChange={(e) => handleSearchChange(e, 'user')}
+            />
+          </Search>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search Landlord"
+              inputProps={{ 'aria-label': 'search landlord' }}
+              value={searchTerms.landlord}
+              onChange={(e) => handleSearchChange(e, 'landlord')}
+            />
+          </Search>
+        </Box>
+      </Box>
       {content}
       <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
         <DialogTitle>Content</DialogTitle>
@@ -306,6 +326,6 @@ export default function ReportUserList() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -1,54 +1,82 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
+import im1 from 'assets/images/im1.PNG';
+import im2 from 'assets/images/im2.PNG';
 
-function Sidebar({ setActiveTab }) {
+function Sidebar() {
   return (
     <div className="sidebar">
+      <img src={im1} alt="Logo 1" className="im1" />
       <h2>Dashboard Menu</h2>
       <ul>
         <li>
-          <button type="button" onClick={() => setActiveTab('overview')}>
+          <NavLink
+            to="/admin/overview"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             OverView
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('userdetails')}>
+          <NavLink
+            to="/admin/user-details"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             User Details
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('report-users')}>
+          <NavLink
+            to="/admin/report-users"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             Report User
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('report_property')}>
+          <NavLink
+            to="/admin/report_property"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             Report Property
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('reviews')}>
+          <NavLink
+            to="/admin/reviews"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             Reviews
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('property-types')}>
+          <NavLink
+            to="/admin/property-types"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             Property Types
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button type="button" onClick={() => setActiveTab('amenities')}>
+          <NavLink
+            to="/admin/amenities"
+            className="nav-link"
+            activeClassName="active-link"
+          >
             Amenities
-          </button>
+          </NavLink>
         </li>
       </ul>
+      <img src={im2} alt="Logo 2" className="im2" />
     </div>
   );
 }
-
-Sidebar.propTypes = {
-  setActiveTab: PropTypes.func.isRequired,
-};
 
 export default Sidebar;

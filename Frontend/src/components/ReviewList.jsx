@@ -1,13 +1,21 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import { styled, alpha } from '@mui/material/styles';
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  InputBase,
+} from '@mui/material';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import SearchIcon from '@mui/icons-material/Search';
+
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,9 +38,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: '20%',
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
+
 export default function ReviewList() {
   const [reviews, setReviews] = useState([]);
   const [fetchError, setFetchError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchReviews = async () => {
     try {
@@ -51,8 +98,47 @@ export default function ReviewList() {
     fetchReviews();
   }, []);
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredReviews = reviews.filter((review) =>
+    review.property.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+          px: 2,
+          py: 2,
+          backgroundColor: '#E8DFDE',
+          borderRadius: 1,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <GridOnIcon sx={{ mr: 1, color: 'black' }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
+            Reviews
+          </Typography>
+        </Box>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search Property"
+            inputProps={{ 'aria-label': 'search property' }}
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </Search>
+      </Box>
       {fetchError && <div>Error: {fetchError}</div>}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -67,7 +153,7 @@ export default function ReviewList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {reviews.map((review) => (
+            {filteredReviews.map((review) => (
               <StyledTableRow key={review.id}>
                 <StyledTableCell component="th" scope="row">
                   {review.id}
