@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Utils;
-
+use Illuminate\Http\UploadedFile;
 class ImageUpload{
     public static function uploadImages(array $images, string $destinationPath)
     {
@@ -14,5 +14,11 @@ class ImageUpload{
         }
 
         return $uploadedImagePaths;
+    }
+    public static function uploadImage(UploadedFile $image, string $destinationPath)
+    {
+        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path($destinationPath), $imageName);
+        return $destinationPath . '/' . $imageName;
     }
 }
