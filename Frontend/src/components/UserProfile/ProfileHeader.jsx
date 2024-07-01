@@ -7,11 +7,18 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
   return (
     <Paper
       elevation={3}
-      sx={{ p: 2, textAlign: 'center', position: 'relative' }}
+      sx={{
+        p: 4,
+        textAlign: 'center',
+        position: 'relative',
+        width: '100%',
+        maxWidth: '400px',
+        margin: '0 auto',
+      }}
     >
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Avatar
-          sx={{ width: 100, height: 100, mx: 'auto', mb: 3 }}
+          sx={{ width: 120, height: 120, mx: 'auto', mb: 3 }}
           src={avatar}
         />
         <IconButton
@@ -31,10 +38,10 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
           <EditIcon />
         </IconButton>
       </div>
-      <Typography variant="h6" component="div">
+      <Typography variant="h5" component="div" sx={{ mb: 1 }}>
         {`${user?.first_name} ${user?.last_name}`}
       </Typography>
-      <Typography variant="body1" component="div">
+      <Typography variant="body1" component="div" sx={{ mb: 1 }}>
         {user?.phone_number}
       </Typography>
       <Typography variant="body1" component="div">
