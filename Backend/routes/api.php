@@ -79,6 +79,7 @@ Route::prefix('reason-report')->group(function(){
     Route::post('/', [ReasonReportController::class, 'store']);
     Route::get('/property', [ReasonReportController::class, 'showReasonProperties']);
     Route::get('/landlord', [ReasonReportController::class, 'showReasonProperties']);
+    Route::delete('/{id}',[ReasonReportController::class,'delete']);
 });
 
 Route::apiResource('property-types', PropertyTypeController::class);

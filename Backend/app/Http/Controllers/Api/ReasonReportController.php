@@ -40,4 +40,12 @@ class ReasonReportController extends Controller
             return response()->json(['message' => 'Reason not found'], 400);
         }
     }
+    public function delete(int $id){
+        $reasons=$this->ReasonReportRepository->deleteReportReason($id);
+        if($reasons){
+            return response()->json(['message'=>'Reason deleted successfully'], 201); 
+        }else{
+            return response()->json(['message' => 'Reason not found'], 400);
+        }
+    }
 }

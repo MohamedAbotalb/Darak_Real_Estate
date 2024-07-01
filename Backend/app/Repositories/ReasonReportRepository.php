@@ -18,4 +18,13 @@ class ReasonReportRepository implements ReasonReportRepositoryInterface
     {
         return ReasonReport::where('type', 'report-user')->get();
     }
+    public function deleteReportReason($id)
+    {
+        $reason= ReasonReport::find($id);
+        if(!$reason){
+            return null;
+        }
+        $reason->delete();
+        return true;
+    }
 }
