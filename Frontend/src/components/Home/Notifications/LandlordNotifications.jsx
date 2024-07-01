@@ -35,11 +35,11 @@ import {
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
-    case 'cancellation':
+    case 'declined':
       return '#FFCCCC'; // Light red for cancellation
-    case 'confirmation':
+    case 'approve':
       return '#CCFFCC'; // Light green for confirmation
-    case 'request':
+    case 'pending':
       return '#FFFFCC'; // Light yellow for request
     default:
       return '#FFFFFF'; // Default white circle
@@ -148,7 +148,7 @@ function LandlordNotifications() {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-
+  console.log(notifications);
   const startIndex = (currentPage - 1) * notificationsPerPage;
   const currentNotifications = notifications
     ? notifications.slice(startIndex, startIndex + notificationsPerPage)
@@ -208,7 +208,7 @@ function LandlordNotifications() {
                     height: '20px',
                     borderRadius: '50%',
                     backgroundColor: getNotificationCircleColor(
-                      notification.type
+                      notification.status
                     ),
                     position: 'absolute',
                     top: '8px',
@@ -255,7 +255,10 @@ function LandlordNotifications() {
                   <Button
                     variant="contained"
                     onClick={() => handleDeclineConfirmation(notification)}
-                    disabled={notification.type === 'cancellation'}
+                    disabled={
+                      notification.status === 'declined' ||
+                      notification.status === 'approve'
+                    }
                     color="error"
                     startIcon={<DeclineIcon />}
                     style={{ marginRight: '16px' }}
@@ -265,7 +268,10 @@ function LandlordNotifications() {
                   <Button
                     variant="contained"
                     onClick={() => handleApprove(notification)}
-                    disabled={notification.type === 'confirmation'}
+                    disabled={
+                      notification.status === 'approve' ||
+                      notification.status === 'declined'
+                    }
                     color="success"
                     startIcon={<ApproveIcon />}
                   >
