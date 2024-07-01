@@ -126,8 +126,11 @@ Route::prefix('amenities')->group(function () {
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);
 });
 
-Route::get('reviews', [ReviewController::class, 'show']);
-
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewController::class, 'show']);
+    Route::post('/',[ReviewController::class, 'store']);
+    Route::put('/{id}', [ReviewController::class, 'update']);
+});
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);
