@@ -32,7 +32,7 @@ class PropertyFactory extends Factory
             'property_type_id' => PropertyType::pluck('id')->random(),
             'user_id' => User::pluck('id')->random(),
             'availability' => $this->faker->randomElement(['available', 'unavailable']),
-            'listing_type' => $this->faker->randomElement(['renting', 'selling']),
+            'listing_type' => $this->faker->randomElement(['rent', 'buy']),
         ];
     }
 }
