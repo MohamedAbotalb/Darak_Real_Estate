@@ -8,7 +8,7 @@ class CreateReportPropertyRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; 
+        return true;
     }
 
     public function rules()
@@ -17,6 +17,7 @@ class CreateReportPropertyRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
             'content' => 'required|string|max:1000',
+            'reason_id' => 'required|exists:reason_reports,id'
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\Reports\CreateReportUserRequest;
 use App\Http\Resources\ReportUserResource;
 use App\Repositories\ReportUserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ReportUserController extends Controller
 {
@@ -50,10 +51,11 @@ class ReportUserController extends Controller
         return response()->json(['message' => 'User and report deleted successfully'], 200);
     }
 
-    public function store(CreateReportUserRequest $request): JsonResponse
+    public function store(CreateReportUserRequest $request)
     {
-        $report = $this->reportUserRepository->createReport($request->validated());
-
+        $data = $request->validated() ;
+        $data['user_id']=Auth::id();
+        $report = $this->reportUserRepository->createReport($data);
         return response()->json(['message' => 'Report created successfully', 'data' => new ReportUserResource($report)], 201);
     }
 }
