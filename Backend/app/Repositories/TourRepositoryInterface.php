@@ -10,5 +10,6 @@ interface TourRepositoryInterface
     public function declineTour(int $id);
     public function getUserTours(int $userId);
     public function getToursByStatus(string $status,int $userId);
+    public function deleteTour(int $id);
 }
 
