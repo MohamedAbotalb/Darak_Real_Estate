@@ -20,6 +20,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,6 +40,7 @@ function Header() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const wishlist = useSelector((state) => state.wishlist.list);
+  const notifications = useSelector((state) => state.notifications);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -100,23 +102,64 @@ function Header() {
         <Box sx={{ flexGrow: 1 }} />
         {!isSmallScreen && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              component={Link}
+              to="/"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
+              Home
+            </Button>
+            <Button
+              component={Link}
+              to="/rent"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
+              Rent
+            </Button>
+            <Button
+              component={Link}
+              to="/buy"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
+              Buy
+            </Button>
+            <Button
+              component={Link}
+              to="/about"
+              color="inherit"
+              sx={{ color: '#cdd0d8', textTransform: 'none' }}
+            >
+              About
+            </Button>
+          </Box>
+        )}
+        <Box sx={{ flexGrow: 1 }} />
+        {!isSmallScreen && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {isLoggedIn ? (
-              <>
-                <NotificationDropdown role={user?.role} />
-                <IconButton component={Link} to="/wishlist" color="inherit">
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton color="inherit">
+                  {user && <NotificationDropdown role={user.role} />}
+                </IconButton>
+
+                <IconButton color="inherit" component={Link} to="/wishlist">
                   <Badge badgeContent={wishlist.length} color="error">
                     <FavoriteIcon />
                   </Badge>
                 </IconButton>
+
                 <IconButton
+                  edge="end"
+                  color="inherit"
+                  onClick={handleProfileClick}
                   aria-controls="profile-menu"
                   aria-haspopup="true"
-                  onClick={handleProfileClick}
-                  color="inherit"
                 >
                   <AccountCircleIcon />
                 </IconButton>
-
                 <Menu
                   id="profile-menu"
                   anchorEl={anchorEl}
@@ -130,16 +173,18 @@ function Header() {
                   >
                     Profile
                   </MenuItem>
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/my-properties"
-                  >
-                    My Properties
-                  </MenuItem>
+                  {user?.role === 'landlord' && (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/my-properties"
+                    >
+                      My Properties
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
-              </>
+              </Box>
             ) : (
               <>
                 <Button color="inherit" component={Link} to="/register">
@@ -153,89 +198,108 @@ function Header() {
           </Box>
         )}
         {isSmallScreen && (
-          <>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleDrawerOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="right"
-              open={drawerOpen}
-              onClose={handleDrawerClose}
-            >
-              <List>
-                {isLoggedIn ? (
-                  <>
-                    <ListItem button onClick={handleDrawerClose}>
-                      <NotificationDropdown role={user?.role} />
-                    </ListItem>
-                    <ListItem
-                      button
-                      component={Link}
-                      to="/wishlist"
-                      onClick={handleDrawerClose}
-                    >
-                      <ListItemIcon>
-                        <FavoriteIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Wishlist" />
-                    </ListItem>
-
-                    <ListItem
-                      button
-                      component={Link}
-                      to="/profile"
-                      onClick={handleDrawerClose}
-                    >
-                      <ListItemIcon>
-                        <AccountCircleIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Profile" />
-                    </ListItem>
-                    <ListItem
-                      button
-                      component={Link}
-                      to="/my-properties"
-                      onClick={handleDrawerClose}
-                    >
-                      <ListItemIcon>
-                        <AccountCircleIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="My Properties" />
-                    </ListItem>
-                    <ListItem button onClick={handleLogout}>
-                      <ListItemText primary="Logout" />
-                    </ListItem>
-                  </>
-                ) : (
-                  <>
-                    <ListItem
-                      button
-                      component={Link}
-                      to="/register"
-                      onClick={handleDrawerClose}
-                    >
-                      <ListItemText primary="Register" />
-                    </ListItem>
-                    <ListItem
-                      button
-                      component={Link}
-                      to="/login"
-                      onClick={handleDrawerClose}
-                    >
-                      <ListItemText primary="Login" />
-                    </ListItem>
-                  </>
-                )}
-              </List>
-            </Drawer>
-          </>
+          <IconButton color="inherit" onClick={handleDrawerOpen}>
+            <MenuIcon />
+          </IconButton>
         )}
       </Toolbar>
+      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
+        <List>
+          <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
+            <ListItemText primary="Home" />
+          </ListItem>
+          <ListItem
+            button
+            component={Link}
+            to="/rent"
+            onClick={handleDrawerClose}
+          >
+            <ListItemText primary="Rent" />
+          </ListItem>
+          <ListItem
+            button
+            component={Link}
+            to="/buy"
+            onClick={handleDrawerClose}
+          >
+            <ListItemText primary="Buy" />
+          </ListItem>
+          <ListItem
+            button
+            component={Link}
+            to="/about"
+            onClick={handleDrawerClose}
+          >
+            <ListItemText primary="About" />
+          </ListItem>
+          {isLoggedIn ? (
+            <>
+              <ListItem
+                button
+                component={Link}
+                to={
+                  user?.role === 'landlord'
+                    ? '/landlord-notification'
+                    : '/renter-notifications'
+                }
+                onClick={handleDrawerClose}
+              >
+                <ListItemIcon>
+                  <Badge badgeContent={notifications.length} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </ListItemIcon>
+              </ListItem>
+
+              <ListItem
+                button
+                component={Link}
+                to="/wishlist"
+                onClick={handleDrawerClose}
+              >
+                <ListItemIcon>
+                  <Badge badgeContent={wishlist.length} color="error">
+                    <FavoriteIcon />
+                  </Badge>
+                </ListItemIcon>
+              </ListItem>
+
+              <ListItem
+                button
+                component={Link}
+                to="/profile"
+                onClick={handleDrawerClose}
+              >
+                <ListItemIcon>
+                  <AccountCircleIcon />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem button onClick={handleLogout}>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </>
+          ) : (
+            <>
+              <ListItem
+                button
+                component={Link}
+                to="/login"
+                onClick={handleDrawerClose}
+              >
+                <ListItemText primary="Log In" />
+              </ListItem>
+              <ListItem
+                button
+                component={Link}
+                to="/register"
+                onClick={handleDrawerClose}
+              >
+                <ListItemText primary="Register" />
+              </ListItem>
+            </>
+          )}
+        </List>
+      </Drawer>
     </AppBar>
   );
 }

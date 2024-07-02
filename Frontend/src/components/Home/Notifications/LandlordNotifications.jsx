@@ -348,7 +348,12 @@ function LandlordNotifications() {
                   marginLeft="85px"
                   marginTop="8px"
                 >
-                  <DateRangeIcon sx={{ marginRight: '5px' }} />
+                  <DateRangeIcon
+                    sx={{
+                      marginRight: '5px',
+                      color: getNotificationCircleColor(notification.status),
+                    }}
+                  />
                   <Typography
                     variant="body2"
                     color="textSecondary"
@@ -386,9 +391,8 @@ function LandlordNotifications() {
                       notification.status === 'declined' ||
                       notification.status === 'approved'
                     }
-                    color="#FFCCCC"
+                    sx={{ backgroundColor: '#530e0e', marginRight: '8px' }}
                     startIcon={<DeclineIcon />}
-                    sx={{ marginRight: '8px' }}
                   >
                     Decline
                   </Button>
@@ -399,7 +403,7 @@ function LandlordNotifications() {
                       notification.status === 'approved' ||
                       notification.status === 'declined'
                     }
-                    color="#CCFFCC"
+                    sx={{ backgroundColor: '#115811' }}
                     startIcon={<ApproveIcon />}
                   >
                     Approve
