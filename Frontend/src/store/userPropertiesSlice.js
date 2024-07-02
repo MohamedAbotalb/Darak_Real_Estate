@@ -3,17 +3,25 @@ import axios from 'services/axiosConfig';
 
 export const fetchUserProperties = createAsyncThunk(
   'userProperties/fetchUserProperties',
-  async () => {
-    const response = await axios.get('/properties/user-properties');
-    return response.data.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/properties/user-properties');
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const deleteProperty = createAsyncThunk(
   'userProperties/deleteProperty',
-  async (propertyId) => {
-    await axios.delete(`/properties/${propertyId}`);
-    return propertyId;
+  async (propertyId, { rejectWithValue }) => {
+    try {
+      await axios.delete(`/properties/${propertyId}`);
+      return propertyId;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -36,12 +44,15 @@ const userPropertySlice = createSlice({
       })
       .addCase(fetchUserProperties.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(deleteProperty.fulfilled, (state, action) => {
         state.userProperties = state.userProperties.filter(
           (property) => property.id !== action.payload
         );
+      })
+      .addCase(deleteProperty.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });
