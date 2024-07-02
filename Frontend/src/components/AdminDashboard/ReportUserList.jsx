@@ -22,7 +22,7 @@ import {
   fetchReports,
   deleteReport,
   deleteLandlord,
-} from 'store/reportUsersSlice';
+} from '../../store/reportUsersSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
