@@ -24,6 +24,7 @@ import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/Myproperties';
 import MyTours from 'pages/MyTours';
+import PropertiesPage from 'pages/Properties';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
@@ -40,6 +41,7 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="properties" element={<PropertiesPage />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
