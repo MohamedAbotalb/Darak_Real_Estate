@@ -17,7 +17,7 @@ class Amenity extends Model
 
     public function properties()
     {
-        return $this->hasMany(Property::class, 'property_amenities');
+        return $this->belongsToMany(Property::class, 'amenity_property');
     }
     protected static function boot()
     {

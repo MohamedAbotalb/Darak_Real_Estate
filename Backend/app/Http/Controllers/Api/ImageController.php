@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\ImageRepositoryInterface;
+use App\Repositories\Contracts\ImageRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller

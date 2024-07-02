@@ -10,18 +10,18 @@ import {
   TableRow,
   tableCellClasses,
   Paper,
-  Button,
   CircularProgress,
   Alert,
   Pagination,
   Typography,
   Box,
   InputBase,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
-import { toast } from 'react-toastify';
-import { fetchUsers, deleteUser } from 'store/userDetailsSlice';
+import { fetchUsers } from 'store/userDetailsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -89,23 +89,13 @@ function UserDetails() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 8;
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchUsers());
     }
   }, [status, dispatch]);
-
-  const handleDelete = (userId) => {
-    dispatch(deleteUser(userId))
-      .unwrap()
-      .then(() => {
-        toast.success('User deleted successfully');
-      })
-      .catch((err) => {
-        toast.error(`Failed to delete user: ${err.message}`);
-      });
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -115,9 +105,18 @@ function UserDetails() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilterChange = (event, newFilterType) => {
+    setFilterType(newFilterType);
+  };
+
+  const filteredUsers = users
+    .filter((user) =>
+      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((user) => {
+      if (filterType === 'all') return true;
+      return user.role === filterType;
+    });
 
   let content;
 
@@ -141,42 +140,34 @@ function UserDetails() {
                   <StyledTableCell align="center">Email</StyledTableCell>
                   <StyledTableCell align="center">Phone</StyledTableCell>
                   <StyledTableCell align="center">Role</StyledTableCell>
-                  <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedUsers.map((user) => (
-                  <StyledTableRow key={user.id}>
-                    <StyledTableCell component="th" scope="row">
-                      {user.id}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {user.first_name}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {user.last_name}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {user.email}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {user.phone_number}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {user.role}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleDelete(user.id)}
-                        sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                      >
-                        Delete
-                      </Button>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+                {paginatedUsers.map(
+                  (user) =>
+                    user.role !== 'admin' && (
+                      <StyledTableRow key={user.id}>
+                        <StyledTableCell component="th" scope="row">
+                          {user.id}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {user.first_name}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {user.last_name}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {user.email}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {user.phone_number}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {user.role}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    )
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -232,6 +223,22 @@ function UserDetails() {
             />
           </Search>
         </Box>
+        <ToggleButtonGroup
+          value={filterType}
+          exclusive
+          onChange={handleFilterChange}
+          aria-label="role filter"
+        >
+          <ToggleButton value="all" aria-label="all">
+            All
+          </ToggleButton>
+          <ToggleButton value="user" aria-label="users">
+            Users
+          </ToggleButton>
+          <ToggleButton value="landlord" aria-label="landlords">
+            Landlords
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Box>
       {content}
     </>
