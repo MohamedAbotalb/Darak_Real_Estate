@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { updateAmenity, fetchAmenities } from 'store/amenitiesSlice';
-import AmenityModal from './AmenityModal';
+import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
 function EditAmenityButton({ amenity }) {
   const [isOpen, setOpen] = useState(false);
@@ -15,8 +15,8 @@ function EditAmenityButton({ amenity }) {
 
   const handleSubmit = async (data) => {
     try {
-      await dispatch(updateAmenity({ id: amenity.id, name: data.name }));
-      await dispatch(fetchAmenities());
+      dispatch(updateAmenity({ id: amenity.id, name: data.name }));
+      dispatch(fetchAmenities());
       handleClose();
     } catch (error) {
       toast.error('Failed to update amenity.');

@@ -21,9 +21,9 @@ import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
-import EditAmenityButton from './EditAmenityButton';
-import ShowAmenityDetailsButton from './ShowAmenityDetailsButton';
-import AddAmenityButton from './AddAmenityButton';
+import AddAmenityButton from 'components/AdminDashboard/Amenities/AmenityButton';
+import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
+import ShowAmenityDetailsButton from 'components/AdminDashboard/Amenities/ShowAmenityDetailsButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
