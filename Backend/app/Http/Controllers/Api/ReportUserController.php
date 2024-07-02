@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reports\CreateReportUserRequest;
 use App\Http\Resources\ReportUserResource;
-use App\Repositories\ReportUserRepositoryInterface;
+use App\Repositories\Contracts\ReportUserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 

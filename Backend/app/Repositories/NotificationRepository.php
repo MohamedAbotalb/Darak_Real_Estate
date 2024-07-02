@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models\Notification;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
 
 class NotificationRepository implements NotificationRepositoryInterface
 {

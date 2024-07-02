@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Amenity;
+use App\Repositories\Contracts\AmenityRepositoryInterface;
 
 class AmenityRepository implements AmenityRepositoryInterface
 {

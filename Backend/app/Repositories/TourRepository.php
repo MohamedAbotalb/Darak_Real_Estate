@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Notification;
 use App\Models\Tour;
 use App\Models\TourDate;
+use App\Repositories\Contracts\TourRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

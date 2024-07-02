@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ReportUser;
+use App\Repositories\Contracts\ReportUserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class ReportUserRepository implements ReportUserRepositoryInterface
