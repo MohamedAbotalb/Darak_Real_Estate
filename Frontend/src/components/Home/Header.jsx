@@ -24,14 +24,14 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from 'store/Auth/authSlice';
+import { logout, setCredentials } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
   fetchRenterNotificationsAsync,
   fetchLandlordNotificationsAsync,
   clearNotifications,
 } from 'store/Notifications/notificationsSlice';
-import NotificationDropdown from './Notifications/NotificationDropdown';
+import NotificationDropdown from 'components/Home/Notifications/NotificationDropdown';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,26 +40,34 @@ function Header() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const wishlist = useSelector((state) => state.wishlist.list);
-  const notifications = useSelector((state) => state.notifications);
+  const notifications = useSelector((state) => state.notifications.list);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const storedUser = secureLocalStorage.getItem('user');
+    const storedUser = JSON.parse(secureLocalStorage.getItem('user'));
+
     if (storedUser) {
+      // Update Redux state with storedUser
+      dispatch(setCredentials(storedUser));
+    } else {
+      setIsLoggedIn(false); // No storedUser, so set isLoggedIn to false
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
       setIsLoggedIn(true);
       dispatch(fetchWishlist());
       dispatch(clearNotifications());
-      if (storedUser.role === 'user') {
+      if (user.role === 'user') {
         dispatch(fetchRenterNotificationsAsync());
-      } else if (storedUser.role === 'landlord') {
+      } else if (user.role === 'landlord') {
         dispatch(fetchLandlordNotificationsAsync());
       }
-    } else {
-      setIsLoggedIn(false);
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,7 +90,7 @@ function Header() {
     setIsLoggedIn(false);
     navigate('/');
   };
-
+  console.log(user?.role, 'user role from header');
   return (
     <AppBar
       position="static"
@@ -137,74 +145,63 @@ function Header() {
           </Box>
         )}
         <Box sx={{ flexGrow: 1 }} />
-        {!isSmallScreen && (
+        {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {isLoggedIn ? (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton color="inherit">
-                  {user && <NotificationDropdown role={user.role} />}
-                </IconButton>
-
-                <IconButton color="inherit" component={Link} to="/wishlist">
-                  <Badge badgeContent={wishlist.length} color="error">
-                    <FavoriteIcon />
-                  </Badge>
-                </IconButton>
-
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  onClick={handleProfileClick}
-                  aria-controls="profile-menu"
-                  aria-haspopup="true"
-                >
-                  <AccountCircleIcon />
-                </IconButton>
-                <Menu
-                  id="profile-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/profile"
-                  >
-                    Profile
-                  </MenuItem>
-                  {user?.role === 'landlord' && (
-                    <MenuItem
-                      onClick={handleClose}
-                      component={Link}
-                      to="/myproperties"
-                    >
-                      My Properties
-                    </MenuItem>
-                  )}
-                  {user?.role === 'user' && (
-                    <MenuItem
-                      onClick={handleClose}
-                      component={Link}
-                      to="/mytours"
-                    >
-                      My Tours
-                    </MenuItem>
-                  )}
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Menu>
-              </Box>
-            ) : (
-              <>
-                <Button color="inherit" component={Link} to="/register">
-                  Register
-                </Button>
-                <Button color="inherit" component={Link} to="/login">
-                  Login
-                </Button>
-              </>
-            )}
+            <IconButton color="inherit">
+              <NotificationDropdown role={user?.role} />
+            </IconButton>
+            <IconButton color="inherit" component={Link} to="/wishlist">
+              <Badge badgeContent={wishlist.length} color="error">
+                <FavoriteIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleProfileClick}
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose} component={Link} to="/profile">
+                Profile
+              </MenuItem>
+              {/* {user?.role === 'landlord' && (
+                <MenuItem onClick={handleClose} component={Link} to="/my-properties">
+                  My Properties
+                </MenuItem>
+              )} */}
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Box>
+        ) : (
+          !isSmallScreen && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                component={Link}
+                to="/register"
+                color="inherit"
+                sx={{ color: '#cdd0d8', textTransform: 'none' }}
+              >
+                Register
+              </Button>
+              <Button
+                component={Link}
+                to="/login"
+                color="inherit"
+                sx={{ color: '#cdd0d8', textTransform: 'none' }}
+              >
+                Log in
+              </Button>
+            </Box>
+          )
         )}
         {isSmallScreen && (
           <IconButton color="inherit" onClick={handleDrawerOpen}>
@@ -212,7 +209,7 @@ function Header() {
           </IconButton>
         )}
       </Toolbar>
-      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
+      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
         <List>
           <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
             <ListItemText primary="Home" />
@@ -248,13 +245,13 @@ function Header() {
                 component={Link}
                 to={
                   user?.role === 'landlord'
-                    ? '/landlord-notification'
+                    ? '/landlord-notifications'
                     : '/renter-notifications'
                 }
                 onClick={handleDrawerClose}
               >
                 <ListItemIcon>
-                  <Badge badgeContent={notifications.length} color="error">
+                  <Badge badgeContent={notifications?.length} color="error">
                     <NotificationsIcon />
                   </Badge>
                 </ListItemIcon>
@@ -282,7 +279,21 @@ function Header() {
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
+                <ListItemText primary="Profile" />
               </ListItem>
+              {/* {user?.role === 'landlord' && (
+                <ListItem
+                  button
+                  component={Link}
+                  to="/my-properties"
+                  onClick={handleDrawerClose}
+                >
+                  <ListItemIcon>
+                    <AccountCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="My Properties" />
+                </ListItem>
+              )} */}
               <ListItem button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
               </ListItem>
@@ -295,7 +306,7 @@ function Header() {
                 to="/login"
                 onClick={handleDrawerClose}
               >
-                <ListItemText primary="Log In" />
+                <ListItemText primary="Login" />
               </ListItem>
               <ListItem
                 button
