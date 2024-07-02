@@ -177,9 +177,18 @@ function Header() {
                     <MenuItem
                       onClick={handleClose}
                       component={Link}
-                      to="/my-properties"
+                      to="/myproperties"
                     >
                       My Properties
+                    </MenuItem>
+                  )}
+                  {user?.role === 'user' && (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/mytours"
+                    >
+                      My Tours
                     </MenuItem>
                   )}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
