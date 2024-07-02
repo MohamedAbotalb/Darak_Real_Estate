@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { addAmenity, fetchAmenities } from 'store/amenitiesSlice';
-import AmenityModal from './AmenityModal';
+import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
 function AddAmenityButton() {
   const [isOpen, setOpen] = useState(false);

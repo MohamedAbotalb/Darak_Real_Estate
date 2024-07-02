@@ -1,16 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Modal,
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  CardActions,
-} from '@mui/material';
+import { Modal, Box, Typography } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 import { fetchAmenities } from 'store/amenitiesSlice';
 
 function ShowAmenityDetailsModal({ amenitySlug, isOpen, handleClose }) {

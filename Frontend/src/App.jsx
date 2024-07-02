@@ -32,7 +32,7 @@ import MyTours from 'pages/MyTours';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
-import SharedLayout from 'layouts/SharedLayout-Dashboard';
+import SharedLayout from 'layouts/AdminLayout';
 
 function App() {
   const router = createBrowserRouter(

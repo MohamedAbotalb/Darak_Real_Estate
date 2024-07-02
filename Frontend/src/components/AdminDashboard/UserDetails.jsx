@@ -87,7 +87,7 @@ function UserDetails() {
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 
@@ -204,13 +204,19 @@ function UserDetails() {
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
             User Details
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center" mb={2}>
+        <Box display="flex" justifyContent="center">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
