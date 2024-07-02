@@ -9,16 +9,15 @@ export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let user;
+  const user = JSON.parse(secureLocalStorage.getItem('user'));
 
   useEffect(() => {
-    user = secureLocalStorage.getItem('user');
     if (user) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
-  }, [dispatch]);
+  }, [user]);
 
   const handleLogout = () => {
     dispatch(logout());
