@@ -86,15 +86,15 @@ class PropertyRepository implements PropertyRepositoryInterface
             $query->where('listing_type', $filters['listing_type']);
         }
         if (isset($filters['num_of_rooms'])) {
-            if ($filters['num_of_rooms'] >= 7) {
-                $query->where('num_of_rooms', '>=', 7);
+            if ($filters['num_of_rooms'] === '+7') {
+                $query->where('num_of_rooms', '>', 7);
             } else {
                 $query->where('num_of_rooms', $filters['num_of_rooms']);
             }
         }
         if (isset($filters['num_of_bathrooms'])) {
-            if ($filters['num_of_bathrooms'] >= 7) {
-                $query->where('num_of_bathrooms', '>=', 7);
+            if ($filters['num_of_bathrooms'] === '+7') {
+                $query->where('num_of_bathrooms', '>', 7);
             } else {
                 $query->where('num_of_bathrooms', $filters['num_of_bathrooms']);
             }
