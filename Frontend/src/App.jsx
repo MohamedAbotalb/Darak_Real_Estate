@@ -22,7 +22,7 @@ import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
-import MyProperties from 'pages/Myproperties';
+import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
