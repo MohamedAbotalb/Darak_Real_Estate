@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Location;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Repositories\Contracts\PropertyRepositoryInterface;
 use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;

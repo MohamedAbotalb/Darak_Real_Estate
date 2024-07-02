@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ReportProperty;
+use App\Repositories\Contracts\ReportPropertyRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class ReportPropertyRepository implements ReportPropertyRepositoryInterface

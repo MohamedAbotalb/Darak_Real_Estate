@@ -8,7 +8,7 @@ function Home() {
     <Box className="home">
       <Hero />
       <PropertyListings type="rent" />
-      <PropertyListings type="sell" />
+      <PropertyListings type="buy" />
     </Box>
   );
 }

@@ -8,7 +8,7 @@ use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\ChangePhoneNumberRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
-use App\Repositories\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;

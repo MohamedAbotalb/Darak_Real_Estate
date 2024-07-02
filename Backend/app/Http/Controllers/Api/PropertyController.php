@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Properties\StorePropertyRequest;
 use App\Http\Requests\properties\UpdatePropertyRequest;
 use App\Http\Resources\PropertyResource;
-use App\Repositories\PropertyRepositoryInterface;
+use App\Repositories\Contracts\PropertyRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -103,7 +103,7 @@ function RenterNotifications() {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-    setCurrentPage(1); // Reset page to 1 when filter changes
+    setCurrentPage(1);
   };
 
   if (status === 'loading') {

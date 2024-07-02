@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Reviews\StoreReviewRequest;
 use App\Http\Requests\Reviews\UpdateReviewRequest;
 use App\Http\Resources\ReviewResource;
-use App\Models\Review;
-use App\Repositories\ReviewRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Repositories\Contracts\ReviewRepositoryInterface;
 
 class ReviewController extends Controller
 {
