@@ -28,6 +28,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import { fetchProperty } from 'store/propertyDetailsSlice';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 import TourRequestForm from 'components/TourRequestForm';
+import ReportModal from './ReportModal';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -35,6 +36,7 @@ function PropertyDetails() {
   const property = useSelector((state) => state.property.property);
   const status = useSelector((state) => state.property.status);
   const error = useSelector((state) => state.property.error);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTourFormOpen, setIsTourFormOpen] = useState(false);
 
   useEffect(() => {
@@ -65,6 +67,14 @@ function PropertyDetails() {
 
   const handleTourFormClose = () => {
     setIsTourFormOpen(false);
+  };
+
+  const handleReportClick = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const handleReportModalClose = () => {
+    setIsReportModalOpen(false);
   };
 
   return (
@@ -427,8 +437,29 @@ function PropertyDetails() {
             variant="contained"
             color="primary"
             onClick={handleRequestTourClick}
+            sx={{ mt: 2, fontSize: '16px' }}
           >
             Request a Tour
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleReportClick}
+            sx={{
+              mt: 2,
+              ml: 2,
+              fontSize: '16px',
+              borderColor: '#ff6666',
+              color: '#ff6666',
+              transition: 'color 0.3s ease, border-color 0.3s ease',
+              '&:hover': {
+                color: '#cc0000',
+                borderColor: '#cc0000',
+              },
+            }}
+          >
+            Report Property
           </Button>
         </Box>
       </Card>
@@ -440,6 +471,13 @@ function PropertyDetails() {
           slug={property.slug}
         />
       )}
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={handleReportModalClose}
+        propertyId={property.id}
+        userData={property.user} // Pass the property ID as a prop
+        // Pass the property ID as a prop
+      />
     </Container>
   );
 }
