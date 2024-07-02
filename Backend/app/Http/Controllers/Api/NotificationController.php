@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\NotificationResource;
-use App\Repositories\NotificationRepositoryInterface;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller

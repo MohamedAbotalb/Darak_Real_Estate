@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reports\CreateReportPropertyRequest;
 use App\Http\Resources\ReportPropertyResource;
-use App\Repositories\ReportPropertyRepositoryInterface;
+use App\Repositories\Contracts\ReportPropertyRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class ReportPropertyController extends Controller

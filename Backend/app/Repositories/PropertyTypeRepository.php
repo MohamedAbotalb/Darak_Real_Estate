@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\PropertyType;
+use App\Repositories\Contracts\PropertyTypeRepositoryInterface;
 
 class PropertyTypeRepository implements PropertyTypeRepositoryInterface
 {

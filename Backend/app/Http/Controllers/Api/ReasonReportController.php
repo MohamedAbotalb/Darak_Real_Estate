@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Reasons\StoreReasonRequest;
 use App\Http\Requests\Reasons\UpdateReasonRequest;
 use App\Http\Resources\ReasonReportResource;
-use App\Repositories\ReasonReportRepositoryInterface;
+use App\Repositories\Contracts\ReasonReportRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ReasonReportController extends Controller

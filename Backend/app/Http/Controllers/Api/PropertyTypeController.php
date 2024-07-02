@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PropertyTypeResource;
-use App\Repositories\PropertyTypeRepositoryInterface;
+use App\Repositories\Contracts\PropertyTypeRepositoryInterface;
 use Illuminate\Http\Request;
 
 class PropertyTypeController extends Controller

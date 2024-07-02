@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\PropertyImage;
+use App\Repositories\Contracts\ImageRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 

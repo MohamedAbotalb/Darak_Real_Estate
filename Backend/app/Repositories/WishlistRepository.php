@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Wishlist;
+use App\Repositories\Contracts\WishlistRepositoryInterface;
 
 class WishlistRepository implements WishlistRepositoryInterface
 {

@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Wishlists\StoreWishlistRequest;
 use App\Http\Resources\WishlistResource;
-use App\Repositories\WishlistRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Repositories\Contracts\WishlistRepositoryInterface;
 class WishlistController extends Controller
 {
     protected $wishlistRepository;
