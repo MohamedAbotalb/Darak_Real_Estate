@@ -14,7 +14,6 @@ class CreateReportUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'landlord_id' => 'required|exists:users,id',
             'content' => 'required|string|max:1000',
             'reason_id' => 'required|exists:reason_reports,id'

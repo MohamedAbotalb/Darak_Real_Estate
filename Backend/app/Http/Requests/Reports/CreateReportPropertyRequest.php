@@ -14,7 +14,6 @@ class CreateReportPropertyRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
             'content' => 'required|string|max:1000',
             'reason_id' => 'required|exists:reason_reports,id'
