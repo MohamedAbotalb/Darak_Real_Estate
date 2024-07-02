@@ -22,7 +22,7 @@ class StorePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'title' => 'required|string|unique:properties',
             'description' => 'required|string',
             'num_of_rooms' => 'required|integer',
             'num_of_bathrooms' => 'required|integer',

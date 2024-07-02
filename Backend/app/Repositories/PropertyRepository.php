@@ -127,12 +127,12 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType','user')->get();
     }
-    public function updateProperty(array $data, int $propertyId)
+    public function updateProperty(array $data, string $slug)
     {
         DB::beginTransaction();
 
         try {
-            $property = Property::findOrFail($propertyId);
+            $property = Property::where('slug', $slug)->first();
             $property->update($data);
             if (isset($data['city']) && isset($data['state']) && isset($data['street'])) {
                 $location = Location::updateOrCreate(
