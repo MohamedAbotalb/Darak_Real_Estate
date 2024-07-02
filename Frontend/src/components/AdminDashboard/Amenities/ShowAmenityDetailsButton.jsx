@@ -1,35 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@mui/material';
-import ShowAmenityDetailsModal from './ShowAmenityDetailsModal';
+import { Modal, Box, Typography } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchAmenities } from 'store/amenitiesSlice';
 
-function ShowAmenityDetailsButton({ amenitySlug }) {
-  const [isOpen, setIsOpen] = useState(false);
+function ShowAmenityDetailsModal({ amenitySlug, isOpen, handleClose }) {
+  const dispatch = useDispatch();
+  const amenity = useSelector((state) =>
+    state.amenities.amenities.find((a) => a.slug === amenitySlug)
+  );
 
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  useEffect(() => {
+    if (isOpen && amenitySlug) {
+      dispatch(fetchAmenities());
+    }
+  }, [dispatch, isOpen, amenitySlug]);
 
   return (
-    <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpen}
-        sx={{ backgroundColor: '#0288d1', color: '#fff', mr: 1 }}
+    <Modal open={isOpen} onClose={handleClose}>
+      <Box
+        sx={{
+          width: '50%',
+          p: 4,
+          margin: 'auto',
+          mt: '5%',
+          bgcolor: 'background.paper',
+          borderRadius: 1,
+          boxShadow: 24,
+          maxHeight: '80vh',
+          overflowY: 'auto',
+        }}
       >
-        Show
-      </Button>
-      <ShowAmenityDetailsModal
-        isOpen={isOpen}
-        handleClose={handleClose}
-        amenitySlug={amenitySlug}
-      />
-    </>
+        <Typography variant="h6" gutterBottom>
+          Amenity Details
+        </Typography>
+        {amenity ? (
+          <Typography variant="body1" gutterBottom>
+            Name: {amenity.name}
+          </Typography>
+        ) : (
+          <Typography variant="body2">Loading...</Typography>
+        )}
+      </Box>
+    </Modal>
   );
 }
 
-ShowAmenityDetailsButton.propTypes = {
+ShowAmenityDetailsModal.propTypes = {
   amenitySlug: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
-export default ShowAmenityDetailsButton;
+export default ShowAmenityDetailsModal;
