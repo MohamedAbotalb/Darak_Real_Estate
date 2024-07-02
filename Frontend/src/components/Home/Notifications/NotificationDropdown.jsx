@@ -264,7 +264,7 @@ function NotificationDropdown({ role }) {
                               fontWeight="bold"
                               sx={{ marginRight: '12px' }}
                             >
-                              {`${notification.landlord.first_name} ${notification.landlord.last_name}`}
+                              {`${notification.user.first_name} ${notification.user.last_name}`}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
                               {getTimeDisplay(notification.created_at)}
@@ -288,7 +288,7 @@ function NotificationDropdown({ role }) {
                           <DateRangeIcon
                             sx={{ marginRight: '4px', marginLeft: '16px' }}
                           />
-                          {notification.tour?.tour_dates?.map((date) => (
+                          {notification.tour?.dates?.map((date) => (
                             <Typography
                               key={date.id}
                               variant="body2"
