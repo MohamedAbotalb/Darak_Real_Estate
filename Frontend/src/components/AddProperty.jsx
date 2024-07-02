@@ -358,13 +358,13 @@ function AddProperty() {
                   <FormLabel component="legend">Listing Type</FormLabel>
                   <RadioGroup row defaultValue="Rent">
                     <FormControlLabel
-                      value="renting"
+                      value="rent"
                       {...register('listing_type')}
                       control={<Radio />}
                       label="Rent"
                     />
                     <FormControlLabel
-                      value="selling"
+                      value="buy"
                       {...register('listing_type')}
                       control={<Radio />}
                       label="Sell"
@@ -380,9 +380,7 @@ function AddProperty() {
               <Grid item xs={12}>
                 <TextField
                   label={
-                    selectedListingType === 'renting'
-                      ? 'Price / month'
-                      : 'Price'
+                    selectedListingType === 'rent' ? 'Price / month' : 'Price'
                   }
                   type="number"
                   id="price"

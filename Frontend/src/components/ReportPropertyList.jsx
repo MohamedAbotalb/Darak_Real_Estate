@@ -176,30 +176,6 @@ export default function ReportPropertyList() {
   } else if (reportStatus === 'succeeded') {
     content = (
       <div>
-        <Box display="flex" justifyContent="center" mb={2}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search User"
-              inputProps={{ 'aria-label': 'search user' }}
-              value={searchTerms.user}
-              onChange={(e) => handleSearchChange(e, 'user')}
-            />
-          </Search>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search Property"
-              inputProps={{ 'aria-label': 'search property' }}
-              value={searchTerms.property}
-              onChange={(e) => handleSearchChange(e, 'property')}
-            />
-          </Search>
-        </Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -297,6 +273,30 @@ export default function ReportPropertyList() {
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
             Report Property List
           </Typography>
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search User"
+              inputProps={{ 'aria-label': 'search user' }}
+              value={searchTerms.user}
+              onChange={(e) => handleSearchChange(e, 'user')}
+            />
+          </Search>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search Property"
+              inputProps={{ 'aria-label': 'search property' }}
+              value={searchTerms.property}
+              onChange={(e) => handleSearchChange(e, 'property')}
+            />
+          </Search>
         </Box>
       </Box>
       {content}

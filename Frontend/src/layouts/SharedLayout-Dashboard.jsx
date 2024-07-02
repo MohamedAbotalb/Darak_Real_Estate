@@ -12,7 +12,7 @@ export default function SharedLayout() {
         <Grid item xs={2}>
           <Sidebar />
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={10} px={2}>
           <Outlet />
         </Grid>
       </Grid>
