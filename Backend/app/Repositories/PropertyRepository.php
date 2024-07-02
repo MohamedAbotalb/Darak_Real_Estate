@@ -114,6 +114,7 @@ class PropertyRepository implements PropertyRepositoryInterface
         } elseif (isset($filters['max_price'])) {
             $query->where('price', '<=', $filters['max_price']);
         }
+    
 
         return $query->get();
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Amenities\AmenityRequest;
 use App\Http\Resources\AmenityResource;
-use App\Repositories\AmenityRepositoryInterface;
+use App\Repositories\Contracts\AmenityRepositoryInterface;
 use Illuminate\Http\Request;
 
 class AmenityController extends Controller
