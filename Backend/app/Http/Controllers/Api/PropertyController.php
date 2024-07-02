@@ -82,12 +82,12 @@ class PropertyController extends Controller
         return response()->json(['data' => PropertyResource::collection($properties)]);
 
     }
-    public function update(UpdatePropertyRequest $request, $propertyId)
+    public function update(UpdatePropertyRequest $request, $slug)
     {
         try {
             $validatedData = $request->validated(); 
     
-            $property = $this->propertyRepository->updateProperty($validatedData, $propertyId);
+            $property = $this->propertyRepository->updateProperty($validatedData, $slug);
     
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
         } catch (\Exception $e) {
