@@ -1,0 +1,38 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #f0f0f0;
+  padding: 20px;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  padding: 20px;
+
+  background: #e9ecef;
+}
+
+.dashboard-logo {
+  width: 50%;
+  height: auto;
+}
+
+.im1 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 210px;
+  height: 100px;
+}
+
+.im2 {
+  position: absolute;
+  left: 20px;
+  bottom: 50px;
+  width: 200px;
+}
