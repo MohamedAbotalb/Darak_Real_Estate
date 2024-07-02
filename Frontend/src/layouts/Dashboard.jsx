@@ -8,7 +8,7 @@ import PropertyType from 'pages/PropertyType';
 import Amenities from 'components/AdminDashboard/Amenities';
 import im1 from 'assets/images/im1.PNG';
 import im2 from 'assets/images/im2.PNG';
-import Sidebar from './Sidebar';
+import Sidebar from '../components/AdminDashboard/Sidebar';
 import '../assets/css/Dashboard.css';
 
 function Dashboard() {

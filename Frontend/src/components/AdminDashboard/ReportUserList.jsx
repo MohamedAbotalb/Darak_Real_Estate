@@ -22,7 +22,7 @@ import {
   fetchReports,
   deleteReport,
   deleteLandlord,
-} from '../../store/reportUsersSlice';
+} from 'store/reportUsersSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -98,7 +98,7 @@ export default function ReportUserList() {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -204,7 +204,7 @@ export default function ReportUserList() {
                       color="primary"
                       onClick={() => handleShowContent(report.content)}
                     >
-                      View_Content
+                      View Content
                     </Button>
                   </StyledTableCell>
                   <StyledTableCell align="center">
@@ -221,7 +221,7 @@ export default function ReportUserList() {
                       color="error"
                       onClick={() => handleDeleteLandlord(report.landlord.id)}
                     >
-                      Blocked Landlord
+                      Block Landlord
                     </Button>
                   </StyledTableCell>
                 </StyledTableRow>

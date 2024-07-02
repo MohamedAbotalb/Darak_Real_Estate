@@ -21,7 +21,7 @@ import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
-import AddAmenityButton from 'components/AdminDashboard/Amenities/AmenityButton';
+import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
 import ShowAmenityDetailsButton from 'components/AdminDashboard/Amenities/ShowAmenityDetailsButton';
 
@@ -87,7 +87,7 @@ function AmenityTable() {
   const amenities = useSelector((state) => state.amenities.amenities);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

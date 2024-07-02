@@ -1,4 +1,3 @@
-import secureLocalStorage from 'react-secure-storage';
 import axios from './axiosConfig';
 
 export const getUserDetails = () => {

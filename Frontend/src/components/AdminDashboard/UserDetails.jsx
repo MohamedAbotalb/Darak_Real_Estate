@@ -87,7 +87,7 @@ function UserDetails() {
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 

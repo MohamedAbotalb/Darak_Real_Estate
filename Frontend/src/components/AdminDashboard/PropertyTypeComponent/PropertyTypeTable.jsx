@@ -92,7 +92,7 @@ function PropertyTypeTable() {
   );
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
