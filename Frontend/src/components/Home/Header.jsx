@@ -24,14 +24,14 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from 'store/Auth/authSlice';
+import { logout, setCredentials } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
   fetchRenterNotificationsAsync,
   fetchLandlordNotificationsAsync,
   clearNotifications,
 } from 'store/Notifications/notificationsSlice';
-import NotificationDropdown from './Notifications/NotificationDropdown';
+import NotificationDropdown from 'components/Home/Notifications/NotificationDropdown';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,32 +46,28 @@ function Header() {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const storedUser = secureLocalStorage.getItem('user');
+    const storedUser = JSON.parse(secureLocalStorage.getItem('user'));
+
     if (storedUser) {
-      setIsLoggedIn(true);
-      dispatch(fetchWishlist());
-      dispatch(clearNotifications());
-      if (storedUser.role === 'user') {
-        dispatch(fetchRenterNotificationsAsync());
-      } else if (storedUser.role === 'landlord') {
-        dispatch(fetchLandlordNotificationsAsync());
-      }
+      // Update Redux state with storedUser
+      dispatch(setCredentials(storedUser));
     } else {
-      setIsLoggedIn(false);
+      setIsLoggedIn(false); // No storedUser, so set isLoggedIn to false
     }
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setIsLoggedIn(true);
-  //     dispatch(clearNotifications());
-  //     if (user.role === 'user') {
-  //       dispatch(fetchRenterNotificationsAsync());
-  //     } else if (user.role === 'landlord') {
-  //       dispatch(fetchLandlordNotificationsAsync());
-  //     }
-  //   }
-  // }, [dispatch, user]);
+  useEffect(() => {
+    if (user) {
+      setIsLoggedIn(true);
+      dispatch(fetchWishlist());
+      dispatch(clearNotifications());
+      if (user.role === 'user') {
+        dispatch(fetchRenterNotificationsAsync());
+      } else if (user.role === 'landlord') {
+        dispatch(fetchLandlordNotificationsAsync());
+      }
+    }
+  }, [dispatch, user]);
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -94,7 +90,7 @@ function Header() {
     setIsLoggedIn(false);
     navigate('/');
   };
-  console.log(user, 'user role');
+  console.log(user?.role, 'user role from header');
   return (
     <AppBar
       position="static"
@@ -255,7 +251,7 @@ function Header() {
                 onClick={handleDrawerClose}
               >
                 <ListItemIcon>
-                  <Badge badgeContent={notifications.length} color="error">
+                  <Badge badgeContent={notifications?.length} color="error">
                     <NotificationsIcon />
                   </Badge>
                 </ListItemIcon>

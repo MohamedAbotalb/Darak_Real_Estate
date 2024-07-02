@@ -38,7 +38,7 @@ function NotificationDropdown({ role }) {
     } else if (role === 'landlord') {
       dispatch(fetchLandlordNotificationsAsync());
     }
-  }, [dispatch, role]);
+  }, [dispatch]);
 
   const lastFourNotifications = notifications.slice(
     Math.max(notifications.length - 4, 0)
