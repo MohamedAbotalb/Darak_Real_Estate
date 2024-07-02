@@ -20,6 +20,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,6 +29,7 @@ import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
   fetchRenterNotificationsAsync,
   fetchLandlordNotificationsAsync,
+  clearNotifications,
 } from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from './Notifications/NotificationDropdown';
 
@@ -38,6 +40,7 @@ function Header() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const wishlist = useSelector((state) => state.wishlist.list);
+  const notifications = useSelector((state) => state.notifications);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -47,20 +50,17 @@ function Header() {
     if (storedUser) {
       setIsLoggedIn(true);
       dispatch(fetchWishlist());
+      dispatch(clearNotifications());
+      if (storedUser.role === 'user') {
+        dispatch(fetchRenterNotificationsAsync());
+      } else if (storedUser.role === 'landlord') {
+        dispatch(fetchLandlordNotificationsAsync());
+      }
     } else {
       setIsLoggedIn(false);
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'user') {
-        dispatch(fetchRenterNotificationsAsync());
-      } else if (user.role === 'landlord') {
-        dispatch(fetchLandlordNotificationsAsync());
-      }
-    }
-  }, [dispatch, user]);
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -137,56 +137,65 @@ function Header() {
           </Box>
         )}
         <Box sx={{ flexGrow: 1 }} />
-        {isLoggedIn && !isSmallScreen ? (
+        {!isSmallScreen && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit">
-              {user && <NotificationDropdown role={user.role} />}
-            </IconButton>
-            <IconButton color="inherit" component={Link} to="/wishlist">
-              <Badge badgeContent={wishlist.length} color="error">
-                <FavoriteIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleProfileClick}
-              aria-controls="profile-menu"
-              aria-haspopup="true"
-            >
-              <AccountCircleIcon />
-            </IconButton>
-            <Menu
-              id="profile-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
+            {isLoggedIn ? (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton color="inherit">
+                  {user && <NotificationDropdown role={user.role} />}
+                </IconButton>
+
+                <IconButton color="inherit" component={Link} to="/wishlist">
+                  <Badge badgeContent={wishlist.length} color="error">
+                    <FavoriteIcon />
+                  </Badge>
+                </IconButton>
+
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  onClick={handleProfileClick}
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                >
+                  <AccountCircleIcon />
+                </IconButton>
+                <Menu
+                  id="profile-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/profile"
+                  >
+                    Profile
+                  </MenuItem>
+                  {user?.role === 'landlord' && (
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/my-properties"
+                    >
+                      My Properties
+                    </MenuItem>
+                  )}
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              <>
+                <Button color="inherit" component={Link} to="/register">
+                  Register
+                </Button>
+                <Button color="inherit" component={Link} to="/login">
+                  Login
+                </Button>
+              </>
+            )}
           </Box>
-        ) : (
-          !isSmallScreen && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                component={Link}
-                to="/register"
-                color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
-              >
-                Register
-              </Button>
-              <Button
-                component={Link}
-                to="/login"
-                color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
-              >
-                Log in
-              </Button>
-            </Box>
-          )
         )}
         {isSmallScreen && (
           <IconButton color="inherit" onClick={handleDrawerOpen}>
@@ -194,7 +203,7 @@ function Header() {
           </IconButton>
         )}
       </Toolbar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
+      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
         <List>
           <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
             <ListItemText primary="Home" />
@@ -225,13 +234,23 @@ function Header() {
           </ListItem>
           {isLoggedIn ? (
             <>
-              <ListItem button onClick={handleDrawerClose}>
+              <ListItem
+                button
+                component={Link}
+                to={
+                  user?.role === 'landlord'
+                    ? '/landlord-notification'
+                    : '/renter-notifications'
+                }
+                onClick={handleDrawerClose}
+              >
                 <ListItemIcon>
-                  <Badge badgeContent={4} color="error">
-                    {user && <NotificationDropdown role={user.role} />}
+                  <Badge badgeContent={notifications.length} color="error">
+                    <NotificationsIcon />
                   </Badge>
                 </ListItemIcon>
               </ListItem>
+
               <ListItem
                 button
                 component={Link}
@@ -244,6 +263,7 @@ function Header() {
                   </Badge>
                 </ListItemIcon>
               </ListItem>
+
               <ListItem
                 button
                 component={Link}

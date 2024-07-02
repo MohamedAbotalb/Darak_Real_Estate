@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { logout } from 'store/Auth/authSlice';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

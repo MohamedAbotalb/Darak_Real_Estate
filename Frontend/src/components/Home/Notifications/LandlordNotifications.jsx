@@ -11,9 +11,7 @@ import {
   CircularProgress,
   List,
   ListItem,
-  ListItemAvatar,
   Avatar,
-  ListItemText,
   Button,
   Typography,
   Divider,
@@ -29,18 +27,25 @@ import {
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
-  HighlightOffOutlined as DeleteIcon,
   HighlightOff as DeclineIcon,
 } from '@mui/icons-material';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import CloseIcon from '@mui/icons-material/Close';
+import { red, grey } from '@mui/material/colors';
+import moment from 'moment';
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
     case 'declined':
       return '#FFCCCC';
-    case 'approve':
+    case 'approved':
       return '#CCFFCC';
     case 'pending':
-      return '#FFFFCC';
+      return '#f1b565';
     default:
       return '#FFFFFF';
   }
@@ -48,9 +53,7 @@ const getNotificationCircleColor = (type) => {
 
 function LandlordNotifications() {
   const dispatch = useDispatch();
-  const { notifications, status, error } = useSelector(
-    (state) => state.notifications
-  );
+  const { notifications, status } = useSelector((state) => state.notifications);
 
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -59,6 +62,8 @@ function LandlordNotifications() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openDeclineConfirmation, setOpenDeclineConfirmation] = useState(false);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [hoveredNotification, setHoveredNotification] = useState(null);
 
   const notificationsPerPage = 5;
 
@@ -81,10 +86,9 @@ function LandlordNotifications() {
       setSubmitting(true);
       dispatch(declineTourAsync(selectedNotification.tour_id))
         .then((response) => {
-          if (response.error) {
-            // Handle the error
-          } else {
-            // Optionally handle state update or UI interaction after declining
+          if (!response.error) {
+            // Re-fetch the notifications after successful decline
+            dispatch(fetchLandlordNotificationsAsync());
           }
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
@@ -104,19 +108,9 @@ function LandlordNotifications() {
         approveDateAsync({ tourId: selectedNotification.tour_id, selectedDate })
       )
         .then((response) => {
-          if (response.error) {
-            // Handle the error
-          } else {
-            setSelectedNotification((prev) => ({
-              ...prev,
-              tour: {
-                ...prev.tour,
-                dates: prev.tour.dates.map((date) =>
-                  date.id === selectedDate.id ? { ...date, approved: 1 } : date
-                ),
-              },
-            }));
-            setSelectedDate(null);
+          if (!response.error) {
+            // Re-fetch the notifications after successful approve
+            dispatch(fetchLandlordNotificationsAsync());
           }
           setSubmitting(false);
           setOpenModal(false);
@@ -136,132 +130,269 @@ function LandlordNotifications() {
 
   const handleConfirmDelete = () => {
     if (selectedNotification) {
-      dispatch(deleteNotificationAsync(selectedNotification)).catch(
-        (deleteError) => {
+      dispatch(deleteNotificationAsync(selectedNotification))
+        .then((response) => {
+          if (!response.error) {
+            // Re-fetch the notifications after successful delete
+            dispatch(fetchLandlordNotificationsAsync());
+          }
+          setOpenDeleteConfirmation(false);
+        })
+        .catch((deleteError) => {
           // Handle the error
-        }
-      );
-      setOpenDeleteConfirmation(false);
+          setOpenDeleteConfirmation(false);
+        });
     }
+  };
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
   };
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-  console.log(notifications);
-  const startIndex = (currentPage - 1) * notificationsPerPage;
-  const currentNotifications = notifications
-    ? notifications.slice(startIndex, startIndex + notificationsPerPage)
+  const handleMouseEnter = (e, color) => {
+    e.currentTarget.style.color = color;
+  };
+
+  const handleMouseLeave = (e, color) => {
+    e.currentTarget.style.color = color;
+  };
+  const getTimeDisplay = (createdAt) => {
+    const now = moment();
+    const notificationTime = moment(createdAt);
+    const diffInHours = now.diff(notificationTime, 'hours');
+
+    if (diffInHours < 3) {
+      return notificationTime.fromNow();
+    }
+    return notificationTime.format('MMMM DD, YYYY hh:mm A');
+  };
+  const filteredNotifications = notifications
+    ? notifications.filter(
+        (notification) => filter === 'all' || notification.status === filter
+      )
     : [];
 
-  if (status === 'loading') {
-    return <CircularProgress />;
-  }
+  const sortedNotifications = filteredNotifications
+    ? [...filteredNotifications].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      )
+    : [];
 
+  const startIndex = (currentPage - 1) * notificationsPerPage;
+  const currentNotifications = sortedNotifications.slice(
+    startIndex,
+    startIndex + notificationsPerPage
+  );
+  if (status === 'loading') {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
   if (status === 'failed') {
-    return <div>Error: {error}</div>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        Not FOUND ANY NOTIFICATION
+      </Box>
+    );
   }
 
   return (
-    <Box textAlign="center" padding="16px">
-      <Typography variant="h2" gutterBottom>
-        Landlord Notifications
+    <Box
+      sx={{
+        padding: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginRight: 3,
+        marginLeft: 3,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Notifications
       </Typography>
       <Divider />
-      {currentNotifications.length > 0 ? (
+      <Box
+        sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
+      >
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel id="filter-label">Filter</InputLabel>
+          <Select
+            labelId="filter-label"
+            id="filter-select"
+            value={filter}
+            label="Filter"
+            onChange={handleFilterChange}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="approved">Declined</MenuItem>
+            <MenuItem value="declined">Approved</MenuItem>
+            <MenuItem value="pending">Pending</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      {currentNotifications.length === 0 ? (
+        <Typography variant="body1" align="center" height="80vh">
+          No notifications found.
+        </Typography>
+      ) : (
         <List>
           {currentNotifications.map((notification) => (
-            <Paper
+            <Box
               key={notification.id}
-              elevation={3}
-              style={{ marginBottom: '16px' }}
+              sx={{
+                marginBottom: 2,
+                transition: 'transform 0.3s ease',
+                transform:
+                  hoveredNotification === notification.id
+                    ? 'scale(1.03)'
+                    : 'scale(1)',
+              }}
+              onMouseEnter={() => setHoveredNotification(notification.id)}
+              onMouseLeave={() => setHoveredNotification(null)}
             >
-              <ListItem
-                style={{
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  textAlign: 'left',
-                  maxWidth: '600px',
-                  margin: '16px auto',
-                  backgroundColor: '#fff',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'stretch',
+              <Paper
+                key={notification.id}
+                elevation={3}
+                sx={{
+                  padding: 2,
+                  borderRadius: 4,
+                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                   position: 'relative',
                 }}
               >
-                <IconButton
-                  onClick={() => handleDelete(notification.id)}
-                  style={{
-                    position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    color: '#f44336',
+                {/* Top row: Profile image, username, and notification time */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '12px',
+                    position: 'relative',
                   }}
                 >
-                  <DeleteIcon />
-                </IconButton>
-                <Box
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    backgroundColor: getNotificationCircleColor(
-                      notification.status
-                    ),
-                    position: 'absolute',
-                    top: '8px',
-                    left: '8px',
-                    bottom: '8px',
-                  }}
-                />
+                  {/* Colorful circle */}
+                  <Box
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      backgroundColor: getNotificationCircleColor(
+                        notification.status
+                      ),
+                      position: 'absolute',
+                      top: '5px',
+                      left: '8px',
+                    }}
+                  />
+                  <Box display="flex" alignItems="center" marginTop={3}>
+                    <Avatar
+                      alt={notification.landlord.first_name}
+                      src={notification.landlord.avatar}
+                      sx={{ marginLeft: '28px', marginRight: '12px' }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      sx={{ marginRight: '12px' }}
+                    >
+                      {`${notification.landlord.first_name} ${notification.landlord.last_name}`}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {getTimeDisplay(notification.created_at)}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    aria-label="delete notification"
+                    onClick={() => handleDelete(notification.id)}
+                    onMouseEnter={(e) => handleMouseEnter(e, red[500])}
+                    onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
+                    sx={{ position: 'absolute', top: 5, right: 5 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+
+                {/* Second row: Notification message and dates */}
+                <Box marginLeft="70px" marginTop="8px">
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{
+                      fontSize: '14px',
+                      marginLeft: '20px',
+                      textAlign: 'left',
+                    }}
+                  >
+                    {notification.message}
+                  </Typography>
+                </Box>
+
                 <Box
                   display="flex"
                   alignItems="center"
-                  marginTop="16px"
-                  marginLeft="20px"
-                  marginBottom="8px"
+                  marginLeft="85px"
+                  marginTop="8px"
                 >
-                  <ListItemAvatar>
-                    <Avatar alt="User Profile" src={notification.user.avatar} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${notification.user.first_name} ${notification.user.last_name}`}
-                    secondary={
-                      <Typography variant="body2" color="textSecondary">
-                        {notification.message}
-                      </Typography>
-                    }
+                  <DateRangeIcon
+                    sx={{
+                      marginRight: '5px',
+                      color: getNotificationCircleColor(notification.status),
+                    }}
                   />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ display: 'flex', flexWrap: 'wrap' }}
+                  >
+                    {notification.tour &&
+                      notification.tour.dates.map((date, index) => (
+                        <React.Fragment key={date.id}>
+                          <Typography
+                            variant="body2"
+                            style={{
+                              color: date.approved === 1 ? 'green' : 'inherit',
+                              marginLeft: index > 0 ? '10px' : '0px',
+                            }}
+                          >
+                            {moment(date.date).format('MMMM DD, YYYY hh:mm A')}
+                          </Typography>
+                        </React.Fragment>
+                      ))}
+                  </Typography>
                 </Box>
-                {notification.tour &&
-                  notification.tour.dates.map((date) => (
-                    <ListItem
-                      key={date.id}
-                      style={{
-                        color: date.approved === 1 ? 'green' : 'inherit',
-                      }}
-                    >
-                      {date.date}
-                    </ListItem>
-                  ))}
+
+                {/* Third row: Action buttons */}
                 <Box
-                  display="flex"
-                  justifyContent="center"
-                  width="100%"
-                  marginTop="16px"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: '8px',
+                  }}
                 >
                   <Button
                     variant="contained"
                     onClick={() => handleDeclineConfirmation(notification)}
                     disabled={
                       notification.status === 'declined' ||
-                      notification.status === 'approve'
+                      notification.status === 'approved'
                     }
-                    color="error"
+                    sx={{ backgroundColor: '#530e0e', marginRight: '8px' }}
                     startIcon={<DeclineIcon />}
-                    style={{ marginRight: '16px' }}
                   >
                     Decline
                   </Button>
@@ -269,21 +400,19 @@ function LandlordNotifications() {
                     variant="contained"
                     onClick={() => handleApprove(notification)}
                     disabled={
-                      notification.status === 'approve' ||
+                      notification.status === 'approved' ||
                       notification.status === 'declined'
                     }
-                    color="success"
+                    sx={{ backgroundColor: '#115811' }}
                     startIcon={<ApproveIcon />}
                   >
                     Approve
                   </Button>
                 </Box>
-              </ListItem>
-            </Paper>
+              </Paper>
+            </Box>
           ))}
         </List>
-      ) : (
-        <Typography>No notifications available.</Typography>
       )}
       <Box display="flex" justifyContent="center" marginTop="16px">
         <Pagination
