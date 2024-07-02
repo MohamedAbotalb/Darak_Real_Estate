@@ -6,11 +6,11 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import ReviewList from 'components/ReviewList';
-import ReportUserList from 'components/ReportUserList';
-import ReportPropertyList from 'components/ReportPropertyList';
+import ReviewList from 'components/AdminDashboard/ReviewList';
+import ReportUserList from 'components/AdminDashboard/ReportUserList';
+import ReportPropertyList from 'components/AdminDashboard/ReportPropertyList';
 import PropertyTypes from 'pages/PropertyType';
-import Amenities from 'components/AdminDashboard/Amenities';
+import Amenities from 'pages/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import UserLayout from 'layouts/UserLayout';

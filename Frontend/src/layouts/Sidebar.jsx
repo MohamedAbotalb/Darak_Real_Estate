@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import 'layouts/Sidebar.css';
+import '../assets/css/Sidebar.css';
 import im1 from 'assets/images/im1.PNG';
 import im2 from 'assets/images/im2.PNG';
 

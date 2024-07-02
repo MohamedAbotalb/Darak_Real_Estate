@@ -1,0 +1,13 @@
+.property-card {
+  position: relative;
+}
+
+.property-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.property-card .MuiIconButton-root {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
