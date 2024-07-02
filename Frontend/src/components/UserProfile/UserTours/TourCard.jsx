@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, Typography, Box, Button } from '@mui/material';
+import { Card, CardContent, Typography, Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { green, red, orange } from '@mui/material/colors';
 import { cancelTour } from 'store/tourSlice';
