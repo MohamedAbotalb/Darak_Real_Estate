@@ -386,7 +386,7 @@ function LandlordNotifications() {
                       notification.status === 'declined' ||
                       notification.status === 'approved'
                     }
-                    color="error"
+                    color="#FFCCCC"
                     startIcon={<DeclineIcon />}
                     sx={{ marginRight: '8px' }}
                   >
@@ -399,7 +399,7 @@ function LandlordNotifications() {
                       notification.status === 'approved' ||
                       notification.status === 'declined'
                     }
-                    color="success"
+                    color="#CCFFCC"
                     startIcon={<ApproveIcon />}
                   >
                     Approve

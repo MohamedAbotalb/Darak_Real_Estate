@@ -158,163 +158,169 @@ function NotificationDropdown({ role }) {
               </Typography>
             </Box>
           )}
-          {status === 'succeeded' && notifications.length > 0 && (
-            <List sx={{ width: '100%', p: 0 }}>
-              {lastFourNotifications.map((notification) => (
-                <ListItem
-                  key={notification.id}
-                  disablePadding
-                  onClick={() => handleNotificationClick(notification)}
-                  sx={{ mb: 1 }}
-                >
-                  {role === 'user' ? (
-                    <Paper
-                      sx={{
-                        padding: 2,
-                        borderRadius: 3,
-                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                        borderLeft: `5px solid ${getBorderColor(notification.tour.status)}`,
-                        width: '100%',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'scale(1.03)',
-                        },
-                      }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <ListItemAvatar>
-                          <Avatar
-                            alt={notification.landlord.first_name}
-                            src={notification.landlord.avatar}
-                          />
-                        </ListItemAvatar>
-                        <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
-                          <Typography variant="subtitle1">
-                            {notification.landlord.first_name}{' '}
-                            {notification.landlord.last_name}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            sx={{ mb: 1 }}
-                          >
-                            {moment(notification.created_at).format(
-                              'MMMM DD, YYYY hh:mm A'
-                            )}
-                          </Typography>
-                          <Typography variant="body1">
-                            {notification.message}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Paper>
-                  ) : (
-                    <Box
-                      key={notification.id}
-                      sx={{
-                        marginBottom: 2,
-                        transition: 'transform 0.3s ease',
-                        transform:
-                          hoveredNotification === notification.id
-                            ? 'scale(1.03)'
-                            : 'scale(1)',
-                      }}
-                      onMouseEnter={() =>
-                        setHoveredNotification(notification.id)
-                      }
-                      onMouseLeave={() => setHoveredNotification(null)}
-                    >
+          {status === 'succeeded' &&
+            notifications &&
+            notifications.length > 0 && (
+              <List sx={{ width: '100%', p: 0 }}>
+                {lastFourNotifications.map((notification) => (
+                  <ListItem
+                    key={notification.id}
+                    disablePadding
+                    onClick={() => handleNotificationClick(notification)}
+                    sx={{ mb: 1 }}
+                  >
+                    {role === 'user' ? (
                       <Paper
-                        key={notification.id}
-                        elevation={3}
                         sx={{
                           padding: 2,
-                          borderRadius: 4,
+                          borderRadius: 3,
                           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                          position: 'relative',
+                          borderLeft: `5px solid ${getBorderColor(notification.tour.status)}`,
+                          width: '100%',
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            transform: 'scale(1.03)',
+                          },
                         }}
                       >
-                        <Box
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <ListItemAvatar>
+                            <Avatar
+                              alt={notification.landlord.first_name}
+                              src={notification.landlord.avatar}
+                            />
+                          </ListItemAvatar>
+                          <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
+                            <Typography variant="subtitle1">
+                              {notification.landlord.first_name}{' '}
+                              {notification.landlord.last_name}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                              sx={{ mb: 1 }}
+                            >
+                              {moment(notification.created_at).format(
+                                'MMMM DD, YYYY hh:mm A'
+                              )}
+                            </Typography>
+                            <Typography variant="body1">
+                              {notification.message}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Paper>
+                    ) : (
+                      <Box
+                        key={notification.id}
+                        sx={{
+                          marginBottom: 2,
+                          transition: 'transform 0.3s ease',
+                          transform:
+                            hoveredNotification === notification.id
+                              ? 'scale(1.03)'
+                              : 'scale(1)',
+                        }}
+                        onMouseEnter={() =>
+                          setHoveredNotification(notification.id)
+                        }
+                        onMouseLeave={() => setHoveredNotification(null)}
+                      >
+                        <Paper
+                          key={notification.id}
+                          elevation={3}
                           sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: '12px',
+                            padding: 2,
+                            borderRadius: 4,
+                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                             position: 'relative',
                           }}
                         >
                           <Box
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '50%',
-                              backgroundColor: getNotificationCircleColor(
-                                notification.status
-                              ),
-                              position: 'absolute',
-                              top: '5px',
-                              left: '8px',
-                            }}
-                          />
-                          <Box display="flex" alignItems="center" marginTop={3}>
-                            <Avatar
-                              alt={notification.landlord.first_name}
-                              src={notification.landlord.avatar}
-                              sx={{ marginLeft: '28px', marginRight: '12px' }}
-                            />
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="bold"
-                              sx={{ marginRight: '12px' }}
-                            >
-                              {`${notification.landlord.first_name} ${notification.landlord.last_name}`}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {getTimeDisplay(notification.created_at)}
-                            </Typography>
-                          </Box>
-                        </Box>
-                        <Box marginLeft="70px" marginTop="8px">
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
                             sx={{
-                              fontSize: '14px',
-                              marginLeft: '20px',
-                              textAlign: 'left',
+                              display: 'flex',
+                              alignItems: 'center',
+                              marginBottom: '12px',
+                              position: 'relative',
                             }}
                           >
-                            {notification.message}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" mt={1}>
-                          <DateRangeIcon
-                            sx={{ marginRight: '4px', marginLeft: '16px' }}
-                          />
-                          {notification.tour.tour_dates.map((date) => (
+                            <Box
+                              style={{
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '50%',
+                                backgroundColor: getNotificationCircleColor(
+                                  notification.status
+                                ),
+                                position: 'absolute',
+                                top: '5px',
+                                left: '8px',
+                              }}
+                            />
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              marginTop={3}
+                            >
+                              <Avatar
+                                alt={notification.landlord.first_name}
+                                src={notification.landlord.avatar}
+                                sx={{ marginLeft: '28px', marginRight: '12px' }}
+                              />
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                sx={{ marginRight: '12px' }}
+                              >
+                                {`${notification.landlord.first_name} ${notification.landlord.last_name}`}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                {getTimeDisplay(notification.created_at)}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Box marginLeft="70px" marginTop="8px">
                             <Typography
-                              key={date.id}
                               variant="body2"
                               color="textSecondary"
-                              sx={{ marginRight: '4px' }}
+                              sx={{
+                                fontSize: '14px',
+                                marginLeft: '20px',
+                                textAlign: 'left',
+                              }}
                             >
-                              {moment(date.date).format('MMM DD, YYYY')}
+                              {notification.message}
                             </Typography>
-                          ))}
-                        </Box>
-                        <Box
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          mt={2}
-                          gap={2}
-                        />
-                      </Paper>
-                    </Box>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          )}
+                          </Box>
+                          <Box display="flex" alignItems="center" mt={1}>
+                            <DateRangeIcon
+                              sx={{ marginRight: '4px', marginLeft: '16px' }}
+                            />
+                            {notification.tour.tour_dates.map((date) => (
+                              <Typography
+                                key={date.id}
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ marginRight: '4px' }}
+                              >
+                                {moment(date.date).format('MMM DD, YYYY')}
+                              </Typography>
+                            ))}
+                          </Box>
+                          <Box
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            mt={2}
+                            gap={2}
+                          />
+                        </Paper>
+                      </Box>
+                    )}
+                  </ListItem>
+                ))}
+              </List>
+            )}
           <Button
             variant="contained"
             onClick={handleShowAllNotifications}
