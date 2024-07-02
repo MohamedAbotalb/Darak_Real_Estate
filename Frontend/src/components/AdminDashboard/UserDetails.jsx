@@ -10,7 +10,6 @@ import {
   TableRow,
   tableCellClasses,
   Paper,
-  Button,
   CircularProgress,
   Alert,
   Pagination,
@@ -22,7 +21,6 @@ import {
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
-import { toast } from 'react-toastify';
 import { fetchUsers } from 'store/userDetailsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
