@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ReasonReport;
+use App\Repositories\Contracts\ReasonReportRepositoryInterface;
 
 class ReasonReportRepository implements ReasonReportRepositoryInterface
 {

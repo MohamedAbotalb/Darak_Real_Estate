@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tours\StoreTourRequest;
 use App\Http\Resources\TourResource;
-use App\Repositories\TourRepositoryInterface;
+use App\Repositories\Contracts\TourRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

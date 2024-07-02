@@ -160,7 +160,7 @@ function UserDetails() {
                       {user.email}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {user.phone}
+                      {user.phone_number}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {user.role}

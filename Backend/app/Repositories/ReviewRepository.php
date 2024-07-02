@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Review;
+use App\Repositories\Contracts\ReviewRepositoryInterface;
 
 class ReviewRepository implements ReviewRepositoryInterface
 {

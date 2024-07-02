@@ -3,29 +3,29 @@
 namespace App\Providers;
 
 use App\Repositories\AmenityRepository;
-use App\Repositories\AmenityRepositoryInterface;
+use App\Repositories\Contracts\AmenityRepositoryInterface;
 use App\Repositories\ImageRepository;
-use App\Repositories\ImageRepositoryInterface;
+use App\Repositories\Contracts\ImageRepositoryInterface;
 use App\Repositories\NotificationRepository;
-use App\Repositories\NotificationRepositoryInterface;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
 use App\Repositories\PropertyRepository;
-use App\Repositories\PropertyRepositoryInterface;
+use App\Repositories\Contracts\PropertyRepositoryInterface;
 use App\Repositories\PropertyTypeRepository;
-use App\Repositories\PropertyTypeRepositoryInterface;
+use App\Repositories\Contracts\PropertyTypeRepositoryInterface;
 use App\Repositories\ReasonReportRepository;
-use App\Repositories\ReasonReportRepositoryInterface;
+use App\Repositories\Contracts\ReasonReportRepositoryInterface;
 use App\Repositories\ReportPropertyRepository;
-use App\Repositories\ReportPropertyRepositoryInterface;
+use App\Repositories\Contracts\ReportPropertyRepositoryInterface;
 use App\Repositories\ReportUserRepository;
-use App\Repositories\ReportUserRepositoryInterface;
+use App\Repositories\Contracts\ReportUserRepositoryInterface;
 use App\Repositories\ReviewRepository;
-use App\Repositories\ReviewRepositoryInterface;
+use App\Repositories\Contracts\ReviewRepositoryInterface;
 use App\Repositories\TourRepository;
-use App\Repositories\TourRepositoryInterface;
+use App\Repositories\Contracts\TourRepositoryInterface;
 use App\Repositories\UserRepository;
-use App\Repositories\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\WishlistRepository;
-use App\Repositories\WishlistRepositoryInterface;
+use App\Repositories\Contracts\WishlistRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Contracts;
 
-interface ReportPropertyRepositoryInterface
+interface ReportUserRepositoryInterface
 {
     public function getAllReports();
     public function findReportById(int $id);
     public function deleteReportById(int $id);
-    public function deletePropertyAndReportById(int $id);
+    public function deleteUserAndReportById(int $id);
     public function createReport(array $data);
 }
