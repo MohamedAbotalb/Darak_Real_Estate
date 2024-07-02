@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './Sidebar.css';
+import 'layouts/Sidebar.css';
 import im1 from 'assets/images/im1.PNG';
 import im2 from 'assets/images/im2.PNG';
 
@@ -39,7 +39,7 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/report_property"
+            to="/admin/report-properties"
             className="nav-link"
             activeClassName="active-link"
           >
