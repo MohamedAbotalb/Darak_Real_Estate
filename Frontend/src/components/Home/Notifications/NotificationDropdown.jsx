@@ -39,8 +39,10 @@ function NotificationDropdown({ role }) {
       dispatch(fetchLandlordNotificationsAsync());
     }
   }, [dispatch]);
-
-  const lastFourNotifications = notifications.slice(
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  );
+  const lastFourNotifications = sortedNotifications.slice(
     Math.max(notifications.length - 4, 0)
   );
 
@@ -81,14 +83,16 @@ function NotificationDropdown({ role }) {
     }
   };
 
-  const getNotificationCircleColor = (tourStatusCircle) => {
-    switch (tourStatusCircle) {
-      case 'approved':
-        return green[500];
+  const getNotificationCircleColor = (type) => {
+    switch (type) {
       case 'declined':
-        return red[500];
+        return '#FFCCCC';
+      case 'approved':
+        return '#CCFFCC';
+      case 'pending':
+        return '#f1b565';
       default:
-        return orange[500];
+        return '#FFFFFF';
     }
   };
 
@@ -171,7 +175,7 @@ function NotificationDropdown({ role }) {
                         padding: 2,
                         borderRadius: 3,
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                        borderLeft: `5px solid ${getBorderColor(notification.tour.status)}`,
+                        borderLeft: `5px solid ${getBorderColor(notification?.tour?.status)}`,
                         width: '100%',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
@@ -188,20 +192,20 @@ function NotificationDropdown({ role }) {
                         </ListItemAvatar>
                         <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
                           <Typography variant="subtitle1">
-                            {notification.landlord.first_name}{' '}
-                            {notification.landlord.last_name}
+                            {notification?.landlord?.first_name}{' '}
+                            {notification?.landlord?.last_name}
                           </Typography>
                           <Typography
                             variant="body2"
                             color="textSecondary"
                             sx={{ mb: 1 }}
                           >
-                            {moment(notification.created_at).format(
+                            {moment(notification?.created_at).format(
                               'MMMM DD, YYYY hh:mm A'
                             )}
                           </Typography>
                           <Typography variant="body1">
-                            {notification.message}
+                            {notification?.message}
                           </Typography>
                         </Box>
                       </Box>
@@ -226,20 +230,16 @@ function NotificationDropdown({ role }) {
                         key={notification.id}
                         elevation={3}
                         sx={{
+                          width: '100%',
                           padding: 2,
                           borderRadius: 4,
                           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                           position: 'relative',
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: '12px',
-                            position: 'relative',
-                          }}
-                        >
+                        {/* Top row: Profile image, username, and notification time */}
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          {/* Colorful circle */}
                           <Box
                             style={{
                               width: '20px',
@@ -249,63 +249,107 @@ function NotificationDropdown({ role }) {
                                 notification.status
                               ),
                               position: 'absolute',
-                              top: '5px',
-                              left: '8px',
+                              top: '12px',
+                              left: '12px',
                             }}
                           />
-                          <Box display="flex" alignItems="center" marginTop={3}>
+                          <Box display="flex" alignItems="center" marginTop={1}>
                             <Avatar
-                              alt={notification.landlord.first_name}
-                              src={notification.landlord.avatar}
+                              alt={notification.user.first_name}
+                              src={notification.user.avatar}
                               sx={{ marginLeft: '28px', marginRight: '12px' }}
                             />
                             <Typography
                               variant="subtitle1"
                               fontWeight="bold"
-                              sx={{ marginRight: '12px' }}
+                              sx={{ marginRight: 'auto' }}
                             >
                               {`${notification.user.first_name} ${notification.user.last_name}`}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="caption" color="textSecondary">
                               {getTimeDisplay(notification.created_at)}
                             </Typography>
                           </Box>
-                        </Box>
-                        <Box marginLeft="70px" marginTop="8px">
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
+                          <Box
                             sx={{
-                              fontSize: '14px',
-                              marginLeft: '20px',
-                              textAlign: 'left',
+                              position: 'absolute',
+                              top: '5px',
+                              right: '5px',
+                            }}
+                          />
+                        </Box>
+
+                        {/* Second row: Notification message and dates */}
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            marginBottom: '16px',
+                            marginLeft: { xs: '0', md: '85px' },
+                            textAlign: { sm: 'center', md: 'left', lg: 'left' },
+                          }}
+                        >
+                          {notification.message}
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: {
+                              xs: 'column',
+                              sm: 'column',
+                              md: 'row',
+                            },
+                            textAlign: {
+                              xs: 'center',
+                              sm: 'center',
+                              md: 'left',
+                            },
+                            marginBottom: '16px',
+                            marginLeft: { xs: '0', md: '75px' },
+                            alignItems: 'center',
+                          }}
+                        >
+                          <DateRangeIcon
+                            sx={{
+                              marginRight: '5px',
+
+                              color: getNotificationCircleColor(
+                                notification.status
+                              ),
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              display: 'flex',
                             }}
                           >
-                            {notification.message}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" mt={1}>
-                          <DateRangeIcon
-                            sx={{ marginRight: '4px', marginLeft: '16px' }}
-                          />
-                          {notification.tour?.dates?.map((date) => (
                             <Typography
-                              key={date.id}
                               variant="body2"
                               color="textSecondary"
-                              sx={{ marginRight: '4px' }}
+                              sx={{ display: 'flex', flexWrap: 'wrap' }}
                             >
-                              {moment(date.date).format('MMM DD, YYYY')}
+                              {notification.tour &&
+                                notification.tour.dates.map((date, index) => (
+                                  <React.Fragment key={date.id}>
+                                    <Typography
+                                      variant="body2"
+                                      style={{
+                                        color:
+                                          date.approved === 1
+                                            ? 'green'
+                                            : 'inherit',
+                                        marginLeft: index > 0 ? '10px' : '0px',
+                                      }}
+                                    >
+                                      {moment(date.date).format(
+                                        'MMMM DD, YYYY hh:mm A'
+                                      )}
+                                    </Typography>
+                                  </React.Fragment>
+                                ))}
                             </Typography>
-                          ))}
+                          </Box>
                         </Box>
-                        <Box
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          mt={2}
-                          gap={2}
-                        />
                       </Paper>
                     </Box>
                   )}

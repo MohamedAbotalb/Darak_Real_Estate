@@ -4,7 +4,7 @@ import {
   fetchRenterNotificationsAsync,
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
@@ -20,6 +20,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import { toast } from 'react-toastify';
 
 function RenterNotifications() {
   const dispatch = useDispatch();
@@ -40,6 +41,9 @@ function RenterNotifications() {
   const handleDeleteNotification = (id) => {
     dispatch(deleteNotificationAsync(id));
     setDeleteConfirmationOpen(false);
+    toast.success('Notification removed successfully', {
+      position: 'top-right',
+    });
   };
 
   const openDeleteConfirmation = (notification) => {
@@ -81,13 +85,16 @@ function RenterNotifications() {
     e.currentTarget.style.color = color;
   };
 
-  // Calculate pagination
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  );
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const filteredNotifications =
     filter === 'all'
-      ? notifications
-      : notifications.filter(
+      ? sortedNotifications
+      : sortedNotifications.filter(
           (notification) => notification.tour.status === filter
         );
   const currentNotifications = filteredNotifications.slice(
@@ -143,6 +150,10 @@ function RenterNotifications() {
         marginLeft: 3,
       }}
     >
+      <Typography variant="h4" gutterBottom>
+        Notifications
+      </Typography>
+      <Divider />
       <Box
         sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
       >
@@ -190,7 +201,7 @@ function RenterNotifications() {
                 padding: 2,
                 borderRadius: 4,
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                borderLeft: `5px solid ${getBorderColor(notification.tour.status)}`,
+                borderLeft: `5px solid ${getBorderColor(notification?.tour?.status)}`,
                 display: 'flex',
                 alignItems: 'center',
                 position: 'relative',
