@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import {
   Table,
   TableBody,
@@ -15,15 +16,18 @@ import {
   alpha,
   styled,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
-import { toast } from 'react-toastify';
-import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
-import ShowAmenityDetailsButton from 'components/AdminDashboard/Amenities/ShowAmenityDetailsButton';
+import { Oval } from 'react-loader-spinner';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,12 +54,8 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
+  marginLeft: theme.spacing(1),
+  width: 'auto',
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -84,22 +84,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function AmenityTable() {
   const dispatch = useDispatch();
   const amenities = useSelector((state) => state.amenities.amenities);
+  const status = useSelector((state) => state.amenities.status);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedSlug, setSelectedSlug] = useState(null);
 
   useEffect(() => {
     dispatch(fetchAmenities());
   }, [dispatch]);
 
-  const handleDelete = async (id) => {
-    try {
-      await dispatch(deleteAmenity(id));
-      toast.success('Amenity deleted successfully!');
-    } catch (error) {
-      toast.error('Failed to delete amenity.');
-    }
+  const handleDelete = async () => {
+    dispatch(deleteAmenity(selectedSlug));
+    setOpenConfirm(false);
+  };
+
+  const handleOpenConfirm = (slug) => {
+    setSelectedSlug(slug);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setSelectedSlug(null);
   };
 
   const handleChangePage = (event, value) => {
@@ -137,7 +146,7 @@ function AmenityTable() {
             Amenities
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -149,53 +158,93 @@ function AmenityTable() {
               onChange={handleSearchChange}
             />
           </Search>
+          <AddAmenityButton />
         </Box>
-        <AddAmenityButton />
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredAmenities
-              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-              .map((amenity) => (
-                <StyledTableRow key={amenity.id}>
-                  <StyledTableCell>{amenity.id}</StyledTableCell>
-                  <StyledTableCell>{amenity.name}</StyledTableCell>
-                  <StyledTableCell>
-                    <EditAmenityButton amenity={amenity} />
-                    <ShowAmenityDetailsButton amenitySlug={amenity.slug} />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDelete(amenity.id)}
-                      sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                    >
-                      Delete
-                    </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination
-          count={Math.ceil(filteredAmenities.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
+      {status === 'loading' ? (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Oval
+            height={80}
+            width={80}
+            color="#4fa94d"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible
+            ariaLabel="oval-loading"
+            secondaryColor="#4fa94d"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </Box>
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell>Name</StyledTableCell>
+                  <StyledTableCell>Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredAmenities
+                  .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                  .map((amenity) => (
+                    <StyledTableRow key={amenity.id}>
+                      <StyledTableCell>{amenity.id}</StyledTableCell>
+                      <StyledTableCell>{amenity.name}</StyledTableCell>
+                      <StyledTableCell>
+                        <EditAmenityButton amenity={amenity} />
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleOpenConfirm(amenity.slug)}
+                          sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
+                        >
+                          Delete
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={Math.ceil(filteredAmenities.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+        </>
+      )}
+
+      <Dialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this amenity?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
