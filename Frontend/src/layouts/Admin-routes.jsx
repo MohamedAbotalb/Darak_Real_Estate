@@ -1,12 +1,12 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ReviewList from '../components/ReviewList';
-import ReportUserList from '../components/ReportUserList';
-import ReportPropertyList from '../components/ReportPropertyList';
+import ReportPropertyList from 'components/ReportPropertyList';
+import ReportUserList from 'components/ReportUserList';
+import ReviewList from 'components/AdminDashboard/ReviewList';
+import UserDetails from 'components/AdminDashboard/UserDetails';
+import OverView from 'components/AdminDashboard/OverView';
 import PropertyTypes from '../pages/PropertyType';
-import Amenities from '../components/AdminDashboard/Amenities';
-import OverView from '../components/AdminDashboard/OverView';
-import UserDetails from '../components/AdminDashboard/UserDetails';
+import Amenities from '../pages/Amenities';
 
 function AdminRoutes() {
   return (

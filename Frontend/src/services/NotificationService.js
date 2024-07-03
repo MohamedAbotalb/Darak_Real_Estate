@@ -1,11 +1,11 @@
 import axiosInstance from 'services/axiosConfig';
 
-export const fetchRenterNotifications = async () => {
+export const fetchUserNotifications = async () => {
   try {
     const response = await axiosInstance.get('/notifications/renter');
     return response.data.data;
   } catch (error) {
-    throw new Error(`Failed to fetch renter notifications: ${error.message}`);
+    throw new Error(`Failed to fetch user notifications: ${error.message}`);
   }
 };
 

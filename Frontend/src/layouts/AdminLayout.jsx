@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import { Outlet } from 'react-router-dom';
-import NavBar from './NavBar-Dashboard';
-import Sidebar from './Sidebar';
+import Sidebar from 'components/AdminDashboard/Sidebar';
+import NavBar from 'components/AdminDashboard/NavBar';
 
 export default function SharedLayout() {
   return (

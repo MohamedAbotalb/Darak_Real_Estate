@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
-import { addPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
-import PropertyTypeModal from 'components/PropertyTypeComponent/PropertyTypeModal';
+import { addAmenity, fetchAmenities } from 'store/amenitiesSlice';
+import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
-function AddPropertyTypeButton() {
+function AddAmenityButton() {
   const [isOpen, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -14,11 +14,11 @@ function AddPropertyTypeButton() {
 
   const handleSubmit = async (data) => {
     try {
-      await dispatch(addPropertyType(data));
-      await dispatch(fetchPropertyTypes());
+      await dispatch(addAmenity(data));
+      await dispatch(fetchAmenities());
       handleClose();
     } catch (error) {
-      toast.error('Failed to add property type.');
+      toast.error('Failed to add amenity.');
     }
   };
 
@@ -40,7 +40,7 @@ function AddPropertyTypeButton() {
       >
         Add New Type
       </Button>
-      <PropertyTypeModal
+      <AmenityModal
         isOpen={isOpen}
         handleClose={handleClose}
         mode="add"
@@ -50,4 +50,4 @@ function AddPropertyTypeButton() {
   );
 }
 
-export default AddPropertyTypeButton;
+export default AddAmenityButton;

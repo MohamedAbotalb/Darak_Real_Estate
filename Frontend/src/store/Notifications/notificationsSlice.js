@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  fetchRenterNotifications,
+  fetchUserNotifications,
   fetchLandlordNotifications,
   declineTourRequest,
   approveTourDate,
@@ -13,10 +13,10 @@ const initialState = {
   error: null,
 };
 
-export const fetchRenterNotificationsAsync = createAsyncThunk(
+export const fetchUserNotificationsAsync = createAsyncThunk(
   'notifications/fetchRenterNotifications',
   async () => {
-    return fetchRenterNotifications();
+    return fetchUserNotifications();
   }
 );
 
@@ -66,14 +66,14 @@ const notificationsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRenterNotificationsAsync.pending, (state) => {
+      .addCase(fetchUserNotificationsAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchRenterNotificationsAsync.fulfilled, (state, action) => {
+      .addCase(fetchUserNotificationsAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.notifications = action.payload;
       })
-      .addCase(fetchRenterNotificationsAsync.rejected, (state, action) => {
+      .addCase(fetchUserNotificationsAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })

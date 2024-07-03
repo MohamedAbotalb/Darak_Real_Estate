@@ -17,16 +17,13 @@ import {
   Typography,
 } from '@mui/material';
 import { toast } from 'react-toastify';
-import {
-  fetchPropertyTypes,
-  deletePropertyType,
-} from 'store/propertyTypesSlice';
+import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import EditPropertyTypeButton from 'components/PropertyTypeComponent/EditPropertyTypeButton';
-import ShowDetailsButton from 'components/PropertyTypeComponent/ShowDetailsButton';
-import SearchIcon from '@mui/icons-material/Search';
-import AddPropertyTypeButton from 'components/PropertyTypeComponent/AddPropertyTypeButton';
 import { tableCellClasses } from '@mui/material/TableCell';
+import SearchIcon from '@mui/icons-material/Search';
+import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
+import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
+import ShowAmenityDetailsButton from 'components/AdminDashboard/Amenities/ShowAmenityDetailsButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,7 +46,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: '20%',
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -85,27 +81,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function PropertyTypeTable() {
+function AmenityTable() {
   const dispatch = useDispatch();
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
-  );
+  const amenities = useSelector((state) => state.amenities.amenities);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    dispatch(fetchPropertyTypes());
+    dispatch(fetchAmenities());
   }, [dispatch]);
 
-  const handleDelete = async (slug) => {
+  const handleDelete = async (id) => {
     try {
-      await dispatch(deletePropertyType(slug));
-      await dispatch(fetchPropertyTypes());
-      toast.success('Property type deleted successfully!');
+      await dispatch(deleteAmenity(id));
+      toast.success('Amenity deleted successfully!');
     } catch (error) {
-      toast.error('Failed to delete property type.');
+      toast.error('Failed to delete amenity.');
     }
   };
 
@@ -117,9 +110,11 @@ function PropertyTypeTable() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredPropertyTypes = propertyTypes.filter((type) =>
-    type.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAmenities = Array.isArray(amenities)
+    ? amenities.filter((amenity) =>
+        amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   return (
     <>
@@ -139,7 +134,7 @@ function PropertyTypeTable() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Property Types
+            Amenities
           </Typography>
         </Box>
         <Box display="flex" justifyContent="center">
@@ -155,7 +150,7 @@ function PropertyTypeTable() {
             />
           </Search>
         </Box>
-        <AddPropertyTypeButton />
+        <AddAmenityButton />
       </Box>
 
       <TableContainer component={Paper}>
@@ -168,19 +163,19 @@ function PropertyTypeTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredPropertyTypes
+            {filteredAmenities
               .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-              .map((type) => (
-                <StyledTableRow key={type.id}>
-                  <StyledTableCell>{type.id}</StyledTableCell>
-                  <StyledTableCell>{type.name}</StyledTableCell>
+              .map((amenity) => (
+                <StyledTableRow key={amenity.id}>
+                  <StyledTableCell>{amenity.id}</StyledTableCell>
+                  <StyledTableCell>{amenity.name}</StyledTableCell>
                   <StyledTableCell>
-                    <EditPropertyTypeButton type={type} />
-                    <ShowDetailsButton typeSlug={type.slug} />
+                    <EditAmenityButton amenity={amenity} />
+                    <ShowAmenityDetailsButton amenitySlug={amenity.slug} />
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => handleDelete(type.slug)}
+                      onClick={() => handleDelete(amenity.id)}
                       sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
                     >
                       Delete
@@ -193,7 +188,7 @@ function PropertyTypeTable() {
       </TableContainer>
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
-          count={Math.ceil(filteredPropertyTypes.length / rowsPerPage)}
+          count={Math.ceil(filteredAmenities.length / rowsPerPage)}
           page={page}
           onChange={handleChangePage}
           variant="outlined"
@@ -205,4 +200,4 @@ function PropertyTypeTable() {
   );
 }
 
-export default PropertyTypeTable;
+export default AmenityTable;

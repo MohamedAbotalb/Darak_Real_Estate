@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
-import { Container, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -22,7 +22,7 @@ import {
   fetchReports,
   deleteReport,
   deleteLandlord,
-} from '../store/reportUsersSlice';
+} from 'store/reportUsersSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,7 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: '20%',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -98,7 +98,7 @@ export default function ReportUserList() {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -204,7 +204,7 @@ export default function ReportUserList() {
                       color="primary"
                       onClick={() => handleShowContent(report.content)}
                     >
-                      View_Content
+                      View Content
                     </Button>
                   </StyledTableCell>
                   <StyledTableCell align="center">
@@ -221,7 +221,7 @@ export default function ReportUserList() {
                       color="error"
                       onClick={() => handleDeleteLandlord(report.landlord.id)}
                     >
-                      Blocked Landlord
+                      Block Landlord
                     </Button>
                   </StyledTableCell>
                 </StyledTableRow>

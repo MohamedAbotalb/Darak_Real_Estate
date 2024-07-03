@@ -8,7 +8,6 @@ import {
   Grid,
   CircularProgress,
   Alert,
-  Container,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import PeopleIcon from '@mui/icons-material/People';
@@ -78,9 +77,7 @@ const cardsData = [
 
 function OverView() {
   const dispatch = useDispatch();
-  const counts = useSelector((state) => state.overview.counts);
-  const status = useSelector((state) => state.overview.status);
-  const error = useSelector((state) => state.overview.error);
+  const { counts, status, error } = useSelector((state) => state.overview);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -110,7 +107,7 @@ function OverView() {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ mt: 4, width: '100%', px: 1 }}>
+      <Box sx={{ mt: 4, width: '100%' }}>
         {status === 'loading' && <CircularProgress />}
         {status === 'failed' && <Alert severity="error">{error}</Alert>}
         {status === 'succeeded' && (
