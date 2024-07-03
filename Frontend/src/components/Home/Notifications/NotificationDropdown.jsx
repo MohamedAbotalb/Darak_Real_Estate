@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  fetchRenterNotificationsAsync,
+  fetchUserNotificationsAsync,
   fetchLandlordNotificationsAsync,
 } from 'store/Notifications/notificationsSlice';
 import {
@@ -34,7 +34,7 @@ function NotificationDropdown({ role }) {
 
   useEffect(() => {
     if (role === 'user') {
-      dispatch(fetchRenterNotificationsAsync());
+      dispatch(fetchUserNotificationsAsync());
     } else if (role === 'landlord') {
       dispatch(fetchLandlordNotificationsAsync());
     }
@@ -64,7 +64,7 @@ function NotificationDropdown({ role }) {
   const handleNotificationClick = () => {
     handleMenuClose();
     if (role === 'user') {
-      navigate('/renter-notifications');
+      navigate('/user-notifications');
     } else if (role === 'landlord') {
       navigate('/landlord-notifications');
     }
@@ -73,7 +73,7 @@ function NotificationDropdown({ role }) {
   const handleShowAllNotifications = () => {
     handleMenuClose();
     if (role === 'user') {
-      navigate('/renter-notifications');
+      navigate('/user-notifications');
     } else if (role === 'landlord') {
       navigate('/landlord-notifications');
     }
