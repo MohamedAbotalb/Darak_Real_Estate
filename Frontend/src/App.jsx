@@ -26,7 +26,7 @@ import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import ProfilePage from 'pages/Profile';
-import MyProperties from 'pages/Myproperties';
+import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
 import ProtectedRoute from 'ProtectedRoute';
 import UserNotifications from 'components/Home/Notifications/UserNotifications';
@@ -51,10 +51,7 @@ function App() {
             path="landlord-notifications"
             element={<LandlordNotifications />}
           />
-          <Route
-            path="user-notifications"
-            element={<UserNotifications />}
-          />
+          <Route path="user-notifications" element={<UserNotifications />} />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/myproperties" element={<MyProperties />} />
