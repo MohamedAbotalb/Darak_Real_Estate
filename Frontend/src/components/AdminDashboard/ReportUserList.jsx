@@ -1,32 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-
-import {
-  Box,
-  Typography,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Pagination,
-  InputBase,
-} from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Pagination from '@mui/material/Pagination';
 import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import {
   fetchReports,
   deleteReport,
-  deleteProperty,
-} from '../store/reportPropertiesSlice';
+  deleteLandlord,
+} from 'store/reportUsersSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,16 +45,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: '20%',
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(1),
     width: 'auto',
   },
 }));
@@ -86,20 +81,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function ReportPropertyList() {
+export default function ReportUserList() {
   const dispatch = useDispatch();
-  const reports = useSelector((state) => state.reportProperties.reports);
-  const reportStatus = useSelector((state) => state.reportProperties.status);
-  const error = useSelector((state) => state.reportProperties.error);
+  const reports = useSelector((state) => state.reportUsers.reports);
+  const reportStatus = useSelector((state) => state.reportUsers.status);
+  const error = useSelector((state) => state.reportUsers.error);
 
-  const [openContentDialog, setOpenContentDialog] = useState(false);
   const [selectedContent, setSelectedContent] = useState('');
+  const [openContentDialog, setOpenContentDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteType, setDeleteType] = useState('');
   const [deleteId, setDeleteId] = useState(null);
-  const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
+  const [searchTerms, setSearchTerms] = useState({
+    user: '',
+    landlord: '',
+  });
+
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -113,23 +112,10 @@ export default function ReportPropertyList() {
     setOpenDeleteDialog(true);
   };
 
-  const handleDeleteProperty = (id) => {
-    setDeleteType('property');
+  const handleDeleteLandlord = (id) => {
+    setDeleteType('landlord');
     setDeleteId(id);
     setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
-  const handleConfirmDelete = () => {
-    if (deleteType === 'report') {
-      dispatch(deleteReport(deleteId));
-    } else if (deleteType === 'property') {
-      dispatch(deleteProperty(deleteId));
-    }
-    setOpenDeleteDialog(false);
   };
 
   const handleShowContent = (content) => {
@@ -139,6 +125,19 @@ export default function ReportPropertyList() {
 
   const handleCloseContentDialog = () => {
     setOpenContentDialog(false);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteType === 'report') {
+      dispatch(deleteReport(deleteId));
+    } else if (deleteType === 'landlord') {
+      dispatch(deleteLandlord(deleteId));
+    }
+    setOpenDeleteDialog(false);
   };
 
   const handleChangePage = (event, value) => {
@@ -154,13 +153,13 @@ export default function ReportPropertyList() {
 
   const filteredReports = reports.filter((report) => {
     const userFullName = `${report.user.first_name.toLowerCase()} ${report.user.last_name.toLowerCase()}`;
-    const propertyTitle = report.property.title.toLowerCase();
+    const landlordFullName = `${report.landlord.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
 
     return (
       (searchTerms.user === '' ||
         userFullName.includes(searchTerms.user.toLowerCase())) &&
-      (searchTerms.property === '' ||
-        propertyTitle.includes(searchTerms.property.toLowerCase()))
+      (searchTerms.landlord === '' ||
+        landlordFullName.includes(searchTerms.landlord.toLowerCase()))
     );
   });
 
@@ -182,7 +181,7 @@ export default function ReportPropertyList() {
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell align="center">User</StyledTableCell>
-                <StyledTableCell align="center">Property</StyledTableCell>
+                <StyledTableCell align="center">Landlord</StyledTableCell>
                 <StyledTableCell align="center">Content</StyledTableCell>
                 <StyledTableCell align="center">Actions</StyledTableCell>
               </TableRow>
@@ -197,7 +196,7 @@ export default function ReportPropertyList() {
                     {`${report.user.first_name} ${report.user.last_name}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {report.property.title}
+                    {`${report.landlord.first_name} ${report.landlord.last_name}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Button
@@ -220,9 +219,9 @@ export default function ReportPropertyList() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleDeleteProperty(report.property.id)}
+                      onClick={() => handleDeleteLandlord(report.landlord.id)}
                     >
-                      Delete Property
+                      Block Landlord
                     </Button>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -271,10 +270,10 @@ export default function ReportPropertyList() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Report Property List
+            Report User
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="between">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -291,10 +290,10 @@ export default function ReportPropertyList() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search Property"
-              inputProps={{ 'aria-label': 'search property' }}
-              value={searchTerms.property}
-              onChange={(e) => handleSearchChange(e, 'property')}
+              placeholder="Search Landlord"
+              inputProps={{ 'aria-label': 'search landlord' }}
+              value={searchTerms.landlord}
+              onChange={(e) => handleSearchChange(e, 'landlord')}
             />
           </Search>
         </Box>

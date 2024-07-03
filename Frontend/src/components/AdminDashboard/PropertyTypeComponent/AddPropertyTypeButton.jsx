@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
-import { editPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
-import PropertyTypeModal from 'components/PropertyTypeComponent/PropertyTypeModal';
+import { addPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
+import PropertyTypeModal from 'components/AdminDashboard/PropertyTypeComponent/PropertyTypeModal';
 
-function EditPropertyTypeButton({ type }) {
+function AddPropertyTypeButton() {
   const [isOpen, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -15,39 +14,40 @@ function EditPropertyTypeButton({ type }) {
 
   const handleSubmit = async (data) => {
     try {
-      await dispatch(editPropertyType({ slug: type.slug, data }));
+      await dispatch(addPropertyType(data));
       await dispatch(fetchPropertyTypes());
       handleClose();
     } catch (error) {
-      toast.error('Failed to update property type.');
+      toast.error('Failed to add property type.');
     }
   };
 
   return (
     <>
       <Button
-        variant="contained"
-        color="primary"
+        variant="outlined"
         onClick={handleOpen}
-        sx={{ backgroundColor: '#1976d2', color: '#fff', mr: 1 }}
+        sx={{
+          borderColor: '#2196f3',
+          color: '#2196f3',
+          mt: 2,
+          mb: 2,
+          '&:hover': {
+            backgroundColor: '#e3f2fd',
+            borderColor: '#2196f3',
+          },
+        }}
       >
-        Edit
+        Add New Type
       </Button>
       <PropertyTypeModal
         isOpen={isOpen}
         handleClose={handleClose}
-        type={type}
-        mode="edit"
+        mode="add"
         handleSubmit={handleSubmit}
       />
     </>
   );
 }
 
-EditPropertyTypeButton.propTypes = {
-  type: PropTypes.shape({
-    slug: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-export default EditPropertyTypeButton;
+export default AddPropertyTypeButton;

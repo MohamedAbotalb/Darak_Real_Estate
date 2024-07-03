@@ -65,7 +65,7 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'listing_type', 'city','num_of_rooms','num_of_bathrooms','min_price','max_price']);
+        $filters = $request->only(['property_type', 'listing_type', 'city','num_of_rooms','num_of_bathrooms','min_price','max_price','amenities']);
         $properties = $this->propertyRepository->searchProperties($filters);
 
         if ($properties->isEmpty()) {
@@ -82,12 +82,12 @@ class PropertyController extends Controller
         return response()->json(['data' => PropertyResource::collection($properties)]);
 
     }
-    public function update(UpdatePropertyRequest $request, $propertyId)
+    public function update(UpdatePropertyRequest $request, $slug)
     {
         try {
             $validatedData = $request->validated(); 
     
-            $property = $this->propertyRepository->updateProperty($validatedData, $propertyId);
+            $property = $this->propertyRepository->updateProperty($validatedData, $slug);
     
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
         } catch (\Exception $e) {

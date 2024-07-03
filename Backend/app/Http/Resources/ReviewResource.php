@@ -16,8 +16,8 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'property_id' => $this->property_id,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'property' => new PropertyResource($this->whenLoaded('property')),
             'content' => $this->content,
             'rate' => $this->rate,
             'created_at' => $this->created_at,

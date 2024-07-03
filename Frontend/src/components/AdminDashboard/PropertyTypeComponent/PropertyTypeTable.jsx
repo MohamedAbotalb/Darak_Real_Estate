@@ -22,11 +22,11 @@ import {
   deletePropertyType,
 } from 'store/propertyTypesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import EditPropertyTypeButton from 'components/PropertyTypeComponent/EditPropertyTypeButton';
-import ShowDetailsButton from 'components/PropertyTypeComponent/ShowDetailsButton';
+import EditPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/EditPropertyTypeButton';
 import SearchIcon from '@mui/icons-material/Search';
-import AddPropertyTypeButton from 'components/PropertyTypeComponent/AddPropertyTypeButton';
+import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
 import { tableCellClasses } from '@mui/material/TableCell';
+import ShowDetailsButton from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,7 +92,7 @@ function PropertyTypeTable() {
   );
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

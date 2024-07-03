@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Review;
 use App\Repositories\Contracts\ReviewRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewRepository implements ReviewRepositoryInterface
 {
@@ -12,6 +13,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     }
     public function storeReview(array $data)
     {
+        $data['user_id']=Auth::id(); 
         return Review::create($data);
     }
     public function updateReview(int $id, array $data)

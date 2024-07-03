@@ -6,11 +6,11 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import ReviewList from 'components/ReviewList';
-import ReportUserList from 'components/ReportUserList';
-import ReportPropertyList from 'components/ReportPropertyList';
+import ReviewList from 'components/AdminDashboard/ReviewList';
+import ReportUserList from 'components/AdminDashboard/ReportUserList';
+import ReportPropertyList from 'components/AdminDashboard/ReportPropertyList';
 import PropertyTypes from 'pages/PropertyType';
-import Amenities from 'components/AdminDashboard/Amenities';
+import Amenities from 'pages/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import UserLayout from 'layouts/UserLayout';
@@ -27,12 +27,12 @@ import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
-import MyProperties from 'pages/Myproperties';
+import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
 import ProtectedRoute from 'ProtectedRoute';
 import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
-import SharedLayout from 'layouts/SharedLayout-Dashboard';
+import SharedLayout from 'layouts/AdminLayout';
 
 function App() {
   const router = createBrowserRouter(
