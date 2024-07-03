@@ -5,6 +5,7 @@ import reportUsersReducer from 'store/reportUsersSlice';
 import reportPropertiesReducer from 'store/reportPropertiesSlice';
 import propertyDetailsReducer from 'store/propertyDetailsSlice';
 import propertyReducer from 'store/propertySlice';
+import reviewsReducer from 'store/reviewsSlice';
 import propertyTypesReducer from 'store/propertyTypesSlice';
 import propertyTypeReducer from 'store/home/propertyTypeSlice';
 import propertiesReducer from 'store/home/propertiesSlice';
@@ -26,6 +27,7 @@ const reduxStore = configureStore({
     user: userReducer,
     reportUsers: reportUsersReducer,
     reportProperties: reportPropertiesReducer,
+    reviews: reviewsReducer,
     propertyDetails: propertyDetailsReducer,
     property: propertyReducer,
     tourRequest: tourRequestReducer,

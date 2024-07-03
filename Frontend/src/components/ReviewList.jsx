@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
-
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import { fetchReviews } from '../store/reviewsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -77,34 +77,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function ReviewList() {
-  const [reviews, setReviews] = useState([]);
-  const [fetchError, setFetchError] = useState(null);
+  const dispatch = useDispatch();
+  const { reviews, status, error } = useSelector((state) => state.reviews);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/reviews');
-      if (!response.ok) {
-        throw new Error('Failed to fetch reviews');
-      }
-      const data = await response.json();
-      setReviews(data);
-    } catch (error) {
-      setFetchError(error.message);
-    }
-  };
-
   useEffect(() => {
-    fetchReviews();
-  }, []);
+    dispatch(fetchReviews());
+  }, [dispatch]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredReviews = reviews.filter((review) =>
-    review.property.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredReviews = Array.isArray(reviews)
+    ? reviews.filter((review) =>
+        review.property.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   return (
     <>
@@ -139,7 +128,7 @@ export default function ReviewList() {
           />
         </Search>
       </Box>
-      {fetchError && <div>Error: {fetchError}</div>}
+      {status === 'failed' && <div>Error: {error}</div>}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -153,7 +142,7 @@ export default function ReviewList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredReviews.map((review) => (
+            {filteredReviews?.map((review) => (
               <StyledTableRow key={review.id}>
                 <StyledTableCell component="th" scope="row">
                   {review.id}
@@ -167,7 +156,7 @@ export default function ReviewList() {
                 <StyledTableCell align="center">{` ${review.content}`}</StyledTableCell>
                 <StyledTableCell align="center">{review.rate}</StyledTableCell>
                 <StyledTableCell align="center">
-                  {new Date(review.date).toLocaleDateString()}
+                  {new Date(review.created_at).toLocaleDateString()}
                 </StyledTableCell>
               </StyledTableRow>
             ))}
