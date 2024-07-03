@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
-import { updateAmenity, fetchAmenities } from 'store/amenitiesSlice';
+import { updateAmenity } from 'store/amenitiesSlice';
 import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
 function EditAmenityButton({ amenity }) {
@@ -14,13 +13,8 @@ function EditAmenityButton({ amenity }) {
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async (data) => {
-    try {
-      dispatch(updateAmenity({ id: amenity.id, name: data.name }));
-      dispatch(fetchAmenities());
-      handleClose();
-    } catch (error) {
-      toast.error('Failed to update amenity.');
-    }
+    dispatch(updateAmenity({ slug: amenity.slug, data }));
+    handleClose();
   };
 
   return (
@@ -46,7 +40,7 @@ function EditAmenityButton({ amenity }) {
 
 EditAmenityButton.propTypes = {
   amenity: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
 };
