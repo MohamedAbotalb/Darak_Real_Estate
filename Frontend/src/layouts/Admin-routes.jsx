@@ -5,8 +5,8 @@ import ReportUserList from 'components/ReportUserList';
 import ReviewList from 'components/AdminDashboard/ReviewList';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import OverView from 'components/AdminDashboard/OverView';
-import PropertyTypes from '../pages/PropertyType';
-import Amenities from '../pages/Amenities';
+import PropertyTypes from 'pages/Admin/PropertyType';
+import Amenities from 'pages/Admin/Amenities';
 
 function AdminRoutes() {
   return (
