@@ -15,8 +15,12 @@ import {
   alpha,
   styled,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
-import { toast } from 'react-toastify';
 import {
   fetchPropertyTypes,
   deletePropertyType,
@@ -27,6 +31,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
 import { tableCellClasses } from '@mui/material/TableCell';
 import ShowDetailsButton from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsButton';
+import { Oval } from 'react-loader-spinner';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -89,27 +94,35 @@ function PropertyTypeTable() {
   const propertyTypes = useSelector(
     (state) => state.propertyTypes.propertyTypes
   );
+  const status = useSelector((state) => state.propertyTypes.status);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedSlug, setSelectedSlug] = useState(null);
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
   }, [dispatch]);
 
-  const handleDelete = async (slug) => {
-    try {
-      await dispatch(deletePropertyType(slug));
-      await dispatch(fetchPropertyTypes());
-      toast.success('Property type deleted successfully!');
-    } catch (error) {
-      toast.error('Failed to delete property type.');
-    }
+  const handleDelete = async () => {
+    dispatch(deletePropertyType(selectedSlug));
+    setOpenConfirm(false);
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
+  };
+
+  const handleOpenConfirm = (slug) => {
+    setSelectedSlug(slug);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setSelectedSlug(null);
   };
 
   const handleSearchChange = (event) => {
@@ -141,7 +154,7 @@ function PropertyTypeTable() {
             Property Types
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -153,53 +166,94 @@ function PropertyTypeTable() {
               onChange={handleSearchChange}
             />
           </Search>
+          <AddPropertyTypeButton />
         </Box>
-        <AddPropertyTypeButton />
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredPropertyTypes
-              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-              .map((type) => (
-                <StyledTableRow key={type.id}>
-                  <StyledTableCell>{type.id}</StyledTableCell>
-                  <StyledTableCell>{type.name}</StyledTableCell>
-                  <StyledTableCell>
-                    <EditPropertyTypeButton type={type} />
-                    <ShowDetailsButton typeSlug={type.slug} />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDelete(type.slug)}
-                      sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                    >
-                      Delete
-                    </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination
-          count={Math.ceil(filteredPropertyTypes.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
+      {status === 'loading' ? (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Oval
+            height={40}
+            width={40}
+            color="#2D2E34"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible
+            ariaLabel="oval-loading"
+            secondaryColor="#2D2E34"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </Box>
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell>Name</StyledTableCell>
+                  <StyledTableCell>Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredPropertyTypes
+                  .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                  .map((type) => (
+                    <StyledTableRow key={type.id}>
+                      <StyledTableCell>{type.id}</StyledTableCell>
+                      <StyledTableCell>{type.name}</StyledTableCell>
+                      <StyledTableCell>
+                        <EditPropertyTypeButton type={type} />
+                        <ShowDetailsButton typeSlug={type.slug} />
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleOpenConfirm(type.slug)}
+                          sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
+                        >
+                          Delete
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={Math.ceil(filteredPropertyTypes.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+        </>
+      )}
+
+      <Dialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this property type?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

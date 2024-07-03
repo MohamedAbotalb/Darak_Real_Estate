@@ -1,17 +1,12 @@
 import axios from 'services/axiosConfig';
 import { toast } from 'react-toastify';
 
-export const getAllPropertyTypes = async () => {
-  try {
-    const response = await axios.get('/property-types');
-    return response.data;
-  } catch (error) {
-    toast.error('Failed to fetch property types.');
-    throw error;
-  }
+const getAllPropertyTypes = async () => {
+  const response = await axios.get('/property-types');
+  return response.data;
 };
 
-export const getPropertyTypeBySlug = async (typeSlug) => {
+const getPropertyTypeBySlug = async (typeSlug) => {
   try {
     const response = await axios.get(`/property-types/${typeSlug}`);
     return response.data;
@@ -21,7 +16,7 @@ export const getPropertyTypeBySlug = async (typeSlug) => {
   }
 };
 
-export const addPropertyType = async (data) => {
+const addPropertyType = async (data) => {
   try {
     const response = await axios.post('/property-types', data);
     toast.success('Property type added successfully!');
@@ -32,7 +27,7 @@ export const addPropertyType = async (data) => {
   }
 };
 
-export const editPropertyType = async (slug, data) => {
+const editPropertyType = async (slug, data) => {
   try {
     const response = await axios.put(`/property-types/${slug}`, data);
     toast.success('Property type updated successfully!');
@@ -43,7 +38,7 @@ export const editPropertyType = async (slug, data) => {
   }
 };
 
-export const deletePropertyType = async (slug) => {
+const deletePropertyType = async (slug) => {
   try {
     await axios.delete(`/property-types/${slug}`);
     toast.success('Property type deleted successfully!');
@@ -51,4 +46,12 @@ export const deletePropertyType = async (slug) => {
     toast.error('Failed to delete property type.');
     throw error;
   }
+};
+
+export {
+  getAllPropertyTypes,
+  getPropertyTypeBySlug,
+  addPropertyType,
+  editPropertyType,
+  deletePropertyType,
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
-import { addPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
+import { addPropertyType } from 'store/propertyTypesSlice';
 import PropertyTypeModal from 'components/AdminDashboard/PropertyTypeComponent/PropertyTypeModal';
 
 function AddPropertyTypeButton() {
@@ -13,13 +12,8 @@ function AddPropertyTypeButton() {
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async (data) => {
-    try {
-      await dispatch(addPropertyType(data));
-      await dispatch(fetchPropertyTypes());
-      handleClose();
-    } catch (error) {
-      toast.error('Failed to add property type.');
-    }
+    dispatch(addPropertyType(data));
+    handleClose();
   };
 
   return (
