@@ -46,9 +46,12 @@ function NotificationDropdown({ role }) {
     Math.max(notifications.length - 4, 0)
   );
 
-  const pendingNotificationsCount = role === 'landlord'
-  ? notifications.filter((notification) => notification.status === 'pending').length
-  : notifications.length;
+  const pendingNotificationsCount =
+    role === 'landlord'
+      ? notifications.filter(
+          (notification) => notification.status === 'pending'
+        ).length
+      : notifications.length;
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,8 +123,8 @@ function NotificationDropdown({ role }) {
         onClick={handleMenuOpen}
       >
         <Badge badgeContent={pendingNotificationsCount} color="error">
-  <NotificationsIcon />
-</Badge>
+          <NotificationsIcon />
+        </Badge>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
