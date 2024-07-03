@@ -33,4 +33,8 @@ class ReviewRepository implements ReviewRepositoryInterface
         }
         return null;
     }
+    public function showPropertyReviews(int $id)
+    {
+        return Review::where('property_id', $id)->get();
+    }
 }
