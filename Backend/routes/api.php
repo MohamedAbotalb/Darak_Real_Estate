@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\ReasonReportController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TourController;
@@ -131,8 +132,14 @@ Route::prefix('reviews')->group(function () {
     Route::post('/',[ReviewController::class, 'store'])->middleware('auth:sanctum');
     Route::put('/{id}', [ReviewController::class, 'update']);
     Route::delete('/{id}', [ReviewController::class, 'delete']);
-
+    Route::get('property/{id}', [ReviewController::class, 'showPropertyReviews']);
 });
+Route::prefix('reactions')->group(function () {
+    Route::post('/',[ReactionController::class, 'store'])->middleware('auth:sanctum');
+    Route::delete('/{id}',[ReactionController::class, 'delete']);
+});
+
+
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
     Route::get('/', [TourController::class, 'getUserTours']);

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ReviewRepository implements ReviewRepositoryInterface
 {
     public function showReviews(){
-        return Review::with(['user', 'property'])->get();
+        return Review::with(['user', 'property','reactions'])->get();
     }
     public function storeReview(array $data)
     {
@@ -32,5 +32,9 @@ class ReviewRepository implements ReviewRepositoryInterface
             return true;
         }
         return null;
+    }
+    public function showPropertyReviews(int $id)
+    {
+        return Review::where('property_id', $id)->get();
     }
 }

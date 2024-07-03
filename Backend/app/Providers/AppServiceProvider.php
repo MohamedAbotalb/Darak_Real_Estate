@@ -12,6 +12,7 @@ use App\Repositories\PropertyRepository;
 use App\Repositories\Contracts\PropertyRepositoryInterface;
 use App\Repositories\PropertyTypeRepository;
 use App\Repositories\Contracts\PropertyTypeRepositoryInterface;
+use App\Repositories\Contracts\ReactionRepositoryInterface;
 use App\Repositories\ReasonReportRepository;
 use App\Repositories\Contracts\ReasonReportRepositoryInterface;
 use App\Repositories\ReportPropertyRepository;
@@ -26,6 +27,7 @@ use App\Repositories\UserRepository;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\WishlistRepository;
 use App\Repositories\Contracts\WishlistRepositoryInterface;
+use App\Repositories\ReactionRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ImageRepositoryInterface::class, ImageRepository::class);
         $this->app->bind(ReasonReportRepositoryInterface::class, ReasonReportRepository::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
+        $this->app->bind(ReactionRepositoryInterface::class, ReactionRepository::class);
     }
 
     /**

@@ -23,6 +23,15 @@ class ReviewController extends Controller
             return response()->json(['message'=>'Reviews is empty']);
         }
     }
+    public function showPropertyReviews($property_id)
+    {
+        $reviews = $this->reviewRepository->showPropertyReviews($property_id);
+        if (!$reviews->isEmpty()) {
+            return response()->json(['data' => ReviewResource::collection($reviews)]);
+        } else {
+            return response()->json(['message' => 'No reviews found for this property']);
+        }
+    }
     public function store(StoreReviewRequest $request)
     {
         

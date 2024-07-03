@@ -18,6 +18,7 @@ class ReviewResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->whenLoaded('user')),
             'property' => new PropertyResource($this->whenLoaded('property')),
+            'reactions' => ReactionResource::collection( $this->whenLoaded('reactions')),
             'content' => $this->content,
             'rate' => $this->rate,
             'created_at' => $this->created_at,
