@@ -18,6 +18,7 @@ import tourRequestReducer from 'store/tourRequestSlice';
 import propertySearchReducer from 'store/propertySearchSlice';
 import notificationsReducer from 'store/Notifications/notificationsSlice';
 import tourReducer from 'store/tourSlice';
+import reviewsSlice from 'store/reviewsSlice';
 import userPropertyReducer from 'store/userPropertiesSlice';
 
 const reduxStore = configureStore({
@@ -41,6 +42,7 @@ const reduxStore = configureStore({
     locations: locationsReducer,
     notifications: notificationsReducer,
     tours: tourReducer,
+    reviews: reviewsSlice,
     userProperties: userPropertyReducer,
   },
   middleware: (getDefaultMiddleware) =>
