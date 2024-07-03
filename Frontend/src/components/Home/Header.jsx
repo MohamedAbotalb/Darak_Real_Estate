@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout, setCredentials } from 'store/Auth/authSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import {
-  fetchRenterNotificationsAsync,
+  fetchUserNotificationsAsync,
   fetchLandlordNotificationsAsync,
   clearNotifications,
 } from 'store/Notifications/notificationsSlice';
@@ -62,7 +62,7 @@ function Header() {
       dispatch(fetchWishlist());
       dispatch(clearNotifications());
       if (user.role === 'user') {
-        dispatch(fetchRenterNotificationsAsync());
+        dispatch(fetchUserNotificationsAsync());
       } else if (user.role === 'landlord') {
         dispatch(fetchLandlordNotificationsAsync());
       }
@@ -246,7 +246,7 @@ function Header() {
                 to={
                   user?.role === 'landlord'
                     ? '/landlord-notifications'
-                    : '/renter-notifications'
+                    : '/user-notifications'
                 }
                 onClick={handleDrawerClose}
               >

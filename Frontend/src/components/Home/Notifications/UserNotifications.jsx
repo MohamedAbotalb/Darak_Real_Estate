@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchRenterNotificationsAsync,
+  fetchUserNotificationsAsync,
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
 import { CircularProgress, Divider } from '@mui/material';
@@ -22,7 +22,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
 
-function RenterNotifications() {
+function UserNotifications() {
   const dispatch = useDispatch();
   const notificationsState = useSelector((state) => state.notifications);
   const { notifications, status, error } = notificationsState; // Destructuring here
@@ -35,7 +35,7 @@ function RenterNotifications() {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    dispatch(fetchRenterNotificationsAsync());
+    dispatch(fetchUserNotificationsAsync());
   }, [dispatch]);
 
   const handleDeleteNotification = (id) => {
@@ -294,4 +294,4 @@ function RenterNotifications() {
   );
 }
 
-export default RenterNotifications;
+export default UserNotifications;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  fetchRenterNotificationsAsync,
+  fetchUserNotificationsAsync,
   fetchLandlordNotificationsAsync,
 } from 'store/Notifications/notificationsSlice';
 import {
@@ -34,7 +34,7 @@ function NotificationDropdown({ role }) {
 
   useEffect(() => {
     if (role === 'user') {
-      dispatch(fetchRenterNotificationsAsync());
+      dispatch(fetchUserNotificationsAsync());
     } else if (role === 'landlord') {
       dispatch(fetchLandlordNotificationsAsync());
     }
@@ -45,6 +45,13 @@ function NotificationDropdown({ role }) {
   const lastFourNotifications = sortedNotifications.slice(
     Math.max(notifications.length - 4, 0)
   );
+
+  const pendingNotificationsCount =
+    role === 'landlord'
+      ? notifications.filter(
+          (notification) => notification.status === 'pending'
+        ).length
+      : notifications.length;
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,7 +64,7 @@ function NotificationDropdown({ role }) {
   const handleNotificationClick = () => {
     handleMenuClose();
     if (role === 'user') {
-      navigate('/renter-notifications');
+      navigate('/user-notifications');
     } else if (role === 'landlord') {
       navigate('/landlord-notifications');
     }
@@ -66,7 +73,7 @@ function NotificationDropdown({ role }) {
   const handleShowAllNotifications = () => {
     handleMenuClose();
     if (role === 'user') {
-      navigate('/renter-notifications');
+      navigate('/user-notifications');
     } else if (role === 'landlord') {
       navigate('/landlord-notifications');
     }
@@ -115,7 +122,7 @@ function NotificationDropdown({ role }) {
         color="inherit"
         onClick={handleMenuOpen}
       >
-        <Badge badgeContent={notifications.length} color="error">
+        <Badge badgeContent={pendingNotificationsCount} color="error">
           <NotificationsIcon />
         </Badge>
       </IconButton>

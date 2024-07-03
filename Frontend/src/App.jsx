@@ -27,10 +27,10 @@ import AboutPage from 'pages/About';
 import AddPropertyPage from 'pages/AddProperty';
 import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
-import MyProperties from 'pages/MyProperties';
+import MyProperties from 'pages/Myproperties';
 import MyTours from 'pages/MyTours';
 import ProtectedRoute from 'ProtectedRoute';
-import RenterNotifications from 'components/Home/Notifications/RenterNotifications';
+import UserNotifications from 'components/Home/Notifications/UserNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
 import SharedLayout from 'layouts/AdminLayout';
 
@@ -54,8 +54,8 @@ function App() {
             element={<LandlordNotifications />}
           />
           <Route
-            path="renter-notifications"
-            element={<RenterNotifications />}
+            path="user-notifications"
+            element={<UserNotifications />}
           />
         </Route>
         <Route path="/profile" element={<ProfilePage />} />
