@@ -24,7 +24,7 @@ class UpdateReviewRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
-            'content' => 'required|string|max:5000',
+            'content' => 'string|max:5000',
             'rate' => 'required|integer|min:1|max:5',
         ];
     }

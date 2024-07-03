@@ -25,4 +25,12 @@ class ReviewRepository implements ReviewRepositoryInterface
         }
         return null;
     }
+    public function deleteReview(int $id){
+        $review = Review::find($id);
+        if ($review) {
+            $review->delete();
+            return true;
+        }
+        return null;
+    }
 }

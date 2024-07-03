@@ -130,6 +130,8 @@ Route::prefix('reviews')->group(function () {
     Route::get('/', [ReviewController::class, 'show']);
     Route::post('/',[ReviewController::class, 'store'])->middleware('auth:sanctum');
     Route::put('/{id}', [ReviewController::class, 'update']);
+    Route::delete('/{id}', [ReviewController::class, 'delete']);
+
 });
 Route::prefix('tour')->middleware(['auth:sanctum', 'checkTokenExpiry'])->group(function () {
     Route::post('/', [TourController::class, 'send_request']);
