@@ -10,7 +10,6 @@ import {
   TableRow,
   tableCellClasses,
   Paper,
-  CircularProgress,
   Alert,
   Pagination,
   Typography,
@@ -21,6 +20,7 @@ import {
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
+import { Oval } from 'react-loader-spinner';
 import { fetchUsers } from 'store/userDetailsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -121,7 +121,22 @@ function UserDetails() {
   let content;
 
   if (status === 'loading') {
-    content = <CircularProgress />;
+    content = (
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Oval
+          height={40}
+          width={40}
+          color="#2D2E34"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible
+          ariaLabel="oval-loading"
+          secondaryColor="#2D2E34"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </Box>
+    );
   } else if (status === 'succeeded') {
     if (Array.isArray(users)) {
       const paginatedUsers = filteredUsers.slice(
@@ -216,7 +231,7 @@ function UserDetails() {
             User Details
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -228,23 +243,23 @@ function UserDetails() {
               onChange={handleSearchChange}
             />
           </Search>
+          <ToggleButtonGroup
+            value={filterType}
+            exclusive
+            onChange={handleFilterChange}
+            aria-label="role filter"
+          >
+            <ToggleButton value="all" aria-label="all">
+              All
+            </ToggleButton>
+            <ToggleButton value="user" aria-label="users">
+              Users
+            </ToggleButton>
+            <ToggleButton value="landlord" aria-label="landlords">
+              Landlords
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
-        <ToggleButtonGroup
-          value={filterType}
-          exclusive
-          onChange={handleFilterChange}
-          aria-label="role filter"
-        >
-          <ToggleButton value="all" aria-label="all">
-            All
-          </ToggleButton>
-          <ToggleButton value="user" aria-label="users">
-            Users
-          </ToggleButton>
-          <ToggleButton value="landlord" aria-label="landlords">
-            Landlords
-          </ToggleButton>
-        </ToggleButtonGroup>
       </Box>
       {content}
     </>

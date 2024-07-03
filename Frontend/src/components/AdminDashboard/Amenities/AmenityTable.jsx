@@ -165,14 +165,14 @@ function AmenityTable() {
       {status === 'loading' ? (
         <Box display="flex" justifyContent="center" mt={2}>
           <Oval
-            height={80}
-            width={80}
-            color="#4fa94d"
+            height={40}
+            width={40}
+            color="#2D2E34"
             wrapperStyle={{}}
             wrapperClass=""
             visible
             ariaLabel="oval-loading"
-            secondaryColor="#4fa94d"
+            secondaryColor="#2D2E34"
             strokeWidth={2}
             strokeWidthSecondary={2}
           />
