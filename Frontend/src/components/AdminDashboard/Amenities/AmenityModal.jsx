@@ -15,6 +15,7 @@ function AmenityModal({ isOpen, handleClose, amenity, mode, handleSubmit }) {
   const onSubmit = (e) => {
     e.preventDefault();
     handleSubmit(formData);
+    setFormData({ name: '' });
   };
 
   return (

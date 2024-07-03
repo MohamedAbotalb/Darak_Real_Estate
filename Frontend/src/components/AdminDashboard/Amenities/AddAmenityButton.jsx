@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
-import { addAmenity, fetchAmenities } from 'store/amenitiesSlice';
+import { addAmenity } from 'store/amenitiesSlice';
 import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
 function AddAmenityButton() {
@@ -13,13 +12,8 @@ function AddAmenityButton() {
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async (data) => {
-    try {
-      await dispatch(addAmenity(data));
-      await dispatch(fetchAmenities());
-      handleClose();
-    } catch (error) {
-      toast.error('Failed to add amenity.');
-    }
+    dispatch(addAmenity(data));
+    handleClose();
   };
 
   return (

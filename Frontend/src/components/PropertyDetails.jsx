@@ -14,21 +14,23 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  Avatar,
+  Divider,
 } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import PriceCheckIcon from '@mui/icons-material/PriceCheck';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import SpaIcon from '@mui/icons-material/Spa';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import SpaIcon from '@mui/icons-material/Spa';
 import { fetchProperty } from 'store/propertyDetailsSlice';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 import TourRequestForm from 'components/TourRequestForm';
 import ReportModal from './ReportModal';
+import amenityIcons from '../utils/amenityIcons';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -45,22 +47,6 @@ function PropertyDetails() {
     }
   }, [dispatch, slug]);
 
-  if (status === 'loading') {
-    return <CircularProgress />;
-  }
-
-  if (status === 'failed') {
-    return (
-      <Typography variant="h6" color="error">
-        {error}
-      </Typography>
-    );
-  }
-
-  if (!property) {
-    return null;
-  }
-
   const handleRequestTourClick = () => {
     setIsTourFormOpen(true);
   };
@@ -68,7 +54,6 @@ function PropertyDetails() {
   const handleTourFormClose = () => {
     setIsTourFormOpen(false);
   };
-
   const handleReportClick = () => {
     setIsReportModalOpen(true);
   };
@@ -77,54 +62,39 @@ function PropertyDetails() {
     setIsReportModalOpen(false);
   };
 
+  if (status === 'loading') return <CircularProgress />;
+  if (status === 'failed')
+    return (
+      <Typography variant="h6" color="error">
+        {error}
+      </Typography>
+    );
+  if (!property) return null;
+
   return (
-    <Container
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        mt: 4,
-        backgroundColor: '#f5f5f0',
-      }}
-    >
+    <Container sx={{ mt: 4, backgroundColor: '#f5f5f0', padding: '24px' }}>
       <Card
         sx={{
           width: '100%',
-          mt: 4,
           boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.1)',
-          overflow: 'hidden',
           borderRadius: '16px',
-          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <AppBar
-          position="relative"
-          sx={{
-            backgroundColor: '#2b3d4f',
-            borderTopLeftRadius: '16px',
-            borderTopRightRadius: '16px',
-          }}
-        >
-          <Toolbar variant="dense">
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
+        <AppBar position="static">
+          <Toolbar sx={{ backgroundColor: '#2C3E50' }}>
+            <IconButton edge="start" color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" component="div">
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Property Details
             </Typography>
+            <AddToWishlistButton propertyId={property.id} />
           </Toolbar>
         </AppBar>
 
-        <AddToWishlistButton property={property} />
-
-        <CardContent>
-          <div className="property-image">
+        <Box mt={2}>
+          <div className="property-image" style={{ marginTop: '16px' }}>
             {property.images && (
               <Carousel
                 navButtonsAlwaysVisible
@@ -134,11 +104,11 @@ function PropertyDetails() {
                 {property.images.map((image) => (
                   <img
                     key={image.id}
-                    src={`http://127.0.0.1:8000/${image.image}`}
+                    src={`${image.image}`}
                     alt={image.image}
                     style={{
                       width: '100%',
-                      height: '600px',
+                      height: '500px',
                       objectFit: 'cover',
                     }}
                   />
@@ -147,322 +117,231 @@ function PropertyDetails() {
             )}
           </div>
 
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography
-                variant="h5"
-                gutterBottom
-                sx={{
-                  transition: 'color 0.3s ease',
-                  padding: '8px',
-                  '&:hover': {
-                    color: 'primary.main',
-                  },
-                }}
-              >
-                {property.title}
-              </Typography>
+          <CardContent>
+            {/* Details Section */}
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+              sx={{ mb: 2 }}
+            >
+              <Grid item display="flex" alignItems="center">
+                <PriceCheckIcon color="primary" />
+                <Typography variant="h5" sx={{ ml: 1 }}>
+                  {property.price
+                    ? property.price.toLocaleString()
+                    : 'Price not available'}{' '}
+                  {property.listing_type === 'buy' ? 'EGP' : 'EGP / Month'}
+                </Typography>
+              </Grid>
+              <Grid item display="flex" alignItems="center">
+                <BedIcon color="primary" />
+                <Typography variant="body1" sx={{ ml: 2, mr: 3 }}>
+                  {property.num_of_rooms} Bedrooms
+                </Typography>
+                <Typography variant="body1" sx={{ mx: 2 }}>
+                  |
+                </Typography>
+                <BathtubIcon color="primary" />
+                <Typography variant="body1" sx={{ ml: 2, mr: 3 }}>
+                  {property.num_of_bathrooms} Bathrooms
+                </Typography>
+                <Typography variant="body1" sx={{ mx: 2 }}>
+                  |
+                </Typography>
+                <AspectRatioIcon color="primary" />
+                <Typography variant="body1" sx={{ ml: 2, mr: 3 }}>
+                  {property.area} sqft
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ my: 1, width: '65%', mb: 5 }} />
+
+            {/* Property title */}
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ fontWeight: 'lighter' }}
+            >
+              {property.title}
+            </Typography>
+
+            {/* Property type */}
+            {property.property_type && (
               <Typography
                 variant="body2"
                 color="textSecondary"
                 gutterBottom
+                sx={{ fontWeight: 'lighter' }}
+              >
+                <HomeWorkIcon color="primary" sx={{ mr: 1 }} />
+                Property Type: {property.property_type.name}
+              </Typography>
+            )}
+
+            <Divider sx={{ my: 1, width: '65%', mb: 5 }} />
+
+            {/* Location details */}
+            {property.location && (
+              <>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{ fontWeight: 'lighter' }}
+                >
+                  Location:
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'lighter' }}>
+                  <LocationOnIcon color="primary" sx={{ mr: 1 }} />
+                  {property.location.street}, {property.location.city},{' '}
+                  {property.location.state}
+                </Typography>
+                <Divider sx={{ my: 1, width: '65%', mb: 5 }} />
+              </>
+            )}
+
+            {/* Agent details */}
+            {property.user && (
+              <>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{ fontWeight: 'lighter' }}
+                >
+                  Agent
+                </Typography>
+                <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
+                  <Avatar src={property.user.avatar} />
+                  <Box ml={2}>
+                    <Typography variant="body1" sx={{ fontWeight: 'lighter' }}>
+                      {property.user.first_name} {property.user.last_name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ fontWeight: 'lighter' }}
+                    >
+                      Phone: {property.user.phone_number}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ fontWeight: 'lighter' }}
+                    >
+                      Email: {property.user.email}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Divider sx={{ my: 1, width: '65%', mb: 5 }} />
+              </>
+            )}
+
+            {/* Description */}
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ fontWeight: 'lighter' }}
+            >
+              Description:
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ mb: 2, fontWeight: 'lighter', width: '60%' }}
+            >
+              {property.description}
+            </Typography>
+
+            <Divider sx={{ my: 1, width: '65%', mb: 5 }} />
+
+            {/* Amenities */}
+            {property.amenities && (
+              <>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{ fontWeight: 'lighter' }}
+                >
+                  Amenities:
+                </Typography>
+                <Grid container spacing={2}>
+                  {property.amenities.map((amenity) => {
+                    const AmenityIcon = amenityIcons[amenity.slug] || SpaIcon;
+                    return (
+                      <Grid item xs={5} key={amenity.id}>
+                        <Box display="flex" alignItems="center">
+                          <AmenityIcon
+                            sx={{
+                              mr: 1,
+                              color: '#4d79ff',
+                            }}
+                          />
+                          <Typography
+                            variant="body1"
+                            sx={{ fontWeight: 'lighter' }}
+                          >
+                            {amenity.name}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </>
+            )}
+
+            {/* Button Section */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                bottom: 0,
+                right: '20px',
+                padding: '16px 0',
+                zIndex: 1,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleRequestTourClick}
                 sx={{
-                  transition: 'color 0.3s ease',
-                  padding: '10px',
+                  mr: 2,
+                  mt: 2,
+                  height: '40px',
+                }}
+              >
+                Request a Tour
+              </Button>
+
+              {/* Your Report Property Button */}
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleReportClick}
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  ml: 2,
+                  fontSize: '16px',
+                  borderColor: '#ff6666',
+                  color: '#ff6666',
+                  transition: 'color 0.3s ease, border-color 0.3s ease',
                   '&:hover': {
-                    color: 'primary.main',
+                    color: '#cc0000',
+                    borderColor: '#cc0000',
                   },
                 }}
               >
-                {property.description}
-              </Typography>
-
-              {/* Display Location Information */}
-              {property.location && (
-                <Grid container spacing={2}>
-                  <Grid item xs={8}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                        mb: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <LocationOnIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Location: {property.location.street},{' '}
-                        {property.location.city}, {property.location.state}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              )}
-
-              <Grid container spacing={2}>
-                {property.num_of_rooms && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <BedIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Rooms: {property.num_of_rooms}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.num_of_bathrooms && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <BathtubIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Bathrooms: {property.num_of_bathrooms}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.area && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <AspectRatioIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Area: {property.area} sq.ft
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.price && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <PriceCheckIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Price: {property.price} EGP / month
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.availability && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <EventAvailableIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Availability: {property.availability}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.listing_type && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <HomeWorkIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Listing: {property.listing_type}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
-
-                {property.amenities && (
-                  <Grid item xs={12} md={4}>
-                    <Box
-                      sx={{
-                        backgroundColor: '#f0f5f5',
-                        borderRadius: '8px',
-                        p: 2,
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        display="flex"
-                        alignItems="center"
-                        gutterBottom
-                        sx={{
-                          transition: 'color 0.3s ease',
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        <SpaIcon sx={{ mr: 1, color: '#4d79ff' }} />
-                        Amenities:
-                      </Typography>
-                      <Box sx={{ paddingLeft: '42px' }}>
-                        {property.amenities.map((amenity) => (
-                          <Typography
-                            key={amenity.id}
-                            variant="body1"
-                            display="flex"
-                            alignItems="center"
-                            sx={{ mb: 1 }}
-                          >
-                            <SpaIcon
-                              sx={{
-                                mr: 1,
-                                fontSize: 'small',
-                                color: '#4d79ff',
-                              }}
-                            />
-                            {amenity.name}
-                          </Typography>
-                        ))}
-                      </Box>
-                    </Box>
-                  </Grid>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Box
-          sx={{ display: 'flex', justifyContent: 'flex-end', padding: '16px' }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleRequestTourClick}
-            sx={{ mt: 2, fontSize: '16px' }}
-          >
-            Request a Tour
-          </Button>
-
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleReportClick}
-            sx={{
-              mt: 2,
-              ml: 2,
-              fontSize: '16px',
-              borderColor: '#ff6666',
-              color: '#ff6666',
-              transition: 'color 0.3s ease, border-color 0.3s ease',
-              '&:hover': {
-                color: '#cc0000',
-                borderColor: '#cc0000',
-              },
-            }}
-          >
-            Report Property
-          </Button>
+                Report Property
+              </Button>
+            </Box>
+          </CardContent>
         </Box>
       </Card>
+
+      {/* Tour Request Form */}
       {property.id && (
         <TourRequestForm
           isOpen={isTourFormOpen}
@@ -475,8 +354,7 @@ function PropertyDetails() {
         isOpen={isReportModalOpen}
         onClose={handleReportModalClose}
         propertyId={property.id}
-        userData={property.user} // Pass the property ID as a prop
-        // Pass the property ID as a prop
+        userData={property.user}
       />
     </Container>
   );

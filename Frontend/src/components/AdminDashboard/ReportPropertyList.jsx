@@ -99,7 +99,7 @@ export default function ReportPropertyList() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
