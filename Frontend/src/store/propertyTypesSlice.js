@@ -1,39 +1,44 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
-import * as propertyTypesService from 'services/propertyTypesService';
+import {
+  getAllPropertyTypes as getAllPropertyTypesService,
+  addPropertyType as addPropertyTypeService,
+  editPropertyType as editPropertyTypeService,
+  deletePropertyType as deletePropertyTypeService,
+  getPropertyTypeBySlug as getPropertyTypeBySlugService,
+} from 'services/propertyTypesService';
 
 export const fetchPropertyTypes = createAsyncThunk(
   'propertyTypes/fetchPropertyTypes',
   async () => {
-    return propertyTypesService.getAllPropertyTypes();
+    return getAllPropertyTypesService();
   }
 );
 
 export const fetchPropertyTypeDetails = createAsyncThunk(
   'propertyTypes/fetchPropertyTypeDetails',
   async (typeSlug) => {
-    return propertyTypesService.getPropertyTypeBySlug(typeSlug);
+    return getPropertyTypeBySlugService(typeSlug);
   }
 );
 
 export const addPropertyType = createAsyncThunk(
   'propertyTypes/addPropertyType',
   async (data) => {
-    return propertyTypesService.addPropertyType(data);
+    return addPropertyTypeService(data);
   }
 );
 
 export const editPropertyType = createAsyncThunk(
   'propertyTypes/editPropertyType',
   async ({ slug, data }) => {
-    return propertyTypesService.editPropertyType(slug, data);
+    return editPropertyTypeService(slug, data);
   }
 );
 
 export const deletePropertyType = createAsyncThunk(
   'propertyTypes/deletePropertyType',
   async (slug) => {
-    await propertyTypesService.deletePropertyType(slug);
+    await deletePropertyTypeService(slug);
     return slug;
   }
 );
@@ -49,7 +54,6 @@ export const propertyTypesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch reducers
       .addCase(fetchPropertyTypes.pending, (state) => {
         state.status = 'loading';
       })
