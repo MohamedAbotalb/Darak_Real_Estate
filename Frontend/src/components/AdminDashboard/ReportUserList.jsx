@@ -98,7 +98,7 @@ export default function ReportUserList() {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
