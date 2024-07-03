@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
@@ -15,6 +15,7 @@ import {
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import { fetchReviews } from 'store/reviewsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -75,27 +76,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function ReviewList() {
-  const [reviews, setReviews] = useState([]);
-  const [fetchError, setFetchError] = useState(null);
+function ReviewList() {
   const [searchTerm, setSearchTerm] = useState('');
-
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/reviews');
-      if (!response.ok) {
-        throw new Error('Failed to fetch reviews');
-      }
-      const data = await response.json();
-      setReviews(data);
-    } catch (error) {
-      setFetchError(error.message);
-    }
-  };
+  const { reviews } = useSelector((state) => state.reviews);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchReviews();
-  }, []);
+    dispatch(fetchReviews());
+  }, [dispatch]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -138,7 +126,6 @@ export default function ReviewList() {
           />
         </Search>
       </Box>
-      {fetchError && <div>Error: {fetchError}</div>}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -166,7 +153,7 @@ export default function ReviewList() {
                 <StyledTableCell align="center">{` ${review.content}`}</StyledTableCell>
                 <StyledTableCell align="center">{review.rate}</StyledTableCell>
                 <StyledTableCell align="center">
-                  {new Date(review.date).toLocaleDateString()}
+                  {new Date(review.created_at).toLocaleDateString()}
                 </StyledTableCell>
               </StyledTableRow>
             ))}
@@ -176,3 +163,5 @@ export default function ReviewList() {
     </>
   );
 }
+
+export default ReviewList;
