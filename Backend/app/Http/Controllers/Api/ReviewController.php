@@ -42,5 +42,13 @@ class ReviewController extends Controller
             return response()->json(['message' => 'Failed to update review or review not found'], 404);
         }
     }
+    public function delete($id){
+        $review = $this->reviewRepository->deleteReview($id);
+        if ($review) {
+            return response()->json(['message' => 'review deleted successfuly'], 200);
+        } else {
+            return response()->json(['message' => 'review not found'], 404);
+        }
+    }
     
 }

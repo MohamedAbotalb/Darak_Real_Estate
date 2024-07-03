@@ -81,7 +81,7 @@ class TourController extends Controller
         }else{
             return response()->json([
                 'message'=>'tour not found',
-            ], 200);
+            ], 400);
         }
     }
 
