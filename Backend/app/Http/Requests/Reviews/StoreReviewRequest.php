@@ -25,6 +25,7 @@ class StoreReviewRequest extends FormRequest
             'property_id' => 'required|exists:properties,id',
             'content' => 'string|max:5000',
             'rate' => 'required|integer|min:1|max:5',
+            'parent_id' => 'nullable|exists:reviews,id',
         ];
     }
 }

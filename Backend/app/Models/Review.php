@@ -10,7 +10,7 @@ class Review extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'property_id', 'content', 'rate', 'date'];
+    protected $fillable = ['user_id', 'property_id', 'content', 'rate', 'date','parent_id'];
     protected $dates=['deleted_at'];
     public function user()
     {
@@ -23,5 +23,14 @@ class Review extends Model
     public function reactions()
     {
         return $this->hasMany(Reaction::class);
+    }
+    public function replies()
+    {
+        return $this->hasMany(Review::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Review::class, 'parent_id');
     }
 }

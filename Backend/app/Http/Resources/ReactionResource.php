@@ -16,7 +16,7 @@ class ReactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'comment_id' => $this->comment_id,
+            'review_id' => $this->review_id,
             'user' => new UserResource($this->user),
             'type' => $this->type,
         ];
