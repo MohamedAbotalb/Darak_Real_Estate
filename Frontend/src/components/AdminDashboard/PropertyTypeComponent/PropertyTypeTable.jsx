@@ -26,7 +26,7 @@ import {
 import Loader from 'components/Loader';
 import EditPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/EditPropertyTypeButton';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
-import ShowDetailsModal from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsModal';
+// import ShowDetailsModal from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsModal';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

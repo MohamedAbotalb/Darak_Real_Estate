@@ -90,7 +90,7 @@ function Header() {
     setIsLoggedIn(false);
     navigate('/');
   };
-  console.log(user?.role, 'user role from header');
+
   return (
     <AppBar
       position="static"
