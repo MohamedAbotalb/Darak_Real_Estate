@@ -16,18 +16,14 @@ import {
   alpha,
   styled,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
-import { Oval } from 'react-loader-spinner';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -163,20 +159,7 @@ function AmenityTable() {
       </Box>
 
       {status === 'loading' ? (
-        <Box display="flex" justifyContent="center" mt={2}>
-          <Oval
-            height={40}
-            width={40}
-            color="#2D2E34"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible
-            ariaLabel="oval-loading"
-            secondaryColor="#2D2E34"
-            strokeWidth={2}
-            strokeWidthSecondary={2}
-          />
-        </Box>
+        <Loader />
       ) : (
         <>
           <TableContainer component={Paper}>
@@ -224,27 +207,12 @@ function AmenityTable() {
         </>
       )}
 
-      <Dialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this amenity?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirm} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item="property type"
+        isOpen={openConfirm}
+        handleClose={handleCloseConfirm}
+        handleConfirm={handleDelete}
+      />
     </>
   );
 }

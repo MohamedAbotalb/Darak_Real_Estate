@@ -22,6 +22,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { fetchReviews } from 'store/reviewsSlice';
+import Loader from 'components/Loader'; // Make sure this path is correct
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -87,9 +88,9 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
-  const { reviews } = useSelector((state) => state.reviews);
+  const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -177,76 +178,85 @@ function ReviewList() {
           </Search>
         </Box>
       </Box>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell align="center">User</StyledTableCell>
-              <StyledTableCell align="center">Property</StyledTableCell>
-              <StyledTableCell align="center">Content</StyledTableCell>
-              <StyledTableCell align="center">Rate</StyledTableCell>
-              <StyledTableCell align="center">Date</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedReviews.map((review) => (
-              <StyledTableRow key={review.id}>
-                <StyledTableCell component="th" scope="row">
-                  {review.id}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {`${review?.user?.first_name} ${review?.user?.last_name}`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {review?.property?.title}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <Button
-                    variant="text"
-                    color="primary"
-                    onClick={() => handleShowContent(review.content)}
-                  >
-                    View Content
-                  </Button>
-                </StyledTableCell>
-                <StyledTableCell align="center">{review.rate}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '10px 20px',
-        }}
-      >
-        <Pagination
-          count={Math.ceil(filteredReviews.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
-      <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
-        <DialogTitle>Content</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">{selectedContent}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseContentDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+      {status === 'loading' ? (
+        <Loader />
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell align="center">User</StyledTableCell>
+                  <StyledTableCell align="center">Property</StyledTableCell>
+                  <StyledTableCell align="center">Content</StyledTableCell>
+                  <StyledTableCell align="center">Rate</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedReviews.map((review) => (
+                  <StyledTableRow key={review.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {review.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {`${review?.user?.first_name} ${review?.user?.last_name}`}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {review?.property?.title}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Button
+                        variant="text"
+                        color="primary"
+                        onClick={() => handleShowContent(review.content)}
+                      >
+                        View Content
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {review.rate}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '10px 20px',
+            }}
+          >
+            <Pagination
+              count={Math.ceil(filteredReviews.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+          <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
+            <DialogTitle>Content</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2">{selectedContent}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseContentDialog} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </>
   );
 }

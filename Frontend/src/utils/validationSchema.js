@@ -1,5 +1,3 @@
-// src/validationSchema.js
-
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
