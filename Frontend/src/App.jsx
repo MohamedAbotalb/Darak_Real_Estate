@@ -9,12 +9,13 @@ import { ToastContainer } from 'react-toastify';
 import ReviewList from 'components/AdminDashboard/ReviewList';
 import ReportUserList from 'components/AdminDashboard/ReportUserList';
 import ReportPropertyList from 'components/AdminDashboard/ReportPropertyList';
-import PropertyTypes from 'pages/Admin/PropertyType';
-import Amenities from 'pages/Admin/Amenities';
+import PropertyTypes from 'pages/PropertyType';
+import Amenities from 'pages/Amenities';
 import OverView from 'components/AdminDashboard/OverView';
 import UserDetails from 'components/AdminDashboard/UserDetails';
 import UserLayout from 'layouts/UserLayout';
 import PropertyDetails from 'components/PropertyDetails';
+import PropertiesPage from 'pages/Properties';
 import WishlistPage from 'pages/Wishlist';
 import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
@@ -32,6 +33,7 @@ import ProtectedRoute from 'ProtectedRoute';
 import UserNotifications from 'components/Home/Notifications/UserNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
 import SharedLayout from 'layouts/AdminLayout';
+import PriceFilter from 'components/PropertySearch/test';
 
 function App() {
   const router = createBrowserRouter(
@@ -44,6 +46,8 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="properties" element={<PropertiesPage />} />
+          <Route path="price" element={<PriceFilter />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
