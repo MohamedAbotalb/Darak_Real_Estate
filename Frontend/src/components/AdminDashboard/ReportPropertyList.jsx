@@ -27,6 +27,8 @@ import {
   deleteReport,
   deleteProperty,
 } from 'store/reportPropertiesSlice';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -99,7 +101,7 @@ export default function ReportPropertyList() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -173,7 +175,7 @@ export default function ReportPropertyList() {
   let content;
 
   if (reportStatus === 'loading') {
-    content = <p>Loading...</p>;
+    content = <Loader />;
   } else if (reportStatus === 'succeeded') {
     content = (
       <div>
@@ -312,22 +314,12 @@ export default function ReportPropertyList() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Are you sure you want to delete this {deleteType}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item={deleteType}
+        isOpen={openDeleteDialog}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+      />
     </>
   );
 }
