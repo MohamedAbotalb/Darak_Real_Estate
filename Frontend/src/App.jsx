@@ -24,7 +24,8 @@ import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
 import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
-import AddPropertyPage from 'pages/AddProperty';
+import AddPropertyPage from 'components/AddProperty';
+import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
@@ -47,6 +48,8 @@ function App() {
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
+          <Route path="edit-property/:slug" element={<AddPropertyPage />} />
+          <Route path="search" element={<SearchPage />} />
           <Route
             path="landlord-notifications"
             element={<LandlordNotifications />}
