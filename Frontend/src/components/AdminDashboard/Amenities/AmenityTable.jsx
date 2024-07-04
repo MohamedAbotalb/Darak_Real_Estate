@@ -208,7 +208,7 @@ function AmenityTable() {
       )}
 
       <DeleteConfirmationModal
-        item="property type"
+        item="Amenity"
         isOpen={openConfirm}
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}

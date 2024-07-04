@@ -26,7 +26,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { fetchReviews } from 'store/reviewsSlice';
-import Loader from 'components/Loader'; // Make sure this path is correct
+import Loader from 'components/Loader';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -92,7 +92,7 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
