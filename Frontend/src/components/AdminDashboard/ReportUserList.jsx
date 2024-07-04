@@ -113,7 +113,7 @@ export default function ReportUserList() {
   };
 
   const handleDeleteLandlord = (id) => {
-    setDeleteType('report');
+    setDeleteType('landlord');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -138,6 +138,7 @@ export default function ReportUserList() {
       dispatch(deleteLandlord(deleteId));
     }
     setOpenDeleteDialog(false);
+    dispatch(fetchReports());
   };
 
   const handleChangePage = (event, value) => {
@@ -153,7 +154,7 @@ export default function ReportUserList() {
 
   const filteredReports = reports.filter((report) => {
     const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
-    const landlordFullName = `${report?.landlord?.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
+    const landlordFullName = `${report?.landlord?.first_name.toLowerCase()} ${report?.landlord?.last_name.toLowerCase()}`;
 
     return (
       (searchTerms.user === '' ||

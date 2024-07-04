@@ -114,7 +114,7 @@ export default function ReportPropertyList() {
   };
 
   const handleDeleteProperty = (id) => {
-    setDeleteType('report');
+    setDeleteType('property');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -130,6 +130,7 @@ export default function ReportPropertyList() {
       dispatch(deleteProperty(deleteId));
     }
     setOpenDeleteDialog(false);
+    dispatch(fetchReports());
   };
 
   const handleShowContent = (content) => {
@@ -153,8 +154,8 @@ export default function ReportPropertyList() {
   };
 
   const filteredReports = reports.filter((report) => {
-    const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
-    const propertyTitle = report?.property?.title.toLowerCase();
+    const userFullName = `${report?.user?.first_name?.toLowerCase() || ''} ${report?.user?.last_name?.toLowerCase() || ''}`;
+    const propertyTitle = report?.property?.title?.toLowerCase() || '';
 
     return (
       (searchTerms.user === '' ||

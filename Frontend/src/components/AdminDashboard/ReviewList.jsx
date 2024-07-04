@@ -17,6 +17,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
@@ -88,7 +92,7 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
@@ -123,7 +127,7 @@ function ReviewList() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesRateSearchTerm =
-      rateSearchTerm === '' || review.rate.toString() === rateSearchTerm;
+      rateSearchTerm === '' || review.rate === parseInt(rateSearchTerm, 10);
     return matchesSearchTerm && matchesRateSearchTerm;
   });
 
@@ -165,17 +169,25 @@ function ReviewList() {
               onChange={handleSearchChange}
             />
           </Search>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search Rate"
-              inputProps={{ 'aria-label': 'search rate' }}
+          <FormControl sx={{ minWidth: 120, ml: 2 }}>
+            <InputLabel id="rate-select-label">Rate</InputLabel>
+            <Select
+              labelId="rate-select-label"
+              id="rate-select"
               value={rateSearchTerm}
               onChange={handleRateSearchChange}
-            />
-          </Search>
+              label="Rate"
+            >
+              <MenuItem value="">
+                <em>All</em>
+              </MenuItem>
+              {[1, 2, 3, 4, 5].map((rate) => (
+                <MenuItem key={rate} value={rate}>
+                  {rate}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
 
