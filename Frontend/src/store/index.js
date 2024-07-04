@@ -22,8 +22,6 @@ import reviewsSlice from 'store/reviewsSlice';
 import userPropertyReducer from 'store/userPropertiesSlice';
 import userReviewsReducer from 'store/userReviews/userReviewsSlice';
 
-
-
 const reduxStore = configureStore({
   reducer: {
     auth: authReducer,

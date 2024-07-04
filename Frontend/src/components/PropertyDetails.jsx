@@ -17,7 +17,7 @@ import {
   Avatar,
   Divider,
   Paper,
-  Rating
+  Rating,
 } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import BedIcon from '@mui/icons-material/Bed';
@@ -36,7 +36,6 @@ import ReportModal from './ReportModal';
 import amenityIcons from '../utils/amenityIcons';
 import ReviewIcon from './userReviews/ReviewIcon';
 
-
 function PropertyDetails() {
   const { slug } = useParams();
   const dispatch = useDispatch();
@@ -45,7 +44,6 @@ function PropertyDetails() {
   const error = useSelector((state) => state.property.error);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTourFormOpen, setIsTourFormOpen] = useState(false);
- 
 
   useEffect(() => {
     if (slug) {
@@ -53,12 +51,9 @@ function PropertyDetails() {
     }
   }, [dispatch, slug]);
 
-
   useEffect(() => {
     dispatch(fetchReviews(property.id));
   }, [dispatch]);
-
- 
 
   const handleRequestTourClick = () => {
     setIsTourFormOpen(true);
@@ -75,7 +70,7 @@ function PropertyDetails() {
     setIsReportModalOpen(false);
   };
 
-  console.log(property.listing_type)
+  console.log(property.listing_type);
 
   if (status === 'loading') return <CircularProgress />;
   if (status === 'failed')
@@ -371,12 +366,12 @@ function PropertyDetails() {
         propertyId={property.id}
         userData={property.user}
       />
-      
-     {/* review */}
+
+      {/* review */}
       {property?.listing_type === 'rent' && (
-          <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
-        )}
-    {/*  */}
+        <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
+      )}
+      {/*  */}
     </Container>
   );
 }

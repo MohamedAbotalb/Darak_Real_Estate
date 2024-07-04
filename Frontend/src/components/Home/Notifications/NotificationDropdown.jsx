@@ -38,7 +38,7 @@ function NotificationDropdown({ role }) {
     } else if (role === 'landlord') {
       dispatch(fetchLandlordNotificationsAsync());
     }
-  }, [dispatch]);
+  }, [dispatch, role]);
   const sortedNotifications = [...notifications].sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
@@ -101,14 +101,6 @@ function NotificationDropdown({ role }) {
       default:
         return '#FFFFFF';
     }
-  };
-
-  const handleMouseEnter = (e, color) => {
-    e.currentTarget.style.color = color;
-  };
-
-  const handleMouseLeave = (e, color) => {
-    e.currentTarget.style.color = color;
   };
 
   const getTimeDisplay = (timestamp) => {

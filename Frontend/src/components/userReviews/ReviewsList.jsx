@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchReviews, deleteReviewAsync, updateReviewAsync } from 'store/userReviews/userReviewsSlice';
-import { Box, Button, Typography, List, ListItem, IconButton, TextField, Rating, Menu, MenuItem, Avatar, Paper } from '@mui/material';
+import {
+  fetchReviews,
+  deleteReviewAsync,
+  updateReviewAsync,
+} from 'store/userReviews/userReviewsSlice';
+import {
+  Box,
+  Button,
+  Typography,
+  List,
+  ListItem,
+  IconButton,
+  TextField,
+  Rating,
+  Menu,
+  MenuItem,
+  Avatar,
+  Paper,
+} from '@mui/material';
 import { MoreVert, Save, Cancel } from '@mui/icons-material';
 import { format, formatDistanceToNow } from 'date-fns'; // Import necessary date-fns functions
 
-const ReviewsList = ({ propertyId }) => {
+function ReviewsList({ propertyId }) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.reviews.reviews);
   const user = useSelector((state) => state.auth.user); // Assuming the logged-in user ID is stored in state.user.id
@@ -32,7 +49,12 @@ const ReviewsList = ({ propertyId }) => {
   };
 
   const handleEditSubmit = () => {
-    dispatch(updateReviewAsync({ reviewId: editingReview, reviewData: { content: editedContent, rate: editedRating } }));
+    dispatch(
+      updateReviewAsync({
+        reviewId: editingReview,
+        reviewData: { content: editedContent, rate: editedRating },
+      })
+    );
     setEditingReview(null);
     setEditedContent('');
     setEditedRating(0);
@@ -72,10 +94,9 @@ const ReviewsList = ({ propertyId }) => {
     if (differenceInHours < 3) {
       // If less than 3 hours ago, show relative time (about 3 hours ago)
       return formatDistanceToNow(reviewDate, { addSuffix: true });
-    } else {
-      // If more than 3 hours ago, show formatted date (1/2/2024)
-      return formatCustomDate(reviewDate);
     }
+    // If more than 3 hours ago, show formatted date (1/2/2024)
+    return formatCustomDate(reviewDate);
   };
 
   return (
@@ -86,21 +107,43 @@ const ReviewsList = ({ propertyId }) => {
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .slice(0, visibleReviews)
           .map((review) => (
-            <Paper elevation={3} style={{ marginBottom: '16px', padding: '16px', borderRadius: '8px' }} key={review.id}>
+            <Paper
+              elevation={3}
+              style={{
+                marginBottom: '16px',
+                padding: '16px',
+                borderRadius: '8px',
+              }}
+              key={review.id}
+            >
               <ListItem alignItems="flex-start">
                 <Box display="flex" flexDirection="column" width="100%">
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
                     <Box display="flex" alignItems="center">
-                      <Avatar src={review.user.avatar} alt={review.user.first_name} style={{ marginRight: '16px' }} />
+                      <Avatar
+                        src={review.user.avatar}
+                        alt={review.user.first_name}
+                        style={{ marginRight: '16px' }}
+                      />
                       <Box>
-                        <Typography variant="subtitle1" component="span" fontWeight="bold">
+                        <Typography
+                          variant="subtitle1"
+                          component="span"
+                          fontWeight="bold"
+                        >
                           {`${review?.user.first_name} ${review?.user.last_name}`}
                         </Typography>
                       </Box>
                     </Box>
                     {user.id === review.user.id && ( // Only show menu options for user's own reviews
-                      <React.Fragment>
-                        <IconButton onClick={(event) => handleMenuClick(event, review.id)}>
+                      <>
+                        <IconButton
+                          onClick={(event) => handleMenuClick(event, review.id)}
+                        >
                           <MoreVert />
                         </IconButton>
                         <Menu
@@ -108,25 +151,37 @@ const ReviewsList = ({ propertyId }) => {
                           open={Boolean(anchorEl) && menuReviewId === review.id}
                           onClose={handleMenuClose}
                         >
-                          <MenuItem onClick={() => handleEditClick(review)} color="primary">
+                          <MenuItem
+                            onClick={() => handleEditClick(review)}
+                            color="primary"
+                          >
                             Edit
                           </MenuItem>
-                          <MenuItem onClick={() => handleDelete(review.id)} color="error">
+                          <MenuItem
+                            onClick={() => handleDelete(review.id)}
+                            color="error"
+                          >
                             Delete
                           </MenuItem>
                         </Menu>
-                      </React.Fragment>
+                      </>
                     )}
                   </Box>
                   <Box display="flex" alignItems="center" mt={1} ml={1}>
                     <Rating
                       name="rate"
-                      value={editingReview === review.id ? editedRating : review.rate}
+                      value={
+                        editingReview === review.id ? editedRating : review.rate
+                      }
                       readOnly={editingReview !== review.id}
                       size="small"
                       onChange={(e, newValue) => setEditedRating(newValue)}
                     />
-                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: '4px', fontSize: '0.75rem' }}>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      style={{ marginLeft: '4px', fontSize: '0.75rem' }}
+                    >
                       {formatReviewDate(review.created_at)}
                     </Typography>
                   </Box>
@@ -167,6 +222,6 @@ const ReviewsList = ({ propertyId }) => {
       )}
     </Box>
   );
-};
+}
 
 export default ReviewsList;
