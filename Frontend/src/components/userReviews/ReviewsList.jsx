@@ -41,6 +41,10 @@ function ReviewsList({ propertyId }) {
     dispatch(deleteReviewAsync(reviewId));
   };
 
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setMenuReviewId(null);
+  };
   const handleEditClick = (review) => {
     setEditingReview(review.id);
     setEditedContent(review.content);
@@ -69,11 +73,6 @@ function ReviewsList({ propertyId }) {
   const handleMenuClick = (event, reviewId) => {
     setAnchorEl(event.currentTarget);
     setMenuReviewId(reviewId);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setMenuReviewId(null);
   };
 
   const loadMore = () => {
@@ -223,5 +222,7 @@ function ReviewsList({ propertyId }) {
     </Box>
   );
 }
-
+ReviewsList.propTypes = {
+  propertyId: PropTypes.number.isRequired,
+};
 export default ReviewsList;
