@@ -171,7 +171,7 @@ function NotificationDropdown({ role }) {
             <List sx={{ width: '100%', p: 0 }}>
               {lastFourNotifications.map((notification) => (
                 <ListItem
-                  key={notification.id}
+                  key={notification?.id}
                   disablePadding
                   onClick={() => handleNotificationClick(notification)}
                   sx={{ mb: 1 }}
@@ -193,8 +193,8 @@ function NotificationDropdown({ role }) {
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ListItemAvatar>
                           <Avatar
-                            alt={notification.landlord.first_name}
-                            src={notification.landlord.avatar}
+                            alt={notification?.landlord.first_name}
+                            src={notification?.landlord.avatar}
                           />
                         </ListItemAvatar>
                         <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
@@ -219,12 +219,12 @@ function NotificationDropdown({ role }) {
                     </Paper>
                   ) : (
                     <Box
-                      key={notification.id}
+                      key={notification?.id}
                       sx={{
                         marginBottom: 2,
                         transition: 'transform 0.3s ease',
                         transform:
-                          hoveredNotification === notification.id
+                          hoveredNotification === notification?.id
                             ? 'scale(1.03)'
                             : 'scale(1)',
                       }}
@@ -253,7 +253,7 @@ function NotificationDropdown({ role }) {
                               height: '20px',
                               borderRadius: '50%',
                               backgroundColor: getNotificationCircleColor(
-                                notification.status
+                                notification?.status
                               ),
                               position: 'absolute',
                               top: '12px',
@@ -262,8 +262,8 @@ function NotificationDropdown({ role }) {
                           />
                           <Box display="flex" alignItems="center" marginTop={1}>
                             <Avatar
-                              alt={notification.user.first_name}
-                              src={notification.user.avatar}
+                              alt={notification?.user?.first_name}
+                              src={notification?.user?.avatar}
                               sx={{ marginLeft: '28px', marginRight: '12px' }}
                             />
                             <Typography
@@ -271,10 +271,10 @@ function NotificationDropdown({ role }) {
                               fontWeight="bold"
                               sx={{ marginRight: 'auto' }}
                             >
-                              {`${notification.user.first_name} ${notification.user.last_name}`}
+                              {`${notification?.user?.first_name} ${notification?.user?.last_name}`}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                              {getTimeDisplay(notification.created_at)}
+                              {getTimeDisplay(notification?.created_at)}
                             </Typography>
                           </Box>
                           <Box
@@ -295,7 +295,7 @@ function NotificationDropdown({ role }) {
                             textAlign: { sm: 'center', md: 'left', lg: 'left' },
                           }}
                         >
-                          {notification.message}
+                          {notification?.message}
                         </Typography>
 
                         <Box

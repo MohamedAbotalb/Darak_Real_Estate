@@ -20,6 +20,9 @@ import notificationsReducer from 'store/Notifications/notificationsSlice';
 import tourReducer from 'store/tourSlice';
 import reviewsSlice from 'store/reviewsSlice';
 import userPropertyReducer from 'store/userPropertiesSlice';
+import userReviewsReducer from 'store/userReviews/userReviewsSlice';
+
+
 
 const reduxStore = configureStore({
   reducer: {
@@ -44,6 +47,7 @@ const reduxStore = configureStore({
     tours: tourReducer,
     reviews: reviewsSlice,
     userProperties: userPropertyReducer,
+    userReviews: userReviewsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

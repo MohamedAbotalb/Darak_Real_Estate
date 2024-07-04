@@ -153,8 +153,8 @@ export default function ReportPropertyList() {
   };
 
   const filteredReports = reports.filter((report) => {
-    const userFullName = `${report.user.first_name.toLowerCase()} ${report.user.last_name.toLowerCase()}`;
-    const propertyTitle = report.property.title.toLowerCase();
+    const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
+    const propertyTitle = report?.property?.title.toLowerCase();
 
     return (
       (searchTerms.user === '' ||
@@ -194,10 +194,10 @@ export default function ReportPropertyList() {
                     {report.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {`${report.user.first_name} ${report.user.last_name}`}
+                    {`${report?.user?.first_name} ${report?.user?.last_name}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {report.property.title}
+                    {report?.property?.title}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Button
