@@ -30,7 +30,7 @@ import EditPropertyTypeButton from 'components/AdminDashboard/PropertyTypeCompon
 import SearchIcon from '@mui/icons-material/Search';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
 import { tableCellClasses } from '@mui/material/TableCell';
-import ShowDetailsButton from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsButton';
+import ShowDetailsModal from 'components/AdminDashboard/PropertyTypeComponent/showDetailsModal';
 import { Oval } from 'react-loader-spinner';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -101,6 +101,7 @@ function PropertyTypeTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -127,6 +128,16 @@ function PropertyTypeTable() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleOpenDetails = (slug) => {
+    setSelectedSlug(slug);
+    setDetailsOpen(true);
+  };
+
+  const handleCloseDetails = () => {
+    setDetailsOpen(false);
+    setSelectedSlug(null);
   };
 
   const filteredPropertyTypes = propertyTypes.filter((type) =>
@@ -205,7 +216,17 @@ function PropertyTypeTable() {
                       <StyledTableCell>{type.name}</StyledTableCell>
                       <StyledTableCell>
                         <EditPropertyTypeButton type={type} />
-                        <ShowDetailsButton typeSlug={type.slug} />
+                        <Button
+                          variant="contained"
+                          onClick={() => handleOpenDetails(type.slug)}
+                          sx={{
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                            mr: 1,
+                          }}
+                        >
+                          Show
+                        </Button>
                         <Button
                           variant="contained"
                           color="secondary"
@@ -254,6 +275,12 @@ function PropertyTypeTable() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ShowDetailsModal
+        typeSlug={selectedSlug}
+        isOpen={detailsOpen}
+        handleClose={handleCloseDetails}
+      />
     </>
   );
 }
