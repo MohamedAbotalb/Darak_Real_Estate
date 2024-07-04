@@ -78,7 +78,7 @@ const reportPropertiesSlice = createSlice({
       })
       .addCase(deleteProperty.fulfilled, (state, action) => {
         state.reports = state.reports.filter(
-          (report) => report.property.id !== action.payload
+          (report) => report.id !== action.payload
         );
       })
       .addCase(submitPropertyReport.fulfilled, (state, action) => {
