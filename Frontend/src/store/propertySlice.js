@@ -25,6 +25,23 @@ export const addProperty = createAsyncThunk(
   }
 );
 
+// Update existing property
+export const updateProperty = createAsyncThunk(
+  'property/updateProperty',
+  async ({ slug, propertyData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/properties/${slug}`, propertyData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || error.message);
+    }
+  }
+);
+
 const propertySlice = createSlice({
   name: 'property',
   initialState: {
@@ -61,6 +78,19 @@ const propertySlice = createSlice({
         state.error = null;
       })
       .addCase(addProperty.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // Handle update property
+      .addCase(updateProperty.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateProperty.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.property = action.payload;
+        state.error = null;
+      })
+      .addCase(updateProperty.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
