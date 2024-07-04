@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
+import { errorToast, successToast } from 'utils/toast';
 import { editPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
 import PropertyTypeModal from 'components/AdminDashboard/PropertyTypeComponent/PropertyTypeModal';
 
@@ -13,9 +14,14 @@ function EditPropertyTypeButton({ type }) {
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async (data) => {
-    dispatch(editPropertyType({ slug: type.slug, data }));
-    dispatch(fetchPropertyTypes());
-    handleClose();
+    try {
+      dispatch(editPropertyType({ slug: type.slug, data }));
+      dispatch(fetchPropertyTypes());
+      handleClose();
+      successToast('Property type updated successfully!');
+    } catch (error) {
+      errorToast('Failed to update property type.');
+    }
   };
 
   return (
@@ -24,7 +30,7 @@ function EditPropertyTypeButton({ type }) {
         variant="contained"
         color="primary"
         onClick={handleOpen}
-        sx={{ backgroundColor: '#1976d2', color: '#fff', mr: 1 }}
+        sx={{ backgroundColor: '#1946d2', color: '#fff', mr: 1 }}
       >
         Edit
       </Button>

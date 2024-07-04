@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material';
-import ShowDetailsModal from './showDetailsModal';
+import ShowDetailsModal from '../PropertyType/showDetailsModal';
 
 function ShowDetailsButton({ typeSlug }) {
   const [isOpen, setIsOpen] = useState(false);

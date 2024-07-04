@@ -8,18 +8,13 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
-  Pagination,
   Box,
   InputBase,
   alpha,
   styled,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  Pagination,
+  Button,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
@@ -93,11 +88,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function PropertyTypeTable() {
   const dispatch = useDispatch();
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
-  );
-  const status = useSelector((state) => state.propertyTypes.status);
-
+  const { propertyTypes, status } = useSelector((state) => state.propertyTypes);
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -110,8 +101,14 @@ function PropertyTypeTable() {
   }, [dispatch]);
 
   const handleDelete = async () => {
-    dispatch(deletePropertyType(selectedSlug));
-    setOpenConfirm(false);
+    try {
+      await dispatch(deletePropertyType(selectedSlug));
+      await dispatch(fetchPropertyTypes());
+      setOpenConfirm(false);
+      successToast('Property type deleted successfully');
+    } catch (error) {
+      errorToast('Failed to deleted this property type');
+    }
   };
 
   const handleChangePage = (event, value) => {
@@ -167,7 +164,7 @@ function PropertyTypeTable() {
             Property Types
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box display="flex" justifyContent="center">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -179,14 +176,20 @@ function PropertyTypeTable() {
               onChange={handleSearchChange}
             />
           </Search>
-          <AddPropertyTypeButton />
         </Box>
+        <AddPropertyTypeButton />
       </Box>
 
       {status === 'loading' ? (
         <Loader />
       ) : (
         <>
+          {filteredPropertyTypes.length === 0 && (
+            <Typography variant="body2" sx={{ px: 2 }}>
+              No property types found.
+            </Typography>
+          )}
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
@@ -240,36 +243,21 @@ function PropertyTypeTable() {
               color="primary"
             />
           </Box>
+
+          <DeleteConfirmationModal
+            item="property type"
+            isOpen={openConfirm}
+            handleClose={handleCloseConfirm}
+            handleConfirm={handleDelete}
+          />
+
+          <ShowDetailsModal
+            typeSlug={selectedSlug}
+            isOpen={detailsOpen}
+            handleClose={handleCloseDetails}
+          />
         </>
       )}
-
-      <Dialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this property type?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirm} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <ShowDetailsModal
-        typeSlug={selectedSlug}
-        isOpen={detailsOpen}
-        handleClose={handleCloseDetails}
-      />
     </>
   );
 }

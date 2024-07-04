@@ -9,37 +9,61 @@ import {
 
 export const fetchPropertyTypes = createAsyncThunk(
   'propertyTypes/fetchPropertyTypes',
-  async () => {
-    return getAllPropertyTypesService();
+  async (thunkAPI) => {
+    try {
+      const response = await getAllPropertyTypesService();
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const fetchPropertyTypeDetails = createAsyncThunk(
   'propertyTypes/fetchPropertyTypeDetails',
-  async (typeSlug) => {
-    return getPropertyTypeBySlugService(typeSlug);
+  async (typeSlug, thunkAPI) => {
+    try {
+      const response = await getPropertyTypeBySlugService(typeSlug);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const addPropertyType = createAsyncThunk(
   'propertyTypes/addPropertyType',
-  async (data) => {
-    return addPropertyTypeService(data);
+  async (data, thunkAPI) => {
+    try {
+      const response = await addPropertyTypeService(data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const editPropertyType = createAsyncThunk(
   'propertyTypes/editPropertyType',
-  async ({ slug, data }) => {
-    return editPropertyTypeService(slug, data);
+  async ({ slug, data }, thunkAPI) => {
+    try {
+      const response = await editPropertyTypeService(slug, data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const deletePropertyType = createAsyncThunk(
   'propertyTypes/deletePropertyType',
-  async (slug) => {
-    await deletePropertyTypeService(slug);
-    return slug;
+  async (slug, thunkAPI) => {
+    try {
+      await deletePropertyTypeService(slug);
+      return slug;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
