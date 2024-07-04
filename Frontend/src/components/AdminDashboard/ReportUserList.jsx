@@ -113,7 +113,7 @@ export default function ReportUserList() {
   };
 
   const handleDeleteLandlord = (id) => {
-    setDeleteType('landlord');
+    setDeleteType('report');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -153,7 +153,7 @@ export default function ReportUserList() {
 
   const filteredReports = reports.filter((report) => {
     const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
-    const landlordFullName = `${report.landlord.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
+    const landlordFullName = `${report?.landlord?.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
 
     return (
       (searchTerms.user === '' ||
@@ -219,7 +219,7 @@ export default function ReportUserList() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleDeleteLandlord(report.landlord.id)}
+                      onClick={() => handleDeleteLandlord(report.id)}
                     >
                       Block Landlord
                     </Button>

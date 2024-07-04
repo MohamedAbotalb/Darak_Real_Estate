@@ -114,7 +114,7 @@ export default function ReportPropertyList() {
   };
 
   const handleDeleteProperty = (id) => {
-    setDeleteType('property');
+    setDeleteType('report');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -220,7 +220,7 @@ export default function ReportPropertyList() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleDeleteProperty(report.property.id)}
+                      onClick={() => handleDeleteProperty(report.id)}
                     >
                       Delete Property
                     </Button>

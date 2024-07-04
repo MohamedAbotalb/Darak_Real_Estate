@@ -1,25 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material';
+import {
+  Modal,
+  Box,
+  Typography,
+  Button,
+  TextField,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+// Define the validation schema
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .required('Name is required')
+    .min(3, 'Property type name should be more than 2 characters'),
+});
 
 function PropertyTypeModal({ isOpen, handleClose, type, mode, handleSubmit }) {
-  const [formData, setFormData] = React.useState({
-    name: type ? type.name : '',
-    description: type ? type.description : '',
+  const {
+    control,
+    handleSubmit: handleFormSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: { name: '' },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    if (type) {
+      reset({ name: type.name });
+    } else {
+      reset({ name: '' });
+    }
+  }, [type, reset]);
+
+  const onSubmit = (data) => {
+    handleSubmit(data);
+    reset({ name: '' });
+    handleClose();
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    handleSubmit(formData);
+  const handleModalClose = () => {
+    reset({ name: '' });
+    handleClose();
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose}>
+    <Modal open={isOpen} onClose={handleModalClose}>
       <Box
         sx={{
           width: 400,
@@ -27,20 +60,37 @@ function PropertyTypeModal({ isOpen, handleClose, type, mode, handleSubmit }) {
           margin: 'auto',
           mt: '10%',
           bgcolor: 'background.paper',
+          position: 'relative',
         }}
       >
+        <IconButton
+          aria-label="close"
+          onClick={handleModalClose}
+          sx={{
+            position: 'absolute',
+            right: 20,
+            top: 30,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <Typography variant="h6" gutterBottom>
           {mode === 'edit' ? 'Edit Property Type' : 'Add New Property Type'}
         </Typography>
-        <form onSubmit={onSubmit}>
-          <TextField
+        <form onSubmit={handleFormSubmit(onSubmit)}>
+          <Controller
             name="name"
-            label="Name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Name"
+                fullWidth
+                margin="normal"
+                error={!!errors.name}
+                helperText={errors.name ? errors.name.message : ''}
+              />
+            )}
           />
           <Box sx={{ mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
@@ -56,19 +106,13 @@ function PropertyTypeModal({ isOpen, handleClose, type, mode, handleSubmit }) {
 PropertyTypeModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  type: PropTypes.shape({
-    name: PropTypes.string,
-    description: PropTypes.string,
-  }),
+  type: PropTypes.shape({ name: PropTypes.string }),
   mode: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
 PropertyTypeModal.defaultProps = {
-  type: {
-    name: '',
-    description: '',
-  },
+  type: { name: '' },
 };
 
 export default PropertyTypeModal;
