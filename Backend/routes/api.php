@@ -133,6 +133,8 @@ Route::prefix('reviews')->group(function () {
     Route::put('/{id}', [ReviewController::class, 'update']);
     Route::delete('/{id}', [ReviewController::class, 'delete']);
     Route::get('property/{id}', [ReviewController::class, 'showPropertyReviews']);
+    Route::get('Average/{id}', [ReviewController::class, 'calcAverage']);
+    
 });
 Route::prefix('reactions')->group(function () {
     Route::post('/',[ReactionController::class, 'store'])->middleware('auth:sanctum');

@@ -38,4 +38,13 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
         return Review::where('property_id', $id)->with('replies')->get();
     }
+    public function getAverageRating(int $propertyId)
+    {
+         $averageRating=Review::where('property_id', $propertyId)
+            ->avg('rate');
+            if(!$averageRating){
+                return null;
+            }
+            return number_format($averageRating, 1);
+    }
 }
