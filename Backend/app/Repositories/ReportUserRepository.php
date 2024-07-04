@@ -35,8 +35,8 @@ class ReportUserRepository implements ReportUserRepositoryInterface
             $report = ReportUser::find($id);
 
             if ($report) {
-                if ($report->user) {
-                    $report->user->delete();
+                if ($report->landlord()) {
+                    $report->landlord()->delete();
                 }
                 return $report->delete();
             }
