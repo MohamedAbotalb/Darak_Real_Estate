@@ -8,7 +8,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ReportIcon from '@mui/icons-material/Report';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import { Oval } from 'react-loader-spinner';
+import Loader from 'components/Loader';
 import { fetchCounts } from 'store/overviewSlice';
 
 const cardStyles = {
@@ -101,22 +101,7 @@ function OverView() {
         </Box>
       </Box>
       <Box sx={{ mt: 4, width: '100%' }}>
-        {status === 'loading' && (
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Oval
-              height={40}
-              width={40}
-              color="#2D2E34"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible
-              ariaLabel="oval-loading"
-              secondaryColor="#2D2E34"
-              strokeWidth={2}
-              strokeWidthSecondary={2}
-            />
-          </Box>
-        )}
+        {status === 'loading' && <Loader />}
         {status === 'failed' && <Alert severity="error">{error}</Alert>}
         {status === 'succeeded' && (
           <Grid container spacing={3}>

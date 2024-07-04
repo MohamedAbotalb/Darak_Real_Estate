@@ -33,9 +33,9 @@ function TourCard({ tour }) {
       }}
     >
       <CardContent>
-        <Typography variant="h6">{tour.property.title}</Typography>
+        <Typography variant="h6">{tour?.property?.title}</Typography>
         <Typography>
-          {tour.dates.map((date) => `${date.date}`).join(', ')}
+          {tour?.dates.map((date) => `${date.date}`).join(', ')}
         </Typography>
         {tour.status === 'pending' && (
           <Button

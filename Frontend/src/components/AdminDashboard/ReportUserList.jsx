@@ -23,6 +23,8 @@ import {
   deleteReport,
   deleteLandlord,
 } from 'store/reportUsersSlice';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: '20%',
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -98,7 +100,7 @@ export default function ReportUserList() {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -113,7 +115,7 @@ export default function ReportUserList() {
   };
 
   const handleDeleteLandlord = (id) => {
-    setDeleteType('report');
+    setDeleteType('landlord');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -138,6 +140,7 @@ export default function ReportUserList() {
       dispatch(deleteLandlord(deleteId));
     }
     setOpenDeleteDialog(false);
+    dispatch(fetchReports());
   };
 
   const handleChangePage = (event, value) => {
@@ -153,7 +156,7 @@ export default function ReportUserList() {
 
   const filteredReports = reports.filter((report) => {
     const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
-    const landlordFullName = `${report?.landlord?.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
+    const landlordFullName = `${report?.landlord?.first_name.toLowerCase()} ${report?.landlord?.last_name.toLowerCase()}`;
 
     return (
       (searchTerms.user === '' ||
@@ -171,7 +174,7 @@ export default function ReportUserList() {
   let content;
 
   if (reportStatus === 'loading') {
-    content = <p>Loading...</p>;
+    content = <Loader />;
   } else if (reportStatus === 'succeeded') {
     content = (
       <div>
@@ -310,22 +313,12 @@ export default function ReportUserList() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Are you sure you want to delete this {deleteType}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item={deleteType}
+        isOpen={openDeleteDialog}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+      />
     </>
   );
 }

@@ -15,11 +15,6 @@ import {
   alpha,
   styled,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
@@ -31,9 +26,8 @@ import {
 import Loader from 'components/Loader';
 import EditPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/EditPropertyTypeButton';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
-import ShowDetailsModal from 'components/AdminDashboard/PropertyType/showDetailsModal';
+import ShowDetailsModal from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsModal';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
-import { errorToast, successToast } from 'utils/toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -243,27 +237,12 @@ function PropertyTypeTable() {
         </>
       )}
 
-      <Dialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this property type?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirm} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item="property type"
+        isOpen={openConfirm}
+        handleClose={handleCloseConfirm}
+        handleConfirm={handleDelete}
+      />
 
       <ShowDetailsModal
         typeSlug={selectedSlug}

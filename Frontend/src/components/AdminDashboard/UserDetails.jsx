@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
-import { Oval } from 'react-loader-spinner';
+import Loader from 'components/Loader';
 import { fetchUsers } from 'store/userDetailsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -121,22 +121,7 @@ function UserDetails() {
   let content;
 
   if (status === 'loading') {
-    content = (
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Oval
-          height={40}
-          width={40}
-          color="#2D2E34"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible
-          ariaLabel="oval-loading"
-          secondaryColor="#2D2E34"
-          strokeWidth={2}
-          strokeWidthSecondary={2}
-        />
-      </Box>
-    );
+    content = <Loader />;
   } else if (status === 'succeeded') {
     if (Array.isArray(users)) {
       const paginatedUsers = filteredUsers.slice(

@@ -78,7 +78,7 @@ const reportUsersSlice = createSlice({
       })
       .addCase(deleteLandlord.fulfilled, (state, action) => {
         state.reports = state.reports.filter(
-          (report) => report.landlord.id !== action.payload
+          (report) => report.id !== action.payload
         );
       })
       .addCase(submitLandlordReport.fulfilled, (state, action) => {

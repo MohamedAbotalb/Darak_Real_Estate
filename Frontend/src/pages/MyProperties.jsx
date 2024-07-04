@@ -41,8 +41,8 @@ function MyProperties() {
     navigate('/add-property');
   };
 
-  const handleEditProperty = (propertyId) => {
-    navigate(`/edit-property/${propertyId}`);
+  const handleEditProperty = (slug) => {
+    navigate(`/edit-property/${slug}`);
   };
 
   const handleOpenDialog = (propertyId) => {
@@ -102,21 +102,31 @@ function MyProperties() {
               <Grid item xs={12} sm={6} md={4} key={property.id}>
                 <PropertyCard
                   property={property}
-                  onEdit={() => handleEditProperty(property.id)}
+                  onEdit={() => handleEditProperty(property.slug)}
                   onDelete={() => handleOpenDialog(property.id)}
                 />
               </Grid>
             ))
           ) : (
-            <Typography>No properties found</Typography>
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                You have no properties listed yet.
+              </Typography>
+            </Grid>
           )}
         </Grid>
       </Container>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete Property</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this property?
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this property? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

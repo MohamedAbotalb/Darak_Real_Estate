@@ -27,6 +27,8 @@ import {
   deleteReport,
   deleteProperty,
 } from 'store/reportPropertiesSlice';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -99,7 +101,7 @@ export default function ReportPropertyList() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (reportStatus === 'idle') {
@@ -114,7 +116,7 @@ export default function ReportPropertyList() {
   };
 
   const handleDeleteProperty = (id) => {
-    setDeleteType('report');
+    setDeleteType('property');
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
@@ -130,6 +132,7 @@ export default function ReportPropertyList() {
       dispatch(deleteProperty(deleteId));
     }
     setOpenDeleteDialog(false);
+    dispatch(fetchReports());
   };
 
   const handleShowContent = (content) => {
@@ -153,8 +156,8 @@ export default function ReportPropertyList() {
   };
 
   const filteredReports = reports.filter((report) => {
-    const userFullName = `${report?.user?.first_name.toLowerCase()} ${report?.user?.last_name.toLowerCase()}`;
-    const propertyTitle = report?.property?.title.toLowerCase();
+    const userFullName = `${report?.user?.first_name?.toLowerCase() || ''} ${report?.user?.last_name?.toLowerCase() || ''}`;
+    const propertyTitle = report?.property?.title?.toLowerCase() || '';
 
     return (
       (searchTerms.user === '' ||
@@ -172,7 +175,7 @@ export default function ReportPropertyList() {
   let content;
 
   if (reportStatus === 'loading') {
-    content = <p>Loading...</p>;
+    content = <Loader />;
   } else if (reportStatus === 'succeeded') {
     content = (
       <div>
@@ -311,22 +314,12 @@ export default function ReportPropertyList() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Are you sure you want to delete this {deleteType}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item={deleteType}
+        isOpen={openDeleteDialog}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+      />
     </>
   );
 }

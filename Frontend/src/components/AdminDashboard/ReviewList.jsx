@@ -17,11 +17,16 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { fetchReviews } from 'store/reviewsSlice';
+import Loader from 'components/Loader';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -87,9 +92,9 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
-  const { reviews } = useSelector((state) => state.reviews);
+  const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -122,7 +127,7 @@ function ReviewList() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesRateSearchTerm =
-      rateSearchTerm === '' || review.rate.toString() === rateSearchTerm;
+      rateSearchTerm === '' || review.rate === parseInt(rateSearchTerm, 10);
     return matchesSearchTerm && matchesRateSearchTerm;
   });
 
@@ -164,89 +169,106 @@ function ReviewList() {
               onChange={handleSearchChange}
             />
           </Search>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search Rate"
-              inputProps={{ 'aria-label': 'search rate' }}
+          <FormControl sx={{ minWidth: 120, ml: 2 }}>
+            <InputLabel id="rate-select-label">Rate</InputLabel>
+            <Select
+              labelId="rate-select-label"
+              id="rate-select"
               value={rateSearchTerm}
               onChange={handleRateSearchChange}
-            />
-          </Search>
+              label="Rate"
+            >
+              <MenuItem value="">
+                <em>All</em>
+              </MenuItem>
+              {[1, 2, 3, 4, 5].map((rate) => (
+                <MenuItem key={rate} value={rate}>
+                  {rate}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell align="center">User</StyledTableCell>
-              <StyledTableCell align="center">Property</StyledTableCell>
-              <StyledTableCell align="center">Content</StyledTableCell>
-              <StyledTableCell align="center">Rate</StyledTableCell>
-              <StyledTableCell align="center">Date</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedReviews.map((review) => (
-              <StyledTableRow key={review.id}>
-                <StyledTableCell component="th" scope="row">
-                  {review.id}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {`${review?.user?.first_name} ${review?.user?.last_name}`}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {review?.property?.title}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <Button
-                    variant="text"
-                    color="primary"
-                    onClick={() => handleShowContent(review.content)}
-                  >
-                    View Content
-                  </Button>
-                </StyledTableCell>
-                <StyledTableCell align="center">{review.rate}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '10px 20px',
-        }}
-      >
-        <Pagination
-          count={Math.ceil(filteredReviews.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
-      <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
-        <DialogTitle>Content</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">{selectedContent}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseContentDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+      {status === 'loading' ? (
+        <Loader />
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell align="center">User</StyledTableCell>
+                  <StyledTableCell align="center">Property</StyledTableCell>
+                  <StyledTableCell align="center">Content</StyledTableCell>
+                  <StyledTableCell align="center">Rate</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedReviews.map((review) => (
+                  <StyledTableRow key={review.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {review.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {`${review?.user?.first_name} ${review?.user?.last_name}`}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {review?.property?.title}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Button
+                        variant="text"
+                        color="primary"
+                        onClick={() => handleShowContent(review.content)}
+                      >
+                        View Content
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {review.rate}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '10px 20px',
+            }}
+          >
+            <Pagination
+              count={Math.ceil(filteredReviews.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+          <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
+            <DialogTitle>Content</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2">{selectedContent}</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseContentDialog} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </>
   );
 }
