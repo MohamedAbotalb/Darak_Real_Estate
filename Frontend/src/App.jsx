@@ -6,14 +6,16 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import ReviewList from 'components/AdminDashboard/ReviewList';
-import ReportUserList from 'components/AdminDashboard/ReportUserList';
-import ReportPropertyList from 'components/AdminDashboard/ReportPropertyList';
-import PropertyTypes from 'pages/Admin/PropertyType';
-import Amenities from 'pages/Admin/Amenities';
-import OverView from 'components/AdminDashboard/OverView';
-import UserDetails from 'components/AdminDashboard/UserDetails';
+import AdminLayout from 'layouts/AdminLayout';
 import UserLayout from 'layouts/UserLayout';
+import ProtectedRoute from 'utils/ProtectedRoute';
+import AmenitiesPage from 'pages/Admin/Amenities';
+import OverviewPage from 'pages/Admin/Overview';
+import PropertyReportsPage from 'pages/Admin/PropertyReports';
+import PropertyTypesPage from 'pages/Admin/PropertyTypes';
+import ReviewsPage from 'pages/Admin/Reviews';
+import UserDetailsPage from 'pages/Admin/UserDetails';
+import UserReportsPage from 'pages/Admin/UserReports';
 import PropertyDetails from 'components/PropertyDetails';
 import WishlistPage from 'pages/Wishlist';
 import NotFoundPage from 'pages/NotFound';
@@ -29,10 +31,8 @@ import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
-import ProtectedRoute from 'ProtectedRoute';
 import UserNotifications from 'components/Home/Notifications/UserNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
-import SharedLayout from 'layouts/AdminLayout';
 
 function App() {
   const router = createBrowserRouter(
@@ -60,15 +60,20 @@ function App() {
         <Route path="/myproperties" element={<MyProperties />} />
         <Route path="/mytours" element={<MyTours />} />
         {/* authenticated admin dashboard routes */}
-        <Route path="/admin" element={<SharedLayout />}>
-          <Route index element={<OverView />} />
-          <Route path="overview" element={<OverView />} />
-          <Route path="user-details" element={<UserDetails />} />
-          <Route path="reviews" element={<ReviewList />} />
-          <Route path="report-users" element={<ReportUserList />} />
-          <Route path="report-properties" element={<ReportPropertyList />} />
-          <Route path="property-types" element={<PropertyTypes />} />
-          <Route path="amenities" element={<Amenities />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute element={<AdminLayout />} roles={['admin']} />
+          }
+        >
+          <Route index element={<OverviewPage />} />
+          <Route path="overview" element={<OverviewPage />} />
+          <Route path="user-details" element={<UserDetailsPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="user-reports" element={<UserReportsPage />} />
+          <Route path="property-reports" element={<PropertyReportsPage />} />
+          <Route path="property-types" element={<PropertyTypesPage />} />
+          <Route path="amenities" element={<AmenitiesPage />} />
         </Route>
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />

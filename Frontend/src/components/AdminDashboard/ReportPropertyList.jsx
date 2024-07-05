@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-
 import {
   Box,
   Typography,
@@ -27,14 +26,18 @@ import {
   deleteReport,
   deleteProperty,
 } from 'store/reportPropertiesSlice';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.grey[700],
     color: theme.palette.common.white,
+    textAlign: 'center',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    textAlign: 'center',
   },
 }));
 
@@ -86,11 +89,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function ReportPropertyList() {
+function ReportPropertyList() {
   const dispatch = useDispatch();
-  const reports = useSelector((state) => state.reportProperties.reports);
-  const reportStatus = useSelector((state) => state.reportProperties.status);
-  const error = useSelector((state) => state.reportProperties.error);
+  const { reports, status, error } = useSelector(
+    (state) => state.reportProperties
+  );
 
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [selectedContent, setSelectedContent] = useState('');
@@ -99,13 +102,13 @@ export default function ReportPropertyList() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   useEffect(() => {
-    if (reportStatus === 'idle') {
+    if (status === 'idle') {
       dispatch(fetchReports());
     }
-  }, [reportStatus, dispatch]);
+  }, [status, dispatch]);
 
   const handleDeleteReport = (id) => {
     setDeleteType('report');
@@ -146,35 +149,36 @@ export default function ReportPropertyList() {
     setPage(value);
   };
 
-  const handleSearchChange = (event, fieldName) => {
-    setSearchTerms({
-      ...searchTerms,
-      [fieldName]: event.target.value,
-    });
-  };
+  const filteredReports = useMemo(
+    () =>
+      reports.filter((report) => {
+        const userFullName = `${report?.user?.first_name?.toLowerCase() || ''} ${report?.user?.last_name?.toLowerCase() || ''}`;
+        const propertyTitle = report?.property?.title?.toLowerCase() || '';
 
-  const filteredReports = reports.filter((report) => {
-    const userFullName = `${report?.user?.first_name?.toLowerCase() || ''} ${report?.user?.last_name?.toLowerCase() || ''}`;
-    const propertyTitle = report?.property?.title?.toLowerCase() || '';
+        return (
+          (searchTerms.user === '' ||
+            userFullName.includes(searchTerms.user.toLowerCase())) &&
+          (searchTerms.property === '' ||
+            propertyTitle.includes(searchTerms.property.toLowerCase()))
+        );
+      }),
+    [reports, searchTerms]
+  );
 
-    return (
-      (searchTerms.user === '' ||
-        userFullName.includes(searchTerms.user.toLowerCase())) &&
-      (searchTerms.property === '' ||
-        propertyTitle.includes(searchTerms.property.toLowerCase()))
-    );
-  });
-
-  const paginatedReports = filteredReports.slice(
-    (page - 1) * rowsPerPage,
-    (page - 1) * rowsPerPage + rowsPerPage
+  const paginatedReports = useMemo(
+    () =>
+      filteredReports.slice(
+        (page - 1) * rowsPerPage,
+        (page - 1) * rowsPerPage + rowsPerPage
+      ),
+    [filteredReports, page, rowsPerPage]
   );
 
   let content;
 
-  if (reportStatus === 'loading') {
-    content = <p>Loading...</p>;
-  } else if (reportStatus === 'succeeded') {
+  if (status === 'loading') {
+    content = <Loader />;
+  } else if (status === 'succeeded') {
     content = (
       <div>
         <TableContainer component={Paper}>
@@ -189,10 +193,10 @@ export default function ReportPropertyList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report) => (
+              {paginatedReports.map((report, index) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
-                    {report.id}
+                    {index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {`${report?.user?.first_name} ${report?.user?.last_name}`}
@@ -202,11 +206,11 @@ export default function ReportPropertyList() {
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Button
-                      variant="text"
+                      variant="contained"
                       color="primary"
                       onClick={() => handleShowContent(report.content)}
                     >
-                      View Content
+                      View
                     </Button>
                   </StyledTableCell>
                   <StyledTableCell align="center">
@@ -250,7 +254,7 @@ export default function ReportPropertyList() {
         </div>
       </div>
     );
-  } else if (reportStatus === 'failed') {
+  } else if (status === 'failed') {
     content = <p>{error}</p>;
   }
 
@@ -272,7 +276,7 @@ export default function ReportPropertyList() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Report Property List
+            Property Reports
           </Typography>
         </Box>
         <Box display="flex" justifyContent="center">
@@ -283,8 +287,12 @@ export default function ReportPropertyList() {
             <StyledInputBase
               placeholder="Search User"
               inputProps={{ 'aria-label': 'search user' }}
-              value={searchTerms.user}
-              onChange={(e) => handleSearchChange(e, 'user')}
+              onChange={(e) =>
+                setSearchTerms((prevTerms) => ({
+                  ...prevTerms,
+                  user: e.target.value,
+                }))
+              }
             />
           </Search>
           <Search>
@@ -294,8 +302,12 @@ export default function ReportPropertyList() {
             <StyledInputBase
               placeholder="Search Property"
               inputProps={{ 'aria-label': 'search property' }}
-              value={searchTerms.property}
-              onChange={(e) => handleSearchChange(e, 'property')}
+              onChange={(e) =>
+                setSearchTerms((prevTerms) => ({
+                  ...prevTerms,
+                  property: e.target.value,
+                }))
+              }
             />
           </Search>
         </Box>
@@ -312,22 +324,14 @@ export default function ReportPropertyList() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Are you sure you want to delete this {deleteType}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        item={deleteType}
+        isOpen={openDeleteDialog}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+      />
     </>
   );
 }
+
+export default React.memo(ReportPropertyList);

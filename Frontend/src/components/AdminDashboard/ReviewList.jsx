@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import {
@@ -26,7 +26,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { fetchReviews } from 'store/reviewsSlice';
-import Loader from 'components/Loader'; // Make sure this path is correct
+import Loader from 'components/Loader';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,14 +51,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(2),
     width: 'auto',
   },
 }));
@@ -92,7 +92,7 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
@@ -122,19 +122,23 @@ function ReviewList() {
     setPage(value);
   };
 
-  const filteredReviews = reviews.filter((review) => {
-    const matchesSearchTerm = review?.property?.title
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesRateSearchTerm =
-      rateSearchTerm === '' || review.rate === parseInt(rateSearchTerm, 10);
-    return matchesSearchTerm && matchesRateSearchTerm;
-  });
+  const filteredReviews = useMemo(() => {
+    return reviews.filter((review) => {
+      const matchesSearchTerm = review?.property?.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesRateSearchTerm =
+        rateSearchTerm === '' || review.rate === parseInt(rateSearchTerm, 10);
+      return matchesSearchTerm && matchesRateSearchTerm;
+    });
+  }, [reviews, searchTerm, rateSearchTerm]);
 
-  const paginatedReviews = filteredReviews.slice(
-    (page - 1) * rowsPerPage,
-    (page - 1) * rowsPerPage + rowsPerPage
-  );
+  const paginatedReviews = useMemo(() => {
+    return filteredReviews.slice(
+      (page - 1) * rowsPerPage,
+      (page - 1) * rowsPerPage + rowsPerPage
+    );
+  }, [filteredReviews, page, rowsPerPage]);
 
   return (
     <>
@@ -157,7 +161,7 @@ function ReviewList() {
             Reviews
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="between">
+        <Box display="flex" justifyContent="between" alignItems="center">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -169,7 +173,7 @@ function ReviewList() {
               onChange={handleSearchChange}
             />
           </Search>
-          <FormControl sx={{ minWidth: 120, ml: 2 }}>
+          <FormControl sx={{ minWidth: 100, ml: 2 }}>
             <InputLabel id="rate-select-label">Rate</InputLabel>
             <Select
               labelId="rate-select-label"
@@ -208,10 +212,10 @@ function ReviewList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedReviews.map((review) => (
+                {paginatedReviews.map((review, index) => (
                   <StyledTableRow key={review.id}>
                     <StyledTableCell component="th" scope="row">
-                      {review.id}
+                      {index + 1}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {`${review?.user?.first_name} ${review?.user?.last_name}`}
@@ -221,11 +225,11 @@ function ReviewList() {
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       <Button
-                        variant="text"
+                        variant="contained"
                         color="primary"
                         onClick={() => handleShowContent(review.content)}
                       >
-                        View Content
+                        View
                       </Button>
                     </StyledTableCell>
                     <StyledTableCell align="center">
@@ -273,4 +277,4 @@ function ReviewList() {
   );
 }
 
-export default ReviewList;
+export default React.memo(ReviewList);

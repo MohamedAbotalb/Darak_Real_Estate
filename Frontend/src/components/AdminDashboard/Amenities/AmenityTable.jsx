@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import {
@@ -20,9 +20,9 @@ import {
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
+import Loader from 'components/Loader';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
-import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,12 +46,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: theme.spacing(1),
-  width: 'auto',
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -115,11 +121,11 @@ function AmenityTable() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredAmenities = Array.isArray(amenities)
-    ? amenities.filter((amenity) =>
-        amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  const filteredAmenities = useMemo(() => {
+    return amenities.filter((amenity) =>
+      amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [amenities, searchTerm]);
 
   return (
     <>
@@ -167,18 +173,20 @@ function AmenityTable() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell align="center">Name</StyledTableCell>
+                  <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredAmenities
                   .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  .map((amenity) => (
+                  .map((amenity, index) => (
                     <StyledTableRow key={amenity.id}>
-                      <StyledTableCell>{amenity.id}</StyledTableCell>
-                      <StyledTableCell>{amenity.name}</StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell>{index + 1}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {amenity.name}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
                         <EditAmenityButton amenity={amenity} />
                         <Button
                           variant="contained"
@@ -208,7 +216,7 @@ function AmenityTable() {
       )}
 
       <DeleteConfirmationModal
-        item="property type"
+        item="Amenity"
         isOpen={openConfirm}
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}

@@ -36,6 +36,15 @@ class ReviewRepository implements ReviewRepositoryInterface
     }
     public function showPropertyReviews(int $id)
     {
-        return Review::where('property_id', $id)->with('replies')->get();
+        return Review::where('property_id', $id)->with('replies','user')->get();
+    }
+    public function getAverageRating(int $propertyId)
+    {
+         $averageRating=Review::where('property_id', $propertyId)
+            ->avg('rate');
+            if(!$averageRating){
+                return null;
+            }
+            return number_format($averageRating, 1);
     }
 }

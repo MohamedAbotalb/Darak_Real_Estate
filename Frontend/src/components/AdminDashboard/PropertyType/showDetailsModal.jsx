@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPropertyTypeDetails } from 'store/propertyTypesSlice';
+import Loader from 'components/Loader';
 
 function ShowDetailsModal({ typeSlug, isOpen, handleClose }) {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function ShowDetailsModal({ typeSlug, isOpen, handleClose }) {
 
   const renderContent = () => {
     if (status === 'loading') {
-      return <Typography variant="body2">Loading...</Typography>;
+      return <Loader />;
     }
 
     if (!type) {

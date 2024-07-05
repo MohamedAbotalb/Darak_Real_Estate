@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Card, CardContent, Typography, Grid, Alert } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
@@ -78,6 +78,8 @@ function OverView() {
     }
   }, [status, dispatch]);
 
+  const memoizedCardsData = useMemo(() => cardsData, []);
+
   return (
     <>
       <Box
@@ -105,7 +107,7 @@ function OverView() {
         {status === 'failed' && <Alert severity="error">{error}</Alert>}
         {status === 'succeeded' && (
           <Grid container spacing={3}>
-            {cardsData.map((card) => (
+            {memoizedCardsData.map((card) => (
               <Grid item xs={12} sm={6} md={4} key={card.key}>
                 <Card sx={cardStyles}>
                   {card.icon}

@@ -1,8 +1,8 @@
 import React from 'react';
 import AmenityTable from 'components/AdminDashboard/Amenities/AmenityTable';
 
-function Amenities() {
+function AmenitiesPage() {
   return <AmenityTable />;
 }
 
-export default Amenities;
+export default AmenitiesPage;

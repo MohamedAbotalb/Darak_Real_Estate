@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Table,
@@ -23,10 +23,11 @@ import {
   deletePropertyType,
   fetchPropertyTypes,
 } from 'store/propertyTypesSlice';
+import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
-import EditPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/EditPropertyTypeButton';
-import AddPropertyTypeButton from 'components/AdminDashboard/PropertyTypeComponent/AddPropertyTypeButton';
-// import ShowDetailsModal from 'components/AdminDashboard/PropertyTypeComponent/ShowDetailsModal';
+import EditPropertyTypeButton from 'components/AdminDashboard/PropertyType/EditPropertyTypeButton';
+import AddPropertyTypeButton from 'components/AdminDashboard/PropertyType/AddPropertyTypeButton';
+import ShowDetailsModal from 'components/AdminDashboard/PropertyType/showDetailsModal';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -50,18 +51,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
     width: 'auto',
   },
 }));
-
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
@@ -87,10 +89,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function PropertyTypeTable() {
   const dispatch = useDispatch();
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
-  );
-  const status = useSelector((state) => state.propertyTypes.status);
+  const { status, propertyTypes } = useSelector((state) => state.propertyTypes);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(10);
@@ -103,9 +102,20 @@ function PropertyTypeTable() {
     dispatch(fetchPropertyTypes());
   }, [dispatch]);
 
+  const filteredPropertyTypes = useMemo(() => {
+    return propertyTypes.filter((type) =>
+      type.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [propertyTypes, searchTerm]);
+
   const handleDelete = async () => {
-    dispatch(deletePropertyType(selectedSlug));
-    setOpenConfirm(false);
+    try {
+      dispatch(deletePropertyType(selectedSlug));
+      successToast('Property type deleted successfully');
+      setOpenConfirm(false);
+    } catch (error) {
+      errorToast('Failed to delete this property type');
+    }
   };
 
   const handleChangePage = (event, value) => {
@@ -135,10 +145,6 @@ function PropertyTypeTable() {
     setDetailsOpen(false);
     setSelectedSlug(null);
   };
-
-  const filteredPropertyTypes = propertyTypes.filter((type) =>
-    type.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <>
@@ -186,19 +192,22 @@ function PropertyTypeTable() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell>Name</StyledTableCell>
-                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell align="center">Name</StyledTableCell>
+                  <StyledTableCell align="center">Actions</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredPropertyTypes
                   .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  .map((type) => (
+                  .map((type, index) => (
                     <StyledTableRow key={type.id}>
-                      <StyledTableCell>{type.id}</StyledTableCell>
-                      <StyledTableCell>{type.name}</StyledTableCell>
-                      <StyledTableCell>
-                        <EditPropertyTypeButton type={type} />
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {type.name}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
                         <Button
                           variant="contained"
                           onClick={() => handleOpenDetails(type.slug)}
@@ -210,6 +219,7 @@ function PropertyTypeTable() {
                         >
                           Show
                         </Button>
+                        <EditPropertyTypeButton type={type} />
                         <Button
                           variant="contained"
                           color="secondary"

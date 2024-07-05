@@ -34,7 +34,7 @@ import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 import TourRequestForm from 'components/TourRequestForm';
 import ReportModal from './ReportModal';
 import amenityIcons from '../utils/amenityIcons';
-import ReviewIcon from './userReviews/ReviewIcon';
+import ReviewIcon from './userReviews/ReviewSection';
 
 function PropertyDetails() {
   const { slug } = useParams();

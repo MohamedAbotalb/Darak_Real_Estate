@@ -1,10 +1,12 @@
+
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addReviewAsync, fetchReviews } from 'store/userReviews/userReviewsSlice';
-import { TextField, Button, Box, Rating,
-   Typography } from '@mui/material';
+import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
+import { AddCircleOutline } from '@mui/icons-material'; // Import the icon you want to use
 import { toast } from 'react-toastify';
+import AverageRating from './AverageRating';
 
 function ReviewForm({ propertyId }) {
   const [rate, setRate] = useState(0);
@@ -12,18 +14,16 @@ function ReviewForm({ propertyId }) {
   const [rateError, setRateError] = useState('');
   const [contentError, setContentError] = useState('');
   const [reviewAdded, setReviewAdded] = useState(false); // State to track review addition
-
   const dispatch = useDispatch();
 
-  // Fetch reviews when component mounts
   useEffect(() => {
     dispatch(fetchReviews(propertyId));
   }, [dispatch, propertyId]);
 
   // Get reviews from Redux store
   const reviews = useSelector(state => state.userReviews.reviews);
-  
- // Check if there's already a review for the property
+
+  // Check if there's already a review for the property
   useEffect(() => {
     const existingReview = reviews.find(review => review.property_id === propertyId);
     setReviewAdded(existingReview !== undefined);
@@ -32,16 +32,14 @@ function ReviewForm({ propertyId }) {
   const handleSubmit = () => {
     let valid = true;
 
-    // Validate rate
     if (rate === 0) {
       setRateError('Please provide a rating.');
-       toast.error('Please provide a rating.');
+      toast.error('Please provide a rating.');
       valid = false;
     } else {
       setRateError('');
     }
 
-    // Validate content
     if (content.trim() !== '') {
       if (content.trim().length < 4) {
         setContentError('Comment must be at least 4 characters long.');
@@ -73,13 +71,12 @@ function ReviewForm({ propertyId }) {
       setRate(0);
       setContent('');
       setReviewAdded(true); // Set reviewAdded to true after successful addition
-       dispatch(fetchReviews(propertyId));
+      dispatch(fetchReviews(propertyId));
       toast.success('Review added successfully!');
     });
-
   };
 
- if (reviewAdded) {
+  if (reviewAdded) {
     return (
       <Typography variant="body1">
         You have already reviewed this property. If you want to delete your review, please do so from your profile.
@@ -90,6 +87,7 @@ function ReviewForm({ propertyId }) {
   return (
     <Box display="flex" alignItems="center" gap={2}>
       <Box flex={1} gap={2}>
+        {/* <AverageRating propertyId={propertyId} /> */}
         <Rating
           name="rate"
           value={rate}
@@ -104,11 +102,17 @@ function ReviewForm({ propertyId }) {
           onChange={(e) => setContent(e.target.value)}
           variant="outlined"
           fullWidth
+          InputProps={{
+            endAdornment: (
+              <IconButton color="primary" onClick={handleSubmit}>
+                <AddCircleOutline />
+              </IconButton>
+            ),
+            style: { backgroundColor: '#eeecec' },
+            disableUnderline: true, // Remove the border
+          }}
         />
         {contentError && <Typography variant="caption" color="error">{contentError}</Typography>}
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Add Review
-        </Button>
       </Box>
     </Box>
   );
@@ -119,3 +123,4 @@ ReviewForm.propTypes = {
 };
 
 export default ReviewForm;
+

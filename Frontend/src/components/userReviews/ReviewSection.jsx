@@ -60,6 +60,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
         <DialogContent
           style={{
             padding: '8px',
+           marginBottom:'8px',
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
@@ -69,16 +70,13 @@ function ReviewSection({ propertyId, propertyTitle }) {
         </DialogContent>
         <DialogTitle
           style={{
-            padding: '2px',
-            borderTop: '2px solid #5d5c5c',
-            borderRadius: '2px',
+            borderTop: '2px solid #c5c3c3',
           }}
         >
-          <ReviewForm propertyId={propertyId} />
+          <Box style={{
+            padding: '2px',
+          }}><ReviewForm propertyId={propertyId} /></Box>
         </DialogTitle>
-        <DialogActions>
-          {/* Optional: Add actions or buttons for the dialog */}
-        </DialogActions>
       </Dialog>
     </Box>
   );
