@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Typography,
-  CircularProgress,
   Button,
   Box,
   AppBar,
@@ -16,8 +15,6 @@ import {
   IconButton,
   Avatar,
   Divider,
-  Paper,
-  Rating,
 } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import BedIcon from '@mui/icons-material/Bed';
@@ -32,6 +29,7 @@ import { fetchProperty } from 'store/propertyDetailsSlice';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 import TourRequestForm from 'components/TourRequestForm';
+import Loader from 'components/Loader';
 import ReportModal from './ReportModal';
 import amenityIcons from '../utils/amenityIcons';
 import ReviewIcon from './userReviews/ReviewIcon';
@@ -53,7 +51,7 @@ function PropertyDetails() {
 
   useEffect(() => {
     dispatch(fetchReviews(property.id));
-  }, [dispatch]);
+  }, [dispatch, property.id]);
 
   const handleRequestTourClick = () => {
     setIsTourFormOpen(true);
@@ -70,9 +68,7 @@ function PropertyDetails() {
     setIsReportModalOpen(false);
   };
 
-  console.log(property.listing_type);
-
-  if (status === 'loading') return <CircularProgress />;
+  if (status === 'loading') return <Loader />;
   if (status === 'failed')
     return (
       <Typography variant="h6" color="error">
