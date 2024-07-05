@@ -1,18 +1,19 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import secureLocalStorage from 'react-secure-storage';
+import { Navigate } from 'react-router-dom';
+import { errorToast } from 'utils/toast';
 
 function ProtectedRoute({ element, roles }) {
-  const { user } = useSelector((state) => state.auth);
+  const user = JSON.parse(secureLocalStorage.getItem('user'));
 
   if (!user) {
-    // If user is not logged in, redirect to login page
+    errorToast('You must be logged in to access this page');
     return <Navigate to="/login" />;
   }
 
+  // If user doesn't have the required role, redirect to access denied page
   if (roles && !roles.includes(user.role)) {
-    // If user doesn't have the required role, redirect to access denied page
     return <Navigate to="/403" />;
   }
 
