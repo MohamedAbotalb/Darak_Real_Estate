@@ -24,6 +24,9 @@ import Loader from 'components/Loader';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import { ToastContainer } from 'react-toastify';
+import { errorToast, successToast } from 'utils/toast';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -89,7 +92,7 @@ function AmenityTable() {
   const status = useSelector((state) => state.amenities.status);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState(null);
@@ -99,8 +102,13 @@ function AmenityTable() {
   }, [dispatch]);
 
   const handleDelete = async () => {
-    dispatch(deleteAmenity(selectedSlug));
-    setOpenConfirm(false);
+    try {
+      await dispatch(deleteAmenity(selectedSlug));
+      successToast('Amenity deleted successfully');
+      setOpenConfirm(false);
+    } catch (error) {
+      errorToast('Failed to delete the amenity');
+    }
   };
 
   const handleOpenConfirm = (slug) => {
@@ -180,9 +188,9 @@ function AmenityTable() {
               <TableBody>
                 {filteredAmenities
                   .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  .map((amenity, index) => (
+                  .map((amenity) => (
                     <StyledTableRow key={amenity.id}>
-                      <StyledTableCell>{index + 1}</StyledTableCell>
+                      <StyledTableCell>{amenity.id}</StyledTableCell>
                       <StyledTableCell align="center">
                         {amenity.name}
                       </StyledTableCell>
@@ -221,6 +229,8 @@ function AmenityTable() {
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}
       />
+
+      <ToastContainer />
     </>
   );
 }
