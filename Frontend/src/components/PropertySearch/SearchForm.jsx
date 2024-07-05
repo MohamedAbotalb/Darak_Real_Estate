@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  IconButton,
-  MenuItem,
-  Select,
-  FormControl,
-  CircularProgress,
-} from '@mui/material';
+import { Box, IconButton, MenuItem, Select, FormControl } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
+import Loader from 'components/Loader';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -92,7 +86,7 @@ function PropertySearch() {
   return (
     <SearchContainer>
       {isLoading ? (
-        <CircularProgress size={50} />
+        <Loader />
       ) : (
         <>
           <SearchFormControl variant="outlined">

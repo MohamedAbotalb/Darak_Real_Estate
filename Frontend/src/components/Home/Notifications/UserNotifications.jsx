@@ -4,7 +4,7 @@ import {
   fetchUserNotificationsAsync,
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
-import { CircularProgress, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
@@ -21,6 +21,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
+import Loader from 'components/Loader';
 
 function UserNotifications() {
   const dispatch = useDispatch();
@@ -121,7 +122,7 @@ function UserNotifications() {
         alignItems="center"
         height="100vh"
       >
-        <CircularProgress />
+        <Loader />
       </Box>
     );
   }
