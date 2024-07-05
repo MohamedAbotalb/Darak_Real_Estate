@@ -209,7 +209,7 @@ function UserDetails() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         }}
