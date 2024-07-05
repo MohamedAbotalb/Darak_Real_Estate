@@ -6,7 +6,6 @@ import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
 import CategoryIcon from '@mui/icons-material/Category';
 import ReportIcon from '@mui/icons-material/Report';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Loader from 'components/Loader';
 import { fetchCounts } from 'store/overviewSlice';
@@ -58,7 +57,7 @@ const cardsData = [
     key: 'property_reports',
     title: 'Property Reports',
     countKey: 'property_reports',
-    icon: <AssessmentIcon sx={iconStyles} />,
+    icon: <ReportIcon sx={iconStyles} />,
   },
   {
     key: 'amenities',
