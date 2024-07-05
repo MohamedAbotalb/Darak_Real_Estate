@@ -202,10 +202,10 @@ function ReportPropertyList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report, index) => (
+              {paginatedReports.map((report) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
-                    {index + 1}
+                    {report.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {`${report?.user?.first_name} ${report?.user?.last_name}`}

@@ -201,10 +201,10 @@ function PropertyTypeTable() {
               <TableBody>
                 {filteredPropertyTypes
                   .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  .map((type, index) => (
+                  .map((type) => (
                     <StyledTableRow key={type.id}>
                       <StyledTableCell component="th" scope="row">
-                        {index + 1}
+                        {type.id}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {type.name}
