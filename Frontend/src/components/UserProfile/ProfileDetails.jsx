@@ -26,7 +26,7 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           variant="contained"
           onClick={() => onEditClick('Name')}
           sx={{
-            backgroundColor: '#0185B7',
+            backgroundColor: '#2C3E50',
             '&:hover': {
               backgroundColor: '#016a92',
             },
@@ -43,7 +43,7 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           variant="contained"
           onClick={handleShowClick}
           sx={{
-            backgroundColor: '#0185B7',
+            backgroundColor: '#2C3E50',
             '&:hover': {
               backgroundColor: '#016a92',
             },
@@ -58,7 +58,7 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           variant="contained"
           onClick={() => onEditClick('Phone')}
           sx={{
-            backgroundColor: '#0185B7',
+            backgroundColor: '#2C3E50',
             '&:hover': {
               backgroundColor: '#016a92',
             },
@@ -73,7 +73,7 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
           variant="contained"
           onClick={() => onEditClick('Password')}
           sx={{
-            backgroundColor: '#0185B7',
+            backgroundColor: '#2C3E50',
             '&:hover': {
               backgroundColor: '#016a92',
             },

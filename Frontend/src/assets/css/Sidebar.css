@@ -15,12 +15,14 @@
 
 .sidebar {
   height: 100%;
-  background-color: #f4f4f4;
+  background-color: #d8d8d8;
   padding: 20px;
 }
 
 .sidebar h2 {
   margin: auto;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  text-align: center;
 }
 
 .nav-link {
