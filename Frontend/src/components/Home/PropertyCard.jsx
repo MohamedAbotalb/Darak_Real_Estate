@@ -53,15 +53,12 @@ const CardLink = styled(Link)({
 function PropertyCard({ property }) {
   const images = property.images || [];
 
-  const formatPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
   const getPriceDisplay = () => {
-    if (property.listing_type === 'renting') {
-      return `${formatPrice(property.price)} EGP/month`;
+    const formattedPrice = property.price.toLocaleString();
+    if (property.listing_type === 'rent') {
+      return `${formattedPrice} EGP/month`;
     }
-    return `${formatPrice(property.price)} EGP`;
+    return `${formattedPrice} EGP`;
   };
 
   return (
@@ -77,7 +74,7 @@ function PropertyCard({ property }) {
           showIndicators={false}
           infiniteLoop
           autoPlay
-          interval={2000}
+          interval={4000}
         >
           {images.length > 0 ? (
             images.map((img) => (
