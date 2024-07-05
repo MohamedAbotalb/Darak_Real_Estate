@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import '../../assets/css/Sidebar.css';
+import 'assets/css/Sidebar.css';
 import im1 from 'assets/images/im1.PNG';
 import im2 from 'assets/images/im2.PNG';
 
@@ -30,20 +30,20 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/report-users"
+            to="/admin/user-reports"
             className="nav-link"
             activeClassName="active-link"
           >
-            Report User
+            User Reports
           </NavLink>
         </li>
         <li>
           <NavLink
-            to="/admin/report-properties"
+            to="/admin/property-reports"
             className="nav-link"
             activeClassName="active-link"
           >
-            Report Property
+            Property Reports
           </NavLink>
         </li>
         <li>
