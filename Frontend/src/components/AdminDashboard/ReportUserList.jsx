@@ -200,7 +200,7 @@ function ReportUserList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report, user) => (
+              {paginatedReports.map((report) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
                     {report.id}
