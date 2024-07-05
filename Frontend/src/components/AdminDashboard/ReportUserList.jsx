@@ -29,6 +29,7 @@ import {
 } from 'store/reportUsersSlice';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import { successToast, errorToast } from 'utils/toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -140,8 +141,10 @@ function ReportUserList() {
   const handleConfirmDelete = () => {
     if (deleteType === 'report') {
       dispatch(deleteReport(deleteId));
+      successToast('Report deleted successfully');
     } else if (deleteType === 'landlord') {
       dispatch(deleteLandlord(deleteId));
+      successToast('Landlord blocked successfully');
     }
     setOpenDeleteDialog(false);
     dispatch(fetchReports());
@@ -262,7 +265,12 @@ function ReportUserList() {
       </div>
     );
   } else if (status === 'failed') {
-    content = <p>{error}</p>;
+    content = (
+      <Typography variant="body1" align="center" color="error">
+        {error}
+      </Typography>
+    );
+    errorToast('Failed to fetch reports');
   }
 
   return (
