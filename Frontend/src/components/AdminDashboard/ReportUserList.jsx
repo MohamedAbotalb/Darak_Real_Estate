@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -21,15 +21,14 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import debounce from 'lodash.debounce';
 import {
   fetchReports,
   deleteReport,
   deleteLandlord,
 } from 'store/reportUsersSlice';
+import { successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
-import { successToast, errorToast } from 'utils/toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -150,14 +149,14 @@ function ReportUserList() {
     dispatch(fetchReports());
   };
 
-  const handleSearchChange = (event, fieldName) => {
-    debounce(() => {
-      setSearchTerms((prevTerms) => ({
-        ...prevTerms,
-        [fieldName]: event.target.value,
-      }));
-    }, 300);
-  };
+  const handleSearchChange = useCallback((event, fieldName) => {
+    setSearchTerms((prevTerms) => ({
+      ...prevTerms,
+      [fieldName]: event.target.value,
+    }));
+  }, []);
+
+  const debouncedSearchTerms = useMemo(() => searchTerms, [searchTerms]);
 
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
@@ -165,13 +164,15 @@ function ReportUserList() {
       const landlordFullName = `${report?.landlord?.first_name?.toLowerCase() || ''} ${report?.landlord?.last_name?.toLowerCase() || ''}`;
 
       return (
-        (searchTerms.user === '' ||
-          userFullName.includes(searchTerms.user.toLowerCase())) &&
-        (searchTerms.landlord === '' ||
-          landlordFullName.includes(searchTerms.landlord.toLowerCase()))
+        (debouncedSearchTerms.user === '' ||
+          userFullName.includes(debouncedSearchTerms.user.toLowerCase())) &&
+        (debouncedSearchTerms.landlord === '' ||
+          landlordFullName.includes(
+            debouncedSearchTerms.landlord.toLowerCase()
+          ))
       );
     });
-  }, [reports, searchTerms]);
+  }, [reports, debouncedSearchTerms]);
 
   const paginatedReports = useMemo(() => {
     return filteredReports.slice(
@@ -203,10 +204,10 @@ function ReportUserList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report) => (
+              {paginatedReports.map((report, index) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
-                    {report.id}
+                    {index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {`${report?.user?.first_name} ${report?.user?.last_name}`}
@@ -265,12 +266,7 @@ function ReportUserList() {
       </div>
     );
   } else if (status === 'failed') {
-    content = (
-      <Typography variant="body1" align="center" color="error">
-        {error}
-      </Typography>
-    );
-    errorToast('Failed to fetch reports');
+    content = <p>{error}</p>;
   }
 
   return (
@@ -337,10 +333,10 @@ function ReportUserList() {
         </DialogActions>
       </Dialog>
       <DeleteConfirmationModal
-        open={openDeleteDialog}
+        isOpen={openDeleteDialog}
         handleClose={handleCloseDeleteDialog}
         handleConfirm={handleConfirmDelete}
-        type={deleteType}
+        item={deleteType}
       />
     </>
   );
