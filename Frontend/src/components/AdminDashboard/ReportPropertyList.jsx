@@ -28,6 +28,9 @@ import {
 } from 'store/reportPropertiesSlice';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import { successToast, errorToast } from 'utils/toast';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -102,7 +105,7 @@ function ReportPropertyList() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchTerms, setSearchTerms] = useState({ user: '', property: '' });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (status === 'idle') {
@@ -126,14 +129,20 @@ function ReportPropertyList() {
     setOpenDeleteDialog(false);
   };
 
-  const handleConfirmDelete = () => {
-    if (deleteType === 'report') {
-      dispatch(deleteReport(deleteId));
-    } else if (deleteType === 'property') {
-      dispatch(deleteProperty(deleteId));
+  const handleConfirmDelete = async () => {
+    try {
+      if (deleteType === 'report') {
+        await dispatch(deleteReport(deleteId));
+        successToast('Report deleted successfully');
+      } else if (deleteType === 'property') {
+        await dispatch(deleteProperty(deleteId));
+        successToast('Property deleted successfully');
+      }
+      setOpenDeleteDialog(false);
+      dispatch(fetchReports());
+    } catch (err) {
+      errorToast('An error occurred while performing the action');
     }
-    setOpenDeleteDialog(false);
-    dispatch(fetchReports());
   };
 
   const handleShowContent = (content) => {
@@ -330,6 +339,7 @@ function ReportPropertyList() {
         handleClose={handleCloseDeleteDialog}
         handleConfirm={handleConfirmDelete}
       />
+      <ToastContainer />
     </>
   );
 }

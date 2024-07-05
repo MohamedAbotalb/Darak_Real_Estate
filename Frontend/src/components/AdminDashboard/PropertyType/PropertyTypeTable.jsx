@@ -24,6 +24,8 @@ import {
   fetchPropertyTypes,
 } from 'store/propertyTypesSlice';
 import { errorToast, successToast } from 'utils/toast';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Loader from 'components/Loader';
 import EditPropertyTypeButton from 'components/AdminDashboard/PropertyType/EditPropertyTypeButton';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyType/AddPropertyTypeButton';
@@ -92,7 +94,7 @@ function PropertyTypeTable() {
   const { status, propertyTypes } = useSelector((state) => state.propertyTypes);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState(null);
@@ -110,7 +112,7 @@ function PropertyTypeTable() {
 
   const handleDelete = async () => {
     try {
-      dispatch(deletePropertyType(selectedSlug));
+      await dispatch(deletePropertyType(selectedSlug));
       successToast('Property type deleted successfully');
       setOpenConfirm(false);
     } catch (error) {
@@ -259,6 +261,8 @@ function PropertyTypeTable() {
         isOpen={detailsOpen}
         handleClose={handleCloseDetails}
       />
+
+      <ToastContainer />
     </>
   );
 }

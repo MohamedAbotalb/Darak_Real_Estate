@@ -104,7 +104,7 @@ function ReportUserList() {
     landlord: '',
   });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (status === 'idle') {
@@ -200,10 +200,10 @@ function ReportUserList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report, index) => (
+              {paginatedReports.map((report, user) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
-                    {index + 1}
+                    {report.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {`${report?.user?.first_name} ${report?.user?.last_name}`}

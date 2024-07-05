@@ -92,7 +92,7 @@ function ReviewList() {
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   const { reviews, status } = useSelector((state) => state.reviews);
   const dispatch = useDispatch();
@@ -212,10 +212,10 @@ function ReviewList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedReviews.map((review, index) => (
+                {paginatedReviews.map((review) => (
                   <StyledTableRow key={review.id}>
                     <StyledTableCell component="th" scope="row">
-                      {index + 1}
+                      {review.id}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {`${review?.user?.first_name} ${review?.user?.last_name}`}

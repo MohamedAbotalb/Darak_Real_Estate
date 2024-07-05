@@ -5,7 +5,7 @@ import 'assets/css/Sidebar.css';
 function Sidebar() {
   return (
     <div className="sidebar">
-      <h2>Dashboard Menu</h2>
+      <h2>RentEZ</h2>
       <ul>
         <li>
           <NavLink
