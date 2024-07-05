@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import {
@@ -97,6 +97,29 @@ function UserDetails() {
     }
   }, [status, dispatch]);
 
+  const filteredUsers = useMemo(() => {
+    let filteredList = users;
+
+    if (searchTerm) {
+      filteredList = filteredList.filter((user) =>
+        user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (filterType !== 'all') {
+      filteredList = filteredList.filter((user) => user.role === filterType);
+    }
+
+    return filteredList;
+  }, [users, searchTerm, filterType]);
+
+  const paginatedUsers = useMemo(() => {
+    return filteredUsers.slice(
+      (page - 1) * rowsPerPage,
+      (page - 1) * rowsPerPage + rowsPerPage
+    );
+  }, [filteredUsers, page, rowsPerPage]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -109,25 +132,12 @@ function UserDetails() {
     setFilterType(newFilterType);
   };
 
-  const filteredUsers = users
-    .filter((user) =>
-      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((user) => {
-      if (filterType === 'all') return true;
-      return user.role === filterType;
-    });
-
   let content;
 
   if (status === 'loading') {
     content = <Loader />;
   } else if (status === 'succeeded') {
     if (Array.isArray(users)) {
-      const paginatedUsers = filteredUsers.slice(
-        (page - 1) * rowsPerPage,
-        (page - 1) * rowsPerPage + rowsPerPage
-      );
       content = (
         <>
           <TableContainer component={Paper}>
@@ -144,11 +154,11 @@ function UserDetails() {
               </TableHead>
               <TableBody>
                 {paginatedUsers.map(
-                  (user) =>
+                  (user, index) =>
                     user.role !== 'admin' && (
                       <StyledTableRow key={user.id}>
                         <StyledTableCell component="th" scope="row">
-                          {user.id}
+                          {index + 1}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {user.first_name}
@@ -251,4 +261,4 @@ function UserDetails() {
   );
 }
 
-export default UserDetails;
+export default React.memo(UserDetails);
