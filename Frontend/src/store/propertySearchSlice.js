@@ -18,13 +18,13 @@ export const fetchProperties = createAsyncThunk(
     try {
       const response = await getPropertiesSearch({
         params: {
-          property_type: propertyType || null,
-          city: city || null,
-          listing_type: listingType || null,
-          num_of_bedrooms: bedrooms || null,
-          num_of_bathrooms: bathrooms || null,
-          min_price: minPrice || null,
-          max_price: maxPrice || null,
+          city,
+          property_type: propertyType,
+          listing_type: listingType,
+          num_of_rooms: bedrooms,
+          num_of_bathrooms: bathrooms,
+          min_price: minPrice,
+          max_price: maxPrice,
         },
       });
       return response.data;
