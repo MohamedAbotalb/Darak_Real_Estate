@@ -17,6 +17,7 @@ import ReviewsPage from 'pages/Admin/Reviews';
 import UserDetailsPage from 'pages/Admin/UserDetails';
 import UserReportsPage from 'pages/Admin/UserReports';
 import PropertyDetails from 'components/PropertyDetails';
+import PropertiesPage from 'pages/Properties';
 import WishlistPage from 'pages/Wishlist';
 import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
@@ -27,7 +28,6 @@ import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
 import AddPropertyPage from 'components/AddProperty';
-import SearchPage from 'pages/Search';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
@@ -45,11 +45,11 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="properties" element={<PropertiesPage />} />
           <Route path="properties/:slug" element={<PropertyDetails />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
           <Route path="edit-property/:slug" element={<AddPropertyPage />} />
-          <Route path="search" element={<SearchPage />} />
           <Route
             path="landlord-notifications"
             element={<LandlordNotifications />}

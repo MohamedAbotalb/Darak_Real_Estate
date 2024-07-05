@@ -22,6 +22,8 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import Loader from 'components/Loader';
 import { fetchUsers } from 'store/userDetailsSlice';
+import { errorToast, successToast } from 'utils/toast';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -87,13 +89,20 @@ function UserDetails() {
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchUsers());
+      dispatch(fetchUsers())
+        .unwrap()
+        .then(() => {
+          successToast('Users fetched successfully');
+        })
+        .catch(() => {
+          errorToast('Failed to fetch users');
+        });
     }
   }, [status, dispatch]);
 
@@ -154,11 +163,11 @@ function UserDetails() {
               </TableHead>
               <TableBody>
                 {paginatedUsers.map(
-                  (user, index) =>
+                  (user) =>
                     user.role !== 'admin' && (
                       <StyledTableRow key={user.id}>
                         <StyledTableCell component="th" scope="row">
-                          {index + 1}
+                          {user.id}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {user.first_name}

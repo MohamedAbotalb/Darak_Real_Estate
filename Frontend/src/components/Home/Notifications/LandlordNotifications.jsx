@@ -8,7 +8,6 @@ import {
 } from 'store/Notifications/notificationsSlice';
 import {
   Box,
-  CircularProgress,
   List,
   ListItem,
   Avatar,
@@ -38,6 +37,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { red, grey } from '@mui/material/colors';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import Loader from 'components/Loader';
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
@@ -207,7 +207,7 @@ function LandlordNotifications() {
         alignItems="center"
         height="100vh"
       >
-        <CircularProgress />
+        <Loader />
       </Box>
     );
   }

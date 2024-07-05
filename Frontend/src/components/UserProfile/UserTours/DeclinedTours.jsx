@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography, Box, CircularProgress, Pagination } from '@mui/material';
+import { Typography, Box, Pagination } from '@mui/material';
 import { fetchToursByStatus } from 'store/tourSlice';
+import Loader from 'components/Loader';
 import TourCard from './TourCard';
 
 const ITEMS_PER_PAGE = 6;
@@ -32,7 +33,7 @@ function DeclinedTours() {
         alignItems="center"
         height="100vh"
       >
-        <CircularProgress />
+        <Loader />
       </Box>
     );
   }

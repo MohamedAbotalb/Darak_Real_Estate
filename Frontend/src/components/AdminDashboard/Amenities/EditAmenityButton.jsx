@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { updateAmenity } from 'store/amenitiesSlice';
+import { successToast } from 'utils/toast';
 import AmenityModal from 'components/AdminDashboard/Amenities/AmenityModal';
 
 function EditAmenityButton({ amenity }) {
@@ -15,6 +16,7 @@ function EditAmenityButton({ amenity }) {
   const handleSubmit = async (data) => {
     dispatch(updateAmenity({ slug: amenity.slug, data }));
     handleClose();
+    successToast('Amenity updated successfully');
   };
 
   return (

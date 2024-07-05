@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -21,12 +21,12 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import GridOnIcon from '@mui/icons-material/GridOn';
-import debounce from 'lodash.debounce';
 import {
   fetchReports,
   deleteReport,
   deleteLandlord,
 } from 'store/reportUsersSlice';
+import { successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
@@ -104,7 +104,7 @@ function ReportUserList() {
     landlord: '',
   });
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
     if (status === 'idle') {
@@ -140,21 +140,23 @@ function ReportUserList() {
   const handleConfirmDelete = () => {
     if (deleteType === 'report') {
       dispatch(deleteReport(deleteId));
+      successToast('Report deleted successfully');
     } else if (deleteType === 'landlord') {
       dispatch(deleteLandlord(deleteId));
+      successToast('Landlord blocked successfully');
     }
     setOpenDeleteDialog(false);
     dispatch(fetchReports());
   };
 
-  const handleSearchChange = (event, fieldName) => {
-    debounce(() => {
-      setSearchTerms((prevTerms) => ({
-        ...prevTerms,
-        [fieldName]: event.target.value,
-      }));
-    }, 300);
-  };
+  const handleSearchChange = useCallback((event, fieldName) => {
+    setSearchTerms((prevTerms) => ({
+      ...prevTerms,
+      [fieldName]: event.target.value,
+    }));
+  }, []);
+
+  const debouncedSearchTerms = useMemo(() => searchTerms, [searchTerms]);
 
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
@@ -162,13 +164,15 @@ function ReportUserList() {
       const landlordFullName = `${report?.landlord?.first_name?.toLowerCase() || ''} ${report?.landlord?.last_name?.toLowerCase() || ''}`;
 
       return (
-        (searchTerms.user === '' ||
-          userFullName.includes(searchTerms.user.toLowerCase())) &&
-        (searchTerms.landlord === '' ||
-          landlordFullName.includes(searchTerms.landlord.toLowerCase()))
+        (debouncedSearchTerms.user === '' ||
+          userFullName.includes(debouncedSearchTerms.user.toLowerCase())) &&
+        (debouncedSearchTerms.landlord === '' ||
+          landlordFullName.includes(
+            debouncedSearchTerms.landlord.toLowerCase()
+          ))
       );
     });
-  }, [reports, searchTerms]);
+  }, [reports, debouncedSearchTerms]);
 
   const paginatedReports = useMemo(() => {
     return filteredReports.slice(
@@ -200,10 +204,10 @@ function ReportUserList() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedReports.map((report, index) => (
+              {paginatedReports.map((report) => (
                 <StyledTableRow key={report.id}>
                   <StyledTableCell component="th" scope="row">
-                    {index + 1}
+                    {report.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {`${report?.user?.first_name} ${report?.user?.last_name}`}
@@ -329,10 +333,10 @@ function ReportUserList() {
         </DialogActions>
       </Dialog>
       <DeleteConfirmationModal
-        open={openDeleteDialog}
+        isOpen={openDeleteDialog}
         handleClose={handleCloseDeleteDialog}
         handleConfirm={handleConfirmDelete}
-        type={deleteType}
+        item={deleteType}
       />
     </>
   );

@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Typography,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,6 +18,7 @@ import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loader from 'components/Loader';
 
 function MyProperties() {
   const dispatch = useDispatch();
@@ -69,16 +69,7 @@ function MyProperties() {
   };
 
   if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
@@ -125,8 +116,7 @@ function MyProperties() {
         <DialogTitle id="alert-dialog-title">Delete Property</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this property? This action cannot be
-            undone.
+            Are you sure you want to delete this property?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
