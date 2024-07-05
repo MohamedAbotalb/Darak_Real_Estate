@@ -39,7 +39,7 @@ class ReviewController extends Controller
         if ($review) {
             return response()->json(['data' => new ReviewResource($review)], 201);
         } else {
-            return response()->json(['message' => 'Failed to create review'], 400);
+            return response()->json(['message' => 'The user has already added a comment on this property'], 400);
         }
     }
     public function update(UpdateReviewRequest $request, $id)
