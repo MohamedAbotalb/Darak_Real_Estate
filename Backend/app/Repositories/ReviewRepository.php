@@ -8,12 +8,23 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewRepository implements ReviewRepositoryInterface
 {
-    public function showReviews(){
-        return Review::with(['user', 'property','reactions','replies'])->get();
+    public function showReviews()
+    {
+        return Review::with(['user', 'property', 'reactions', 'replies'])->get();
     }
     public function storeReview(array $data)
     {
-        $data['user_id']=Auth::id(); 
+        $userId = Auth::id();
+        $propertyId = $data['property_id'];
+        $existingReview = Review::where('user_id', $userId)
+            ->where('property_id', $propertyId)
+            ->first();
+
+        if ($existingReview) {
+            return null;
+        }
+
+        $data['user_id'] = $userId;
         return Review::create($data);
     }
     public function updateReview(int $id, array $data)
@@ -25,9 +36,10 @@ class ReviewRepository implements ReviewRepositoryInterface
         }
         return null;
     }
-    public function deleteReview(int $id){
+    public function deleteReview(int $id)
+    {
         $review = Review::find($id);
-        $review['user_id']=Auth::id();
+        $review['user_id'] = Auth::id();
         if ($review) {
             $review->delete();
             return true;
@@ -36,15 +48,15 @@ class ReviewRepository implements ReviewRepositoryInterface
     }
     public function showPropertyReviews(int $id)
     {
-        return Review::where('property_id', $id)->with('replies','user')->get();
+        return Review::where('property_id', $id)->with('replies', 'user')->get();
     }
     public function getAverageRating(int $propertyId)
     {
-         $averageRating=Review::where('property_id', $propertyId)
+        $averageRating = Review::where('property_id', $propertyId)
             ->avg('rate');
-            if(!$averageRating){
-                return null;
-            }
-            return number_format($averageRating, 1);
+        if (!$averageRating) {
+            return null;
+        }
+        return number_format($averageRating, 1);
     }
 }
