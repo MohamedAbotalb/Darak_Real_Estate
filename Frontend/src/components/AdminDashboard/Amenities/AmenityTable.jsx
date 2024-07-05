@@ -24,9 +24,7 @@ import Loader from 'components/Loader';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
-import { ToastContainer } from 'react-toastify';
 import { errorToast, successToast } from 'utils/toast';
-import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -88,8 +86,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function AmenityTable() {
   const dispatch = useDispatch();
-  const amenities = useSelector((state) => state.amenities.amenities);
-  const status = useSelector((state) => state.amenities.status);
+  const { amenities, status } = useSelector((state) => state.amenities);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(5);
@@ -103,7 +100,7 @@ function AmenityTable() {
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteAmenity(selectedSlug));
+      dispatch(deleteAmenity(selectedSlug));
       successToast('Amenity deleted successfully');
       setOpenConfirm(false);
     } catch (error) {
@@ -171,6 +168,7 @@ function AmenityTable() {
           <AddAmenityButton />
         </Box>
       </Box>
+
       {status === 'loading' ? (
         <Loader />
       ) : (
@@ -221,13 +219,13 @@ function AmenityTable() {
           </Box>
         </>
       )}
+
       <DeleteConfirmationModal
         item="Amenity"
         isOpen={openConfirm}
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}
       />
-      <ToastContainer />
     </>
   );
 }
