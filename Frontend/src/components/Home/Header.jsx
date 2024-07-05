@@ -173,11 +173,20 @@ function Header() {
               <MenuItem onClick={handleClose} component={Link} to="/profile">
                 Profile
               </MenuItem>
-              {/* {user?.role === 'landlord' && (
-                <MenuItem onClick={handleClose} component={Link} to="/my-properties">
+              {user?.role === 'landlord' && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/myproperties"
+                >
                   My Properties
                 </MenuItem>
-              )} */}
+              )}
+              {user?.role === 'user' && (
+                <MenuItem onClick={handleClose} component={Link} to="/mytours">
+                  My Tours
+                </MenuItem>
+              )}
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
@@ -281,19 +290,6 @@ function Header() {
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
               </ListItem>
-              {/* {user?.role === 'landlord' && (
-                <ListItem
-                  button
-                  component={Link}
-                  to="/my-properties"
-                  onClick={handleDrawerClose}
-                >
-                  <ListItemIcon>
-                    <AccountCircleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="My Properties" />
-                </ListItem>
-              )} */}
               <ListItem button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
               </ListItem>
