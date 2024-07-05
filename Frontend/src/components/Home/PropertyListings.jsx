@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, CircularProgress, Alert, Box } from '@mui/material';
+import { Grid, Typography, Alert, Box } from '@mui/material';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchCategories } from 'store/home/categoriesSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from 'components/Home/PropertyCard';
 import CategoryFilter from 'components/Home/CategoryFilter';
+import Loader from 'components/Loader';
 
 function PropertyListings({ type }) {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ function PropertyListings({ type }) {
         alignItems="center"
         style={{ minHeight: '100vh' }}
       >
-        <CircularProgress />
+        <Loader />
       </Grid>
     );
   }

@@ -59,5 +59,13 @@ class ReviewController extends Controller
             return response()->json(['message' => 'review not found'], 404);
         }
     }
-    
+    public function calcAverage($id)
+    {
+        $averageRating = $this->reviewRepository->getAverageRating($id);
+        if(!$averageRating){
+            return response()->json(['message'=>'There is no reviews']);
+        }
+        return response()->json(['average'=>$averageRating]);
+
+    }
 }

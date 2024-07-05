@@ -18,12 +18,12 @@ import {
   Paper,
   Box,
   Button,
-  CircularProgress,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { green, red, orange } from '@mui/material/colors';
 import moment from 'moment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import Loader from 'components/Loader';
 
 function NotificationDropdown({ role }) {
   const dispatch = useDispatch();
@@ -132,7 +132,7 @@ function NotificationDropdown({ role }) {
               alignItems="center"
               height="100px"
             >
-              <CircularProgress />
+              <Loader />
             </Box>
           )}
           {status === 'failed' && (

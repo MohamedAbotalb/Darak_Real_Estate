@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  Box,
-  IconButton,
-  MenuItem,
-  Select,
-  FormControl,
-  CircularProgress,
-} from '@mui/material';
+import { Box, IconButton, MenuItem, Select, FormControl } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { toast } from 'react-toastify';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
+import Loader from 'components/Loader';
 
 const SearchContainer = styled(Box)(() => ({
   display: 'flex',
@@ -179,14 +173,7 @@ function SearchForm() {
   return (
     <SearchContainer>
       {isLoading ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="100vh"
-        >
-          <CircularProgress size={50} />
-        </Box>
+        <Loader />
       ) : (
         <>
           <SearchFormControl variant="outlined">
