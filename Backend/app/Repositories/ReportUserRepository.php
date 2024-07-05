@@ -29,21 +29,22 @@ class ReportUserRepository implements ReportUserRepositoryInterface
         return false; 
     }
 
-    public function deleteUserAndReportById(int $id)
-    {
-        return DB::transaction(function () use ($id) {
-            $report = ReportUser::find($id);
-
-            if ($report) {
-                if ($report->landlord()) {
-                    $report->landlord()->delete();
-                }
-                return $report->delete();
+    public function deleteUserAndReportById(int $reportId)
+{
+    return DB::transaction(function () use ($reportId) {
+        $report = ReportUser::find($reportId);
+        if ($report) {
+            $landlord = $report->landlord;
+            if ($landlord) {
+                $landlord->properties()->delete();
+                $landlord->delete();
             }
+            return $report->delete();
+        }
+        return false;
+    });
+}
 
-            return false; 
-        });
-    }
 
     public function createReport(array $data)
     {

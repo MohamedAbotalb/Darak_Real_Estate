@@ -30,7 +30,7 @@ class User extends Authenticatable
         'social_id',
         'social_type',
     ];
-    protected $dates=['deleted_at'];
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,7 +51,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     public function reports()
-{
-    return $this->hasMany(ReportUser::class, 'user_id');
-}
+    {
+        return $this->hasMany(ReportUser::class, 'user_id');
+    }
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
 }
