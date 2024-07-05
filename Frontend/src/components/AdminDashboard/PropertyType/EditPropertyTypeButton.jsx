@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { errorToast, successToast } from 'utils/toast';
 import { editPropertyType, fetchPropertyTypes } from 'store/propertyTypesSlice';
-import PropertyTypeModal from 'components/AdminDashboard/PropertyTypeComponent/PropertyTypeModal';
+import PropertyTypeModal from 'components/AdminDashboard/PropertyType/PropertyTypeModal';
 
 function EditPropertyTypeButton({ type }) {
   const [isOpen, setOpen] = useState(false);
