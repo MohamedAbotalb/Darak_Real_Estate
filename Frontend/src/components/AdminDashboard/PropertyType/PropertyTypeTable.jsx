@@ -23,7 +23,7 @@ import {
   deletePropertyType,
   fetchPropertyTypes,
 } from 'store/propertyTypesSlice';
-import { errorToast, successToast } from 'utils/toast';
+import { errorToast, successToast } from 'utils/toast'; // Import toast functions
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from 'components/Loader';

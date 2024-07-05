@@ -171,7 +171,6 @@ function AmenityTable() {
           <AddAmenityButton />
         </Box>
       </Box>
-
       {status === 'loading' ? (
         <Loader />
       ) : (
@@ -222,14 +221,12 @@ function AmenityTable() {
           </Box>
         </>
       )}
-
       <DeleteConfirmationModal
         item="Amenity"
         isOpen={openConfirm}
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}
       />
-
       <ToastContainer />
     </>
   );
