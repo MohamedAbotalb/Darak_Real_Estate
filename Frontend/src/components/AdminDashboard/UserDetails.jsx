@@ -163,11 +163,11 @@ function UserDetails() {
               </TableHead>
               <TableBody>
                 {paginatedUsers.map(
-                  (user, index) =>
+                  (user) =>
                     user.role !== 'admin' && (
                       <StyledTableRow key={user.id}>
                         <StyledTableCell component="th" scope="row">
-                          {index + 1}
+                          {user.id}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {user.first_name}
