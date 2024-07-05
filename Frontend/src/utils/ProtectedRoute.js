@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import secureLocalStorage from 'react-secure-storage';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { errorToast } from 'utils/toast';
 
 function ProtectedRoute({ element, roles }) {
-  const { user } = useSelector((state) => state.auth);
+  const user = JSON.parse(secureLocalStorage.getItem('user'));
 
   if (!user) {
-    errorToast('You should be logged in to access this page');
+    errorToast('You must be logged in to access this page');
     return <Navigate to="/login" />;
   }
 
