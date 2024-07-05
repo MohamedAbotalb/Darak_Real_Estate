@@ -23,9 +23,7 @@ import {
   deletePropertyType,
   fetchPropertyTypes,
 } from 'store/propertyTypesSlice';
-import { errorToast, successToast } from 'utils/toast'; // Import toast functions
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import EditPropertyTypeButton from 'components/AdminDashboard/PropertyType/EditPropertyTypeButton';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyType/AddPropertyTypeButton';
@@ -261,8 +259,6 @@ function PropertyTypeTable() {
         isOpen={detailsOpen}
         handleClose={handleCloseDetails}
       />
-
-      <ToastContainer />
     </>
   );
 }
