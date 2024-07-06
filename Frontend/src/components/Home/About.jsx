@@ -4,7 +4,7 @@ import logo from 'assets/images/logo-auth.png';
 
 function AboutUs() {
   return (
-    <Container sx={{ my: 8 }}>
+    <Container sx={{ my: 11 }}>
       <Grid container spacing={4} alignItems="center">
         {/* Left Content */}
         <Grid item xs={12} md={6}>

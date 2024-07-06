@@ -15,7 +15,7 @@ const SearchContainer = styled(Box)(() => ({
   alignItems: 'center',
   justifyContent: 'center',
   flexWrap: 'wrap',
-  margin: '20px auto',
+  margin: '80px auto',
 }));
 
 const SearchFormControl = styled(FormControl)(() => ({

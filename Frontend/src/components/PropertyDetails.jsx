@@ -318,6 +318,7 @@ function PropertyDetails() {
                   mt: 2,
                   height: '40px',
                 }}
+                disabled={user.role === 'landlord'}
               >
                 Request a Tour
               </Button>
@@ -340,6 +341,7 @@ function PropertyDetails() {
                     borderColor: '#cc0000',
                   },
                 }}
+                disabled={user.role === 'landlord'}
               >
                 Report Property
               </Button>
