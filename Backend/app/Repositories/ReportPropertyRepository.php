@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\PropertyImage;
 use App\Models\ReportProperty;
 use App\Repositories\Contracts\ReportPropertyRepositoryInterface;
 use Illuminate\Support\Facades\DB;
@@ -32,16 +33,22 @@ class ReportPropertyRepository implements ReportPropertyRepositoryInterface
     public function deletePropertyAndReportById(int $id)
     {
         return DB::transaction(function () use ($id) {
-            $report = ReportProperty::find($id);
+           $report = ReportProperty::find($id);
 
-            if ($report) {
-                if ($report->property) {
-                    $report->property->delete();
-                }
-                return $report->delete();
+        if ($report) {
+            $property = $report->property;
+
+            if ($property) {
+                ReportProperty::where('property_id', $property->id)->delete();
+                PropertyImage::where('property_id', $property->id)->delete();
+                $property->amenities()->detach();
+                $property->delete();
             }
 
-            return false;
+            return true;
+        }
+
+        return false;
         });
     }
 

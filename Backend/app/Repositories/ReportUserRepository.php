@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\ReportProperty;
 use App\Models\ReportUser;
 use App\Repositories\Contracts\ReportUserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
@@ -26,30 +27,44 @@ class ReportUserRepository implements ReportUserRepositoryInterface
             return $report->delete();
         }
 
-        return false; 
+        return false;
+    }
+    public function deleteUserAndReportById(int $reportId)
+    {
+        return DB::transaction(function () use ($reportId) {
+            $report = ReportUser::find($reportId);
+
+            if ($report) {
+                $landlord = $report->landlord;
+
+                if ($landlord) {
+                    $landlordReports = ReportUser::where('landlord_id', $landlord->id)->get();
+
+                    foreach ($landlordReports as $landlordReport) {
+                        $landlordReport->delete();
+                    }
+
+                    $landlord->properties()->each(function ($property) {
+                        ReportProperty::where('property_id', $property->id)->delete();
+                        $property->delete();
+                    });
+
+                    $landlord->delete();
+                }
+
+                return $report->delete();
+            }
+
+            return false;
+        });
     }
 
-    public function deleteUserAndReportById(int $reportId)
-{
-    return DB::transaction(function () use ($reportId) {
-        $report = ReportUser::find($reportId);
-        if ($report) {
-            $landlord = $report->landlord;
-            if ($landlord) {
-                $landlord->properties()->delete();
-                $landlord->delete();
-            }
-            return $report->delete();
-        }
-        return false;
-    });
-}
 
 
     public function createReport(array $data)
     {
         $report = ReportUser::create($data);
-        $report->load('reason'); 
+        $report->load('reason');
         return $report;
     }
 }
