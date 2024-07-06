@@ -69,7 +69,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
         </DialogContent>
         <DialogTitle
           style={{
-            borderTop: '2px solid #c5c3c3',
+            borderTop: '1px solid #c5c3c3',
           }}
         >
           <Box
