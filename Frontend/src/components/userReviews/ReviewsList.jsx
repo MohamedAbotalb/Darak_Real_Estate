@@ -37,7 +37,6 @@ function ReviewsList({ propertyId }) {
   const [editedPropertyId, setEditedPropertyId] = useState(null);
   const [editingReview, setEditingReview] = useState(null);
   const [editedContent, setEditedContent] = useState('');
-  const [originalContent, setOriginalContent] = useState('');
   const [editedRating, setEditedRating] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuReviewId, setMenuReviewId] = useState(null);
@@ -51,14 +50,12 @@ function ReviewsList({ propertyId }) {
   }, [dispatch, propertyId]);
 
   const handleDelete = (reviewId) => {
+    setAnchorEl(null);
+    setMenuReviewId(null);
 
-  setAnchorEl(null);
-  setMenuReviewId(null);
-
-  setOpenDeleteDialog(true);
-  setReviewToDelete(reviewId);
-};
-
+    setOpenDeleteDialog(true);
+    setReviewToDelete(reviewId);
+  };
 
   const handleConfirmDelete = () => {
     setOpenDeleteDialog(false);
@@ -77,105 +74,59 @@ function ReviewsList({ propertyId }) {
     setMenuReviewId(null);
   };
 
- const handleEditClick = (review) => {
+  const handleEditClick = (review) => {
     setEditingReview(review.id);
     setEditedContent(review.content);
     setEditedRating(review.rate);
-    setEditedPropertyId(propertyId); 
+    setEditedPropertyId(propertyId);
     handleMenuClose();
   };
 
-// const handleEditSubmit = () => {
-//   let valid = true;
+  const handleEditSubmit = () => {
+    let valid = true;
 
-//   // Validate rate
-//   if (editedRating === 0) {
-//     toast.error('Please provide a rating.');
-//     valid = false;
-//   }
-
-//   // Validate content
-//   if (editedContent !== null && editedContent.trim() !== '') {
-//     if (editedContent.trim().length < 4) {
-//       toast.error('Comment must be at least 4 characters long.');
-//       valid = false;
-//     } else if (/^\d/.test(editedContent.trim())) {
-//       toast.error('Comment cannot start with a number.');
-//       valid = false;
-//     }
-//   }
-
-//   if (!valid) {
-//     return;
-//   }
-
-//   // Prepare the review data payload
-//   const reviewData = {
-//     rate: editedRating,
-//     property_id: editedPropertyId,
-//     content: editedContent !== null ? editedContent.trim() : null
-//   };
-
-//   dispatch(
-//     updateReviewAsync({
-//       reviewId: editingReview,
-//       reviewData,
-//     })
-//   ).then(() => {
-//     dispatch(fetchReviews(propertyId)); 
-//     setEditingReview(null);
-//     setEditedContent('');
-//     setEditedRating(0);
-//     setEditedPropertyId(null); 
-//   });
-// };
-
-const handleEditSubmit = () => {
-  let valid = true;
-
-  // Validate rate
-  if (editedRating === 0) {
-    toast.error('Please provide a rating.');
-    valid = false;
-  }
-
-  // Validate content
-  if (editedContent !== null && editedContent.trim() !== '') {
-    if (editedContent.trim().length < 4) {
-      toast.error('Comment must be at least 4 characters long.');
-      valid = false;
-    } else if (/^\d/.test(editedContent.trim())) {
-      toast.error('Comment cannot start with a number.');
+    // Validate rate
+    if (editedRating === 0) {
+      toast.error('Please provide a rating.');
       valid = false;
     }
-  }
 
-  if (!valid) {
-    return;
-  }
+    // Validate content
+    if (editedContent !== null && editedContent.trim() !== '') {
+      if (editedContent.trim().length < 4) {
+        toast.error('Comment must be at least 4 characters long.');
+        valid = false;
+      } else if (/^\d/.test(editedContent.trim())) {
+        toast.error('Comment cannot start with a number.');
+        valid = false;
+      }
+    }
 
-  // Prepare the review data payload
-  const reviewData = {
-    rate: editedRating,
-    property_id: editedPropertyId,
-    content: editedContent !== null ? editedContent.trim() : null,
-    updated_at: new Date().toISOString(), // Add updated_at field with current date
+    if (!valid) {
+      return;
+    }
+
+    // Prepare the review data payload
+    const reviewData = {
+      rate: editedRating,
+      property_id: editedPropertyId,
+      content: editedContent !== null ? editedContent.trim() : null,
+      updated_at: new Date().toISOString(), // Add updated_at field with current date
+    };
+
+    dispatch(
+      updateReviewAsync({
+        reviewId: editingReview,
+        reviewData,
+      })
+    ).then(() => {
+      dispatch(fetchReviews(propertyId));
+      setEditingReview(null);
+      setEditedContent('');
+      setEditedRating(0);
+      setEditedPropertyId(null);
+    });
   };
-
-  dispatch(
-    updateReviewAsync({
-      reviewId: editingReview,
-      reviewData,
-    })
-  ).then(() => {
-    dispatch(fetchReviews(propertyId));
-    setEditingReview(null);
-    setEditedContent('');
-    setEditedRating(0);
-    setEditedPropertyId(null);
-  });
-};
-
 
   const handleEditCancel = () => {
     setEditingReview(null);
@@ -196,19 +147,8 @@ const handleEditSubmit = () => {
     return format(date, 'd/M/yyyy');
   };
 
-  // const formatReviewDate = (createdAt) => {
-  //   const reviewDate = new Date(createdAt);
-  //   const now = new Date();
-  //   const differenceInHours = Math.abs(now - reviewDate) / 36e5;
-
-  //   if (differenceInHours < 24) {
-  //     return formatDistanceToNow(reviewDate, { addSuffix: true });
-  //   }
-
-  //   return formatCustomDate(reviewDate);
-  // };
- const formatReviewDate = (createdAt, updatedAt, editingReviewId) => {
-    if (editingReviewId === editingReviewId && updatedAt) {
+  const formatReviewDate = (createdAt, updatedAt, reviewId) => {
+    if (editingReview === reviewId && updatedAt) {
       // Display updated at time if review is currently being edited and has an updated_at time
       const updateDate = new Date(updatedAt);
       return formatDistanceToNow(updateDate, { addSuffix: true });
@@ -224,86 +164,95 @@ const handleEditSubmit = () => {
 
     return formatCustomDate(reviewDate);
   };
-  console.log(reviews,'reviews from list form')
+
+  console.log(reviews, 'reviews from list form');
 
   return (
     <Box>
       <List>
-        {reviews?.length > 0 && reviews.slice()
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-          .slice(0, visibleReviews)
-          .map((review) => (
-            <Paper
-              elevation={3}
-              style={{
-                marginBottom: '16px',
-                padding: '16px',
-                borderRadius: '8px',
-              }}
-              key={review.id}
-            >
-              <ListItem alignItems="flex-start">
-                <Box display="flex" flexDirection="column" width="100%">
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Box display="flex" alignItems="center">
-                      <Avatar
-                        src={review.user.avatar}
-                        alt={review.user.first_name}
-                        style={{ marginRight: '16px' }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          component="span"
-                          fontWeight="bold"
-                        >
-                          {`${review?.user.first_name} ${review?.user.last_name}`}
-                        </Typography>
+        {reviews?.length > 0 &&
+          reviews
+            .slice()
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .slice(0, visibleReviews)
+            .map((review) => (
+              <Paper
+                elevation={3}
+                style={{
+                  marginBottom: '16px',
+                  padding: '16px',
+                  borderRadius: '8px',
+                }}
+                key={review.id}
+              >
+                <ListItem alignItems="flex-start">
+                  <Box display="flex" flexDirection="column" width="100%">
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Box display="flex" alignItems="center">
+                        <Avatar
+                          src={review.user.avatar}
+                          alt={review.user.first_name}
+                          style={{ marginRight: '16px' }}
+                        />
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            component="span"
+                            fontWeight="bold"
+                          >
+                            {`${review?.user.first_name} ${review?.user.last_name}`}
+                          </Typography>
+                        </Box>
                       </Box>
+                      {user.id === review.user.id && (
+                        <>
+                          <IconButton
+                            onClick={(event) =>
+                              handleMenuClick(event, review.id)
+                            }
+                          >
+                            <MoreVert />
+                          </IconButton>
+                          <Menu
+                            anchorEl={anchorEl}
+                            open={
+                              Boolean(anchorEl) && menuReviewId === review.id
+                            }
+                            onClose={handleMenuClose}
+                          >
+                            <MenuItem
+                              onClick={() => handleEditClick(review)}
+                              color="primary"
+                            >
+                              Edit
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => handleDelete(review.id)}
+                              color="error"
+                            >
+                              Delete
+                            </MenuItem>
+                          </Menu>
+                        </>
+                      )}
                     </Box>
-                    {user.id === review.user.id && (
-                      <>
-                        <IconButton
-                          onClick={(event) => handleMenuClick(event, review.id)}
-                        >
-                          <MoreVert />
-                        </IconButton>
-                        <Menu
-                          anchorEl={anchorEl}
-                          open={Boolean(anchorEl) && menuReviewId === review.id}
-                          onClose={handleMenuClose}
-                        >
-                          <MenuItem
-                            onClick={() => handleEditClick(review)}
-                            color="primary"
-                          >
-                            Edit
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => handleDelete(review.id)}
-                            color="error"
-                          >
-                            Delete
-                          </MenuItem>
-                        </Menu>
-                      </>
-                    )}
-                  </Box>
-                  <Box display="flex" alignItems="center" mt={1} ml={1}>
-                    <Rating
-                      name="rate"
-                      value={
-                        editingReview === review.id ? editedRating : review.rate
-                      }
-                      readOnly={editingReview !== review.id}
-                      size="small"
-                      onChange={(e, newValue) => setEditedRating(newValue)}
-                    />
-                     <Typography
+                    <Box display="flex" alignItems="center" mt={1} ml={1}>
+                      <Rating
+                        name="rate"
+                        value={
+                          editingReview === review.id
+                            ? editedRating
+                            : review.rate
+                        }
+                        readOnly={editingReview !== review.id}
+                        size="small"
+                        onChange={(e, newValue) => setEditedRating(newValue)}
+                      />
+                      <Typography
                         variant="body2"
                         color="textSecondary"
                         style={{ marginLeft: '4px', fontSize: '0.75rem' }}
@@ -314,36 +263,40 @@ const handleEditSubmit = () => {
                           review.id
                         )}
                       </Typography>
-                  </Box>
+                    </Box>
 
-                  <Box marginTop={2}>
-                    {editingReview === review.id ? (
-                      <TextField
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
-                        variant="outlined"
-                        fullWidth
-                      />
-                    ) : (
-                      <Typography variant="body2" color="textSecondary">
-                        {review.content}
-                      </Typography>
+                    <Box marginTop={2}>
+                      {editingReview === review.id ? (
+                        <TextField
+                          value={editedContent}
+                          onChange={(e) => setEditedContent(e.target.value)}
+                          variant="outlined"
+                          fullWidth
+                        />
+                      ) : (
+                        <Typography variant="body2" color="textSecondary">
+                          {review.content}
+                        </Typography>
+                      )}
+                    </Box>
+                    {editingReview === review.id && (
+                      <Box
+                        display="flex"
+                        justifyContent="flex-end"
+                        marginTop={1}
+                      >
+                        <IconButton onClick={handleEditSubmit} color="primary">
+                          <Save />
+                        </IconButton>
+                        <IconButton onClick={handleEditCancel} color="error">
+                          <Cancel />
+                        </IconButton>
+                      </Box>
                     )}
                   </Box>
-                  {editingReview === review.id && (
-                    <Box display="flex" justifyContent="flex-end" marginTop={1}>
-                      <IconButton onClick={handleEditSubmit} color="primary">
-                        <Save />
-                      </IconButton>
-                      <IconButton onClick={handleEditCancel} color="secondary">
-                        <Cancel />
-                      </IconButton>
-                    </Box>
-                  )}
-                </Box>
-              </ListItem>
-            </Paper>
-          ))}
+                </ListItem>
+              </Paper>
+            ))}
       </List>
       {visibleReviews < reviews.length && (
         <Button variant="contained" color="primary" onClick={loadMore}>
@@ -358,7 +311,7 @@ const handleEditSubmit = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete Review?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Delete Review?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete this review?

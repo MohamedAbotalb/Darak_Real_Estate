@@ -13,6 +13,7 @@ import {
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
 import ReviewForm from './ReviewForm';
 import ReviewsList from './ReviewsList';
+import AverageRating from './AverageRating';
 
 function ReviewSection({ propertyId, propertyTitle }) {
   const [openForm, setOpenForm] = useState(false);
@@ -29,8 +30,6 @@ function ReviewSection({ propertyId, propertyTitle }) {
 
   return (
     <Box>
-      {/* <IconButton onClick={handleOpenForm}>
-        <AddCircleOutline /> */}
       <Button
         variant="contained"
         color="primary"
@@ -43,7 +42,6 @@ function ReviewSection({ propertyId, propertyTitle }) {
       >
         Add Review
       </Button>
-      {/* </IconButton> */}
       <Dialog
         open={openForm}
         onClose={handleCloseForm}
@@ -56,11 +54,12 @@ function ReviewSection({ propertyId, propertyTitle }) {
           <Typography component="span" color="primary">
             {propertyTitle}
           </Typography>
+          <AverageRating propertyId={propertyId} />
         </DialogTitle>
         <DialogContent
           style={{
             padding: '8px',
-           marginBottom:'8px',
+            marginBottom: '8px',
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
@@ -73,9 +72,13 @@ function ReviewSection({ propertyId, propertyTitle }) {
             borderTop: '2px solid #c5c3c3',
           }}
         >
-          <Box style={{
-            padding: '2px',
-          }}><ReviewForm propertyId={propertyId} /></Box>
+          <Box
+            style={{
+              padding: '2px',
+            }}
+          >
+            <ReviewForm propertyId={propertyId} />
+          </Box>
         </DialogTitle>
       </Dialog>
     </Box>

@@ -1,33 +1,30 @@
-
-import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { addReviewAsync, fetchReviews } from 'store/userReviews/userReviewsSlice';
+import {
+  addReviewAsync,
+  fetchReviews,
+} from 'store/userReviews/userReviewsSlice';
 import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
-import { AddCircleOutline } from '@mui/icons-material'; // Import the icon you want to use
+import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
-import AverageRating from './AverageRating';
 
 function ReviewForm({ propertyId }) {
   const [rate, setRate] = useState(0);
   const [content, setContent] = useState('');
   const [rateError, setRateError] = useState('');
   const [contentError, setContentError] = useState('');
-  const [reviewAdded, setReviewAdded] = useState(false); // State to track review addition
+
+  const { user } = useSelector((state) => state.auth);
+  const reviews = useSelector((state) => state.reviews.reviews);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchReviews(propertyId));
   }, [dispatch, propertyId]);
 
-  // Get reviews from Redux store
-  const reviews = useSelector(state => state.userReviews.reviews);
-
   // Check if there's already a review for the property
-  useEffect(() => {
-    const existingReview = reviews.find(review => review.property_id === propertyId);
-    setReviewAdded(existingReview !== undefined);
-  }, [reviews, propertyId]);
+  const existingReview = reviews.find((review) => review.user.id === user.id);
 
   const handleSubmit = () => {
     let valid = true;
@@ -66,54 +63,71 @@ function ReviewForm({ propertyId }) {
       reviewData.content = content.trim();
     }
 
-    dispatch(addReviewAsync(reviewData)).then(() => {
-      // Reset form fields
-      setRate(0);
-      setContent('');
-      setReviewAdded(true); // Set reviewAdded to true after successful addition
-      dispatch(fetchReviews(propertyId));
-      toast.success('Review added successfully!');
-    });
-  };
+    dispatch(addReviewAsync(reviewData))
+      .then(() => {
+        // Reset form fields
+        setRate(0);
+        setContent('');
+        dispatch(fetchReviews(propertyId));
 
-  if (reviewAdded) {
-    return (
-      <Typography variant="body1">
-        You have already reviewed this property. If you want to delete your review, please do so from your profile.
-      </Typography>
-    );
-  }
+        // Check if review was already added
+        if (existingReview) {
+          toast.info('Review already added. You can edit or delete it.');
+        } else {
+          toast.success('Review added successfully!');
+        }
+      })
+      .catch((error) => {
+        toast.error('Failed to add review. Please try again later.');
+      });
+  };
 
   return (
     <Box display="flex" alignItems="center" gap={2}>
-      <Box flex={1} gap={2}>
-        {/* <AverageRating propertyId={propertyId} /> */}
-        <Rating
-          name="rate"
-          value={rate}
-          onChange={(event, newValue) => setRate(newValue)}
-        />
-        {rateError && <Typography variant="caption" color="error">{rateError}</Typography>}
-        <TextField
-          label="Review"
-          multiline
-          rows={2}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          variant="outlined"
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <IconButton color="primary" onClick={handleSubmit}>
-                <AddCircleOutline />
-              </IconButton>
-            ),
-            style: { backgroundColor: '#eeecec' },
-            disableUnderline: true, // Remove the border
-          }}
-        />
-        {contentError && <Typography variant="caption" color="error">{contentError}</Typography>}
-      </Box>
+      {!existingReview ? (
+        <Box flex={1} display="flex" flexDirection="column" gap={2}>
+          <Typography variant="h6">Leave a Review</Typography>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Rating
+              name="rate"
+              value={rate}
+              onChange={(event, newValue) => setRate(newValue)}
+            />
+            {rateError && (
+              <Typography variant="caption" color="error">
+                {rateError}
+              </Typography>
+            )}
+          </Box>
+          <TextField
+            label="Review"
+            multiline
+            rows={4}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            variant="outlined"
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <IconButton color="primary" onClick={handleSubmit}>
+                  <SendIcon />
+                </IconButton>
+              ),
+              style: { backgroundColor: '#f8f5f5' },
+              disableUnderline: true, 
+            }}
+          />
+          {contentError && (
+            <Typography variant="caption" color="error">
+              {contentError}
+            </Typography>
+          )}
+        </Box>
+      ) : (
+        <Box>
+          <Typography variant="h6">Thank you for your review</Typography>
+        </Box>
+      )}
     </Box>
   );
 }
@@ -123,4 +137,3 @@ ReviewForm.propTypes = {
 };
 
 export default ReviewForm;
-

@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const fetchAverageRating = createAsyncThunk(
   'averageRating/fetchAverageRating',
   async (propertyId, thunkAPI) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/reviews/Average/${propertyId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch average rating');
-      }
-      return parseFloat(response.average); // Ensure to parse average as needed
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/reviews/Average/${propertyId}`
+      );
+      return parseFloat(response.data.average); // Convert average to float
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -20,7 +20,7 @@ const averageRatingSlice = createSlice({
   initialState: {
     average: null,
     status: 'idle',
-    error: null
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -36,7 +36,7 @@ const averageRatingSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       });
-  }
+  },
 });
 
 export { fetchAverageRating };
