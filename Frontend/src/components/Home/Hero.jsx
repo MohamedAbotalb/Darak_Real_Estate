@@ -11,7 +11,7 @@ function Hero() {
         position: 'relative',
         height: '100vh',
         overflow: 'hidden',
-        marginTop: '60px',
+       
       }}
     >
       <Carousel
