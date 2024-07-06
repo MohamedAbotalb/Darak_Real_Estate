@@ -55,10 +55,11 @@ function App() {
             element={<LandlordNotifications />}
           />
           <Route path="user-notifications" element={<UserNotifications />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/myproperties" element={<MyProperties />} />
+          <Route path="/mytours" element={<MyTours />} />
         </Route>
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/myproperties" element={<MyProperties />} />
-        <Route path="/mytours" element={<MyTours />} />
+
         {/* authenticated admin dashboard routes */}
         <Route
           path="/admin"

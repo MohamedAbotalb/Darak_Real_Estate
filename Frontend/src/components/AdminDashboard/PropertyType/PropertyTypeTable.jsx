@@ -159,6 +159,7 @@ function PropertyTypeTable() {
           backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

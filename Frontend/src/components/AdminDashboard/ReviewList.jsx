@@ -147,12 +147,13 @@ function ReviewList() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 4,
           px: 2,
           py: 2,
+          mb: 4,
           backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

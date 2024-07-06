@@ -15,7 +15,7 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, mt: 6 }}>
+    <Paper elevation={3} sx={{ p: 4 }}>
       <Typography variant="h4" component="div" sx={{ mb: 3 }}>
         Profile
       </Typography>

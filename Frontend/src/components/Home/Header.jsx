@@ -18,7 +18,6 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
-  Grid,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -98,7 +97,7 @@ function Header() {
   return (
     <AppBar
       position="fixed"
-      className="header"
+      // className="header"
       sx={{ backgroundColor: '#2C3E50' }}
     >
       <Toolbar>

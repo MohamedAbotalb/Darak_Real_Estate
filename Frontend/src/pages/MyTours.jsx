@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Header from 'components/Home/Header';
 import CenteredTabs from 'components/UserProfile/UserTours/CenteredTabs';
 
 function MyTours() {
@@ -8,7 +7,6 @@ function MyTours() {
 
   return (
     <div>
-      <Header />
       <CenteredTabs tours={tours} isLoading={isLoading} />
     </div>
   );

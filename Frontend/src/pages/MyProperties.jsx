@@ -12,7 +12,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import Header from 'components/Home/Header';
 import PropertyCard from 'components/UserProfile/LandlordProperties/PropertyCard';
 import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +72,6 @@ function MyProperties() {
 
   return (
     <div>
-      <Header />
       <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h4">My Properties</Typography>
