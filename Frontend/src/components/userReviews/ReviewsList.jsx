@@ -171,7 +171,7 @@ function ReviewsList({ propertyId }) {
 
     return formatCustomDate(reviewDate);
   };
-
+  console.log(reviews, 'error');
   return (
     <Box>
       <List>
@@ -199,8 +199,8 @@ function ReviewsList({ propertyId }) {
                     >
                       <Box display="flex" alignItems="center">
                         <Avatar
-                          src={review.user.avatar}
-                          alt={review.user.first_name}
+                          src={review.user?.avatar}
+                          alt={review.user?.first_name}
                           style={{ marginRight: '16px' }}
                         />
                         <Box>
@@ -209,11 +209,11 @@ function ReviewsList({ propertyId }) {
                             component="span"
                             fontWeight="bold"
                           >
-                            {`${review?.user.first_name} ${review?.user.last_name}`}
+                            {`${review.user?.first_name} ${review.user?.last_name}`}
                           </Typography>
                         </Box>
                       </Box>
-                      {user.id === review.user.id && (
+                      {user?.id === review.user?.id && (
                         <>
                           <IconButton
                             onClick={(event) =>
@@ -329,7 +329,7 @@ function ReviewsList({ propertyId }) {
               </Paper>
             ))}
       </List>
-      {visibleReviews < reviews.length && (
+      {reviews && visibleReviews < reviews.length && (
         <Button variant="contained" color="primary" onClick={loadMore}>
           Load More
         </Button>

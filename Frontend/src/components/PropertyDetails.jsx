@@ -96,7 +96,7 @@ function PropertyDetails() {
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Property Details
             </Typography>
-            <AddToWishlistButton propertyId={property.id} />
+            <AddToWishlistButton propertyId={property?.id} />
           </Toolbar>
         </AppBar>
 
@@ -220,24 +220,24 @@ function PropertyDetails() {
                   Agent
                 </Typography>
                 <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
-                  <Avatar src={property.user.avatar} />
+                  <Avatar src={property?.user?.avatar} />
                   <Box ml={2}>
                     <Typography variant="body1" sx={{ fontWeight: 'lighter' }}>
-                      {property.user.first_name} {property.user.last_name}
+                      {property?.user?.first_name} {property.user?.last_name}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="textSecondary"
                       sx={{ fontWeight: 'lighter' }}
                     >
-                      Phone: {property.user.phone_number}
+                      Phone: {property.user?.phone_number}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="textSecondary"
                       sx={{ fontWeight: 'lighter' }}
                     >
-                      Email: {property.user.email}
+                      Email: {property.user?.email}
                     </Typography>
                   </Box>
                 </Box>
@@ -318,7 +318,7 @@ function PropertyDetails() {
                   mt: 2,
                   height: '40px',
                 }}
-                disabled={user.role === 'landlord'}
+                disabled={user?.role === 'landlord'}
               >
                 Request a Tour
               </Button>
@@ -341,7 +341,7 @@ function PropertyDetails() {
                     borderColor: '#cc0000',
                   },
                 }}
-                disabled={user.role === 'landlord'}
+                disabled={user?.role === 'landlord'}
               >
                 Report Property
               </Button>
@@ -367,9 +367,7 @@ function PropertyDetails() {
       />
 
       {/* review */}
-      {property?.listing_type === 'rent' && user?.role === 'user' && (
-        <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
-      )}
+      <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
       {/*  */}
     </Container>
   );

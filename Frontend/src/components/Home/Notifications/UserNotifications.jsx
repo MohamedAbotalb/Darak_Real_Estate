@@ -149,7 +149,6 @@ function UserNotifications() {
         justifyContent: 'center',
         marginRight: 3,
         marginLeft: 3,
-        // marginTop: '60px',
       }}
     >
       <Typography variant="h4" gutterBottom>
