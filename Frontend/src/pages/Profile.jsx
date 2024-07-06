@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Container, Grid } from '@mui/material';
 import { toast } from 'react-toastify';
-import Header from 'components/Home/Header';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
 import PasswordDialog from 'components/UserProfile/PasswordDialog';
@@ -231,16 +230,15 @@ function Profile() {
 
   return (
     <div>
-      <Header />
-      <Container maxWidth="xlg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <ProfileHeader
               user={user}
               onEditAvatar={() => setOpenAvatarDialog(true)}
             />
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} md={8}>
             <ProfileDetails
               user={user}
               onEditClick={handleEditClick}
