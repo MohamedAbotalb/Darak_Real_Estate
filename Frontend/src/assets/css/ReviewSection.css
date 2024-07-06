@@ -1,0 +1,12 @@
+/* ReviewSection.css */
+.scrollable-container {
+  width: 100%; /* or any specific width */
+  height: 400px; /* or any specific height */
+  overflow-y: auto; /* vertical scrolling */
+  overflow-x: hidden; /* hide horizontal scrolling */
+  padding: 16px; /* optional padding */
+  box-sizing: border-box; /* include padding in height/width calculation */
+  border: 1px solid #ccc; /* optional border */
+  border-radius: 8px; /* optional border radius */
+  background-color: #f9f9f9; /* optional background color */
+}

@@ -21,6 +21,7 @@ import tourReducer from 'store/tourSlice';
 import reviewsSlice from 'store/reviewsSlice';
 import userPropertyReducer from 'store/userPropertiesSlice';
 import userReviewsReducer from 'store/userReviews/userReviewsSlice';
+import averageRatingReducer from 'store/userReviews/averageRatingSlice';
 
 const reduxStore = configureStore({
   reducer: {
@@ -46,6 +47,7 @@ const reduxStore = configureStore({
     reviews: reviewsSlice,
     userProperties: userPropertyReducer,
     userReviews: userReviewsReducer,
+    averageRating: averageRatingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

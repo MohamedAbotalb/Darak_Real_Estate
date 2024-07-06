@@ -1,10 +1,8 @@
 import axiosInstance from 'services/axiosConfig';
 
 export const fetchReviewsApi = async (propertyId) => {
-  const response = await axiosInstance.get(
-    `/reviews?property_id=${propertyId}`
-  );
-  return response.data.data;
+  const response = await axiosInstance.get(`/reviews/property/${propertyId}`);
+  return response.data;
 };
 
 export const addReviewApi = async (reviewData) => {
