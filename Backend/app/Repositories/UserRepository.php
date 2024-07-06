@@ -28,6 +28,7 @@ class UserRepository implements UserRepositoryInterface
         $user = User::find($id);
         if ($user) {
             $user->delete();
+            $user->properties()->delete();
         }
     }
 }

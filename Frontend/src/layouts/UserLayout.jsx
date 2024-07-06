@@ -8,7 +8,7 @@ export default function UserLayout() {
   return (
     <>
       <Header />
-      <Grid container>
+      <Grid container style={{ marginTop: '64px' }}>
         <Grid item xs={12}>
           <Outlet />
         </Grid>

@@ -18,6 +18,7 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
+  Grid,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -90,7 +91,6 @@ function Header() {
     navigate('/');
   };
 
-  // Function to determine if a link is active based on path and search params
   const isActiveLink = (path, searchParam) => {
     return location.pathname === path && location.search.includes(searchParam);
   };
@@ -103,23 +103,25 @@ function Header() {
     >
       <Toolbar>
         <Typography
-          variant="h6"
+          variant="h4"
           className="title"
           component={Link}
           to="/"
-          sx={{ color: '#cdd0d8', textDecoration: 'none' }}
+          sx={{ color: '#cdd0d8', textDecoration: 'none', marginRight: 3 }}
         >
           RentEZ
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         {!isSmallScreen && (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {' '}
             <Button
               component={NavLink}
               to="/"
               isActive={() => isActiveLink('/', '')}
               color="inherit"
               sx={{
+                fontSize: '1.1rem',
                 color: isActiveLink('/', '') ? '#60B2F0' : '#cdd0d8',
                 textTransform: 'none',
                 backgroundColor: isActiveLink('/', '')
@@ -128,56 +130,89 @@ function Header() {
                 '&:hover': {
                   backgroundColor: '#34495E',
                 },
+                margin: '0 10px',
               }}
             >
               Home
             </Button>
-            <Button
-              component={NavLink}
-              to="/properties?lt=rent"
-              isActive={() => isActiveLink('/properties', 'lt=rent')}
-              color="inherit"
-              sx={{
-                color: isActiveLink('/properties', 'lt=rent')
-                  ? '#60B2F0'
-                  : '#cdd0d8',
-                textTransform: 'none',
-                backgroundColor: isActiveLink('/properties', 'lt=rent')
-                  ? '#34495E'
-                  : 'transparent',
-                '&:hover': {
-                  backgroundColor: '#34495E',
-                },
-              }}
-            >
-              Rent
-            </Button>
-            <Button
-              component={NavLink}
-              to="/properties?lt=buy"
-              isActive={() => isActiveLink('/properties', 'lt=buy')}
-              color="inherit"
-              sx={{
-                color: isActiveLink('/properties', 'lt=buy')
-                  ? '#60B2F0'
-                  : '#cdd0d8',
-                textTransform: 'none',
-                backgroundColor: isActiveLink('/properties', 'lt=buy')
-                  ? '#34495E'
-                  : 'transparent',
-                '&:hover': {
-                  backgroundColor: '#34495E',
-                },
-              }}
-            >
-              Buy
-            </Button>
+            {user?.role !== 'landlord' ? (
+              <>
+                <Button
+                  component={NavLink}
+                  to="/properties?lt=rent"
+                  isActive={() => isActiveLink('/properties', 'lt=rent')}
+                  color="inherit"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: isActiveLink('/properties', 'lt=rent')
+                      ? '#60B2F0'
+                      : '#cdd0d8',
+                    textTransform: 'none',
+                    backgroundColor: isActiveLink('/properties', 'lt=rent')
+                      ? '#34495E'
+                      : 'transparent',
+                    '&:hover': {
+                      backgroundColor: '#34495E',
+                    },
+                    margin: '0 10px',
+                  }}
+                >
+                  Rent
+                </Button>
+                <Button
+                  component={NavLink}
+                  to="/properties?lt=buy"
+                  isActive={() => isActiveLink('/properties', 'lt=buy')}
+                  color="inherit"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: isActiveLink('/properties', 'lt=buy')
+                      ? '#60B2F0'
+                      : '#cdd0d8',
+                    textTransform: 'none',
+                    backgroundColor: isActiveLink('/properties', 'lt=buy')
+                      ? '#34495E'
+                      : 'transparent',
+                    '&:hover': {
+                      backgroundColor: '#34495E',
+                    },
+                    margin: '0 10px',
+                  }}
+                >
+                  Buy
+                </Button>
+              </>
+            ) : (
+              <Button
+                component={NavLink}
+                to="/myproperties"
+                isActive={() => isActiveLink('/myproperties', '')}
+                color="inherit"
+                sx={{
+                  fontSize: '1.1rem',
+                  color: isActiveLink('/myproperties', '')
+                    ? '#60B2F0'
+                    : '#cdd0d8',
+                  textTransform: 'none',
+                  backgroundColor: isActiveLink('/myproperties', '')
+                    ? '#34495E'
+                    : 'transparent',
+                  '&:hover': {
+                    backgroundColor: '#34495E',
+                  },
+                  margin: '0 10px',
+                }}
+              >
+                My Properties
+              </Button>
+            )}
             <Button
               component={NavLink}
               to="/about"
               isActive={() => isActiveLink('/about', '')}
               color="inherit"
               sx={{
+                fontSize: '1.1rem',
                 color: isActiveLink('/about', '') ? '#60B2F0' : '#cdd0d8',
                 textTransform: 'none',
                 backgroundColor: isActiveLink('/about', '')
@@ -186,6 +221,7 @@ function Header() {
                 '&:hover': {
                   backgroundColor: '#34495E',
                 },
+                margin: '0 10px',
               }}
             >
               About
@@ -194,7 +230,8 @@ function Header() {
         )}
         <Box sx={{ flexGrow: 1 }} />
         {isLoggedIn && !isSmallScreen ? (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {' '}
             <IconButton color="inherit">
               <NotificationDropdown role={user?.role} />
             </IconButton>
@@ -221,15 +258,6 @@ function Header() {
               <MenuItem onClick={handleClose} component={Link} to="/profile">
                 Profile
               </MenuItem>
-              {user?.role === 'landlord' && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/myproperties"
-                >
-                  My Properties
-                </MenuItem>
-              )}
               {user?.role === 'user' && (
                 <MenuItem onClick={handleClose} component={Link} to="/mytours">
                   My Tours
@@ -240,12 +268,17 @@ function Header() {
           </Box>
         ) : (
           !isSmallScreen && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {' '}
               <Button
                 component={Link}
                 to="/register"
                 color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
+                sx={{
+                  color: '#cdd0d8',
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                }}
               >
                 Register
               </Button>
@@ -253,7 +286,11 @@ function Header() {
                 component={Link}
                 to="/login"
                 color="inherit"
-                sx={{ color: '#cdd0d8', textTransform: 'none' }}
+                sx={{
+                  color: '#cdd0d8',
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                }}
               >
                 Log in
               </Button>
@@ -276,6 +313,7 @@ function Header() {
             color="inherit"
             onClick={handleDrawerClose}
             sx={{
+              fontSize: '1.1rem',
               color: isActiveLink('/', '') ? '#60B2F0' : '#cdd0d8',
               textTransform: 'none',
               backgroundColor: isActiveLink('/', '')
@@ -288,50 +326,80 @@ function Header() {
           >
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem
-            button
-            component={NavLink}
-            to="/properties?lt=rent"
-            isActive={() => isActiveLink('/properties', 'lt=rent')}
-            color="inherit"
-            onClick={handleDrawerClose}
-            sx={{
-              color: isActiveLink('/properties', 'lt=rent')
-                ? '#60B2F0'
-                : '#cdd0d8',
-              textTransform: 'none',
-              backgroundColor: isActiveLink('/properties', 'lt=rent')
-                ? '#34495E'
-                : 'transparent',
-              '&:hover': {
-                backgroundColor: '#34495E',
-              },
-            }}
-          >
-            <ListItemText primary="Rent" />
-          </ListItem>
-          <ListItem
-            button
-            component={NavLink}
-            to="/properties?lt=buy"
-            isActive={() => isActiveLink('/properties', 'lt=buy')}
-            color="inherit"
-            onClick={handleDrawerClose}
-            sx={{
-              color: isActiveLink('/properties', 'lt=buy')
-                ? '#60B2F0'
-                : '#cdd0d8',
-              textTransform: 'none',
-              backgroundColor: isActiveLink('/properties', 'lt=buy')
-                ? '#34495E'
-                : 'transparent',
-              '&:hover': {
-                backgroundColor: '#34495E',
-              },
-            }}
-          >
-            <ListItemText primary="Buy" />
-          </ListItem>
+          {user?.role !== 'landlord' ? (
+            <>
+              <ListItem
+                button
+                component={NavLink}
+                to="/properties?lt=rent"
+                isActive={() => isActiveLink('/properties', 'lt=rent')}
+                color="inherit"
+                onClick={handleDrawerClose}
+                sx={{
+                  fontSize: '1.1rem',
+                  color: isActiveLink('/properties', 'lt=rent')
+                    ? '#60B2F0'
+                    : '#cdd0d8',
+                  textTransform: 'none',
+                  backgroundColor: isActiveLink('/properties', 'lt=rent')
+                    ? '#34495E'
+                    : 'transparent',
+                  '&:hover': {
+                    backgroundColor: '#34495E',
+                  },
+                }}
+              >
+                <ListItemText primary="Rent" />
+              </ListItem>
+              <ListItem
+                button
+                component={NavLink}
+                to="/properties?lt=buy"
+                isActive={() => isActiveLink('/properties', 'lt=buy')}
+                color="inherit"
+                onClick={handleDrawerClose}
+                sx={{
+                  fontSize: '1.1rem',
+                  color: isActiveLink('/properties', 'lt=buy')
+                    ? '#60B2F0'
+                    : '#cdd0d8',
+                  textTransform: 'none',
+                  backgroundColor: isActiveLink('/properties', 'lt=buy')
+                    ? '#34495E'
+                    : 'transparent',
+                  '&:hover': {
+                    backgroundColor: '#34495E',
+                  },
+                }}
+              >
+                <ListItemText primary="Buy" />
+              </ListItem>
+            </>
+          ) : (
+            <ListItem
+              button
+              component={NavLink}
+              to="/myproperties"
+              isActive={() => isActiveLink('/myproperties', '')}
+              color="inherit"
+              onClick={handleDrawerClose}
+              sx={{
+                fontSize: '1.1rem',
+                color: isActiveLink('/myproperties', '')
+                  ? '#60B2F0'
+                  : '#cdd0d8',
+                textTransform: 'none',
+                backgroundColor: isActiveLink('/myproperties', '')
+                  ? '#34495E'
+                  : 'transparent',
+                '&:hover': {
+                  backgroundColor: '#34495E',
+                },
+              }}
+            >
+              <ListItemText primary="My Properties" />
+            </ListItem>
+          )}
           <ListItem
             button
             component={NavLink}
@@ -340,6 +408,7 @@ function Header() {
             color="inherit"
             onClick={handleDrawerClose}
             sx={{
+              fontSize: '1.1rem',
               color: isActiveLink('/about', '') ? '#60B2F0' : '#cdd0d8',
               textTransform: 'none',
               backgroundColor: isActiveLink('/about', '')
@@ -363,6 +432,7 @@ function Header() {
                     : '/user-notifications'
                 }
                 onClick={handleDrawerClose}
+                sx={{ fontSize: '1.1rem' }}
               >
                 <ListItemIcon>
                   <Badge badgeContent={notifications?.length} color="error">
@@ -376,6 +446,7 @@ function Header() {
                 component={Link}
                 to="/wishlist"
                 onClick={handleDrawerClose}
+                sx={{ fontSize: '1.1rem' }}
               >
                 <ListItemIcon>
                   <Badge badgeContent={wishlist.length} color="error">
@@ -389,13 +460,19 @@ function Header() {
                 component={Link}
                 to="/profile"
                 onClick={handleDrawerClose}
+                sx={{ fontSize: '1.1rem' }}
               >
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
               </ListItem>
-              <ListItem button onClick={handleLogout}>
+              <ListItem
+                button
+                onClick={handleLogout}
+                sx={{ fontSize: '1.1rem' }}
+              >
+                {' '}
                 <ListItemText primary="Logout" />
               </ListItem>
             </>
@@ -406,6 +483,7 @@ function Header() {
                 component={Link}
                 to="/login"
                 onClick={handleDrawerClose}
+                sx={{ fontSize: '1.1rem' }}
               >
                 <ListItemText primary="Login" />
               </ListItem>
@@ -414,6 +492,7 @@ function Header() {
                 component={Link}
                 to="/register"
                 onClick={handleDrawerClose}
+                sx={{ fontSize: '1.1rem' }}
               >
                 <ListItemText primary="Register" />
               </ListItem>
