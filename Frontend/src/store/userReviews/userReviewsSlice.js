@@ -37,7 +37,7 @@ export const updateReviewAsync = createAsyncThunk(
 export const deleteReviewAsync = createAsyncThunk(
   'reviews/deleteReview',
   async (reviewId) => {
-    const response = await deleteReviewApi(reviewId);
+    await deleteReviewApi(reviewId);
     return reviewId;
   }
 );
@@ -56,7 +56,6 @@ const userReviewsSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchReviews.fulfilled, (state, action) => {
-        console.log(action.payload); // Log the payload to check the structure
         state.status = 'succeeded';
         if (Array.isArray(action.payload)) {
           state.reviews = action.payload

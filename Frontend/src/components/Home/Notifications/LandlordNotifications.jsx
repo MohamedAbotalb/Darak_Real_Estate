@@ -96,7 +96,7 @@ function LandlordNotifications() {
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
         })
-        .catch((declineError) => {
+        .catch(() => {
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
           toast.error('Failed to decline tour', {
@@ -122,7 +122,7 @@ function LandlordNotifications() {
           setSubmitting(false);
           setOpenModal(false);
         })
-        .catch((approveError) => {
+        .catch(() => {
           setSubmitting(false);
           setOpenModal(false);
           toast.error('Failed to approve tour', {
@@ -149,7 +149,7 @@ function LandlordNotifications() {
           }
           setOpenDeleteConfirmation(false);
         })
-        .catch((deleteError) => {
+        .catch(() => {
           setOpenDeleteConfirmation(false);
           toast.error('Failed to remove notification', {
             position: 'top-right',

@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   Typography,
 } from '@mui/material';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
@@ -40,7 +39,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
           height: '40px',
         }}
       >
-        Add Review
+        Reviews
       </Button>
       <Dialog
         open={openForm}

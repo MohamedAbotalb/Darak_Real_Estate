@@ -61,6 +61,7 @@ function ReviewsList({ propertyId }) {
     setOpenDeleteDialog(false);
     dispatch(deleteReviewAsync(reviewToDelete)).then(() => {
       dispatch(fetchReviews(propertyId));
+      toast.success('Review deleted successfully.');
     });
   };
 
@@ -77,7 +78,7 @@ function ReviewsList({ propertyId }) {
   const handleEditClick = (review) => {
     setEditingReview(review.id);
     setEditedContent(review.content);
-    setEditedRating(review.rate);
+    setEditedRating(review.rate || 0);
     setEditedPropertyId(propertyId);
     handleMenuClose();
   };
@@ -88,17 +89,22 @@ function ReviewsList({ propertyId }) {
     // Validate rate
     if (editedRating === 0) {
       toast.error('Please provide a rating.');
+      setRateError('Please provide a rating.');
       valid = false;
+    } else {
+      setRateError('');
     }
 
     // Validate content
     if (editedContent !== null && editedContent.trim() !== '') {
       if (editedContent.trim().length < 4) {
-        toast.error('Comment must be at least 4 characters long.');
+        setContentError('Comment must be at least 4 characters long.');
         valid = false;
       } else if (/^\d/.test(editedContent.trim())) {
-        toast.error('Comment cannot start with a number.');
+        setContentError('Comment cannot start with a number.');
         valid = false;
+      } else {
+        setContentError('');
       }
     }
 
@@ -125,6 +131,7 @@ function ReviewsList({ propertyId }) {
       setEditedContent('');
       setEditedRating(0);
       setEditedPropertyId(null);
+      toast.success('Review updated successfully.');
     });
   };
 
@@ -164,8 +171,6 @@ function ReviewsList({ propertyId }) {
 
     return formatCustomDate(reviewDate);
   };
-
-  console.log(reviews, 'reviews from list form');
 
   return (
     <Box>
@@ -250,8 +255,11 @@ function ReviewsList({ propertyId }) {
                         }
                         readOnly={editingReview !== review.id}
                         size="small"
-                        onChange={(e, newValue) => setEditedRating(newValue)}
+                        onChange={(e, newValue) =>
+                          setEditedRating(newValue || 0)
+                        }
                       />
+
                       <Typography
                         variant="body2"
                         color="textSecondary"
@@ -267,12 +275,35 @@ function ReviewsList({ propertyId }) {
 
                     <Box marginTop={2}>
                       {editingReview === review.id ? (
-                        <TextField
-                          value={editedContent}
-                          onChange={(e) => setEditedContent(e.target.value)}
-                          variant="outlined"
-                          fullWidth
-                        />
+                        <Box>
+                          <TextField
+                            value={editedContent}
+                            onChange={(e) => {
+                              setEditedContent(e.target.value);
+                              setContentError(''); // Clear content error when user changes content
+                            }}
+                            variant="outlined"
+                            fullWidth
+                          />
+                          {rateError && (
+                            <Typography
+                              variant="body2"
+                              color="error"
+                              style={{ marginTop: '4px' }}
+                            >
+                              {rateError}
+                            </Typography>
+                          )}
+                          {contentError && (
+                            <Typography
+                              variant="body2"
+                              color="error"
+                              style={{ marginTop: '4px' }}
+                            >
+                              {contentError}
+                            </Typography>
+                          )}
+                        </Box>
                       ) : (
                         <Typography variant="body2" color="textSecondary">
                           {review.content}

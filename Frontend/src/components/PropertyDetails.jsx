@@ -42,6 +42,7 @@ function PropertyDetails() {
   const error = useSelector((state) => state.property.error);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTourFormOpen, setIsTourFormOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (slug) {
@@ -364,7 +365,7 @@ function PropertyDetails() {
       />
 
       {/* review */}
-      {property?.listing_type === 'rent' && (
+      {property?.listing_type === 'rent' && user?.role === 'user' && (
         <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
       )}
       {/*  */}

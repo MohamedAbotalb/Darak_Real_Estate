@@ -78,7 +78,9 @@ function ReviewForm({ propertyId }) {
         }
       })
       .catch((error) => {
-        toast.error('Failed to add review. Please try again later.');
+        if (error) {
+          toast.error('Failed to add review. Please try again later.');
+        }
       });
   };
 
