@@ -44,7 +44,11 @@ export const updatePhone = createAsyncThunk(
 export const updateAvatar = createAsyncThunk(
   'user/updateAvatar',
   async (avatarData) => {
-    const response = await updateUserAvatar(avatarData);
+    const response = await updateUserAvatar(avatarData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
