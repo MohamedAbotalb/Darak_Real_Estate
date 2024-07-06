@@ -36,7 +36,8 @@ React Framework for frontend development
 
 
 ## Installation
-<h4>Clone the repository:</h4>
+
+<h4>Server Side:</h4>
 
 ```
 git clone https://github.com/yourusername/e-commerce-platform](https://github.com/dohaseif2/Real_Estate_Ecommerce.git <br>
@@ -49,3 +50,13 @@ php artisan migrate
 php artisan serve
 
 ```
+
+<h4>Server Side:</h4>
+
+```
+npm i 
+npm start
+
+```
+
+
