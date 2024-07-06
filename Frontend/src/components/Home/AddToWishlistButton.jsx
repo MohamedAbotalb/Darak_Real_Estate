@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { successToast } from 'utils/toast';
+
 import {
   fetchWishlist,
   addToWishlist,
@@ -13,10 +14,10 @@ import {
 
 function AddToWishlistButton({ property }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const wishlist = useSelector((state) => state.wishlist.list);
   const { status } = useSelector((state) => state.wishlist);
-const { user } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -33,22 +34,22 @@ const { user } = useSelector((state) => state.auth);
       navigate('/login');
       return;
     }
-    if (isInWishlist) {
-      const wishlistItem = wishlist.find(
-        (item) => item.property && item.property.id === property.id
-      );
-      dispatch(removeFromWishlist(wishlistItem.id));
-      toast.success('Property removed from wishlist successfully', {
-        position: 'top-right',
-      });
-    } else {
-      dispatch(addToWishlist(property));
-      toast.success('Property added to wishlist successfully', {
-        position: 'top-right',
-      });
+    if (property) {
+      if (isInWishlist) {
+        const wishlistItem = wishlist.find(
+          (item) => item.property && item.property.id === property.id
+        );
+        if (wishlistItem) {
+          dispatch(removeFromWishlist(wishlistItem.id));
+          successToast('Property removed from wishlist successfully');
+        }
+      } else {
+        dispatch(addToWishlist(property));
+        successToast('Property added to wishlist successfully');
+      }
+      // Fetch the updated wishlist
+      dispatch(fetchWishlist());
     }
-    // Fetch the updated wishlist
-    dispatch(fetchWishlist());
   };
 
   return (

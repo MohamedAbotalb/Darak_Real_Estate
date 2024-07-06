@@ -16,7 +16,7 @@ import PropertyTypesPage from 'pages/Admin/PropertyTypes';
 import ReviewsPage from 'pages/Admin/Reviews';
 import UserDetailsPage from 'pages/Admin/UserDetails';
 import UserReportsPage from 'pages/Admin/UserReports';
-import PropertyDetails from 'components/PropertyDetails';
+import PropertyDetailsPage from 'pages/PropertyDetails';
 import PropertiesPage from 'pages/Properties';
 import WishlistPage from 'pages/Wishlist';
 import NotFoundPage from 'pages/NotFound';
@@ -46,7 +46,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="properties" element={<PropertiesPage />} />
-          <Route path="properties/:slug" element={<PropertyDetails />} />
+          <Route path="properties/:slug" element={<PropertyDetailsPage />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="add-property" element={<AddPropertyPage />} />
           <Route path="edit-property/:slug" element={<AddPropertyPage />} />
