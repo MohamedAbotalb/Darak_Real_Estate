@@ -29,8 +29,6 @@ import {
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 import { successToast, errorToast } from 'utils/toast';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -277,7 +275,7 @@ function ReportPropertyList() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         }}
@@ -339,7 +337,6 @@ function ReportPropertyList() {
         handleClose={handleCloseDeleteDialog}
         handleConfirm={handleConfirmDelete}
       />
-      <ToastContainer />
     </>
   );
 }

@@ -22,8 +22,6 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import Loader from 'components/Loader';
 import { fetchUsers } from 'store/userDetailsSlice';
-import { errorToast, successToast } from 'utils/toast';
-import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,14 +93,7 @@ function UserDetails() {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchUsers())
-        .unwrap()
-        .then(() => {
-          successToast('Users fetched successfully');
-        })
-        .catch(() => {
-          errorToast('Failed to fetch users');
-        });
+      dispatch(fetchUsers()).unwrap();
     }
   }, [status, dispatch]);
 
@@ -218,7 +209,7 @@ function UserDetails() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         }}

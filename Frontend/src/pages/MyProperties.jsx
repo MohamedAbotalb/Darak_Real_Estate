@@ -16,8 +16,7 @@ import Header from 'components/Home/Header';
 import PropertyCard from 'components/UserProfile/LandlordProperties/PropertyCard';
 import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
 
 function MyProperties() {
@@ -75,7 +74,6 @@ function MyProperties() {
   return (
     <div>
       <Header />
-      <ToastContainer />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h4">My Properties</Typography>

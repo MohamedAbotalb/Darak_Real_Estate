@@ -39,7 +39,7 @@ const WishlistButtonWrapper = styled(Box)({
   position: 'absolute',
   top: '8px',
   right: '8px',
-  zIndex: 1,
+  zIndex: 2,
   backgroundColor: 'white',
   borderRadius: '50%',
 });
@@ -64,18 +64,7 @@ function PropertyCard({ property }) {
   return (
     <StyledCard>
       <SliderWrapper>
-        <WishlistButtonWrapper>
-          <AddToWishlistButton property={property} />
-        </WishlistButtonWrapper>
-        <Carousel
-          showThumbs={false}
-          showStatus={false}
-          showArrows={false}
-          showIndicators={false}
-          infiniteLoop
-          autoPlay
-          interval={4000}
-        >
+        <Carousel showThumbs={false} showStatus={false}>
           {images.length > 0 ? (
             images.map((img) => (
               <StyledImage key={img.id} src={img.image} alt={property.title} />
@@ -84,6 +73,9 @@ function PropertyCard({ property }) {
             <StyledImage src={defaultImage} alt={property.title} />
           )}
         </Carousel>
+        <WishlistButtonWrapper>
+          <AddToWishlistButton property={property} />
+        </WishlistButtonWrapper>
       </SliderWrapper>
       <CardContent style={{ height: '100%' }}>
         <CardLink to={`/properties/${property.slug}`}>

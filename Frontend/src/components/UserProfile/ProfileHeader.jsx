@@ -29,7 +29,7 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
             bgcolor: 'white',
             border: '2px solid white',
             '&:hover': {
-              bgcolor: 'primary.main',
+              bgcolor: '#2C3E50',
               color: 'white',
             },
           }}

@@ -78,8 +78,8 @@ function Wishlist() {
           <FormControl variant="outlined" margin="normal" sx={{ width: 150 }}>
             <Select value={filter} onChange={handleFilterChange}>
               <MenuItem value="all">All</MenuItem>
-              <MenuItem value="renting">Rent</MenuItem>
-              <MenuItem value="selling">Sell</MenuItem>
+              <MenuItem value="rent">Rent</MenuItem>
+              <MenuItem value="buy">Buy</MenuItem>
             </Select>
           </FormControl>
         </Box>
