@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IconButton } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import {
   fetchWishlist,
   addToWishlist,
@@ -14,6 +15,8 @@ function AddToWishlistButton({ property }) {
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.list);
   const { status } = useSelector((state) => state.wishlist);
+const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (status === 'idle') {
@@ -26,6 +29,10 @@ function AddToWishlistButton({ property }) {
   );
 
   const handleToggleWishlist = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (isInWishlist) {
       const wishlistItem = wishlist.find(
         (item) => item.property && item.property.id === property.id

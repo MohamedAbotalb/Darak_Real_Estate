@@ -60,14 +60,14 @@ function PropertyCard({ property }) {
     }
     return `${formattedPrice} EGP`;
   };
-
+  const baseImgUrl='http://127.0.0.1:8000/';
   return (
     <StyledCard>
       <SliderWrapper>
         <Carousel showThumbs={false} showStatus={false}>
           {images.length > 0 ? (
             images.map((img) => (
-              <StyledImage key={img.id} src={img.image} alt={property.title} />
+              <StyledImage key={img.id} src={baseImgUrl+img.image} alt={property.title} />
             ))
           ) : (
             <StyledImage src={defaultImage} alt={property.title} />
