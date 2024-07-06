@@ -98,7 +98,7 @@ function Header() {
   return (
     <AppBar
       position="fixed"
-      className="header"
+      // className="header"
       sx={{ backgroundColor: '#2C3E50' }}
     >
       <Toolbar>
