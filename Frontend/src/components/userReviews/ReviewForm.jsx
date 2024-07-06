@@ -8,6 +8,7 @@ import {
 import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function ReviewForm({ propertyId }) {
   const [rate, setRate] = useState(0);
@@ -18,15 +19,28 @@ function ReviewForm({ propertyId }) {
   const { user } = useSelector((state) => state.auth);
   const reviews = useSelector((state) => state.reviews.reviews);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchReviews(propertyId));
   }, [dispatch, propertyId]);
 
   // Check if there's already a review for the property
-  const existingReview = reviews.find((review) => review.user.id === user.id);
+  const existingReview = reviews?.find(
+    (review) => review.user?.id === user?.id
+  );
 
   const handleSubmit = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    if (user?.role === 'landlord') {
+      toast.error('Landlords cannot leave reviews.');
+      return;
+    }
+
     let valid = true;
 
     if (rate === 0) {

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -97,6 +98,8 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
   });
 
   const selectedType = watch('type');
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedType === 'report-property') {
@@ -107,6 +110,10 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
   }, [dispatch, selectedType]);
 
   const onSubmit = async (data) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     const reportData = {
       ...data,
       reason_id: data.reason,
