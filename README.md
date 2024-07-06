@@ -35,6 +35,10 @@ MySQL: Relational database management system.
 React Framework for frontend development 
 
 
+<h2>ERD</h2>
+
+![Screenshot (344)](https://github.com/MohamedAbotalb/Real_Estate_Ecommerce/assets/92125041/9642c67e-920a-40b8-bb68-58daf2bf4043)
+
 ## Installation
 
 <h4>Server Side:</h4>
