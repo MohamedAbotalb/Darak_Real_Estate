@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(PropertyTypeSeeder::class);  
+        $this->call(AmenitiesSeeder::class);
         \App\Models\Location::factory(20)->create(); 
-        \App\Models\Property::factory(50)->create();   
-        \App\Models\PropertyImage::factory(50)->create();   
-        \App\Models\Notification::factory(20)->create();   
-        \App\Models\Amenity::factory(15)->create();   
+        \App\Models\Property::factory(100)->create();   
+        \App\Models\PropertyImage::factory(100)->create();   
+        \App\Models\Notification::factory(20)->create();    
         \App\Models\ReportUser::factory(20)->create();   
         \App\Models\ReportProperty::factory(20)->create();  
         \App\Models\Wishlist::factory(20)->create();
