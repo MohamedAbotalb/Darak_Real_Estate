@@ -57,6 +57,6 @@ class ReviewRepository implements ReviewRepositoryInterface
         if (!$averageRating) {
             return null;
         }
-        return number_format($averageRating, 1);
+        return round($averageRating);
     }
 }
