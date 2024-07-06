@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Properties\StorePropertyRequest;
+use App\Http\Requests\properties\StorePropertyRequest;
 use App\Http\Requests\properties\UpdatePropertyRequest;
 use App\Http\Resources\PropertyResource;
 use App\Repositories\Contracts\PropertyRepositoryInterface;
