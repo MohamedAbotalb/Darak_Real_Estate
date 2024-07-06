@@ -57,6 +57,7 @@ function Wishlist() {
       alignItems="center"
       minHeight="100vh"
       mx={{ xs: 2, sm: 4 }}
+      mt={4}
       px={{ xs: 2, sm: 4 }}
       py={4}
     >

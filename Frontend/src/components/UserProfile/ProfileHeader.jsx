@@ -13,7 +13,7 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
         position: 'relative',
         width: '100%',
         maxWidth: '400px',
-        margin: '0 auto',
+        margin: '45px auto',
       }}
     >
       <div style={{ position: 'relative', display: 'inline-block' }}>

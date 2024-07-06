@@ -32,7 +32,7 @@ import TourRequestForm from 'components/TourRequestForm';
 import Loader from 'components/Loader';
 import ReportModal from './ReportModal';
 import amenityIcons from '../utils/amenityIcons';
-import ReviewIcon from './userReviews/ReviewIcon';
+import ReviewIcon from './userReviews/ReviewSection';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -42,6 +42,7 @@ function PropertyDetails() {
   const error = useSelector((state) => state.property.error);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTourFormOpen, setIsTourFormOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (slug) {
@@ -317,6 +318,7 @@ function PropertyDetails() {
                   mt: 2,
                   height: '40px',
                 }}
+                disabled={user.role === 'landlord'}
               >
                 Request a Tour
               </Button>
@@ -339,6 +341,7 @@ function PropertyDetails() {
                     borderColor: '#cc0000',
                   },
                 }}
+                disabled={user.role === 'landlord'}
               >
                 Report Property
               </Button>
@@ -364,7 +367,7 @@ function PropertyDetails() {
       />
 
       {/* review */}
-      {property?.listing_type === 'rent' && (
+      {property?.listing_type === 'rent' && user?.role === 'user' && (
         <ReviewIcon propertyId={property.id} propertyTitle={property.title} />
       )}
       {/*  */}

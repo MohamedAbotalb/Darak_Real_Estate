@@ -9,28 +9,36 @@ import {
 export const fetchReviews = createAsyncThunk(
   'reviews/fetchReviews',
   async (propertyId) => {
-    return fetchReviewsApi(propertyId);
+    const response = await fetchReviewsApi(propertyId);
+    return response.data;
   }
 );
 
 export const addReviewAsync = createAsyncThunk(
   'reviews/addReview',
-  async (reviewData) => {
-    return addReviewApi(reviewData);
+  async (reviewData, { rejectWithValue }) => {
+    try {
+      const response = await addReviewApi(reviewData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const updateReviewAsync = createAsyncThunk(
   'reviews/updateReview',
   async ({ reviewId, reviewData }) => {
-    return updateReviewApi({ reviewId, reviewData });
+    const response = await updateReviewApi({ reviewId, reviewData });
+    return response;
   }
 );
 
 export const deleteReviewAsync = createAsyncThunk(
   'reviews/deleteReview',
   async (reviewId) => {
-    return deleteReviewApi(reviewId);
+    await deleteReviewApi(reviewId);
+    return reviewId;
   }
 );
 
@@ -49,10 +57,13 @@ const userReviewsSlice = createSlice({
       })
       .addCase(fetchReviews.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        // Sort reviews in descending order based on the creation date
-        state.reviews = action.payload
-          .slice()
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        if (Array.isArray(action.payload)) {
+          state.reviews = action.payload
+            .slice()
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        } else {
+          state.error = 'Invalid response structure';
+        }
       })
       .addCase(fetchReviews.rejected, (state, action) => {
         state.status = 'failed';
@@ -60,6 +71,9 @@ const userReviewsSlice = createSlice({
       })
       .addCase(addReviewAsync.fulfilled, (state, action) => {
         state.reviews.unshift(action.payload);
+      })
+      .addCase(addReviewAsync.rejected, (state, action) => {
+        state.error = action.payload || action.error.message;
       })
       .addCase(deleteReviewAsync.fulfilled, (state, action) => {
         state.reviews = state.reviews.filter(

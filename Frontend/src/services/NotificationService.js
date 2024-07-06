@@ -43,7 +43,7 @@ export const approveTourDate = async ({ tourId, selectedDate }) => {
 export const deleteNotification = async (id) => {
   const url = `/notifications/${id}`;
   try {
-    const response = await axiosInstance.delete(url);
+    await axiosInstance.delete(url);
     return { id };
   } catch (error) {
     throw new Error(`Failed to delete notification: ${error.message}`);
