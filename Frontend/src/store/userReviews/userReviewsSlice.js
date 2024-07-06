@@ -10,7 +10,7 @@ export const fetchReviews = createAsyncThunk(
   'reviews/fetchReviews',
   async (propertyId) => {
     const response = await fetchReviewsApi(propertyId);
-    return response.data; 
+    return response.data;
   }
 );
 

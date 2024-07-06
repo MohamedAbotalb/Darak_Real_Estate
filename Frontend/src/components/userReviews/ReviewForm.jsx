@@ -114,7 +114,7 @@ function ReviewForm({ propertyId }) {
                 </IconButton>
               ),
               style: { backgroundColor: '#f8f5f5' },
-              disableUnderline: true, 
+              disableUnderline: true,
             }}
           />
           {contentError && (
