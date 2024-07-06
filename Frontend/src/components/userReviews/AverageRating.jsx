@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAverageRating } from 'store/userReviews/averageRatingSlice';
+import { fetchAverageRatingAsync} from 'store/userReviews/averageRatingSlice';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import StarRating from './StarRating';
 
@@ -12,7 +12,7 @@ function AverageRating({ propertyId }) {
   );
 
   useEffect(() => {
-    dispatch(fetchAverageRating(propertyId));
+    dispatch(fetchAverageRatingAsync(propertyId));
   }, [dispatch, propertyId]);
 
   if (status === 'loading') {
