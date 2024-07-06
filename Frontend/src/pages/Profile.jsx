@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Container, Grid } from '@mui/material';
 import { toast } from 'react-toastify';
-import Header from 'components/Home/Header';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
 import PasswordDialog from 'components/UserProfile/PasswordDialog';

@@ -12,7 +12,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import Header from 'components/Home/Header';
 import PropertyCard from 'components/UserProfile/LandlordProperties/PropertyCard';
 import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
