@@ -27,6 +27,8 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
     dates: yup.array().of(yup.string().required('Date is required')),
   });
 
+  if (!user) navigate('/login');
+
   const {
     control,
     handleSubmit,
