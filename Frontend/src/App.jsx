@@ -47,17 +47,62 @@ function App() {
           <Route path="about" element={<AboutPage />} />
           <Route path="properties" element={<PropertiesPage />} />
           <Route path="properties/:slug" element={<PropertyDetailsPage />} />
-          <Route path="wishlist" element={<WishlistPage />} />
-          <Route path="add-property" element={<AddPropertyPage />} />
-          <Route path="edit-property/:slug" element={<AddPropertyPage />} />
+          <Route
+            path="wishlist"
+            element={
+              <ProtectedRoute
+                element={<WishlistPage />}
+                roles={['user', 'landlord']}
+              />
+            }
+          />
+          <Route
+            path="add-property"
+            element={
+              <ProtectedRoute
+                element={<AddPropertyPage />}
+                roles={['landlord']}
+              />
+            }
+          />
+          <Route
+            path="edit-property/:slug"
+            element={
+              <ProtectedRoute
+                element={<AddPropertyPage />}
+                roles={['landlord']}
+              />
+            }
+          />
           <Route
             path="landlord-notifications"
-            element={<LandlordNotifications />}
+            element={
+              <ProtectedRoute
+                element={<LandlordNotifications />}
+                roles={['landlord']}
+              />
+            }
           />
-          <Route path="user-notifications" element={<UserNotifications />} />
+          <Route
+            path="user-notifications"
+            element={
+              <ProtectedRoute
+                element={<UserNotifications />}
+                roles={['user']}
+              />
+            }
+          />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/myproperties" element={<MyProperties />} />
-          <Route path="/mytours" element={<MyTours />} />
+          <Route
+            path="/myproperties"
+            element={
+              <ProtectedRoute element={<MyProperties />} roles={['landlord']} />
+            }
+          />
+          <Route
+            path="/mytours"
+            element={<ProtectedRoute element={<MyTours />} roles={['user']} />}
+          />
         </Route>
 
         {/* authenticated admin dashboard routes */}
