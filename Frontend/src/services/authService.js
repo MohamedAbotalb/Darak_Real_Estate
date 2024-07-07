@@ -1,15 +1,11 @@
-import axios from 'axios';
+import axios from 'services/axiosConfig';
 
-const baseURL = 'http://localhost:8000/api';
+export const registerApi = (data) => axios.post(`/register`, data);
 
-export const registerApi = (data) => axios.post(`${baseURL}/register`, data);
+export const loginApi = (data) => axios.post(`/login`, data);
 
-export const loginApi = (data) => axios.post(`${baseURL}/login`, data);
+export const logoutApi = () => axios.get(`/logout`);
 
-export const logoutApi = () => axios.get(`${baseURL}/logout`);
+export const forgetPasswordApi = (data) => axios.post(`/forget-password`, data);
 
-export const forgetPasswordApi = (data) =>
-  axios.post(`${baseURL}/forget-password`, data);
-
-export const resetPasswordApi = (data) =>
-  axios.post(`${baseURL}/reset-password`, data);
+export const resetPasswordApi = (data) => axios.post(`/reset-password`, data);
