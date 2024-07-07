@@ -23,6 +23,7 @@ import {
   IconButton,
   Box,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/system';
@@ -60,6 +61,7 @@ const DeleteButton = styled(IconButton)({
 
 function AddProperty() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -136,6 +138,7 @@ function AddProperty() {
         setSelectedImages([]);
         dispatch(clearState());
         setIsSubmitting(false);
+        navigate('/myproperties');
       }
       if (status === 'failed') {
         toast.error(error || 'Failed to add property!');
