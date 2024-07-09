@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
@@ -229,9 +229,9 @@ function Profile() {
   };
 
   return (
-    <div>
-      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={2}>
+    <Box sx={{ flexGrow: 1, padding: { xs: 2, sm: 3, md: 4 } }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={10}>
           <Grid item xs={12} md={4}>
             <ProfileHeader
               user={user}
@@ -246,48 +246,48 @@ function Profile() {
             />
           </Grid>
         </Grid>
-        <EditDialog
-          isOpen={openEditDialog}
-          onClose={handleDialogClose}
-          firstName={firstName}
-          lastName={lastName}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <PasswordDialog
-          isOpen={openPasswordDialog}
-          onClose={handleDialogClose}
-          currentPassword={currentPassword}
-          newPassword={newPassword}
-          confirmPassword={confirmPassword}
-          setCurrentPassword={setCurrentPassword}
-          setNewPassword={setNewPassword}
-          setConfirmPassword={setConfirmPassword}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <AvatarDialog
-          isOpen={openAvatarDialog}
-          onClose={handleDialogClose}
-          onChange={handleAvatarChange}
-        />
-        <PhoneDialog
-          isOpen={openPhoneDialog}
-          onClose={handleDialogClose}
-          phone={phone}
-          setPhone={setPhone}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <DeleteDialog
-          isOpen={openDeleteDialog}
-          onClose={handleDialogClose}
-          onDelete={handleDeleteAccount}
-        />
       </Container>
-    </div>
+      <EditDialog
+        isOpen={openEditDialog}
+        onClose={handleDialogClose}
+        firstName={firstName}
+        lastName={lastName}
+        setFirstName={setFirstName}
+        setLastName={setLastName}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <PasswordDialog
+        isOpen={openPasswordDialog}
+        onClose={handleDialogClose}
+        currentPassword={currentPassword}
+        newPassword={newPassword}
+        confirmPassword={confirmPassword}
+        setCurrentPassword={setCurrentPassword}
+        setNewPassword={setNewPassword}
+        setConfirmPassword={setConfirmPassword}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <AvatarDialog
+        isOpen={openAvatarDialog}
+        onClose={handleDialogClose}
+        onChange={handleAvatarChange}
+      />
+      <PhoneDialog
+        isOpen={openPhoneDialog}
+        onClose={handleDialogClose}
+        phone={phone}
+        setPhone={setPhone}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <DeleteDialog
+        isOpen={openDeleteDialog}
+        onClose={handleDialogClose}
+        onDelete={handleDeleteAccount}
+      />
+    </Box>
   );
 }
 
