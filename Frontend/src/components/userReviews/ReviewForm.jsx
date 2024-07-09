@@ -10,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-function ReviewForm({ propertyId }) {
+function ReviewForm({ propertyId, ownerId }) {
   const [rate, setRate] = useState(0);
   const [content, setContent] = useState('');
   const [rateError, setRateError] = useState('');
@@ -37,8 +37,12 @@ function ReviewForm({ propertyId }) {
     }
 
     if (user?.role === 'landlord') {
-      toast.error('Landlords cannot leave reviews.');
-      return;
+      if (user?.id === ownerId) {
+        toast.error(
+          'Property owners cannot leave reviews for their own properties.'
+        );
+        return;
+      }
     }
 
     let valid = true;
@@ -150,6 +154,7 @@ function ReviewForm({ propertyId }) {
 
 ReviewForm.propTypes = {
   propertyId: PropTypes.number.isRequired,
+  ownerId: PropTypes.number.isRequired,
 };
 
 export default ReviewForm;

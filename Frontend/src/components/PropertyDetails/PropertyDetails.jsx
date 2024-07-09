@@ -323,16 +323,16 @@ function PropertyDetails() {
                     )}
 
                     {/* review */}
-                    {property?.listing_type === 'rent' &&
+                    {/* {property?.listing_type === 'rent' &&
                       user?.role === 'user' && (
                         <ReviewSection
                           propertyId={property.id}
                           propertyTitle={property.title}
                         />
-                      )}
+                      )} */}
 
                     {/* Reviews */}
-                    {property.reviews && (
+                    {/* {property.reviews && (
                       <>
                         <Typography
                           variant="h6"
@@ -349,7 +349,7 @@ function PropertyDetails() {
                           ))}
                         </Grid>
                       </>
-                    )}
+                    )} */}
                   </Grid>
                 </Grid>
               </Grid>
@@ -448,6 +448,13 @@ function PropertyDetails() {
         propertyId={property.id}
         userData={property.user}
       />
+      {/* review */}
+      {property?.listing_type === 'rent' && (
+        <ReviewSection
+          propertyId={property.id}
+          propertyTitle={property.title}
+        />
+      )}
     </Container>
   );
 }
