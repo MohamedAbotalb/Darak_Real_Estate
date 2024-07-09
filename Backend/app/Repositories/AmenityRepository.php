@@ -43,4 +43,14 @@ class AmenityRepository implements AmenityRepositoryInterface
 
         return false;
     }
+    public function updateAmenityAvailability(int $id, string $status)
+    {
+        $amenity = Amenity::find($id);
+        if(!$amenity){
+            return null;
+        }
+        $amenity->availability = $status;
+        $amenity->save();
+        return true;
+    }
 }
