@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Button,
@@ -15,6 +15,7 @@ import ReviewsList from './ReviewsList';
 import AverageRating from './AverageRating';
 
 function ReviewSection({ propertyId, propertyTitle }) {
+  const { property } = useSelector((state) => state.property);
   const [openForm, setOpenForm] = useState(false);
   const dispatch = useDispatch();
 
@@ -76,7 +77,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
               padding: '2px',
             }}
           >
-            <ReviewForm propertyId={propertyId} />
+            <ReviewForm propertyId={propertyId} ownerId={property.user.id} />
           </Box>
         </DialogTitle>
       </Dialog>
