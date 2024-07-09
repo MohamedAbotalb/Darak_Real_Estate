@@ -415,6 +415,10 @@ function PropertyDetails() {
                     variant="contained"
                     color="primary"
                     onClick={handleRequestTourClick}
+                    disabled={
+                      user?.role === 'landlord' &&
+                      property.user?.id === user?.id
+                    }
                   >
                     Request a tour
                   </Button>
@@ -422,6 +426,10 @@ function PropertyDetails() {
                     variant="outlined"
                     color="secondary"
                     onClick={handleReportClick}
+                    disabled={
+                      user?.role === 'landlord' &&
+                      property.user?.id === user?.id
+                    }
                   >
                     Report Listing
                   </Button>
