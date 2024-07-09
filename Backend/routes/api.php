@@ -122,6 +122,7 @@ Route::prefix('dashboard')->group(function () {
 Route::prefix('amenities')->group(function () {
     Route::get('/', [AmenityController::class, 'index']);
     Route::post('/', [AmenityController::class, 'store']);
+    Route::put('/availability/{id}', [AmenityController::class, 'updateAvailability']);
     Route::get('/{slug}', [AmenityController::class, 'show']);
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);

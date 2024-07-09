@@ -61,4 +61,19 @@ class AmenityController extends Controller
 
         return response()->json(["message" => "Amenity deleted successfully"]);
     }
+    public function updateAvailability(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'status' => 'required|in:available,unavailable',
+        ]);
+
+        $status = $validatedData['status'];
+        $result = $this->amenityRepository->updateAmenityAvailability($id, $status);
+
+        if ($result) {
+            return response()->json(['message' => ' availability updated successfully'], 200);
+        } else {
+            return response()->json(['error' => 'Amenity not found'], 400);
+        }
+    }
 }
