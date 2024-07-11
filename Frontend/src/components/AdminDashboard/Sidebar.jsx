@@ -5,7 +5,6 @@ import 'assets/css/Sidebar.css';
 function Sidebar() {
   return (
     <div className="sidebar">
-      <h2>RentEZ</h2>
       <ul>
         <li>
           <NavLink
@@ -68,6 +67,15 @@ function Sidebar() {
             activeClassName="active-link"
           >
             Amenities
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/admin/ads"
+            className="nav-link"
+            activeClassName="active-link"
+          >
+            Ads
           </NavLink>
         </li>
       </ul>

@@ -16,6 +16,7 @@ import PropertyTypesPage from 'pages/Admin/PropertyTypes';
 import ReviewsPage from 'pages/Admin/Reviews';
 import UserDetailsPage from 'pages/Admin/UserDetails';
 import UserReportsPage from 'pages/Admin/UserReports';
+import Ads from 'pages/Admin/Ads';
 import PropertyDetailsPage from 'pages/PropertyDetails';
 import PropertiesPage from 'pages/Properties';
 import WishlistPage from 'pages/Wishlist';
@@ -120,6 +121,7 @@ function App() {
           <Route path="property-reports" element={<PropertyReportsPage />} />
           <Route path="property-types" element={<PropertyTypesPage />} />
           <Route path="amenities" element={<AmenitiesPage />} />
+          <Route path="ads" element={<Ads />} />
         </Route>
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />

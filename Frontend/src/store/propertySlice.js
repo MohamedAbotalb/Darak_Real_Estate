@@ -9,6 +9,14 @@ export const fetchProperty = createAsyncThunk(
   }
 );
 
+export const fetchProperties = createAsyncThunk(
+  'property/fetchProperties',
+  async () => {
+    const response = await axios.get('/properties');
+    return response.data.data;
+  }
+);
+
 export const addProperty = createAsyncThunk(
   'property/addProperty',
   async (propertyData, { rejectWithValue }) => {
@@ -25,7 +33,14 @@ export const addProperty = createAsyncThunk(
   }
 );
 
-// Update existing property
+export const deleteProperty = createAsyncThunk(
+  'properties/deleteProperty',
+  async (id) => {
+    await axios.delete(`/properties/${id}`);
+    return id;
+  }
+);
+
 export const updateProperty = createAsyncThunk(
   'property/updateProperty',
   async ({ slug, propertyData }, { rejectWithValue }) => {
@@ -46,6 +61,7 @@ const propertySlice = createSlice({
   name: 'property',
   initialState: {
     property: {},
+    properties: [],
     status: 'idle',
     error: null,
   },
@@ -69,6 +85,20 @@ const propertySlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
+      .addCase(fetchProperties.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchProperties.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = Array.isArray(action.payload)
+          ? action.payload
+          : Object.values(action.payload);
+        state.error = null;
+      })
+      .addCase(fetchProperties.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
       .addCase(addProperty.pending, (state) => {
         state.status = 'loading';
       })
@@ -81,7 +111,11 @@ const propertySlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      // Handle update property
+      .addCase(deleteProperty.fulfilled, (state, action) => {
+        state.properties = state.properties.filter(
+          (property) => property.id !== action.payload
+        );
+      })
       .addCase(updateProperty.pending, (state) => {
         state.status = 'loading';
       })
