@@ -110,7 +110,7 @@ class TourRepository implements TourRepositoryInterface
         }
     }
 
-    public function declineTour(int $id)
+    public function declineTour(int $id,string $message)
     {
         $tour = Tour::find($id);
 
@@ -140,7 +140,7 @@ class TourRepository implements TourRepositoryInterface
                 'user_id' => $tour->user_id,
                 'landlord_id' => $property->user_id,
                 'tour_id' => $tour->id,
-                'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
+                'message' => $message,
                 'type' => 'cancelation',
                 'status' => 'declined',
                 'date' => now(),
