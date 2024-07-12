@@ -16,8 +16,8 @@ class NotificationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
-            'landlord' => new UserResource($this->landlord),
+            'from' => new UserResource($this->fromUser),
+            'to' => new UserResource($this->toUser),
             'tour_id' => $this->tour_id,
             'tour' => new TourResource($this->whenLoaded('tour')),
             'message' => $this->message,

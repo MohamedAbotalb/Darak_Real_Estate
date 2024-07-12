@@ -18,8 +18,8 @@ class NotificationFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->randomElement(User::where('role', 'user')->pluck('id')->toArray()),
-            'landlord_id' => $this->faker->randomElement(User::where('role', 'landlord')->pluck('id')->toArray()),
+            'from_user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'to_user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
             'message' => $this->faker->sentence(),
             'type' => $this->faker->randomElement(['request', 'confirmation', 'cancelation']),
             'date' => $this->faker->dateTime(),
