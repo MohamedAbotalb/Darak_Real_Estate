@@ -50,13 +50,42 @@ class PropertyRepository implements PropertyRepositoryInterface
         $property = Property::find($id);
 
         if (!$property) {
-            return null; 
+            return null;
         }
 
         $property->status = $status;
         $property->save();
 
+        $user = $property->user;
+
+        if (!$user) {
+            return null;
+        }
+
+        $message = $this->generateNotificationMessage($property, $status);
+
+        Notification::create([
+            'from_user_id' => Auth::id(),
+            'to_user_id' => $user->id,
+            'property_id' => $property->id,
+            'message' => $message,
+            'type' => 'status_change',
+            'date' => now(),
+        ]);
+
         return $property;
+    }
+
+
+    protected function generateNotificationMessage(Property $property, string $status)
+    {
+        $username = $property->user->first_name . ' ' . $property->user->last_name;
+
+        if ($status === 'accepted') {
+            return "Hello $username, your property '{$property->title}' has been accepted.";
+        } elseif ($status === 'rejected') {
+            return "Hello $username, your property '{$property->title}' has been rejected.";
+        }
     }
 
     public function createProperty(array $data)
