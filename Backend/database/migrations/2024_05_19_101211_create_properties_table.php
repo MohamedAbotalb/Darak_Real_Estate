@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->enum('availability', ["available", "unavailable"]);
             $table->enum("listing_type", ["rent","buy"]);
-            $table->enum("status", ["accepted","notAccepted","pending"])->default('pending');
+            $table->enum("status", ["accepted","rejected","pending"])->default('pending');
             $table->timestamps();
             $table->softDeletes();
 
