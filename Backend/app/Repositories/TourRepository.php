@@ -8,6 +8,9 @@ use App\Models\TourDate;
 use App\Repositories\Contracts\TourRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Mail\TourRequestMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class TourRepository implements TourRepositoryInterface
 {
@@ -51,6 +54,9 @@ class TourRepository implements TourRepositoryInterface
                 'status' => 'pending',
                 'date' => now(),
             ]);
+            $landlord = User::find($landlord_id);
+            Mail::to($landlord->email)->send(new TourRequestMail($tour, $property, $landlord));
+
 
             return $tour->load('tourDates', 'property');
         });
