@@ -98,7 +98,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update']);
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
-
+    Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus']);
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 

@@ -61,6 +61,16 @@ class PropertyController extends Controller
         }
         return PropertyResource::collection($properties);
     }
+    public function changePropertyStatus(Request $request, $propertyId)
+    {
+        $status = $request->input('status');
+
+        $updatedProperty = $this->propertyRepository->updateStatus($propertyId, $status);
+        if(!$updatedProperty){
+            return response()->json(['message' => 'Property not found', 'property' => $updatedProperty]);
+        }
+        return response()->json(['message' => 'Property status updated successfully.', 'property' => $updatedProperty]);
+    }
     public function store(StorePropertyRequest $request)
     {
         try {

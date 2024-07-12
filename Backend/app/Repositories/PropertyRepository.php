@@ -45,6 +45,19 @@ class PropertyRepository implements PropertyRepositoryInterface
 
         return $properties;
     }
+    public function updateStatus(int $id, string $status)
+    {
+        $property = Property::find($id);
+
+        if (!$property) {
+            return null; 
+        }
+
+        $property->status = $status;
+        $property->save();
+
+        return $property;
+    }
 
     public function createProperty(array $data)
     {
