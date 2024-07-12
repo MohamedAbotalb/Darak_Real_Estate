@@ -1,14 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import '../../assets/css/Sidebar.css';
-import im1 from 'assets/images/im1.PNG';
-import im2 from 'assets/images/im2.PNG';
+import 'assets/css/Sidebar.css';
 
 function Sidebar() {
   return (
     <div className="sidebar">
-      <img src={im1} alt="Logo 1" className="im1" />
-      <h2>Dashboard Menu</h2>
       <ul>
         <li>
           <NavLink
@@ -30,20 +26,20 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/report-users"
+            to="/admin/user-reports"
             className="nav-link"
             activeClassName="active-link"
           >
-            Report User
+            User Reports
           </NavLink>
         </li>
         <li>
           <NavLink
-            to="/admin/report-properties"
+            to="/admin/property-reports"
             className="nav-link"
             activeClassName="active-link"
           >
-            Report Property
+            Property Reports
           </NavLink>
         </li>
         <li>
@@ -73,8 +69,16 @@ function Sidebar() {
             Amenities
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/admin/ads"
+            className="nav-link"
+            activeClassName="active-link"
+          >
+            Ads
+          </NavLink>
+        </li>
       </ul>
-      <img src={im2} alt="Logo 2" className="im2" />
     </div>
   );
 }

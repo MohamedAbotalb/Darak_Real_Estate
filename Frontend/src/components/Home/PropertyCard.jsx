@@ -39,7 +39,7 @@ const WishlistButtonWrapper = styled(Box)({
   position: 'absolute',
   top: '8px',
   right: '8px',
-  zIndex: 1,
+  zIndex: 2,
   backgroundColor: 'white',
   borderRadius: '50%',
 });
@@ -53,40 +53,33 @@ const CardLink = styled(Link)({
 function PropertyCard({ property }) {
   const images = property.images || [];
 
-  const formatPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
   const getPriceDisplay = () => {
-    if (property.listing_type === 'renting') {
-      return `${formatPrice(property.price)} EGP/month`;
+    const formattedPrice = property.price.toLocaleString();
+    if (property.listing_type === 'rent') {
+      return `${formattedPrice} EGP/month`;
     }
-    return `${formatPrice(property.price)} EGP`;
+    return `${formattedPrice} EGP`;
   };
-
+  const baseImgUrl = 'http://127.0.0.1:8000/';
   return (
     <StyledCard>
       <SliderWrapper>
-        <WishlistButtonWrapper>
-          <AddToWishlistButton property={property} />
-        </WishlistButtonWrapper>
-        <Carousel
-          showThumbs={false}
-          showStatus={false}
-          showArrows={false}
-          showIndicators={false}
-          infiniteLoop
-          autoPlay
-          interval={2000}
-        >
+        <Carousel showThumbs={false} showStatus={false}>
           {images.length > 0 ? (
             images.map((img) => (
-              <StyledImage key={img.id} src={img.image} alt={property.title} />
+              <StyledImage
+                key={img.id}
+                src={baseImgUrl + img.image}
+                alt={property.title}
+              />
             ))
           ) : (
             <StyledImage src={defaultImage} alt={property.title} />
           )}
         </Carousel>
+        <WishlistButtonWrapper>
+          <AddToWishlistButton property={property} />
+        </WishlistButtonWrapper>
       </SliderWrapper>
       <CardContent style={{ height: '100%' }}>
         <CardLink to={`/properties/${property.slug}`}>

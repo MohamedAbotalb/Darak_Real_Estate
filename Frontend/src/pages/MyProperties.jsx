@@ -6,19 +6,17 @@ import {
   Box,
   Button,
   Typography,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import Header from 'components/Home/Header';
 import PropertyCard from 'components/UserProfile/LandlordProperties/PropertyCard';
 import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import Loader from 'components/Loader';
 
 function MyProperties() {
   const dispatch = useDispatch();
@@ -41,8 +39,8 @@ function MyProperties() {
     navigate('/add-property');
   };
 
-  const handleEditProperty = (propertyId) => {
-    navigate(`/edit-property/${propertyId}`);
+  const handleEditProperty = (slug) => {
+    navigate(`/edit-property/${slug}`);
   };
 
   const handleOpenDialog = (propertyId) => {
@@ -69,23 +67,12 @@ function MyProperties() {
   };
 
   if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
     <div>
-      <Header />
-      <ToastContainer />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 3, mb: 4 }}>
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h4">My Properties</Typography>
           <Button
@@ -102,20 +89,29 @@ function MyProperties() {
               <Grid item xs={12} sm={6} md={4} key={property.id}>
                 <PropertyCard
                   property={property}
-                  onEdit={() => handleEditProperty(property.id)}
+                  onEdit={() => handleEditProperty(property.slug)}
                   onDelete={() => handleOpenDialog(property.id)}
                 />
               </Grid>
             ))
           ) : (
-            <Typography>No properties found</Typography>
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                You have no properties listed yet.
+              </Typography>
+            </Grid>
           )}
         </Grid>
       </Container>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete Property</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText id="alert-dialog-description">
             Are you sure you want to delete this property?
           </DialogContentText>
         </DialogContent>

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Box } from '@mui/material';
 import { toast } from 'react-toastify';
-import Header from 'components/Home/Header';
 import ProfileHeader from 'components/UserProfile/ProfileHeader';
 import EditDialog from 'components/UserProfile/EditDialog';
 import PasswordDialog from 'components/UserProfile/PasswordDialog';
@@ -217,6 +216,7 @@ function Profile() {
             new_password: newPassword,
           })
         );
+
         toast.success('Password changed successfully');
       } else if (editField === 'Phone') {
         await dispatch(updatePhone({ phone_number: `+2${phone}` }));
@@ -230,18 +230,16 @@ function Profile() {
   };
 
   return (
-    <div>
-      <Header />
-      <Container maxWidth="xlg" sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+    <Box sx={{ flexGrow: 1, padding: { xs: 2, sm: 3, md: 4 } }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={10}>
+          <Grid item xs={12} md={4}>
             <ProfileHeader
-              avatar={user?.avatar || '../assets/images/defaultprofile.png'}
               user={user}
               onEditAvatar={() => setOpenAvatarDialog(true)}
             />
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} md={8}>
             <ProfileDetails
               user={user}
               onEditClick={handleEditClick}
@@ -249,48 +247,48 @@ function Profile() {
             />
           </Grid>
         </Grid>
-        <EditDialog
-          isOpen={openEditDialog}
-          onClose={handleDialogClose}
-          firstName={firstName}
-          lastName={lastName}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <PasswordDialog
-          isOpen={openPasswordDialog}
-          onClose={handleDialogClose}
-          currentPassword={currentPassword}
-          newPassword={newPassword}
-          confirmPassword={confirmPassword}
-          setCurrentPassword={setCurrentPassword}
-          setNewPassword={setNewPassword}
-          setConfirmPassword={setConfirmPassword}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <AvatarDialog
-          isOpen={openAvatarDialog}
-          onClose={handleDialogClose}
-          onChange={handleAvatarChange}
-        />
-        <PhoneDialog
-          isOpen={openPhoneDialog}
-          onClose={handleDialogClose}
-          phone={phone}
-          setPhone={setPhone}
-          onSave={handleSave}
-          errors={errors}
-        />
-        <DeleteDialog
-          isOpen={openDeleteDialog}
-          onClose={handleDialogClose}
-          onDelete={handleDeleteAccount}
-        />
       </Container>
-    </div>
+      <EditDialog
+        isOpen={openEditDialog}
+        onClose={handleDialogClose}
+        firstName={firstName}
+        lastName={lastName}
+        setFirstName={setFirstName}
+        setLastName={setLastName}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <PasswordDialog
+        isOpen={openPasswordDialog}
+        onClose={handleDialogClose}
+        currentPassword={currentPassword}
+        newPassword={newPassword}
+        confirmPassword={confirmPassword}
+        setCurrentPassword={setCurrentPassword}
+        setNewPassword={setNewPassword}
+        setConfirmPassword={setConfirmPassword}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <AvatarDialog
+        isOpen={openAvatarDialog}
+        onClose={handleDialogClose}
+        onChange={handleAvatarChange}
+      />
+      <PhoneDialog
+        isOpen={openPhoneDialog}
+        onClose={handleDialogClose}
+        phone={phone}
+        setPhone={setPhone}
+        onSave={handleSave}
+        errors={errors}
+      />
+      <DeleteDialog
+        isOpen={openDeleteDialog}
+        onClose={handleDialogClose}
+        onDelete={handleDeleteAccount}
+      />
+    </Box>
   );
 }
 

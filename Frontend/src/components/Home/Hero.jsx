@@ -6,7 +6,13 @@ import { Carousel } from 'react-responsive-carousel';
 
 function Hero() {
   return (
-    <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+    <Box
+      sx={{
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
       <Carousel
         autoPlay
         infiniteLoop
@@ -22,18 +28,7 @@ function Hero() {
             sx={{
               height: '100vh',
               backgroundImage:
-                'url(https://via.placeholder.com/640x480.png/007777?text=dignissimos)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        </div>
-        <div>
-          <Box
-            sx={{
-              height: '100vh',
-              backgroundImage:
-                'url(https://via.placeholder.com/640x480.png/007777?text=dignissimos)',
+                'url(https://images.unsplash.com/photo-1448630360428-65456885c650?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvcGVydHl8ZW58MHx8MHx8fDA%3D)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import {
   Table,
   TableBody,
@@ -16,14 +17,14 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { toast } from 'react-toastify';
-import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import { tableCellClasses } from '@mui/material/TableCell';
 import SearchIcon from '@mui/icons-material/Search';
+import Loader from 'components/Loader';
 import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButton';
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
-import ShowAmenityDetailsButton from 'components/AdminDashboard/Amenities/ShowAmenityDetailsButton';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import { errorToast, successToast } from 'utils/toast';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,14 +47,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
+  borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
     width: 'auto',
   },
 }));
@@ -83,23 +86,36 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function AmenityTable() {
   const dispatch = useDispatch();
-  const amenities = useSelector((state) => state.amenities.amenities);
+  const { amenities, status } = useSelector((state) => state.amenities);
 
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(10);
+  const [rowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedSlug, setSelectedSlug] = useState(null);
 
   useEffect(() => {
     dispatch(fetchAmenities());
   }, [dispatch]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await dispatch(deleteAmenity(id));
-      toast.success('Amenity deleted successfully!');
+      dispatch(deleteAmenity(selectedSlug));
+      successToast('Amenity deleted successfully');
+      setOpenConfirm(false);
     } catch (error) {
-      toast.error('Failed to delete amenity.');
+      errorToast('Failed to delete the amenity');
     }
+  };
+
+  const handleOpenConfirm = (slug) => {
+    setSelectedSlug(slug);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setSelectedSlug(null);
   };
 
   const handleChangePage = (event, value) => {
@@ -110,11 +126,11 @@ function AmenityTable() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredAmenities = Array.isArray(amenities)
-    ? amenities.filter((amenity) =>
-        amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  const filteredAmenities = useMemo(() => {
+    return amenities.filter((amenity) =>
+      amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [amenities, searchTerm]);
 
   return (
     <>
@@ -126,9 +142,10 @@ function AmenityTable() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -137,7 +154,7 @@ function AmenityTable() {
             Amenities
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -149,53 +166,67 @@ function AmenityTable() {
               onChange={handleSearchChange}
             />
           </Search>
+          <AddAmenityButton />
         </Box>
-        <AddAmenityButton />
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredAmenities
-              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-              .map((amenity) => (
-                <StyledTableRow key={amenity.id}>
-                  <StyledTableCell>{amenity.id}</StyledTableCell>
-                  <StyledTableCell>{amenity.name}</StyledTableCell>
-                  <StyledTableCell>
-                    <EditAmenityButton amenity={amenity} />
-                    <ShowAmenityDetailsButton amenitySlug={amenity.slug} />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDelete(amenity.id)}
-                      sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                    >
-                      Delete
-                    </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination
-          count={Math.ceil(filteredAmenities.length / rowsPerPage)}
-          page={page}
-          onChange={handleChangePage}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
+      {status === 'loading' ? (
+        <Loader />
+      ) : (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell align="center">Name</StyledTableCell>
+                  <StyledTableCell align="center">Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredAmenities
+                  .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+                  .map((amenity) => (
+                    <StyledTableRow key={amenity.id}>
+                      <StyledTableCell>{amenity.id}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {amenity.name}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <EditAmenityButton amenity={amenity} />
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleOpenConfirm(amenity.slug)}
+                          sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
+                        >
+                          Delete
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={Math.ceil(filteredAmenities.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </Box>
+        </>
+      )}
+
+      <DeleteConfirmationModal
+        item="Amenity"
+        isOpen={openConfirm}
+        handleClose={handleCloseConfirm}
+        handleConfirm={handleDelete}
+      />
     </>
   );
 }

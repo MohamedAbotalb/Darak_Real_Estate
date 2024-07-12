@@ -1,40 +1,69 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
-import * as propertyTypesService from 'services/propertyTypesService';
+import {
+  getAllPropertyTypes as getAllPropertyTypesService,
+  addPropertyType as addPropertyTypeService,
+  editPropertyType as editPropertyTypeService,
+  deletePropertyType as deletePropertyTypeService,
+  getPropertyTypeBySlug as getPropertyTypeBySlugService,
+} from 'services/propertyTypesService';
 
 export const fetchPropertyTypes = createAsyncThunk(
   'propertyTypes/fetchPropertyTypes',
-  async () => {
-    return propertyTypesService.getAllPropertyTypes();
+  async (thunkAPI) => {
+    try {
+      const response = await getAllPropertyTypesService();
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const fetchPropertyTypeDetails = createAsyncThunk(
   'propertyTypes/fetchPropertyTypeDetails',
-  async (typeSlug) => {
-    return propertyTypesService.getPropertyTypeBySlug(typeSlug);
+  async (typeSlug, thunkAPI) => {
+    try {
+      const response = await getPropertyTypeBySlugService(typeSlug);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const addPropertyType = createAsyncThunk(
   'propertyTypes/addPropertyType',
-  async (data) => {
-    return propertyTypesService.addPropertyType(data);
+  async (data, thunkAPI) => {
+    try {
+      const response = await addPropertyTypeService(data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const editPropertyType = createAsyncThunk(
   'propertyTypes/editPropertyType',
-  async ({ slug, data }) => {
-    return propertyTypesService.editPropertyType(slug, data);
+  async ({ slug, data }, thunkAPI) => {
+    try {
+      const response = await editPropertyTypeService(slug, data);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const deletePropertyType = createAsyncThunk(
   'propertyTypes/deletePropertyType',
-  async (slug) => {
-    await propertyTypesService.deletePropertyType(slug);
-    return slug;
+  async (slug, thunkAPI) => {
+    try {
+      await deletePropertyTypeService(slug);
+      return slug;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -49,7 +78,6 @@ export const propertyTypesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch reducers
       .addCase(fetchPropertyTypes.pending, (state) => {
         state.status = 'loading';
       })

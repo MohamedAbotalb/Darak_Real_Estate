@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogTitle,
@@ -20,10 +21,13 @@ import { submitTourRequest } from 'store/tourRequestSlice';
 function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.tourRequest);
-
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const schema = yup.object().shape({
     dates: yup.array().of(yup.string().required('Date is required')),
   });
+
+  if (!user) navigate('/login');
 
   const {
     control,
@@ -55,6 +59,10 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
   });
 
   const onSubmit = async (data) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     const formattedDates = data.dates.map(formatDate);
     dispatch(submitTourRequest({ propertyId, dates: formattedDates }))
       .then(() => {

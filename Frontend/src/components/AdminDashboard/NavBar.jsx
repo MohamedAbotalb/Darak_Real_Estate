@@ -27,7 +27,7 @@ export default function NavBar() {
 
   return (
     <AppBar
-      position="static"
+      position="absolute"
       className="header"
       sx={{ backgroundColor: '#2b3d4f' }}
     >

@@ -9,32 +9,29 @@ import {
 export const fetchAmenities = createAsyncThunk(
   'amenities/fetchAmenities',
   async () => {
-    const response = await fetchAmenitiesService();
-    return response.data;
+    return fetchAmenitiesService();
   }
 );
 
 export const addAmenity = createAsyncThunk(
   'amenities/addAmenity',
-  async (newAmenity) => {
-    const response = await addAmenityService(newAmenity);
-    return response;
-  }
-);
-
-export const deleteAmenity = createAsyncThunk(
-  'amenities/deleteAmenity',
-  async (amenityId) => {
-    await deleteAmenityService(amenityId);
-    return amenityId;
+  async (data) => {
+    return addAmenityService(data);
   }
 );
 
 export const updateAmenity = createAsyncThunk(
   'amenities/updateAmenity',
-  async ({ id, name }) => {
-    const response = await updateAmenityService(id, name);
-    return response;
+  async ({ slug, data }) => {
+    return updateAmenityService(slug, data);
+  }
+);
+
+export const deleteAmenity = createAsyncThunk(
+  'amenities/deleteAmenity',
+  async (slug) => {
+    await deleteAmenityService(slug);
+    return slug;
   }
 );
 
@@ -64,14 +61,16 @@ const amenitiesSlice = createSlice({
       })
       .addCase(deleteAmenity.fulfilled, (state, action) => {
         state.amenities = state.amenities.filter(
-          (amenity) => amenity.id !== action.payload
+          (amenity) => amenity.slug !== action.payload
         );
       })
       .addCase(updateAmenity.fulfilled, (state, action) => {
         const index = state.amenities.findIndex(
-          (amenity) => amenity.id === action.payload.id
+          (amenity) => amenity.slug === action.meta.arg.slug
         );
-        state.amenities[index] = action.payload;
+        if (index !== -1) {
+          state.amenities[index] = action.payload;
+        }
       });
   },
 });

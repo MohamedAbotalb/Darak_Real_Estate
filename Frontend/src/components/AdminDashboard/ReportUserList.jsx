@@ -1,36 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Pagination from '@mui/material/Pagination';
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Pagination,
+  InputBase,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import {
   fetchReports,
   deleteReport,
   deleteLandlord,
 } from 'store/reportUsersSlice';
+import { successToast } from 'utils/toast';
+import Loader from 'components/Loader';
+import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.grey[700],
     color: theme.palette.common.white,
+    textAlign: 'center',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    textAlign: 'center',
   },
 }));
 
@@ -50,10 +58,11 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
     width: 'auto',
   },
 }));
@@ -81,11 +90,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function ReportUserList() {
+function ReportUserList() {
   const dispatch = useDispatch();
-  const reports = useSelector((state) => state.reportUsers.reports);
-  const reportStatus = useSelector((state) => state.reportUsers.status);
-  const error = useSelector((state) => state.reportUsers.error);
+  const { reports, status, error } = useSelector((state) => state.reportUsers);
 
   const [selectedContent, setSelectedContent] = useState('');
   const [openContentDialog, setOpenContentDialog] = useState(false);
@@ -96,15 +103,14 @@ export default function ReportUserList() {
     user: '',
     landlord: '',
   });
-
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   useEffect(() => {
-    if (reportStatus === 'idle') {
+    if (status === 'idle') {
       dispatch(fetchReports());
     }
-  }, [reportStatus, dispatch]);
+  }, [status, dispatch]);
 
   const handleDeleteReport = (id) => {
     setDeleteType('report');
@@ -134,45 +140,56 @@ export default function ReportUserList() {
   const handleConfirmDelete = () => {
     if (deleteType === 'report') {
       dispatch(deleteReport(deleteId));
+      successToast('Report deleted successfully');
     } else if (deleteType === 'landlord') {
       dispatch(deleteLandlord(deleteId));
+      successToast('Landlord blocked successfully');
     }
     setOpenDeleteDialog(false);
+    dispatch(fetchReports());
   };
+
+  const handleSearchChange = useCallback((event, fieldName) => {
+    setSearchTerms((prevTerms) => ({
+      ...prevTerms,
+      [fieldName]: event.target.value,
+    }));
+  }, []);
+
+  const debouncedSearchTerms = useMemo(() => searchTerms, [searchTerms]);
+
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      const userFullName = `${report?.user?.first_name?.toLowerCase() || ''} ${report?.user?.last_name?.toLowerCase() || ''}`;
+      const landlordFullName = `${report?.landlord?.first_name?.toLowerCase() || ''} ${report?.landlord?.last_name?.toLowerCase() || ''}`;
+
+      return (
+        (debouncedSearchTerms.user === '' ||
+          userFullName.includes(debouncedSearchTerms.user.toLowerCase())) &&
+        (debouncedSearchTerms.landlord === '' ||
+          landlordFullName.includes(
+            debouncedSearchTerms.landlord.toLowerCase()
+          ))
+      );
+    });
+  }, [reports, debouncedSearchTerms]);
+
+  const paginatedReports = useMemo(() => {
+    return filteredReports.slice(
+      (page - 1) * rowsPerPage,
+      (page - 1) * rowsPerPage + rowsPerPage
+    );
+  }, [filteredReports, page, rowsPerPage]);
 
   const handleChangePage = (event, value) => {
     setPage(value);
   };
 
-  const handleSearchChange = (event, fieldName) => {
-    setSearchTerms({
-      ...searchTerms,
-      [fieldName]: event.target.value,
-    });
-  };
-
-  const filteredReports = reports.filter((report) => {
-    const userFullName = `${report.user.first_name.toLowerCase()} ${report.user.last_name.toLowerCase()}`;
-    const landlordFullName = `${report.landlord.first_name.toLowerCase()} ${report.landlord.last_name.toLowerCase()}`;
-
-    return (
-      (searchTerms.user === '' ||
-        userFullName.includes(searchTerms.user.toLowerCase())) &&
-      (searchTerms.landlord === '' ||
-        landlordFullName.includes(searchTerms.landlord.toLowerCase()))
-    );
-  });
-
-  const paginatedReports = filteredReports.slice(
-    (page - 1) * rowsPerPage,
-    (page - 1) * rowsPerPage + rowsPerPage
-  );
-
   let content;
 
-  if (reportStatus === 'loading') {
-    content = <p>Loading...</p>;
-  } else if (reportStatus === 'succeeded') {
+  if (status === 'loading') {
+    content = <Loader />;
+  } else if (status === 'succeeded') {
     content = (
       <div>
         <TableContainer component={Paper}>
@@ -193,18 +210,18 @@ export default function ReportUserList() {
                     {report.id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {`${report.user.first_name} ${report.user.last_name}`}
+                    {`${report?.user?.first_name} ${report?.user?.last_name}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {`${report.landlord.first_name} ${report.landlord.last_name}`}
+                    {`${report?.landlord?.first_name} ${report?.landlord?.last_name}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Button
-                      variant="text"
+                      variant="contained"
                       color="primary"
                       onClick={() => handleShowContent(report.content)}
                     >
-                      View Content
+                      View
                     </Button>
                   </StyledTableCell>
                   <StyledTableCell align="center">
@@ -219,7 +236,7 @@ export default function ReportUserList() {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleDeleteLandlord(report.landlord.id)}
+                      onClick={() => handleDeleteLandlord(report.id)}
                     >
                       Block Landlord
                     </Button>
@@ -248,7 +265,7 @@ export default function ReportUserList() {
         </div>
       </div>
     );
-  } else if (reportStatus === 'failed') {
+  } else if (status === 'failed') {
     content = <p>{error}</p>;
   }
 
@@ -262,18 +279,19 @@ export default function ReportUserList() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Report User
+            User Reports
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="between">
+        <Box display="flex">
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -299,10 +317,15 @@ export default function ReportUserList() {
         </Box>
       </Box>
       {content}
-      <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
-        <DialogTitle>Content</DialogTitle>
+      <Dialog
+        open={openContentDialog}
+        onClose={handleCloseContentDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Content</DialogTitle>
         <DialogContent>
-          <Typography variant="body2">{selectedContent}</Typography>
+          <Typography>{selectedContent}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseContentDialog} color="primary">
@@ -310,22 +333,14 @@ export default function ReportUserList() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Are you sure you want to delete this {deleteType}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationModal
+        isOpen={openDeleteDialog}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+        item={deleteType}
+      />
     </>
   );
 }
+
+export default React.memo(ReportUserList);

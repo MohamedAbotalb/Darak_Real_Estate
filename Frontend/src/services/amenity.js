@@ -2,21 +2,20 @@ import axios from 'services/axiosConfig';
 
 const fetchAmenities = async () => {
   const response = await axios.get('/amenities');
+  return response.data.data;
+};
+
+const addAmenity = async (data) => {
+  const response = await axios.post('/amenities', data);
   return response.data;
 };
 
-const addAmenity = async (newAmenity) => {
-  const response = await axios.post('/amenities', newAmenity);
-  return response.data;
+const deleteAmenity = async (slug) => {
+  await axios.delete(`/amenities/${slug}`);
 };
 
-const deleteAmenity = async (amenitySlug) => {
-  await axios.delete(`/amenities/${amenitySlug}`);
-  return amenitySlug;
-};
-
-const updateAmenity = async (slug, name) => {
-  const response = await axios.put(`/amenities/${slug}`, { name });
+const updateAmenity = async (slug, data) => {
+  const response = await axios.put(`/amenities/${slug}`, data);
   return response.data;
 };
 

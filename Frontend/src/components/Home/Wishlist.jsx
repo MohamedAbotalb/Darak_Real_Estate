@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
   Typography,
-  CircularProgress,
   Box,
   Pagination,
   FormControl,
@@ -12,6 +11,7 @@ import {
 } from '@mui/material';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from 'components/Home/PropertyCard';
+import Loader from 'components/Loader';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -46,16 +46,7 @@ function Wishlist() {
   );
 
   if (status === 'loading') {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
@@ -87,8 +78,8 @@ function Wishlist() {
           <FormControl variant="outlined" margin="normal" sx={{ width: 150 }}>
             <Select value={filter} onChange={handleFilterChange}>
               <MenuItem value="all">All</MenuItem>
-              <MenuItem value="renting">Rent</MenuItem>
-              <MenuItem value="selling">Sell</MenuItem>
+              <MenuItem value="rent">Rent</MenuItem>
+              <MenuItem value="buy">Buy</MenuItem>
             </Select>
           </FormControl>
         </Box>

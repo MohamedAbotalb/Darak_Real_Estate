@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  IconButton,
-  MenuItem,
-  Select,
-  FormControl,
-  CircularProgress,
-} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, IconButton, MenuItem, Select, FormControl } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
+import Loader from 'components/Loader';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -53,6 +48,7 @@ const SearchButton = styled(IconButton)({
 
 function PropertySearch() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
   const locations = useSelector((state) => state.locations.data || []);
   const locationsStatus = useSelector((state) => state.locations.status);
@@ -60,7 +56,7 @@ function PropertySearch() {
     (state) => state.propertyTypes.status
   );
 
-  const [rentOrBuy, setRentOrBuy] = useState('renting');
+  const [listingType, setListingType] = useState('rent');
   const [propertyType, setPropertyType] = useState('');
   const [city, setCity] = useState('');
 
@@ -73,26 +69,36 @@ function PropertySearch() {
   }, [dispatch]);
 
   const handleSearch = () => {
-    dispatch(fetchProperties({ propertyType, city, listingType: rentOrBuy }));
+    // Navigate to properties search page with query parameters
+    let query = `lt=${listingType}`;
+    if (propertyType) query += `&pt=${propertyType}`;
+    if (city) query += `&c=${city}`;
+
+    navigate({
+      pathname: '/properties',
+      search: `?${query}`,
+    });
+
+    dispatch(fetchProperties({ propertyType, city, listingType }));
   };
 
   return (
     <SearchContainer>
       {isLoading ? (
-        <CircularProgress size={50} />
+        <Loader />
       ) : (
         <>
           <SearchFormControl variant="outlined">
             <Select
-              value={rentOrBuy}
-              onChange={(e) => setRentOrBuy(e.target.value)}
+              value={listingType}
+              onChange={(e) => setListingType(e.target.value)}
               displayEmpty
             >
               <MenuItem value="" disabled>
                 <em>Rent, Buy</em>
               </MenuItem>
-              <MenuItem value="renting">Rent</MenuItem>
-              <MenuItem value="selling">Buy</MenuItem>
+              <MenuItem value="rent">Rent</MenuItem>
+              <MenuItem value="buy">Buy</MenuItem>
             </Select>
           </SearchFormControl>
 

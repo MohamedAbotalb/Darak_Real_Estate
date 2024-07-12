@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import {
@@ -10,7 +10,6 @@ import {
   TableRow,
   tableCellClasses,
   Paper,
-  CircularProgress,
   Alert,
   Pagination,
   Typography,
@@ -21,6 +20,7 @@ import {
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
+import Loader from 'components/Loader';
 import { fetchUsers } from 'store/userDetailsSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -87,15 +87,38 @@ function UserDetails() {
   const status = useSelector((state) => state.userDetails.status);
   const error = useSelector((state) => state.userDetails.error);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchUsers());
+      dispatch(fetchUsers()).unwrap();
     }
   }, [status, dispatch]);
+
+  const filteredUsers = useMemo(() => {
+    let filteredList = users;
+
+    if (searchTerm) {
+      filteredList = filteredList.filter((user) =>
+        user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (filterType !== 'all') {
+      filteredList = filteredList.filter((user) => user.role === filterType);
+    }
+
+    return filteredList;
+  }, [users, searchTerm, filterType]);
+
+  const paginatedUsers = useMemo(() => {
+    return filteredUsers.slice(
+      (page - 1) * rowsPerPage,
+      (page - 1) * rowsPerPage + rowsPerPage
+    );
+  }, [filteredUsers, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -109,25 +132,12 @@ function UserDetails() {
     setFilterType(newFilterType);
   };
 
-  const filteredUsers = users
-    .filter((user) =>
-      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((user) => {
-      if (filterType === 'all') return true;
-      return user.role === filterType;
-    });
-
   let content;
 
   if (status === 'loading') {
-    content = <CircularProgress />;
+    content = <Loader />;
   } else if (status === 'succeeded') {
     if (Array.isArray(users)) {
-      const paginatedUsers = filteredUsers.slice(
-        (page - 1) * rowsPerPage,
-        (page - 1) * rowsPerPage + rowsPerPage
-      );
       content = (
         <>
           <TableContainer component={Paper}>
@@ -199,9 +209,10 @@ function UserDetails() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box
@@ -216,7 +227,7 @@ function UserDetails() {
             User Details
           </Typography>
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -228,27 +239,27 @@ function UserDetails() {
               onChange={handleSearchChange}
             />
           </Search>
+          <ToggleButtonGroup
+            value={filterType}
+            exclusive
+            onChange={handleFilterChange}
+            aria-label="role filter"
+          >
+            <ToggleButton value="all" aria-label="all">
+              All
+            </ToggleButton>
+            <ToggleButton value="user" aria-label="users">
+              Users
+            </ToggleButton>
+            <ToggleButton value="landlord" aria-label="landlords">
+              Landlords
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
-        <ToggleButtonGroup
-          value={filterType}
-          exclusive
-          onChange={handleFilterChange}
-          aria-label="role filter"
-        >
-          <ToggleButton value="all" aria-label="all">
-            All
-          </ToggleButton>
-          <ToggleButton value="user" aria-label="users">
-            Users
-          </ToggleButton>
-          <ToggleButton value="landlord" aria-label="landlords">
-            Landlords
-          </ToggleButton>
-        </ToggleButtonGroup>
       </Box>
       {content}
     </>
   );
 }
 
-export default UserDetails;
+export default React.memo(UserDetails);

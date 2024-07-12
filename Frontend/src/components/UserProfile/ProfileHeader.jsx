@@ -13,12 +13,17 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
         position: 'relative',
         width: '100%',
         maxWidth: '400px',
-        margin: '0 auto',
+        margin: 'auto',
       }}
     >
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Avatar
-          sx={{ width: 120, height: 120, mx: 'auto', mb: 3 }}
+          sx={{
+            width: { xs: 80, sm: 100, md: 120 },
+            height: { xs: 80, sm: 100, md: 120 },
+            mx: 'auto',
+            mb: 3,
+          }}
           src={avatar}
         />
         <IconButton
@@ -29,7 +34,7 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
             bgcolor: 'white',
             border: '2px solid white',
             '&:hover': {
-              bgcolor: 'primary.main',
+              bgcolor: '#2C3E50',
               color: 'white',
             },
           }}

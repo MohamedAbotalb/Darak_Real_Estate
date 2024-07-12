@@ -1,21 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Box, Card, CardContent, Typography, Grid, Alert } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
 import CategoryIcon from '@mui/icons-material/Category';
 import ReportIcon from '@mui/icons-material/Report';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import Loader from 'components/Loader';
 import { fetchCounts } from 'store/overviewSlice';
 
 const cardStyles = {
@@ -65,7 +57,7 @@ const cardsData = [
     key: 'property_reports',
     title: 'Property Reports',
     countKey: 'property_reports',
-    icon: <AssessmentIcon sx={iconStyles} />,
+    icon: <ReportIcon sx={iconStyles} />,
   },
   {
     key: 'amenities',
@@ -85,6 +77,8 @@ function OverView() {
     }
   }, [status, dispatch]);
 
+  const memoizedCardsData = useMemo(() => cardsData, []);
+
   return (
     <>
       <Box
@@ -95,9 +89,10 @@ function OverView() {
           mb: 4,
           px: 2,
           py: 2,
-          backgroundColor: '#E8DFDE',
+          backgroundColor: '#d8d8d8',
           borderRadius: 1,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          marginTop: '66px',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -108,11 +103,11 @@ function OverView() {
         </Box>
       </Box>
       <Box sx={{ mt: 4, width: '100%' }}>
-        {status === 'loading' && <CircularProgress />}
+        {status === 'loading' && <Loader />}
         {status === 'failed' && <Alert severity="error">{error}</Alert>}
         {status === 'succeeded' && (
           <Grid container spacing={3}>
-            {cardsData.map((card) => (
+            {memoizedCardsData.map((card) => (
               <Grid item xs={12} sm={6} md={4} key={card.key}>
                 <Card sx={cardStyles}>
                   {card.icon}
