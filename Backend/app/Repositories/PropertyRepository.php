@@ -34,6 +34,17 @@ class PropertyRepository implements PropertyRepositoryInterface
             ->take(3)
             ->get();
     }
+    public function getAcceptedProperties(int $perPage)
+    {
+        $properties = Property::where('status', 'accepted')
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')
+            ->paginate($perPage);
+        if ($properties->isEmpty()) {
+            return null;
+        }
+
+        return $properties;
+    }
 
     public function createProperty(array $data)
     {
