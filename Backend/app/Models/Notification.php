@@ -10,7 +10,7 @@ class Notification extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['from_user_id', 'to_user_id', 'tour_id','message', 'type', 'date','status',];
+    protected $fillable = ['from_user_id', 'to_user_id', 'tour_id','message','property_id', 'type', 'date','status',];
     protected $dates=['deleted_at'];
 
     public function fromUser()
@@ -26,5 +26,8 @@ class Notification extends Model
     {
         return $this->belongsTo(Tour::class, 'tour_id');
     }
-
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
 }

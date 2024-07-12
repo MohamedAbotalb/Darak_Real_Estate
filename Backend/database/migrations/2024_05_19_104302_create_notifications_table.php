@@ -15,14 +15,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('from_user_id');
             $table->unsignedBigInteger('to_user_id');
+            $table->unsignedBigInteger('property_id');
             $table->text('message');
-            $table->enum('type',['request','confirmation','cancelation']);
+            $table->enum('type',['request','confirmation','cancelation','property_request']);
             $table->dateTime('date');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('from_user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('to_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

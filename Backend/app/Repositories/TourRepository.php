@@ -38,11 +38,14 @@ class TourRepository implements TourRepositoryInterface
 
             $property = $tour->property;
             $landlord_id = $property->user_id;
-
+            if (!$property->id) {
+                throw new \Exception('Property ID is missing');
+            }
             Notification::create([
                 'from_user_id' => Auth::id(),
                 'to_user_id' => $landlord_id,
                 'tour_id' => $tour->id,
+                'property_id'=> $data['property_id'],
                 'message' => 'Tour request for property: ' . $property->title,
                 'type' => 'request',
                 'status' => 'pending',
@@ -95,6 +98,7 @@ class TourRepository implements TourRepositoryInterface
             Notification::create([
                 'to_user_id' => $tour->user_id,
                 'from_user_id' => $property->user_id,
+                'property_id'=>$property->id,
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been approved',
                 'type' => 'confirmation',
@@ -136,6 +140,7 @@ class TourRepository implements TourRepositoryInterface
             Notification::create([
                 'to_user_id' => $tour->user_id,
                 'from_user_id' => $property->user_id,
+                'property_id'=>$property->id,
                 'tour_id' => $tour->id,
                 'message' => $message,
                 'type' => 'cancelation',
