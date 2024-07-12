@@ -23,14 +23,12 @@ class TourRepository implements TourRepositoryInterface
                 return null; 
             }
 
-            // Create the tour
             $tour = Tour::create([
                 'user_id' => Auth::id(),
                 'property_id' => $data['property_id'],
                 'status' => $data['status'],
             ]);
 
-            // Create tour dates
             foreach ($data['dates'] as $date) {
                 TourDate::create([
                     'tour_id' => $tour->id,
@@ -38,14 +36,16 @@ class TourRepository implements TourRepositoryInterface
                 ]);
             }
 
-            // Notify the landlord
             $property = $tour->property;
             $landlord_id = $property->user_id;
-
+            if (!$property->id) {
+                throw new \Exception('Property ID is missing');
+            }
             Notification::create([
-                'user_id' => Auth::id(),
-                'landlord_id' => $landlord_id,
+                'from_user_id' => Auth::id(),
+                'to_user_id' => $landlord_id,
                 'tour_id' => $tour->id,
+                'property_id'=> $data['property_id'],
                 'message' => 'Tour request for property: ' . $property->title,
                 'type' => 'request',
                 'status' => 'pending',
@@ -88,16 +88,17 @@ class TourRepository implements TourRepositoryInterface
             return null;
         }
 
-        $existingNotification = Notification::where('user_id', $tour->user_id)
-            ->where('landlord_id', $property->user_id)
+        $existingNotification = Notification::where('to_user_id', $tour->user_id)
+            ->where('from_user_id', $property->user_id)
             ->where('tour_id', $tour->id)
             ->where('type', 'confirmation')
             ->exists();
 
         if (!$existingNotification) {
             Notification::create([
-                'user_id' => $tour->user_id,
-                'landlord_id' => $property->user_id,
+                'to_user_id' => $tour->user_id,
+                'from_user_id' => $property->user_id,
+                'property_id'=>$property->id,
                 'tour_id' => $tour->id,
                 'message' => 'Tour request for property ' . $property->title . ' has been approved',
                 'type' => 'confirmation',
@@ -129,16 +130,17 @@ class TourRepository implements TourRepositoryInterface
         $tour->status = 'declined';
         $tour->save();
 
-        $existingNotification = Notification::where('user_id', $tour->user_id)
-            ->where('landlord_id', $property->user_id)
+        $existingNotification = Notification::where('to_user_id', $tour->user_id)
+            ->where('from_user_id', $property->user_id)
             ->where('tour_id', $tour->id)
             ->where('type', 'cancelation')
             ->exists();
 
         if (!$existingNotification) {
             Notification::create([
-                'user_id' => $tour->user_id,
-                'landlord_id' => $property->user_id,
+                'to_user_id' => $tour->user_id,
+                'from_user_id' => $property->user_id,
+                'property_id'=>$property->id,
                 'tour_id' => $tour->id,
                 'message' => $message,
                 'type' => 'cancelation',

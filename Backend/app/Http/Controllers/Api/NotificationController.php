@@ -19,7 +19,9 @@ class NotificationController extends Controller
     public function showLandlordNotifications()
     {
         $notifications = $this->notificationRepository->getLandlordNotifications(Auth::id());
-
+        if(!$notifications){
+            return response()->json(['message' => 'This is not a landlord'], 404);
+        }
         if ($notifications->isEmpty()) {
             return response()->json(['message' => 'No notifications found for the landlord'], 404);
         }
@@ -30,7 +32,9 @@ class NotificationController extends Controller
     public function showRenterNotifications()
     {
         $notifications = $this->notificationRepository->getRenterNotifications(Auth::id());
-
+        if(!$notifications){
+            return response()->json(['message' => 'This is not a renter'], 404);
+        }
         if ($notifications->isEmpty()) {
             return response()->json(['message' => 'No notifications found for the renter'], 404);
         }

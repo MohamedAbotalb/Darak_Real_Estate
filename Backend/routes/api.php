@@ -89,6 +89,7 @@ Route::apiResource('property-types', PropertyTypeController::class);
 
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
+    Route::get('/accepted',[PropertyController::class,'showAcceptedProperties']);
     Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
     Route::get('/{slug}',[PropertyController::class,'show']);
     Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
@@ -97,7 +98,7 @@ Route::prefix('properties')->group(function(){
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update']);
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
-
+    Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus']);
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 
