@@ -32,22 +32,22 @@ class PropertyController extends Controller
         return response()->json(['message' => 'Property fetched successfully', 'data' => $property], 200);
     }
 
-    public function showLatestRent($property_type_id)
+    public function showLatestRent()
     {
-        return $this->showLatestProperties($property_type_id, 'rent');
+        return $this->showLatestProperties('rent');
     }
 
-    public function showLatestBuy($property_type_id)
+    public function showLatestBuy()
     {
-        return $this->showLatestProperties($property_type_id, 'buy');
+        return $this->showLatestProperties('buy');
     }
 
-    private function showLatestProperties($property_type_id, $listing_type)
+    private function showLatestProperties($listing_type)
     {
-        $latestProperties = $this->propertyRepository->getLatestProperties($property_type_id, $listing_type);
+        $latestProperties = $this->propertyRepository->getLatestProperties($listing_type);
 
         if ($latestProperties->isEmpty()) {
-            return response()->json(['message' => 'No properties found for ' . $listing_type . ' in this category'], 404);
+            return response()->json(['message' => 'No properties found for ' . $listing_type ], 404);
         }
 
         return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' => PropertyResource::collection($latestProperties)], 200);
