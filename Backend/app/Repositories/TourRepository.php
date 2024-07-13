@@ -9,6 +9,8 @@ use App\Repositories\Contracts\TourRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Mail\TourRequestMail;
+use App\Mail\TourApprovalMail;
+use App\Mail\TourDeclineMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
@@ -106,11 +108,15 @@ class TourRepository implements TourRepositoryInterface
                 'from_user_id' => $property->user_id,
                 'property_id'=>$property->id,
                 'tour_id' => $tour->id,
-                'message' => 'Tour request for property ' . $property->title . ' has been approved',
+                'message' => 'Tour request for property ' . $property->title . ' has been approved at '. $tourDate['date'],
                 'type' => 'confirmation',
                 'status' => 'approved',
                 'date' => now(),
             ]);
+
+            $user = User::find($tour->user_id);
+            Mail::to($user->email)->send(new TourApprovalMail($tour, $property, $user,$tourDate));
+
             return true;
         } else {
             return null;
@@ -153,6 +159,9 @@ class TourRepository implements TourRepositoryInterface
                 'status' => 'declined',
                 'date' => now(),
             ]);
+            $user = User::find($tour->user_id);
+            Mail::to($user->email)->send(new TourDeclineMail($tour, $property, $user, $message));
+
             return true;
         } else {
             return null;
