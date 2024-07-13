@@ -25,13 +25,12 @@ class PropertyRepository implements PropertyRepositoryInterface
         return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType', 'user')->firstOrFail();
     }
 
-    public function getLatestProperties(int $property_type_id, string $listing_type)
+    public function getLatestProperties(string $listing_type)
     {
         return Property::with('location', 'images', 'amenities', 'propertyType')
-            ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
-            ->take(3)
+            ->take(6)
             ->get();
     }
     public function getAcceptedProperties(int $perPage)
