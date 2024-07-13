@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Mail\TourRequestMail;
 use App\Mail\TourApprovalMail;
+use App\Mail\TourDeclineMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
@@ -158,6 +159,9 @@ class TourRepository implements TourRepositoryInterface
                 'status' => 'declined',
                 'date' => now(),
             ]);
+            $user = User::find($tour->user_id);
+            Mail::to($user->email)->send(new TourDeclineMail($tour, $property, $user, $message));
+
             return true;
         } else {
             return null;
