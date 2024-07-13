@@ -12,6 +12,8 @@ use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Mail\PropertyStatusUpdateMail;
+use Illuminate\Support\Facades\Mail;
 
 class PropertyRepository implements PropertyRepositoryInterface
 {
@@ -71,7 +73,7 @@ class PropertyRepository implements PropertyRepositoryInterface
             'type' => 'status_change',
             'date' => now(),
         ]);
-
+        Mail::to($user->email)->send(new PropertyStatusUpdateMail($property, $user, $status, $message));
         return $property;
     }
 
