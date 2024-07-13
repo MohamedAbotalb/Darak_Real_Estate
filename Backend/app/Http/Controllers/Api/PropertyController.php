@@ -21,8 +21,7 @@ class PropertyController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->query('perPage', 6);
-        $properties = $this->propertyRepository->getAllProperties($perPage);
+        $properties = $this->propertyRepository->getAllProperties();
         return PropertyResource::collection($properties);
     }
 
@@ -66,7 +65,7 @@ class PropertyController extends Controller
         $status = $request->input('status');
 
         $updatedProperty = $this->propertyRepository->updateStatus($propertyId, $status);
-        if(!$updatedProperty){
+        if (!$updatedProperty) {
             return response()->json(['message' => 'Property not found', 'property' => $updatedProperty]);
         }
         return response()->json(['message' => 'Property status updated successfully.', 'property' => $updatedProperty]);
