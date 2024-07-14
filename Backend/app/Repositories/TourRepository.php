@@ -8,6 +8,12 @@ use App\Models\TourDate;
 use App\Repositories\Contracts\TourRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Mail\TourRequestMail;
+use App\Mail\TourApprovalMail;
+use App\Mail\TourDeclineMail;
+use App\Mail\TourDeleteMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class TourRepository implements TourRepositoryInterface
 {
@@ -20,17 +26,15 @@ class TourRepository implements TourRepositoryInterface
                 ->exists();
 
             if ($existingTour) {
-                return null; 
+                return null;
             }
 
-            // Create the tour
             $tour = Tour::create([
                 'user_id' => Auth::id(),
                 'property_id' => $data['property_id'],
                 'status' => $data['status'],
             ]);
 
-            // Create tour dates
             foreach ($data['dates'] as $date) {
                 TourDate::create([
                     'tour_id' => $tour->id,
@@ -38,19 +42,24 @@ class TourRepository implements TourRepositoryInterface
                 ]);
             }
 
-            // Notify the landlord
             $property = $tour->property;
             $landlord_id = $property->user_id;
-
+            if (!$property->id) {
+                throw new \Exception('Property ID is missing');
+            }
             Notification::create([
-                'user_id' => Auth::id(),
-                'landlord_id' => $landlord_id,
+                'from_user_id' => Auth::id(),
+                'to_user_id' => $landlord_id,
                 'tour_id' => $tour->id,
+                'property_id' => $data['property_id'],
                 'message' => 'Tour request for property: ' . $property->title,
                 'type' => 'request',
                 'status' => 'pending',
                 'date' => now(),
             ]);
+            $landlord = User::find($landlord_id);
+            Mail::to($landlord->email)->send(new TourRequestMail($tour, $property, $landlord));
+
 
             return $tour->load('tourDates', 'property');
         });
@@ -64,7 +73,7 @@ class TourRepository implements TourRepositoryInterface
         if (!$tour) {
             return false;
         }
-        
+
         $tourDate = TourDate::where('id', $tourDateId)
             ->where('tour_id', $id)
             ->first();
@@ -79,8 +88,8 @@ class TourRepository implements TourRepositoryInterface
         $tourDate->approved = true;
         $tourDate->save();
 
-        $oldNotification = Notification::where('tour_id',$id)->first();
-        $oldNotification->status='approved';
+        $oldNotification = Notification::where('tour_id', $id)->first();
+        $oldNotification->status = 'approved';
         $oldNotification->save();
 
         $property = $tour->property;
@@ -88,37 +97,42 @@ class TourRepository implements TourRepositoryInterface
             return null;
         }
 
-        $existingNotification = Notification::where('user_id', $tour->user_id)
-            ->where('landlord_id', $property->user_id)
+        $existingNotification = Notification::where('to_user_id', $tour->user_id)
+            ->where('from_user_id', $property->user_id)
             ->where('tour_id', $tour->id)
             ->where('type', 'confirmation')
             ->exists();
 
         if (!$existingNotification) {
             Notification::create([
-                'user_id' => $tour->user_id,
-                'landlord_id' => $property->user_id,
+                'to_user_id' => $tour->user_id,
+                'from_user_id' => $property->user_id,
+                'property_id' => $property->id,
                 'tour_id' => $tour->id,
-                'message' => 'Tour request for property ' . $property->title . ' has been approved',
+                'message' => 'Tour request for property ' . $property->title . ' has been approved at ' . $tourDate['date'],
                 'type' => 'confirmation',
                 'status' => 'approved',
                 'date' => now(),
             ]);
+
+            $user = User::find($tour->user_id);
+            Mail::to($user->email)->send(new TourApprovalMail($tour, $property, $user, $tourDate));
+
             return true;
         } else {
             return null;
         }
     }
 
-    public function declineTour(int $id)
+    public function declineTour(int $id, string $message)
     {
         $tour = Tour::find($id);
 
         if (!$tour) {
             return false;
         }
-        $oldNotification = Notification::where('tour_id',$id)->first();
-        $oldNotification->status='declined';
+        $oldNotification = Notification::where('tour_id', $id)->first();
+        $oldNotification->status = 'declined';
         $oldNotification->save();
 
         $property = $tour->property;
@@ -129,33 +143,57 @@ class TourRepository implements TourRepositoryInterface
         $tour->status = 'declined';
         $tour->save();
 
-        $existingNotification = Notification::where('user_id', $tour->user_id)
-            ->where('landlord_id', $property->user_id)
+        $existingNotification = Notification::where('to_user_id', $tour->user_id)
+            ->where('from_user_id', $property->user_id)
             ->where('tour_id', $tour->id)
             ->where('type', 'cancelation')
             ->exists();
 
         if (!$existingNotification) {
             Notification::create([
-                'user_id' => $tour->user_id,
-                'landlord_id' => $property->user_id,
+                'to_user_id' => $tour->user_id,
+                'from_user_id' => $property->user_id,
+                'property_id' => $property->id,
                 'tour_id' => $tour->id,
-                'message' => 'Tour request for property ' . $property->title . ' has been cancelled',
+                'message' => $message,
                 'type' => 'cancelation',
                 'status' => 'declined',
                 'date' => now(),
             ]);
+            $user = User::find($tour->user_id);
+            Mail::to($user->email)->send(new TourDeclineMail($tour, $property, $user, $message));
+
             return true;
         } else {
             return null;
         }
     }
-    public function deleteTour(int $id){
-        $tour=Tour::find($id);
-        if(!$tour){
+    public function deleteTour(int $id)
+    {
+        $tour = Tour::find($id);
+        if (!$tour) {
             return null;
         }
+        $property = $tour->property;
+        if (!$property) {
+            return null;
+        }
+
+        $landlord = $property->user;
+        $user = Auth::user();
         $tour->delete();
+        Notification::create([
+            'from_user_id' => Auth::id(),
+            'to_user_id' => $landlord->id,
+            'property_id' => $property->id,
+            'tour_id' => $id,
+            'message' => 'Tour request for property ' . $property->title . ' has been deleted by the user.',
+            'type' => 'deleted-property',
+            'date' => now(),
+        ]);
+        Mail::to($landlord->email)->send(new TourDeleteMail($tour, $property, $landlord,$user));
+
+
         return true;
     }
 

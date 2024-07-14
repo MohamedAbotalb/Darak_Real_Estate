@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('landlord_id');
+            $table->unsignedBigInteger('from_user_id');
+            $table->unsignedBigInteger('to_user_id');
+            $table->unsignedBigInteger('property_id');
             $table->text('message');
-            $table->enum('type',['request','confirmation','cancelation']);
+            $table->enum('type',['request','confirmation','cancelation','property_request','status_change','deleted-property']);
             $table->dateTime('date');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('landlord_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('from_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('to_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

@@ -3,34 +3,90 @@
 namespace App\Repositories;
 
 use App\Models\Location;
+use App\Models\Notification;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Models\User;
 use App\Repositories\Contracts\PropertyRepositoryInterface;
 use App\Utils\ImageUpload;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Mail\PropertyStatusUpdateMail;
+use Illuminate\Support\Facades\Mail;
 
 class PropertyRepository implements PropertyRepositoryInterface
 {
-    public function getAllProperties(int $perPage)
+    public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType','user')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
 
     public function getPropertyBySlug(string $slug)
     {
-        return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType','user')->firstOrFail();
+        return Property::where('slug', $slug)->with('location', 'images', 'amenities', 'propertyType', 'user')->firstOrFail();
     }
 
-    public function getLatestProperties(int $property_type_id, string $listing_type)
+    public function getLatestProperties(string $listing_type)
     {
         return Property::with('location', 'images', 'amenities', 'propertyType')
-            ->where('property_type_id', $property_type_id)
             ->where('listing_type', $listing_type)
             ->latest()
-            ->take(3)
+            ->take(6)
             ->get();
+    }
+    public function getAcceptedProperties(int $perPage)
+    {
+        $properties = Property::where('status', 'accepted')
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')
+            ->paginate($perPage);
+        if ($properties->isEmpty()) {
+            return null;
+        }
+
+        return $properties;
+    }
+    public function updateStatus(int $id, string $status)
+    {
+        $property = Property::find($id);
+
+        if (!$property) {
+            return null;
+        }
+
+        $property->status = $status;
+        $property->save();
+
+        $user = $property->user;
+
+        if (!$user) {
+            return null;
+        }
+
+        $message = $this->generateNotificationMessage($property, $status);
+
+        Notification::create([
+            'from_user_id' => Auth::id(),
+            'to_user_id' => $user->id,
+            'property_id' => $property->id,
+            'message' => $message,
+            'type' => 'status_change',
+            'date' => now(),
+        ]);
+        Mail::to($user->email)->send(new PropertyStatusUpdateMail($property, $user, $status, $message));
+        return $property;
+    }
+
+
+    protected function generateNotificationMessage(Property $property, string $status)
+    {
+        $username = $property->user->first_name . ' ' . $property->user->last_name;
+
+        if ($status === 'accepted') {
+            return "Hello $username, your property '{$property->title}' has been accepted.";
+        } elseif ($status === 'rejected') {
+            return "Hello $username, your property '{$property->title}' has been rejected.";
+        }
     }
 
     public function createProperty(array $data)
@@ -66,7 +122,19 @@ class PropertyRepository implements PropertyRepositoryInterface
             }
 
             $property->load('location', 'propertyType', 'user', 'images', 'amenities');
-
+            $adminUsers = User::where('role', 'admin')->get();
+            $user = Auth::user();
+            $userName = $user->first_name . ' ' . $user->last_name;
+            foreach ($adminUsers as $admin) {
+                Notification::create([
+                    'from_user_id' => $data['user_id'],
+                    'to_user_id' => $admin->id,
+                    'property_id' => $property->id,
+                    'message' => $userName . ' wants to add a new property.',
+                    'type' => 'property_request',
+                    'date' => now(),
+                ]);
+            }
             DB::commit();
             return $property;
         } catch (\Exception $e) {
@@ -78,7 +146,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function searchProperties(array $filters)
     {
-        $query = Property::with('images', 'location', 'amenities', 'propertyType','user');
+        $query = Property::with('images', 'location', 'amenities', 'propertyType', 'user');
 
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
@@ -125,7 +193,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function showUserProperties(int $id)
     {
-        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType','user')->get();
+        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
     public function updateProperty(array $data, string $slug)
     {
@@ -161,7 +229,7 @@ class PropertyRepository implements PropertyRepositoryInterface
                 $property->amenities()->sync($data['amenities']);
             }
 
-            $property->load('location', 'propertyType', 'user', 'images', 'amenities','user');
+            $property->load('location', 'propertyType', 'user', 'images', 'amenities', 'user');
 
             DB::commit();
             return $property;
@@ -170,9 +238,10 @@ class PropertyRepository implements PropertyRepositoryInterface
             throw new \Exception('Failed to update property: ' . $e->getMessage());
         }
     }
-    public function delete(int $id){
-        $property=Property::find($id);
-        if(!$property){
+    public function delete(int $id)
+    {
+        $property = Property::find($id);
+        if (!$property) {
             return null;
         }
         $property->delete();

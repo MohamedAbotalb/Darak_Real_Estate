@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            $table->unsignedBigInteger('tour_id')->nullable()->after('to_user_id');
-            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
+        Schema::table('amenities', function (Blueprint $table) {
+            $table->enum('availability', ['available', 'unavailable'])->default('unavailable');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
+        Schema::table('amenities', function (Blueprint $table) {
             //
         });
     }

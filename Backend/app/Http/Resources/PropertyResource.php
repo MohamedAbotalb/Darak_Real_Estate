@@ -25,6 +25,7 @@ class PropertyResource extends JsonResource
             'price' => $this->price,
             'availability' => $this->availability,
             'listing_type' => $this->listing_type,
+            'status'=> $this->status,
             'location' => new LocationResource($this->whenLoaded('location')),
             'property_type' => new PropertyTypeResource($this->whenLoaded('propertyType')),
             'user' => new UserResource($this->whenLoaded('user')),

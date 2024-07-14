@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tours\DeclineTourRequest;
 use App\Http\Requests\Tours\StoreTourRequest;
 use App\Http\Resources\TourResource;
 use App\Repositories\Contracts\TourRepositoryInterface;
@@ -49,9 +50,10 @@ class TourController extends Controller
         return response()->json(['message' => 'Tour approved successfully'], 200);
     }
 
-    public function declineTour($id)
+    public function declineTour(DeclineTourRequest $request,$id)
     {
-        $success = $this->tourRepository->declineTour($id);
+        $message = $request->input('message');
+        $success = $this->tourRepository->declineTour($id,$message);
         if (!$success) {
             return response()->json(['error' => 'Tour request already declined'], 404);
         }

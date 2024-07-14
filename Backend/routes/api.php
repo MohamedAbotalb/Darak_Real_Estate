@@ -89,15 +89,16 @@ Route::apiResource('property-types', PropertyTypeController::class);
 
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
+    Route::get('/accepted',[PropertyController::class,'showAcceptedProperties']);
     Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
+    Route::get('latest-rent',[PropertyController::class,'showLatestRent']);
+    Route::get('latest-buy',[PropertyController::class,'showLatestBuy']);
     Route::get('/{slug}',[PropertyController::class,'show']);
-    Route::get('latest-rent/{typeId}',[PropertyController::class,'showLatestRent']);
-    Route::get('latest-buy/{typeId}',[PropertyController::class,'showLatestBuy']);
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
-    Route::put('/{id}',[PropertyController::class,'update']);
+    Route::put('/{slug}',[PropertyController::class,'update']);
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
-
+    Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 
@@ -122,6 +123,7 @@ Route::prefix('dashboard')->group(function () {
 Route::prefix('amenities')->group(function () {
     Route::get('/', [AmenityController::class, 'index']);
     Route::post('/', [AmenityController::class, 'store']);
+    Route::put('/availability/{id}', [AmenityController::class, 'updateAvailability']);
     Route::get('/{slug}', [AmenityController::class, 'show']);
     Route::put('/{slug}', [AmenityController::class, 'update']);
     Route::delete('/{slug}', [AmenityController::class, 'destroy']);

@@ -10,20 +10,24 @@ class Notification extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'landlord_id', 'tour_id','message', 'type', 'date','status',];
+    protected $fillable = ['from_user_id', 'to_user_id', 'tour_id','message','property_id', 'type', 'date','status',];
     protected $dates=['deleted_at'];
 
-    public function user()
+    public function fromUser()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'from_user_id');
     }
-    public function landlord()
+
+    public function toUser()
     {
-        return $this->belongsTo(User::class, 'landlord_id');
+        return $this->belongsTo(User::class, 'to_user_id');
     }
     public function tour()
     {
-        return $this->belongsTo(Tour::class);
+        return $this->belongsTo(Tour::class, 'tour_id');
     }
-
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
 }

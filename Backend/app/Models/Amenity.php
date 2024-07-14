@@ -11,7 +11,7 @@ class Amenity extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug','availability'];
 
     protected $dates=['deleted_at'];
 

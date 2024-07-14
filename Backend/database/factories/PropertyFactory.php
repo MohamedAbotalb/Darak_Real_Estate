@@ -30,6 +30,7 @@ class PropertyFactory extends Factory
             'price' => $this->faker->numberBetween(10000, 10000000),
             'location_id' => Location::pluck('id')->random(),
             'property_type_id' => PropertyType::pluck('id')->random(),
+            'status'=> $this->faker->randomElement(["accepted","rejected","pending"]),
             'user_id' => User::pluck('id')->random(),
             'availability' => $this->faker->randomElement(['available', 'unavailable']),
             'listing_type' => $this->faker->randomElement(['rent', 'buy']),
