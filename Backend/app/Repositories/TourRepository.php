@@ -188,7 +188,7 @@ class TourRepository implements TourRepositoryInterface
             'property_id' => $property->id,
             'tour_id' => $id,
             'message' => 'Tour request for property ' . $property->title . ' has been deleted by the user.',
-            'type' => 'deleted-property',
+            'type' => 'deleted-tour',
             'date' => now(),
         ]);
         Mail::to($landlord->email)->send(new TourDeleteMail($tour, $property, $landlord,$user));
