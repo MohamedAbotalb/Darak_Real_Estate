@@ -102,15 +102,13 @@ class PropertyController extends Controller
     }
     public function update(UpdatePropertyRequest $request, $slug)
     {
-        try {
+    
             $validatedData = $request->validated();
-
             $property = $this->propertyRepository->updateProperty($validatedData, $slug);
-
+            if(!$property){ 
+                return response()->json(['message' => 'Property or admin not found'], 400); 
+            }
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
-        }
     }
     public function deleteProperty($propertyId)
     {
