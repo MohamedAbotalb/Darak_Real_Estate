@@ -33,6 +33,7 @@ import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
 import UserNotifications from 'components/Home/Notifications/UserNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
+import 'typeface-josefin-sans';
 
 function App() {
   const router = createBrowserRouter(

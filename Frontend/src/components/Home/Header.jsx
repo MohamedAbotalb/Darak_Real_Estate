@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { keyframes } from '@emotion/react';
 import {
   AppBar,
   Toolbar,
@@ -22,6 +23,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { logout, setCredentials } from 'store/Auth/authSlice';
@@ -45,7 +47,14 @@ function Header() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
-
+const underlineAnimation = keyframes`
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+`;
   useEffect(() => {
     const storedUser = JSON.parse(secureLocalStorage.getItem('user'));
     if (storedUser) {
@@ -98,7 +107,7 @@ function Header() {
     <AppBar
       position="fixed"
       // className="header"
-      sx={{ backgroundColor: '#2C3E50' }}
+      sx={{ backgroundColor: '#ffffff' }}
     >
       <Toolbar>
         <Typography
@@ -121,13 +130,30 @@ function Header() {
               color="inherit"
               sx={{
                 fontSize: '1.1rem',
-                color: isActiveLink('/', '') ? '#60B2F0' : '#cdd0d8',
+                color:  '#000' ,
                 textTransform: 'none',
-                backgroundColor: isActiveLink('/', '')
-                  ? '#34495E'
-                  : 'transparent',
+                // backgroundColor: isActiveLink('/', '')
+                //   ? '#34495E'
+                //   : 'transparent',
+                 backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: '#34495E',
+                  backgroundColor: 'transparent',
+                  '&::after': {
+                    width: '100%',
+                  },
+                },
+                position: 'relative',
+                '&::after': {
+                  content: '""',
+                  display: 'block',
+                  width: isActiveLink('/', '') ? '100%' : '0',
+                  height: '2px',
+                  backgroundColor: '#EE2027',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  transition: 'width 0.3s ease-in-out',
+                  animation: isActiveLink('/', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
                 },
                 margin: '0 10px',
               }}
@@ -136,7 +162,7 @@ function Header() {
             </Button>
             {user?.role !== 'landlord' ? (
               <>
-                <Button
+                {/* <Button
                   component={NavLink}
                   to="/properties?lt=rent"
                   isActive={() => isActiveLink('/properties', 'lt=rent')}
@@ -157,6 +183,43 @@ function Header() {
                   }}
                 >
                   Rent
+                </Button> */}
+                <Button
+                  component={NavLink}
+                  to="/properties?lt=rent"
+                  isActive={() => isActiveLink('/properties', 'lt=rent')}
+                  color="inherit"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: '#000' ,
+                    textTransform: 'none',
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                      backgroundColor: 'transparent', // Remove hover background
+                      '&::after': {
+                        width: '100%',
+                      },
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent', // Remove focus background
+                    },
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      display: 'block',
+                      width: isActiveLink('/properties', 'lt=rent') ? '100%' : '0',
+                      height: '2px',
+                      backgroundColor: '#EE2027',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      transition: 'width 0.3s ease-in-out',
+                      animation: isActiveLink('/properties', 'lt=rent') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                    },
+                    margin: '0 10px',
+                  }}
+                >
+                  Rent
                 </Button>
                 <Button
                   component={NavLink}
@@ -165,15 +228,33 @@ function Header() {
                   color="inherit"
                   sx={{
                     fontSize: '1.1rem',
-                    color: isActiveLink('/properties', 'lt=buy')
-                      ? '#60B2F0'
-                      : '#cdd0d8',
+                    color: '#000',
                     textTransform: 'none',
-                    backgroundColor: isActiveLink('/properties', 'lt=buy')
-                      ? '#34495E'
-                      : 'transparent',
+                    backgroundColor: 'transparent',
+                    // backgroundColor: isActiveLink('/properties', 'lt=buy')
+                    //   ? '#34495E'
+                    //   : 'transparent',
                     '&:hover': {
-                      backgroundColor: '#34495E',
+                      backgroundColor: 'transparent', // Remove hover background
+                      '&::after': {
+                        width: '100%',
+                      },
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent', // Remove focus background
+                    },
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      display: 'block',
+                      width: isActiveLink('/properties', 'lt=buy') ? '100%' : '0',
+                      height: '2px',
+                      backgroundColor: '#EE2027',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      transition: 'width 0.3s ease-in-out',
+                      animation: isActiveLink('/properties', 'lt=buy') ? `${underlineAnimation} 0.3s forwards` : 'none',
                     },
                     margin: '0 10px',
                   }}
@@ -189,15 +270,31 @@ function Header() {
                 color="inherit"
                 sx={{
                   fontSize: '1.1rem',
-                  color: isActiveLink('/myproperties', '')
-                    ? '#60B2F0'
-                    : '#cdd0d8',
+                  color: '#000',
                   textTransform: 'none',
-                  backgroundColor: isActiveLink('/myproperties', '')
-                    ? '#34495E'
-                    : 'transparent',
+                  backgroundColor: 'transparent',
+                  // backgroundColor: isActiveLink('/myproperties', '')
+                  //   ? '#34495E'
+                  //   : 'transparent',
+
                   '&:hover': {
-                    backgroundColor: '#34495E',
+                     backgroundColor: 'transparent', // Remove hover background
+                    '&::after': {
+                        width: '100%',
+                      },
+                  },
+                  position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/myproperties', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/myproperties', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
                   },
                   margin: '0 10px',
                 }}
@@ -212,14 +309,31 @@ function Header() {
               color="inherit"
               sx={{
                 fontSize: '1.1rem',
-                color: isActiveLink('/about', '') ? '#60B2F0' : '#cdd0d8',
+                color: '#000',
                 textTransform: 'none',
-                backgroundColor: isActiveLink('/about', '')
-                  ? '#34495E'
-                  : 'transparent',
+                // backgroundColor: isActiveLink('/about', '')
+                //   ? '#34495E'
+                //   : 'transparent',
+                backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: '#34495E',
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '100%',
+                  },
                 },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                  },
                 margin: '0 10px',
               }}
             >
@@ -231,12 +345,12 @@ function Header() {
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {' '}
-            <IconButton color="inherit">
+            <IconButton color="inherit" >
               <NotificationDropdown role={user?.role} />
             </IconButton>
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
-                <FavoriteIcon />
+                <FavoriteBorder sx={{ color: '#000' }}/>
               </Badge>
             </IconButton>
             <IconButton
@@ -246,7 +360,7 @@ function Header() {
               aria-controls="profile-menu"
               aria-haspopup="true"
             >
-              <AccountCircleIcon />
+              <AccountCircleIcon sx={{ color: '#EE2027' }}/>
             </IconButton>
             <Menu
               id="profile-menu"

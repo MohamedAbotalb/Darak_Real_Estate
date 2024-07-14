@@ -6,6 +6,7 @@ import {
   deleteReviewAsync,
   updateReviewAsync,
 } from 'store/userReviews/userReviewsSlice';
+import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
 import {
   Box,
   Button,
@@ -33,6 +34,7 @@ function ReviewsList({ propertyId }) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.reviews.reviews);
   const user = useSelector((state) => state.auth.user);
+  const averageRating = useSelector((state) => state.averageRating.average); 
   const [visibleReviews, setVisibleReviews] = useState(4);
   const [editedPropertyId, setEditedPropertyId] = useState(null);
   const [editingReview, setEditingReview] = useState(null);
@@ -127,6 +129,7 @@ function ReviewsList({ propertyId }) {
       })
     ).then(() => {
       dispatch(fetchReviews(propertyId));
+      dispatch(fetchAverageRatingAsync(propertyId));
       setEditingReview(null);
       setEditedContent('');
       setEditedRating(0);

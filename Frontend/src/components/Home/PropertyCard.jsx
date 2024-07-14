@@ -30,7 +30,7 @@ const SliderWrapper = styled(Box)({
 });
 
 const StyledImage = styled('img')({
-  height: 300,
+  height: 250,
   width: '100%',
   objectFit: 'cover',
 });
@@ -69,7 +69,7 @@ function PropertyCard({ property }) {
             images.map((img) => (
               <StyledImage
                 key={img.id}
-                src={baseImgUrl + img.image}
+                src={img.image}
                 alt={property.title}
               />
             ))
@@ -92,18 +92,18 @@ function PropertyCard({ property }) {
               {property.property_type.name}
             </Typography>
           </Box>
-          <Typography gutterBottom variant="h5" component="div" mb={2}>
+          <Typography gutterBottom variant="h5" component="div" mb={1}>
             {getPriceDisplay()}
           </Typography>
           <Typography variant="body2">{property.title}</Typography>
-          <Box display="flex" alignItems="center" my={4}>
+          <Box display="flex" alignItems="center" my={2}>
             <LocationOnIcon color="action" />
             <Typography variant="body2" color="text.secondary" ml={0.5}>
               {property.location.street}, {property.location.state},{' '}
               {property.location.city}
             </Typography>
           </Box>
-          <Box display="flex" mt={2}>
+          <Box display="flex" >
             <Box display="flex" alignItems="center" mr={2}>
               <BedIcon color="action" />
               <Typography variant="body2" color="text.secondary" ml={0.5}>

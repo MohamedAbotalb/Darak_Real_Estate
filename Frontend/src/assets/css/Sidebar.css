@@ -16,12 +16,12 @@
 .sidebar {
   min-height: calc(100% - 100px);
   padding: 20px;
-  margin-top:70px;
+  margin-top: 70px;
 }
 
 .sidebar h2 {
   margin: auto;
-  font-family: "Pinyon Script", cursive;
+  font-family: 'Pinyon Script', cursive;
   text-align: center;
   font-size: 36px;
   font-weight: bold;
@@ -29,15 +29,15 @@
   position: relative;
   margin-bottom: 40px;
 }
-.sidebar:hover h2{
-  color:white;
+.sidebar:hover h2 {
+  color: white;
 }
 .sidebar h2:before,
 .sidebar h2:after {
-  content:"";
-  width:20px;
-  height:20px;
-  position:absolute;
+  content: '';
+  width: 20px;
+  height: 20px;
+  position: absolute;
   background-color: #2b3d4f;
   transform: translateY(-50%);
   border-radius: 6px;
@@ -45,20 +45,20 @@
   z-index: -1;
 }
 
-.sidebar h2:before{
-  top:50%;
-  left:0px;
+.sidebar h2:before {
+  top: 50%;
+  left: 0px;
 }
-.sidebar h2:after{
-  top:50%;
-  right:0px;
+.sidebar h2:after {
+  top: 50%;
+  right: 0px;
 }
-.sidebar:hover h2:before , 
-.sidebar:hover h2:after{
-  width:100%;
-  height:120%;
+.sidebar:hover h2:before,
+.sidebar:hover h2:after {
+  width: 100%;
+  height: 120%;
   transform: rotate(180deg) translateY(50%);
-  background: linear-gradient(to right , #2b3d4f , #b219e0 ,#2b3d4f );
+  background: linear-gradient(to right, #2b3d4f, #b219e0, #2b3d4f);
 }
 
 .nav-link {
@@ -78,20 +78,20 @@
 }
 
 .nav-link.active {
-  position:relative;
+  position: relative;
   background-color: #2b3d4f;
   font-weight: bold;
-  color:#fff;
+  color: #fff;
 }
 .nav-link.active:before {
-  content:"";
-  width:0px;
-  height:0px;
-  position:absolute;
-  border-style:solid;
-  border-width:20px;
-  border-color:transparent transparent transparent #2b3d4f;
-  top:50%;
-  left:-20px;
-  transform:translateY( -50%);
+  content: '';
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-style: solid;
+  border-width: 20px;
+  border-color: transparent transparent transparent #2b3d4f;
+  top: 50%;
+  left: -20px;
+  transform: translateY(-50%);
 }
