@@ -6,7 +6,7 @@ export const fetchProperties = createAsyncThunk(
   async ({ type }, { rejectWithValue }) => {
     try {
       const endpoint = type === 'rent' ? 'latest-rent' : 'latest-buy';
-      const url = `/properties/${endpoint}/1`
+      const url = `/properties/${endpoint}`
       const response = await axios.get(url);
       return response.data;
     } catch (error) {

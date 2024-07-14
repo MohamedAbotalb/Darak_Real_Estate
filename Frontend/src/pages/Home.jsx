@@ -12,8 +12,8 @@ function Home() {
       <Container >
         <CategoryFilter/>
         <PropertyListings type={'rent'}/>
-        <WhyChooseUs/>
         <PropertyListings type={'sell'}/>
+         <WhyChooseUs/>
       </Container>
      
     </Box>
