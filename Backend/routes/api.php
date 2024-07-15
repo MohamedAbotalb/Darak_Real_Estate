@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PropertyTypeController;
 use App\Http\Controllers\Api\AmenityController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\PropertyUpdateController;
 use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\ReasonReportController;
 use App\Http\Controllers\Api\ReviewController;
@@ -100,7 +101,11 @@ Route::prefix('properties')->group(function(){
     Route::put('/{slug}',[PropertyController::class,'update']);
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
     Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
-    Route::post('/property-update/approve/{id}', [PropertyController::class, 'approvePropertyUpdate'])->middleware('admin','auth:sanctum');
+});
+Route::prefix('property-updates')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [PropertyUpdateController::class, 'index']);
+    Route::post('/accepted/{id}', [PropertyUpdateController::class, 'approve']);
+    Route::post('/rejected/{id}', [PropertyUpdateController::class, 'reject']);
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 

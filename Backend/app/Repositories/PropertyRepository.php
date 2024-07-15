@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Mail\PropertyUpdateApprovedMail;
+use App\Mail\PropertyUpdateRejectedMail;
 use App\Models\Location;
 use App\Models\Notification;
 use App\Models\Property;
@@ -21,7 +22,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user');
     }
 
     public function getPropertyBySlug(string $slug)
@@ -239,35 +240,6 @@ class PropertyRepository implements PropertyRepositoryInterface
         });
     }
 
-    public function approvePropertyUpdate(int $propertyUpdateId)
-    {
-        $propertyUpdate = PropertyUpdate::find($propertyUpdateId);
-
-        if (!$propertyUpdate) {
-            return null;
-        }
-
-        $property = $propertyUpdate->property;
-
-        $property->update($propertyUpdate->data);
-
-        $propertyUpdate->status = 'approved';
-        $propertyUpdate->save();
-
-        $landlord = $property->user;
-        Mail::to($landlord->email)->send(new PropertyUpdateApprovedMail($property));
-        Notification::create([
-            'from_user_id' => Auth::id(),
-            'to_user_id' => $landlord->id,
-            'property_id' => $property->id,
-            'message' => "Hello $landlord->first_name, your property '{$property->title}' has been accepted.",
-            'type' => 'property_update_approved',
-            'date' => now(),
-        ]);
-        return $property;
-    }
-
-    
     public function delete(int $id)
     {
         $property = Property::find($id);
