@@ -244,7 +244,8 @@ class PropertyRepository implements PropertyRepositoryInterface
         $propertyUpdate->status = 'approved';
         $propertyUpdate->save();
 
-        $user = $property->user;
+        // Notify user about approval
+        $landlord = $property->user;
 
         return $property;
     }
