@@ -119,4 +119,14 @@ class PropertyController extends Controller
             return response()->json(['message' => 'property not found'], 200);
         }
     }
+    public function approvePropertyUpdate($id)
+    {
+        $property = $this->propertyRepository->approvePropertyUpdate($id);
+
+        if (!$property) {
+            return response()->json(['message' => 'Property update not found or approval failed'], 404);
+        }
+
+        return response()->json(['message' => 'Property update approved successfully', 'property' => $property], 200);
+    }
 }

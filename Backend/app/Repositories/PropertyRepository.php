@@ -197,39 +197,59 @@ class PropertyRepository implements PropertyRepositoryInterface
         return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
     public function updateProperty(array $data, int $id)
-{
-    return DB::transaction(function () use ($data, $id) {
-        $property = Property::find($id);
+    {
+        return DB::transaction(function () use ($data, $id) {
+            $property = Property::find($id);
 
-        if (!$property) {
-            return null; 
+            if (!$property) {
+                return null;
+            }
+
+            PropertyUpdate::create([
+                'property_id' => $property->id,
+                'data' => $data,
+            ]);
+
+            $admin = User::where('role', 'admin')->first();
+
+            if (!$admin) {
+                return null;
+            }
+
+            Notification::create([
+                'from_user_id' => Auth::id(),
+                'to_user_id' => $admin->id,
+                'property_id' => $property->id,
+                'message' => 'Property update requires approval',
+                'type' => 'update_request',
+                'date' => now(),
+            ]);
+
+            return $property;
+        });
+    }
+
+    public function approvePropertyUpdate(int $propertyUpdateId)
+    {
+        $propertyUpdate = PropertyUpdate::find($propertyUpdateId);
+
+        if (!$propertyUpdate) {
+            return null;
         }
 
-        PropertyUpdate::create([
-            'property_id' => $property->id,
-            'data' => $data,
-        ]);
+        $property = $propertyUpdate->property;
 
-        $admin = User::where('role', 'admin')->first();
+        $property->update($propertyUpdate->data);
 
-        if (!$admin) {
-            return null; 
-        }
+        $propertyUpdate->status = 'approved';
+        $propertyUpdate->save();
 
-        Notification::create([
-            'from_user_id' => Auth::id(),
-            'to_user_id' => $admin->id,
-            'property_id' => $property->id,
-            'message' => 'Property update requires approval',
-            'type' => 'update_request',
-            'date' => now(),
-        ]);
+        $user = $property->user;
 
         return $property;
-    });
-}
+    }
 
-
+    
     public function delete(int $id)
     {
         $property = Property::find($id);
