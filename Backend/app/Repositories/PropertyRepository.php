@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Mail\PropertyUpdateApprovedMail;
+use App\Mail\PropertyUpdateRejectedMail;
 use App\Models\Location;
 use App\Models\Notification;
 use App\Models\Property;
@@ -277,7 +278,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
         $propertyUpdate->status = 'rejected';
         $propertyUpdate->save();
-
+        $property = $propertyUpdate->property;
         $landlord = $propertyUpdate->property->user;
         Notification::create([
             'from_user_id' => Auth::id(),
@@ -287,6 +288,7 @@ class PropertyRepository implements PropertyRepositoryInterface
             'type' => 'property_update_rejected',
             'date' => now(),
         ]);
+        Mail::to($landlord->email)->send(new PropertyUpdateRejectedMail($property));
 
         return $propertyUpdate->property;
     }
