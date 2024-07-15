@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Property;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -14,13 +15,15 @@ class PropertyUpdateApprovedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $property;
+    public $landlord;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($property)
+    public function __construct(Property $property)
     {
         $this->property = $property;
+        $this->landlord = $property->user;
     }
 
     /**

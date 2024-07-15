@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Mail\PropertyUpdateApprovedMail;
 use App\Models\Location;
 use App\Models\Notification;
 use App\Models\Property;
@@ -254,6 +255,7 @@ class PropertyRepository implements PropertyRepositoryInterface
         $propertyUpdate->save();
 
         $landlord = $property->user;
+        Mail::to($landlord->email)->send(new PropertyUpdateApprovedMail($property,$landlord));
 
         return $property;
     }
