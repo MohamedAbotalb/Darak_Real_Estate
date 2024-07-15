@@ -22,7 +22,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user');
     }
 
     public function getPropertyBySlug(string $slug)

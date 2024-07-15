@@ -14,7 +14,7 @@ class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
 {
     public function index()
     {
-        $pendingUpdates = PropertyUpdate::where('status', 'pending')->get();
+        $pendingUpdates = PropertyUpdate::where('status', 'pending')->with('property')->get();
 
         if ($pendingUpdates->isEmpty()) {
             return false;

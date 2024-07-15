@@ -106,11 +106,11 @@ class PropertyController extends Controller
         }
         return response()->json(['data' => PropertyResource::collection($properties)]);
     }
-    public function update(UpdatePropertyRequest $request, $slug)
+    public function update(UpdatePropertyRequest $request, $id)
     {
     
             $validatedData = $request->validated();
-            $property = $this->propertyRepository->updateProperty($validatedData, $slug);
+            $property = $this->propertyRepository->updateProperty($validatedData, $id);
             if(!$property){ 
                 return response()->json(['message' => 'Property or admin not found'], 400); 
             }

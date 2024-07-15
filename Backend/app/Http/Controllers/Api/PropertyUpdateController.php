@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PropertyUpdateResource;
 use App\Repositories\Contracts\PropertyUpdatesRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,7 @@ class PropertyUpdateController extends Controller
             return response()->json(['message' => 'No pending property updates found.'], 404);
         }
 
-        return response()->json($pendingUpdates);
+        return response()->json(PropertyUpdateResource::collection($pendingUpdates));
     }
     public function approve($id)
     {

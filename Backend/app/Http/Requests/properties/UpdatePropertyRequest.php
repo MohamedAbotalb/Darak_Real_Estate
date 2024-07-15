@@ -30,6 +30,12 @@ class UpdatePropertyRequest extends FormRequest
             'city' => 'required|nullable|string|max:255',
             'state' => 'required|nullable|string|max:255',
             'street' => 'required|nullable|string|max:255',
+            'num_of_rooms' => 'nullable|integer',
+            'num_of_bathrooms' => 'nullable|integer',
+            'area'=>'nullable|integer',
+            'listing_type' => 'nullable|string|in:rent,buy',
+            'property_type_id' => 'nullable|integer',
+            'availability' => 'nullable|string|in:available,unavailable',
         ];
     }
 }
