@@ -1,10 +1,10 @@
 import React from 'react';
-import PropertyTable from 'components/AdminDashboard/Ads/PropertyTable';
+import AdsTable from 'components/AdminDashboard/Ads/AdsTable';
 
 function Ads() {
   return (
     <div>
-      <PropertyTable />
+      <AdsTable />
     </div>
   );
 }

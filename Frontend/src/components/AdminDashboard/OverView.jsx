@@ -37,7 +37,7 @@ const cardsData = [
   },
   {
     key: 'properties',
-    title: 'Properties',
+    title: 'Ads',
     countKey: 'properties',
     icon: <HomeIcon sx={iconStyles} />,
   },
