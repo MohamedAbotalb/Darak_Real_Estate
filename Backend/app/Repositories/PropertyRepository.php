@@ -260,14 +260,36 @@ class PropertyRepository implements PropertyRepositoryInterface
             'from_user_id' => Auth::id(),
             'to_user_id' => $landlord->id,
             'property_id' => $property->id,
-            'message' => "Hello $landlord->first_name, your property '{$property->title}' has been accepted.",
+            'message' => "Hello $landlord->first_name, your property update for '{$property->title}' has been accepted.",
             'type' => 'property_update_approved',
             'date' => now(),
         ]);
         return $property;
     }
 
-    
+    public function rejectPropertyUpdate(int $propertyUpdateId)
+    {
+        $propertyUpdate = PropertyUpdate::find($propertyUpdateId);
+
+        if (!$propertyUpdate) {
+            return null;
+        }
+
+        $propertyUpdate->status = 'rejected';
+        $propertyUpdate->save();
+
+        $landlord = $propertyUpdate->property->user;
+        Notification::create([
+            'from_user_id' => Auth::id(),
+            'to_user_id' => $landlord->id,
+            'property_id' => $propertyUpdate->property->id,
+            'message' => "Hello $landlord->first_name, your property update for '{$propertyUpdate->property->title}' has been rejected.",
+            'type' => 'property_update_rejected',
+            'date' => now(),
+        ]);
+
+        return $propertyUpdate->property;
+    }
     public function delete(int $id)
     {
         $property = Property::find($id);

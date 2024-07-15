@@ -16,4 +16,5 @@ interface PropertyRepositoryInterface
     public function updateProperty(array $data, int $id);
     public function delete(int $id);
     public function approvePropertyUpdate(int $propertyUpdateId);
+    public function rejectPropertyUpdate(int $propertyUpdateId);
 }

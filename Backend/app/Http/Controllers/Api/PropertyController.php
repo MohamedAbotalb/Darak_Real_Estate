@@ -135,4 +135,14 @@ class PropertyController extends Controller
 
         return response()->json(['message' => 'Property update approved successfully', 'property' => $property], 200);
     }
+    public function rejectPropertyUpdate($id)
+    {
+        $property = $this->propertyRepository->rejectPropertyUpdate($id);
+
+        if (!$property) {
+            return response()->json(['message' => 'Property update not found.'], 404);
+        }
+
+        return response()->json(['message' => 'Property update rejected.', 'property' => $property]);
+    }
 }
