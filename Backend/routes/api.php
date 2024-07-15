@@ -100,7 +100,7 @@ Route::prefix('properties')->group(function(){
     Route::put('/{slug}',[PropertyController::class,'update']);
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
     Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
-    Route::post('/property-update/approve/{id}', [PropertyController::class, 'approvePropertyUpdate']);
+    Route::post('/property-update/approve/{id}', [PropertyController::class, 'approvePropertyUpdate'])->middleware('admin','auth:sanctum');
 });
 Route::delete('images/{imageId}', [ImageController::class, 'deleteImage']);
 

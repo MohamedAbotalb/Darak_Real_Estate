@@ -25,7 +25,7 @@ function EditAmenityButton({ amenity }) {
         variant="contained"
         color="primary"
         onClick={handleOpen}
-        sx={{ backgroundColor: '#1976d2', color: '#fff', mr: 1 }}
+        sx={{ backgroundColor: '#1976d2', color: '#fff', ml: 2 }}
       >
         Edit
       </Button>

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Mail\PropertyUpdateApprovedMail;
 use App\Models\Location;
 use App\Models\Notification;
 use App\Models\Property;
@@ -20,7 +21,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->paginate($perPage);
     }
 
     public function getPropertyBySlug(string $slug)
@@ -254,7 +255,15 @@ class PropertyRepository implements PropertyRepositoryInterface
         $propertyUpdate->save();
 
         $landlord = $property->user;
-
+        Mail::to($landlord->email)->send(new PropertyUpdateApprovedMail($property));
+        Notification::create([
+            'from_user_id' => Auth::id(),
+            'to_user_id' => $landlord->id,
+            'property_id' => $property->id,
+            'message' => "Hello $landlord->first_name, your property '{$property->title}' has been accepted.",
+            'type' => 'property_update_approved',
+            'date' => now(),
+        ]);
         return $property;
     }
 

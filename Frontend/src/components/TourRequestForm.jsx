@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -17,17 +17,32 @@ import * as yup from 'yup';
 import formatDate from 'utils/formatDate';
 import { fetchProperty } from 'store/propertySlice';
 import { submitTourRequest } from 'store/tourRequestSlice';
+import { format, addDays } from 'date-fns';
 
 function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.tourRequest);
+  const { loading } = useSelector((state) => state.tourRequest);
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const [submitError, setSubmitError] = useState('');
+  const [dateInputs, setDateInputs] = useState([
+    { id: Date.now(), value: format(new Date(), "yyyy-MM-dd'T'HH:mm") },
+  ]);
+
   const schema = yup.object().shape({
-    dates: yup.array().of(yup.string().required('Date is required')),
+    dates: yup
+      .array()
+      .of(yup.string().required('Date is required'))
+      .test('unique', 'Dates must be unique', (dates) => {
+        const uniqueDates = new Set(dates);
+        return uniqueDates.size === dates.length;
+      }),
   });
 
   if (!user) navigate('/login');
+
+  const today = format(new Date(), "yyyy-MM-dd'T'HH:mm");
+  const twoWeeksFromNow = format(addDays(new Date(), 14), "yyyy-MM-dd'T'HH:mm");
 
   const {
     control,
@@ -35,7 +50,7 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      dates: ['2024-07-01T09:00', '2024-07-01T09:00'],
+      dates: [today],
     },
     resolver: async (data) => {
       try {
@@ -50,7 +65,10 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
           errors: validationErrors.inner.reduce((allErrors, currentError) => {
             return {
               ...allErrors,
-              [currentError.path]: currentError.message,
+              [currentError.path]: {
+                type: currentError.type ?? 'validation',
+                message: currentError.message,
+              },
             };
           }, {}),
         };
@@ -58,18 +76,27 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
     },
   });
 
+  const addDateInput = () => {
+    if (dateInputs.length < 3) {
+      setDateInputs([...dateInputs, { id: Date.now(), value: today }]);
+    }
+  };
+
   const onSubmit = async (data) => {
     if (!user) {
       navigate('/login');
       return;
     }
     const formattedDates = data.dates.map(formatDate);
-    dispatch(submitTourRequest({ propertyId, dates: formattedDates }))
-      .then(() => {
-        dispatch(fetchProperty(slug));
-        onClose();
-      })
-      .catch(() => {});
+    try {
+      await dispatch(
+        submitTourRequest({ propertyId, dates: formattedDates })
+      ).unwrap();
+      dispatch(fetchProperty(slug));
+      onClose();
+    } catch (err) {
+      setSubmitError(err.message);
+    }
   };
 
   return (
@@ -78,26 +105,30 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            {['date1', 'date2'].map((fieldName, index) => (
-              <Grid item xs={12} key={fieldName}>
+            {dateInputs.map((input, index) => (
+              <Grid item xs={12} key={input.id}>
                 <Controller
                   name={`dates[${index}]`}
                   control={control}
-                  render={({ field: { onChange, onBlur, onFocus, value } }) => (
+                  defaultValue={input.value}
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextField
-                      name={fieldName}
+                      name={`dates[${index}]`}
                       value={value}
                       onChange={onChange}
                       onBlur={onBlur}
-                      onFocus={onFocus}
                       label={`Date ${index + 1}`}
                       type="datetime-local"
                       fullWidth
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      error={!!errors?.dates?.[index]}
-                      helperText={errors?.dates?.[index]?.message}
+                      inputProps={{
+                        min: today,
+                        max: twoWeeksFromNow,
+                      }}
+                      error={!!errors.dates?.[index]}
+                      helperText={errors.dates?.[index]?.message}
                     />
                   )}
                 />
@@ -105,13 +136,24 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
             ))}
           </Grid>
 
+          {dateInputs.length < 3 && (
+            <Button
+              onClick={addDateInput}
+              color="primary"
+              sx={{ mt: 2 }}
+              disabled={loading}
+            >
+              Add another date
+            </Button>
+          )}
+
           <Typography variant="body2" color="error" sx={{ mt: 2 }}>
             {errors.dates && <span>{errors.dates.message}</span>}
           </Typography>
 
-          {error && (
+          {submitError && (
             <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-              {error}
+              {submitError}
             </Typography>
           )}
         </form>

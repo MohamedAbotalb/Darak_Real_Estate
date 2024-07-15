@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'services/axiosConfig';
 
-// const token = localStorage.getItem('authToken');
-
 export const submitTourRequest = createAsyncThunk(
   'tourRequest/submitTourRequest',
   async ({ propertyId, dates }, { rejectWithValue }) => {
@@ -14,9 +12,7 @@ export const submitTourRequest = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(
-        'Error submitting tour request. Please try again later.'
-      );
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -39,7 +35,7 @@ const tourRequestSlice = createSlice({
       })
       .addCase(submitTourRequest.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
       });
   },
 });

@@ -19,4 +19,17 @@ const updateAmenity = async (slug, data) => {
   return response.data;
 };
 
-export { fetchAmenities, addAmenity, deleteAmenity, updateAmenity };
+const updateAvailability = async (id, availability) => {
+  const response = await axios.put(`/amenities/availability/${id}`, {
+    status: availability,
+  });
+  return response.data;
+};
+
+export {
+  fetchAmenities,
+  addAmenity,
+  deleteAmenity,
+  updateAmenity,
+  updateAvailability,
+};
