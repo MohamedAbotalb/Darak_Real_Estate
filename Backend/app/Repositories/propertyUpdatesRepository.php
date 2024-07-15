@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Mail;
 
 class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
 {
+    public function index()
+    {
+        $pendingUpdates = PropertyUpdate::where('status', 'pending')->get();
+
+        if ($pendingUpdates->isEmpty()) {
+            return false;
+        }
+
+        return $pendingUpdates;
+    }
     public function approvePropertyUpdate(int $propertyUpdateId)
     {
         $propertyUpdate = PropertyUpdate::find($propertyUpdateId);

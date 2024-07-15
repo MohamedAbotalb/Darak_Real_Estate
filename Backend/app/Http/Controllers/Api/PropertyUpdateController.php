@@ -14,6 +14,15 @@ class PropertyUpdateController extends Controller
     {
         $this->propertyUpdatesRepository = $propertyRepository;
     }
+    public function index()
+    {
+        $pendingUpdates=$this->propertyUpdatesRepository->index();
+        if (!$pendingUpdates) {
+            return response()->json(['message' => 'No pending property updates found.'], 404);
+        }
+
+        return response()->json($pendingUpdates);
+    }
     public function approve($id)
     {
         $property = $this->propertyUpdatesRepository->approvePropertyUpdate($id);
