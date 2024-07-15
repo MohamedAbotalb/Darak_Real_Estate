@@ -51,11 +51,18 @@ class PropertyController extends Controller
 
         return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' => PropertyResource::collection($latestProperties)], 200);
     }
-    public function showAcceptedProperties(Request $request)
+    public function showAcceptedProperties()
     {
-        $perPage = $request->query('perPage', 6);
-        $properties = $this->propertyRepository->getAcceptedProperties($perPage);
-        if ($properties->isEmpty()) {
+        $properties = $this->propertyRepository->getAcceptedProperties();
+        if (!$properties) {
+            return response()->json(['message' => 'No accepted properties found.'], 404);
+        }
+        return PropertyResource::collection($properties);
+    }
+    public function showpendingProperties()
+    {
+        $properties = $this->propertyRepository->getPendingProperties();
+        if (!$properties) {
             return response()->json(['message' => 'No accepted properties found.'], 404);
         }
         return PropertyResource::collection($properties);
@@ -101,15 +108,13 @@ class PropertyController extends Controller
     }
     public function update(UpdatePropertyRequest $request, $slug)
     {
-        try {
+    
             $validatedData = $request->validated();
-
             $property = $this->propertyRepository->updateProperty($validatedData, $slug);
-
+            if(!$property){ 
+                return response()->json(['message' => 'Property or admin not found'], 400); 
+            }
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
-        }
     }
     public function deleteProperty($propertyId)
     {
@@ -119,5 +124,15 @@ class PropertyController extends Controller
         } else {
             return response()->json(['message' => 'property not found'], 200);
         }
+    }
+    public function approvePropertyUpdate($id)
+    {
+        $property = $this->propertyRepository->approvePropertyUpdate($id);
+
+        if (!$property) {
+            return response()->json(['message' => 'Property update not found or approval failed'], 404);
+        }
+
+        return response()->json(['message' => 'Property update approved successfully', 'property' => $property], 200);
     }
 }
