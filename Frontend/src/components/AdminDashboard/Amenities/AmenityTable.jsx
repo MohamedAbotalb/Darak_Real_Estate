@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAmenities, deleteAmenity } from 'store/amenitiesSlice';
+import {
+  fetchAmenities,
+  deleteAmenity,
+  updateAmenityAvailability,
+} from 'store/amenitiesSlice';
 import {
   Table,
   TableBody,
@@ -126,6 +130,15 @@ function AmenityTable() {
     setSearchTerm(event.target.value);
   };
 
+  const updateAvailability = async (id, availability) => {
+    try {
+      await dispatch(updateAmenityAvailability({ id, availability }));
+      successToast('Availability updated successfully');
+    } catch (error) {
+      errorToast('Failed to update availability');
+    }
+  };
+
   const filteredAmenities = useMemo(() => {
     return amenities.filter((amenity) =>
       amenity.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -180,6 +193,7 @@ function AmenityTable() {
                 <TableRow>
                   <StyledTableCell>ID</StyledTableCell>
                   <StyledTableCell align="center">Name</StyledTableCell>
+                  <StyledTableCell align="center">Availability</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -193,12 +207,38 @@ function AmenityTable() {
                         {amenity.name}
                       </StyledTableCell>
                       <StyledTableCell align="center">
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor:
+                              amenity.availability === 'available'
+                                ? 'green'
+                                : 'red',
+                            color: '#fff',
+                          }}
+                          onClick={() =>
+                            updateAvailability(
+                              amenity.id,
+                              amenity.availability === 'available'
+                                ? 'unavailable'
+                                : 'available'
+                            )
+                          }
+                        >
+                          {amenity.availability}
+                        </Button>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
                         <EditAmenityButton amenity={amenity} />
                         <Button
                           variant="contained"
                           color="secondary"
                           onClick={() => handleOpenConfirm(amenity.slug)}
-                          sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
+                          sx={{
+                            backgroundColor: '#d32f2f',
+                            color: '#fff',
+                            ml: 2,
+                          }}
                         >
                           Delete
                         </Button>
@@ -208,7 +248,13 @@ function AmenityTable() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box display="flex" justifyContent="center" mt={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 2,
+            }}
+          >
             <Pagination
               count={Math.ceil(filteredAmenities.length / rowsPerPage)}
               page={page}
@@ -222,10 +268,9 @@ function AmenityTable() {
       )}
 
       <DeleteConfirmationModal
-        item="Amenity"
-        isOpen={openConfirm}
-        handleClose={handleCloseConfirm}
-        handleConfirm={handleDelete}
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        onDelete={handleDelete}
       />
     </>
   );
