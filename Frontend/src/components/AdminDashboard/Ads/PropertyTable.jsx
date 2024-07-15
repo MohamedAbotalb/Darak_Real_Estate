@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -87,8 +88,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function ShowDetailsButton({ propertyId }) {
-  const handleShowDetails = () => {};
+function ShowDetailsButton({ slug }) {
+  const navigate = useNavigate();
+
+  const handleShowDetails = () => {
+    navigate(`/properties/${slug}`);
+  };
 
   return (
     <Button
@@ -102,7 +107,7 @@ function ShowDetailsButton({ propertyId }) {
 }
 
 ShowDetailsButton.propTypes = {
-  propertyId: PropTypes.string.isRequired,
+  slug: PropTypes.string.isRequired,
 };
 
 function DeletePropertyButton({ propertyId, onDelete }) {
@@ -145,10 +150,21 @@ function PropertyTable() {
     );
   }, [properties, searchTerm]);
 
+  const paginatedProperties = useMemo(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    return filteredProperties.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredProperties, page, rowsPerPage]);
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setSelectedId(null);
+  };
+
   const handleDelete = async () => {
     try {
       dispatch(deleteProperty(selectedId));
       successToast('Property deleted successfully');
+      handleCloseConfirm();
     } catch (error) {
       errorToast('Failed to delete this property');
     }
@@ -157,11 +173,6 @@ function PropertyTable() {
   const handleOpenConfirm = (id) => {
     setSelectedId(id);
     setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-    setSelectedId(null);
   };
 
   const handleShowDescription = (description) => {
@@ -200,7 +211,7 @@ function PropertyTable() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Properties
+            Ads
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -237,42 +248,40 @@ function PropertyTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredProperties
-                  .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-                  .map((property) => (
-                    <StyledTableRow key={property.id}>
-                      <StyledTableCell>{property.id}</StyledTableCell>
-                      <StyledTableCell>{property.title}</StyledTableCell>
-                      <StyledTableCell>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            handleShowDescription(property.description)
-                          }
-                        >
-                          View
-                        </Button>
-                      </StyledTableCell>
-                      <StyledTableCell>{property.num_of_rooms}</StyledTableCell>
-                      <StyledTableCell>
-                        {property.num_of_bathrooms}
-                      </StyledTableCell>
-                      <StyledTableCell>{property.area}</StyledTableCell>
-                      <StyledTableCell>{property.price}</StyledTableCell>
-                      <StyledTableCell>
-                        <ShowDetailsButton propertyId={property.id} />
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => handleOpenConfirm(property.id)}
-                          sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                        >
-                          Delete
-                        </Button>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
+                {paginatedProperties.map((property) => (
+                  <StyledTableRow key={property.id}>
+                    <StyledTableCell>{property.id}</StyledTableCell>
+                    <StyledTableCell>{property.title}</StyledTableCell>
+                    <StyledTableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          handleShowDescription(property.description)
+                        }
+                      >
+                        View
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell>{property.num_of_rooms}</StyledTableCell>
+                    <StyledTableCell>
+                      {property.num_of_bathrooms}
+                    </StyledTableCell>
+                    <StyledTableCell>{property.area}</StyledTableCell>
+                    <StyledTableCell>{property.price}</StyledTableCell>
+                    <StyledTableCell>
+                      <ShowDetailsButton propertyId={property.slug} />
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleOpenConfirm(property.id)}
+                        sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
+                      >
+                        Delete
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -311,4 +320,5 @@ function PropertyTable() {
     </>
   );
 }
+
 export default PropertyTable;

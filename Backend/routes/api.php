@@ -98,6 +98,7 @@ Route::prefix('properties')->group(function(){
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
     Route::put('/{id}',[PropertyController::class,'update'])->middleware('auth:sanctum');
+
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
     Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
     Route::post('/property-update/approve/{id}', [PropertyController::class, 'approvePropertyUpdate']);
