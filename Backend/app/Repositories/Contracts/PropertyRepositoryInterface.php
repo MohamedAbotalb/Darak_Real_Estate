@@ -7,7 +7,8 @@ interface PropertyRepositoryInterface
     public function getAllProperties(int $perPage);
     public function getPropertyBySlug(string $slug);
     public function getLatestProperties(string $listing_type);
-    public function getAcceptedProperties(int $perPage);
+    public function getAcceptedProperties();
+    public function getPendingProperties();
     public function updateStatus(int $id, string $status);
     public function createProperty(array $data);
     public function searchProperties(array $filters);

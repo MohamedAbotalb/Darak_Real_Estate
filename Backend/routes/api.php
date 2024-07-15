@@ -90,6 +90,7 @@ Route::apiResource('property-types', PropertyTypeController::class);
 Route::prefix('properties')->group(function(){
     Route::get('/',[PropertyController::class,'index']);
     Route::get('/accepted',[PropertyController::class,'showAcceptedProperties']);
+    Route::get('/pending',[PropertyController::class,'showPendingProperties']);
     Route::get('/user-properties',[PropertyController::class,'showUserProperties'])->middleware('auth:sanctum');
     Route::get('latest-rent',[PropertyController::class,'showLatestRent']);
     Route::get('latest-buy',[PropertyController::class,'showLatestBuy']);

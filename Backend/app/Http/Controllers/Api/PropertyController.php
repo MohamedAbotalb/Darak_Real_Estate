@@ -52,11 +52,18 @@ class PropertyController extends Controller
 
         return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' => PropertyResource::collection($latestProperties)], 200);
     }
-    public function showAcceptedProperties(Request $request)
+    public function showAcceptedProperties()
     {
-        $perPage = $request->query('perPage', 6);
-        $properties = $this->propertyRepository->getAcceptedProperties($perPage);
-        if ($properties->isEmpty()) {
+        $properties = $this->propertyRepository->getAcceptedProperties();
+        if (!$properties) {
+            return response()->json(['message' => 'No accepted properties found.'], 404);
+        }
+        return PropertyResource::collection($properties);
+    }
+    public function showpendingProperties()
+    {
+        $properties = $this->propertyRepository->getPendingProperties();
+        if (!$properties) {
             return response()->json(['message' => 'No accepted properties found.'], 404);
         }
         return PropertyResource::collection($properties);

@@ -36,11 +36,20 @@ class PropertyRepository implements PropertyRepositoryInterface
             ->take(6)
             ->get();
     }
-    public function getAcceptedProperties(int $perPage)
+    public function getAcceptedProperties()
     {
         $properties = Property::where('status', 'accepted')
-            ->with('images', 'location', 'amenities', 'propertyType', 'user')
-            ->paginate($perPage);
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        if ($properties->isEmpty()) {
+            return null;
+        }
+
+        return $properties;
+    }
+    public function getPendingProperties()
+    {
+        $properties = Property::where('status', 'pending')
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
         if ($properties->isEmpty()) {
             return null;
         }
@@ -244,7 +253,6 @@ class PropertyRepository implements PropertyRepositoryInterface
         $propertyUpdate->status = 'approved';
         $propertyUpdate->save();
 
-        // Notify user about approval
         $landlord = $property->user;
 
         return $property;
