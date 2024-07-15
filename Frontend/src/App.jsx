@@ -122,6 +122,7 @@ function App() {
           <Route path="property-types" element={<PropertyTypesPage />} />
           <Route path="amenities" element={<AmenitiesPage />} />
           <Route path="ads" element={<Ads />} />
+          <Route path="ads/:slug" element={<PropertyDetailsPage />} />
         </Route>
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />

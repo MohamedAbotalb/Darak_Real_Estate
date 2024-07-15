@@ -21,11 +21,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import { tableCellClasses } from '@mui/material/TableCell';
-import { fetchProperties, deleteProperty } from 'store/propertySlice';
+import {
+  fetchAcceptedProperties,
+  fetchPendingProperties,
+  deleteProperty,
+  acceptProperty,
+  rejectProperty,
+} from 'store/propertySlice';
 import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
@@ -92,7 +100,7 @@ function ShowDetailsButton({ slug }) {
   const navigate = useNavigate();
 
   const handleShowDetails = () => {
-    navigate(`/properties/${slug}`);
+    navigate(`/admin/ads/${slug}`);
   };
 
   return (
@@ -128,6 +136,42 @@ DeletePropertyButton.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
+function AcceptPropertyButton({ propertyId, onAccept }) {
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => onAccept(propertyId)}
+      sx={{ backgroundColor: '#388e3c', color: '#fff', mr: 1 }}
+    >
+      Accept
+    </Button>
+  );
+}
+
+AcceptPropertyButton.propTypes = {
+  propertyId: PropTypes.string.isRequired,
+  onAccept: PropTypes.func.isRequired,
+};
+
+function RejectPropertyButton({ propertyId, onReject }) {
+  return (
+    <Button
+      variant="contained"
+      color="error"
+      onClick={() => onReject(propertyId)}
+      sx={{ backgroundColor: '#d32f2f', color: '#fff', mr: 1 }}
+    >
+      Reject
+    </Button>
+  );
+}
+
+RejectPropertyButton.propTypes = {
+  propertyId: PropTypes.string.isRequired,
+  onReject: PropTypes.func.isRequired,
+};
+
 function PropertyTable() {
   const dispatch = useDispatch();
   const { status, properties = [] } = useSelector((state) => state.property);
@@ -138,11 +182,20 @@ function PropertyTable() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [page, setPage] = useState(1);
+  const [filterType, setFilterType] = useState('Accepted');
   const rowsPerPage = 6;
 
   useEffect(() => {
-    dispatch(fetchProperties());
-  }, [dispatch]);
+    if (filterType === 'Accepted') {
+      dispatch(fetchAcceptedProperties());
+    } else if (filterType === 'Pending') {
+      dispatch(fetchPendingProperties());
+    }
+  }, [dispatch, filterType]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filterType]);
 
   const filteredProperties = useMemo(() => {
     return properties.filter((property) =>
@@ -163,10 +216,10 @@ function PropertyTable() {
   const handleDelete = async () => {
     try {
       dispatch(deleteProperty(selectedId));
-      successToast('Property deleted successfully');
+      successToast('Ad deleted successfully');
       handleCloseConfirm();
     } catch (error) {
-      errorToast('Failed to delete this property');
+      errorToast('Failed to delete this Ad');
     }
   };
 
@@ -190,6 +243,30 @@ function PropertyTable() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleFilterChange = (event, newFilterType) => {
+    if (newFilterType !== null) {
+      setFilterType(newFilterType);
+    }
+  };
+
+  const handleAccept = async (propertyId) => {
+    try {
+      await dispatch(acceptProperty(propertyId)).unwrap();
+      successToast('Property accepted successfully');
+    } catch (error) {
+      errorToast('Failed to accept this property');
+    }
+  };
+
+  const handleReject = async (propertyId) => {
+    try {
+      await dispatch(rejectProperty(propertyId)).unwrap();
+      successToast('Property rejected successfully');
+    } catch (error) {
+      errorToast('Failed to reject this property');
+    }
   };
 
   return (
@@ -226,6 +303,19 @@ function PropertyTable() {
               onChange={handleSearchChange}
             />
           </Search>
+          <ToggleButtonGroup
+            value={filterType}
+            exclusive
+            onChange={handleFilterChange}
+            aria-label="status filter"
+          >
+            <ToggleButton value="Accepted" aria-label="Accepted">
+              Accepted
+            </ToggleButton>
+            <ToggleButton value="Pending" aria-label="Pending">
+              Pending
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
       </Box>
 
@@ -270,15 +360,24 @@ function PropertyTable() {
                     <StyledTableCell>{property.area}</StyledTableCell>
                     <StyledTableCell>{property.price}</StyledTableCell>
                     <StyledTableCell>
-                      <ShowDetailsButton propertyId={property.slug} />
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleOpenConfirm(property.id)}
-                        sx={{ backgroundColor: '#d32f2f', color: '#fff' }}
-                      >
-                        Delete
-                      </Button>
+                      <ShowDetailsButton slug={property.slug} />
+                      {filterType === 'Accepted' ? (
+                        <DeletePropertyButton
+                          propertyId={property.id}
+                          onDelete={handleOpenConfirm}
+                        />
+                      ) : (
+                        <>
+                          <AcceptPropertyButton
+                            propertyId={property.id}
+                            onAccept={handleAccept}
+                          />
+                          <RejectPropertyButton
+                            propertyId={property.id}
+                            onReject={handleReject}
+                          />
+                        </>
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
@@ -310,7 +409,7 @@ function PropertyTable() {
             </DialogActions>
           </Dialog>
           <DeleteConfirmationModal
-            item="property"
+            item="Ad"
             isOpen={openConfirm}
             handleClose={handleCloseConfirm}
             handleConfirm={handleDelete}
