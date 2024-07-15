@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Mail;
 
 class PropertyRepository implements PropertyRepositoryInterface
 {
-    public function getAllProperties(int $perPage)
+    public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->paginate($perPage);
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
 
     public function getPropertyBySlug(string $slug)
