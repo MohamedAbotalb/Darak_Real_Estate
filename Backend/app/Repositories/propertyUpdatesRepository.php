@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Mail\PropertyUpdateApprovedMail;
 use App\Mail\PropertyUpdateRejectedMail;
+use App\Mail\TourPropertyUpdateMail;
 use App\Models\Notification;
 use App\Models\PropertyUpdate;
 use App\Models\Tour;
@@ -66,6 +67,8 @@ class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
             'type' => 'tour_property_update',
             'date' => now(),
         ]);
+        Mail::to($user->email)->send(new TourPropertyUpdateMail($property, $user));
+
         }
         return $property;
     }
