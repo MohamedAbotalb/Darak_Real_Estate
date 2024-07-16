@@ -22,7 +22,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user');
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->where('status','accepted')->get();
     }
 
     public function getPropertyBySlug(string $slug)
@@ -34,6 +34,7 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         return Property::with('location', 'images', 'amenities', 'propertyType')
             ->where('listing_type', $listing_type)
+            ->where('status','accepted')
             ->latest()
             ->take(6)
             ->get();
@@ -158,7 +159,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function searchProperties(array $filters)
     {
-        $query = Property::with('images', 'location', 'amenities', 'propertyType', 'user');
+        $query = Property::where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user');
 
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
@@ -205,7 +206,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function showUserProperties(int $id)
     {
-        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        return Property::where('user_id', $id)->where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
     public function updateProperty(array $data, int $id)
     {
