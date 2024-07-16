@@ -72,7 +72,8 @@ const IconContainer = styled(Box)(({ theme }) => ({
 }));
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(2),
+  // marginTop: theme.spacing(1),
+  padding:'6px',
   textTransform: 'none',
   fontWeight: 'bold',
   backgroundColor: 'transparent',
@@ -88,7 +89,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
   '&::after': {
     content: '""',
     position: 'absolute',
-    width: '90%',
+    width: '100%',
     height: '2px',
     backgroundColor: '#EE2027', // Setting underline color
     bottom: 0,
@@ -147,7 +148,7 @@ const WhyChooseUs = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
           {textContent.features.map((feature, index) => (
-            <Box key={index} sx={{ display: 'flex', alignItems: 'center', flexBasis: '50%' }}>
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', flexBasis: '50%', marginBottom:'20px'}}>
               <CheckCircleIcon color="success" sx={{ marginRight: '8px' }} />
               <Typography variant="body1">
                 {feature}
