@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('to_user_id');
             $table->unsignedBigInteger('property_id');
             $table->text('message');
-            $table->enum('type',['request','confirmation','cancelation','property_request','status_change','deleted-tour','update_request','property_update_approved','property_update_rejected']);
+            $table->enum('type',['request','confirmation','cancelation','property_request','status_change','deleted-tour','update_request','property_update_approved','property_update_rejected','tour_property_update']);
             $table->dateTime('date');
             $table->timestamps();
             $table->softDeletes();
