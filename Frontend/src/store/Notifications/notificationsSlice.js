@@ -27,12 +27,20 @@ export const fetchLandlordNotificationsAsync = createAsyncThunk(
   }
 );
 
+// export const declineTourAsync = createAsyncThunk(
+//   'notifications/declineTour',
+//   async (tourId) => {
+//     return declineTourRequest(tourId);
+//   }
+// );
+
 export const declineTourAsync = createAsyncThunk(
   'notifications/declineTour',
-  async (tourId) => {
-    return declineTourRequest(tourId);
+  async ({ tourId, message }) => {
+    return declineTourRequest(tourId, message);
   }
 );
+
 
 export const approveDateAsync = createAsyncThunk(
   'notifications/approveDate',

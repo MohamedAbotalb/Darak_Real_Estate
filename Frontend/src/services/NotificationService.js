@@ -18,15 +18,27 @@ export const fetchLandlordNotifications = async () => {
   }
 };
 
-export const declineTourRequest = async (tourId) => {
+// export const declineTourRequest = async (tourId) => {
+//   const url = `/tours/${tourId}/decline`;
+//   try {
+//     const response = await axiosInstance.post(url);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(`Failed to decline tour: ${error.message}`);
+//   }
+// };
+
+export const declineTourRequest = async (tourId, message) => {
   const url = `/tours/${tourId}/decline`;
+  const body = { message }; // Include message in the request body
   try {
-    const response = await axiosInstance.post(url);
+    const response = await axiosInstance.post(url, body);
     return response.data;
   } catch (error) {
     throw new Error(`Failed to decline tour: ${error.message}`);
   }
 };
+
 
 export const approveTourDate = async ({ tourId, selectedDate }) => {
   const url = `/tours/${tourId}/approve`;

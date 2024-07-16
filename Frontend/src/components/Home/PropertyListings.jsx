@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, Alert, Box } from '@mui/material';
+import { Grid, Typography, Alert, Box, Container } from '@mui/material';
 import Slider from 'react-slick';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
@@ -12,10 +12,17 @@ import 'slick-carousel/slick/slick-theme.css';
 import { styled } from '@mui/system';
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
+  '.slider-container': {
+    width: '100%',
+    maxWidth: '1200px', /* Adjust according to your design */
+    margin: '0 auto',
+    padding: '0 20px', /* Adjust padding to center slides */
+    overflow: 'hidden'
+  },
   '.slick-slide': {
     padding: '0 15px', // Adjust the padding to add space between the cards
     boxSizing: 'border-box',
-    height:'500px'
+    height: '500px'
   },
   '.slick-list': {
     margin: '0 -15px', // Adjust the margin to compensate for the padding
@@ -82,6 +89,8 @@ function PropertyListings({ type }) {
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: '0px',
     responsive: [
       {
         breakpoint: 1024,
@@ -104,29 +113,31 @@ function PropertyListings({ type }) {
   };
 
   return (
-    <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
-      <Typography
-        variant="h4"
-        align="center"
-        gutterBottom
-        sx={{ color: '#2b3d4f', mb:'0'}}
-      >
-        Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
-      </Typography>
-      {propertiesStatus === 'failed' ? (
-        <Typography variant="body1" align="center">
-          No properties found for the selected category.
+    <Container maxWidth="lg">
+      <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{ color: '#2b3d4f', mb: '0' }}
+        >
+          Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
         </Typography>
-      ) : (
-        <StyledSlider {...settings}>
-          {properties.map((property) => (
-            <Box key={property.id} px={1} py={1}>
-              <PropertyCard property={property} />
-            </Box>
-          ))}
-        </StyledSlider>
-      )}
-    </Box>
+        {propertiesStatus === 'failed' ? (
+          <Typography variant="body1" align="center">
+            No properties found for the selected category.
+          </Typography>
+        ) : (
+          <StyledSlider {...settings}>
+            {properties.map((property) => (
+              <Box key={property.id} px={1} py={1}>
+                <PropertyCard property={property} />
+              </Box>
+            ))}
+          </StyledSlider>
+        )}
+      </Box>
+    </Container>
   );
 }
 

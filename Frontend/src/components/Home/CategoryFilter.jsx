@@ -15,12 +15,12 @@ import TownhouseIcon from '@mui/icons-material/Home';
 import CommercialIcon from '@mui/icons-material/Domain';
 
 const iconMapping = {
-  Apartment: <ApartmentIcon  style={{ fontSize: 80 }}/>,
-  Villa: <VillaIcon style={{ fontSize: 80 }}/>,
-  Studio: <StudioIcon style={{ fontSize: 80 }}/>,
-  Office: <OfficeIcon style={{ fontSize: 80 }}/>,
-  House: <TownhouseIcon style={{ fontSize: 80 }}/>,
-  Commercial: <CommercialIcon style={{ fontSize: 80 }}/>
+  Apartment: <ApartmentIcon style={{ fontSize: 80 }} />,
+  Villa: <VillaIcon style={{ fontSize: 80 }} />,
+  Studio: <StudioIcon style={{ fontSize: 80 }} />,
+  Office: <OfficeIcon style={{ fontSize: 80 }} />,
+  House: <TownhouseIcon style={{ fontSize: 80 }} />,
+  Commercial: <CommercialIcon style={{ fontSize: 80 }} />
 };
 
 const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
@@ -42,17 +42,24 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
     color: '#fff',
   },
   textAlign: 'center',
+  boxSizing: 'border-box',
 }));
 
-const StyledSlider = styled(Slider)({
+const StyledSlider = styled(Slider)(({ theme }) => ({
   width: '100%',
   '.slick-slide': {
     display: 'flex',
     justifyContent: 'center',
+    boxSizing: 'border-box',
+    padding: '0 10px', // Adjust padding to add space between slides
+  },
+  '.slick-list': {
+    margin: '0 -10px', // Adjust margin to compensate for padding
+    overflow: 'hidden', // Ensure overflow is hidden
   },
   '& .slick-prev, & .slick-next': {
     zIndex: 1,
-    backgroundColor: 'transperant',
+    backgroundColor: 'transparent',
     borderRadius: '10px',
     height: '40px',
     width: '40px',
@@ -64,34 +71,36 @@ const StyledSlider = styled(Slider)({
     color: '#EE2027',
     fontSize: '35px',
   },
-});
+}));
 
 const ArrowWrapper = styled(Box)({
   position: 'absolute',
   top: '50%',
   transform: 'translateY(-50%)',
   '&.prev': {
-    left: '-20px',
+    left: '-5px',
+    zIndex: 1,
   },
   '&.next': {
-    right: '-20px',
+    right: '-5px',
+    zIndex: 1,
   },
 });
 
 const ViewAllLink = styled('a')(({ theme }) => ({
   textDecoration: 'none',
   color: '#000000', // Fallback color
-  fontSize:'18px',
-  fontWeight:'bold',
+  fontSize: '18px',
+  fontWeight: 'bold',
   '&:hover': {
-    color:  '#000000', // Fallback color
+    color: '#000000', // Fallback color
   },
   '&::after': {
     content: '""',
     display: 'block',
     width: '0',
     height: '2px',
-    background:  '#EE2027', // Fallback color
+    background: '#EE2027', // Fallback color
     transition: 'width 0.3s',
   },
   '&:hover::after': {
@@ -105,7 +114,6 @@ const CategoryFilter = () => {
   const categories = useSelector(state => state.categories.list);
   const status = useSelector(state => state.categories.status);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [type, setType] = useState('');
 
   useEffect(() => {
     if (status === 'idle') {
@@ -114,7 +122,7 @@ const CategoryFilter = () => {
   }, [status, dispatch]);
 
   const handleCategoryClick = (categoryType) => {
-    setType(categoryType);
+    setActiveCategory(categoryType);
     navigate(`/properties?pt=${categoryType}`);
   };
 
@@ -147,39 +155,46 @@ const CategoryFilter = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: categories.length < 4 ? categories.length : 4,
+          slidesToShow: categories.length < 5 ? categories.length : 5,
           slidesToScroll: 1,
           infinite: true,
-          dots: false
-        }
+          dots: false,
+        },
       },
       {
-        breakpoint: 600,
+        breakpoint: 800,
+        settings: {
+          slidesToShow:  categories.length < 3 ? categories.length : 3,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 700,
         settings: {
           slidesToShow: categories.length < 2 ? categories.length : 2,
-          slidesToScroll: 1
-        }
+          slidesToScroll: 1,
+        },
       },
       {
-        breakpoint: 480,
+        breakpoint: 500,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
     <Box position="relative" p={2}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-        <Typography sx={{fontSize:'16px', fontWeight: 'bold'}} color="#EE2027">PROPERTY TYPE</Typography>
+        <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }} color="#EE2027">
+          PROPERTY TYPE
+        </Typography>
       </Box>
       <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h5">Try Searching For</Typography>
-         <ViewAllLink href="/all-services">
-          View All Services →
-        </ViewAllLink>
+        <ViewAllLink href="/all-services">View All Services →</ViewAllLink>
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center" position="relative">
         <StyledSlider {...settings}>

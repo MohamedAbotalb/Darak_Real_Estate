@@ -1,6 +1,6 @@
 // import React from 'react';
 // import 'react-responsive-carousel/lib/styles/carousel.min.css';
-// import { Box, Typography } from '@mui/material';
+// import { Box } from '@mui/material';
 // import PropertySearch from 'components/Home/PropertySearch';
 // import { Carousel } from 'react-responsive-carousel';
 
@@ -9,7 +9,7 @@
 //     <Box
 //       sx={{
 //         position: 'relative',
-//         height: '75vh',
+//         height: '80vh',
 //         overflow: 'hidden',
 //       }}
 //     >
@@ -26,9 +26,31 @@
 //         <div>
 //           <Box
 //             sx={{
-//               height: '75vh',
-//               backgroundImage:
-//                 'url(hero1.jpg)',
+//               height: '80vh',
+//               width: '100vw',
+//               backgroundImage: 'url(hero1.jpg)',
+//               backgroundSize: 'cover',
+//               backgroundPosition: 'center',
+//             }}
+//           />
+//         </div>
+//         <div>
+//           <Box
+//             sx={{
+//               height: '80vh',
+//               width: '100vw',
+//               backgroundImage: 'url(hero2.jpg)',
+//               backgroundSize: 'cover',
+//               backgroundPosition: 'center',
+//             }}
+//           />
+//         </div>
+//         <div>
+//           <Box
+//             sx={{
+//               height: '80vh',
+//               width: '100vw',
+//               backgroundImage: 'url(hero3.jpg)',
 //               backgroundSize: 'cover',
 //               backgroundPosition: 'center',
 //             }}
@@ -47,53 +69,47 @@
 //           alignItems: 'center',
 //           flexDirection: 'column',
 //           color: '#fff',
-//           backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//           // backgroundColor: 'rgba(0, 0, 0, 0.5)',
 //         }}
 //       >
-//         {/* <Typography variant="h2" component="h1">
-//           Welcome to RentEZ
-//         </Typography>
-//         <Typography variant="body1" component="p" sx={{ mb: 3 }}>
-//           Your ultimate destination for finding rental properties.
-//         </Typography> */}
-//         <PropertySearch sx={{marginTop:'300px'}}/>
+//         <PropertySearch sx={{ marginTop: '300px' }} />
 //       </Box>
 //     </Box>
 //   );
 // }
 
 // export default Hero;
-
-
 import React from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Box } from '@mui/material';
 import PropertySearch from 'components/Home/PropertySearch';
-import { Carousel } from 'react-responsive-carousel';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function Hero() {
+  const settings = {
+    autoplay: true,
+    infinite: true,
+    arrows: false,
+    dots: false,
+    autoplaySpeed: 3000,
+    speed: 500
+  };
+
   return (
     <Box
       sx={{
         position: 'relative',
-        height: '75vh',
+        height: '80vh',
         overflow: 'hidden',
       }}
     >
-      <Carousel
-        autoPlay
-        infiniteLoop
-        showArrows={false}
-        showThumbs={false}
-        showStatus={false}
-        showIndicators={false}
-        interval={3000}
-        transitionTime={500}
-      >
+      <Slider {...settings}>
         <div>
           <Box
             sx={{
-              height: '75vh',
+              height: '80vh',
               width: '100vw',
               backgroundImage: 'url(hero1.jpg)',
               backgroundSize: 'cover',
@@ -104,7 +120,7 @@ function Hero() {
         <div>
           <Box
             sx={{
-              height: '75vh',
+              height: '80vh',
               width: '100vw',
               backgroundImage: 'url(hero2.jpg)',
               backgroundSize: 'cover',
@@ -115,7 +131,7 @@ function Hero() {
         <div>
           <Box
             sx={{
-              height: '75vh',
+              height: '80vh',
               width: '100vw',
               backgroundImage: 'url(hero3.jpg)',
               backgroundSize: 'cover',
@@ -123,7 +139,7 @@ function Hero() {
             }}
           />
         </div>
-      </Carousel>
+      </Slider>
       <Box
         sx={{
           position: 'absolute',
@@ -136,7 +152,6 @@ function Hero() {
           alignItems: 'center',
           flexDirection: 'column',
           color: '#fff',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
       >
         <PropertySearch sx={{ marginTop: '300px' }} />

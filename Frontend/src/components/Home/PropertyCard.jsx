@@ -96,7 +96,7 @@ function PropertyCard({ property }) {
             {getPriceDisplay()}
           </Typography>
           <Typography variant="body2">{property.title}</Typography>
-          <Box display="flex" alignItems="center" my={2}>
+          <Box display="flex" alignItems="center" my={1}>
             <LocationOnIcon color="action" />
             <Typography variant="body2" color="text.secondary" ml={0.5}>
               {property.location.street}, {property.location.state},{' '}

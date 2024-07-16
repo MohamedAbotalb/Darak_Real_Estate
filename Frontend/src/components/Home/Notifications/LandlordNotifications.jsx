@@ -23,6 +23,7 @@ import {
   Pagination,
   IconButton,
   Paper,
+  TextField
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
@@ -65,8 +66,28 @@ function LandlordNotifications() {
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [filter, setFilter] = useState('all');
   const [hoveredNotification, setHoveredNotification] = useState(null);
-
+  const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
+ 
+  const [declineMessage, setDeclineMessage] = useState('');
+  const [validationError, setValidationError] = useState('');
+  const [selectedReason, setSelectedReason] = useState('');
+  const [customReason, setCustomReason] = useState('');
   const notificationsPerPage = 5;
+
+  const predefinedReasons = [
+  "Scheduling conflict",
+  "Property is no longer available",
+  "Unsuitable for the requested tour",
+  "Other"
+];
+
+   useEffect(() => {
+    if (selectedNotification) {
+      setSelectedReason('');
+      setCustomReason('');
+      setValidationError('');
+    }
+  }, [selectedNotification]);
 
   useEffect(() => {
     dispatch(fetchLandlordNotificationsAsync());
@@ -82,10 +103,30 @@ function LandlordNotifications() {
     setOpenDeclineConfirmation(true);
   };
 
-  const handleDecline = () => {
+  
+  const validateMessage = (message) => {
+    if (/^\d/.test(message)) {
+      return "Message cannot start with a number.";
+    }
+    if (message.length < 10) {
+      return "Message must be at least 10 characters long.";
+    }
+    return '';
+  };
+
+
+     const handleDecline = () => {
+    const error = validateMessage(selectedReason === "Other" ? customReason : selectedReason);
+    if (error) {
+      setValidationError(error);
+      return;
+    }
+    
     if (selectedNotification) {
       setSubmitting(true);
-      dispatch(declineTourAsync(selectedNotification.tour_id))
+      const reason = selectedReason === "Other" ? customReason : selectedReason;
+      const fullMessage = `${defaultMessage} ${reason}`;
+      dispatch(declineTourAsync({ tourId: selectedNotification.tour_id, message: fullMessage }))
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
@@ -95,6 +136,8 @@ function LandlordNotifications() {
           }
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
+          setSelectedReason('');
+          setCustomReason('');
         })
         .catch(() => {
           setSubmitting(false);
@@ -105,6 +148,31 @@ function LandlordNotifications() {
         });
     }
   };
+
+  const handleReasonChange = (e) => {
+    setSelectedReason(e.target.value);
+    if (e.target.value !== "Other") {
+      setValidationError('');
+    }
+  };
+
+  const handleCustomReasonChange = (e) => {
+    const { value } = e.target;
+    setCustomReason(value);
+    if (value) {
+      setValidationError(validateMessage(value));
+    } else {
+      setValidationError('');
+    }
+  };
+
+
+  const handleMessageChange = (e) => {
+    const { value } = e.target;
+    setDeclineMessage(value);
+    setValidationError(validateMessage(value));
+  };
+
 
   const handleApproveDate = () => {
     if (selectedNotification && selectedDate) {
@@ -290,7 +358,7 @@ function LandlordNotifications() {
                   position: 'relative',
                 }}
               >
-                {/* Top row: Profile image, username, and notification time */}
+                {/* Top row: Profile image, fromname, and notification time */}
                 <Box
                   sx={{
                     display: 'flex',
@@ -299,6 +367,7 @@ function LandlordNotifications() {
                     position: 'relative',
                   }}
                 >
+                  
                   {/* Colorful circle */}
                   <Box
                     style={{
@@ -315,8 +384,8 @@ function LandlordNotifications() {
                   />
                   <Box display="flex" alignItems="center" marginTop={3}>
                     <Avatar
-                      alt={notification.user.first_name}
-                      src={notification.user.avatar}
+                      alt={notification.from.first_name}
+                      src={notification.from.avatar}
                       sx={{ marginLeft: '28px', marginRight: '12px' }}
                     />
                     <Typography
@@ -324,7 +393,7 @@ function LandlordNotifications() {
                       fontWeight="bold"
                       sx={{ marginRight: 'auto' }}
                     >
-                      {`${notification.user.first_name} ${notification.user.last_name}`}
+                      {`${notification.from.first_name} ${notification.from.last_name}`}
                     </Typography>
                     <Typography
                       variant="body"
@@ -334,6 +403,7 @@ function LandlordNotifications() {
                       {getTimeDisplay(notification.created_at)}
                     </Typography>
                   </Box>
+                  
                   <Box
                     sx={{
                       position: 'absolute',
@@ -364,7 +434,8 @@ function LandlordNotifications() {
                 >
                   {notification.message}
                 </Typography>
-
+                  {notification.type !== 'status_change' &&(
+                    <>
                 <Box
                   sx={{
                     display: 'flex',
@@ -412,7 +483,6 @@ function LandlordNotifications() {
                     </Typography>
                   </Box>
                 </Box>
-
                 {/* Third row: Action buttons */}
                 <Box
                   sx={{
@@ -458,6 +528,7 @@ function LandlordNotifications() {
                     Approve
                   </Button>
                 </Box>
+                </>)}
               </Paper>
             </Box>
           ))}
@@ -510,7 +581,8 @@ function LandlordNotifications() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
+
+<Dialog
         open={openDeclineConfirmation}
         onClose={() => setOpenDeclineConfirmation(false)}
       >
@@ -518,6 +590,38 @@ function LandlordNotifications() {
         <DialogContent>
           <Typography>
             Are you sure you want to decline this tour request?
+          </Typography>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="reason-select-label">Reason</InputLabel>
+            <Select
+              labelId="reason-select-label"
+              value={selectedReason}
+              onChange={handleReasonChange}
+              label="Reason"
+            >
+              {predefinedReasons.map((reason, index) => (
+                <MenuItem key={index} value={reason}>
+                  {reason}
+                </MenuItem>
+              ))}
+            </Select>
+            {selectedReason === "Other" && (
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Other Reason"
+                fullWidth
+                variant="outlined"
+                value={customReason}
+                onChange={handleCustomReasonChange}
+                error={!!validationError}
+                helperText={validationError}
+              />
+            )}
+            {validationError && <FormHelperText error>{validationError}</FormHelperText>}
+          </FormControl>
+          <Typography variant="body2" color="textSecondary" style={{ marginTop: '8px' }}>
+            {defaultMessage}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -527,11 +631,12 @@ function LandlordNotifications() {
           >
             Cancel
           </Button>
-          <Button onClick={handleDecline} color="error" disabled={submitting}>
+          <Button onClick={handleDecline} color="error" disabled={submitting || !!validationError}>
             Decline
           </Button>
         </DialogActions>
       </Dialog>
+
       <Dialog
         open={openDeleteConfirmation}
         onClose={() => setOpenDeleteConfirmation(false)}

@@ -48,9 +48,10 @@ function NotificationDropdown({ role }) {
   const sortedNotifications = [...notifications].sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
-  const lastFourNotifications = sortedNotifications.slice(
-    Math.max(notifications.length - 4, 0)
-  );
+  // const lastFourNotifications = sortedNotifications.slice(
+  //   Math.max(notifications.length - 4, 0)
+  // );
+const lastFourNotifications = sortedNotifications.slice(0, 4);
 
   const pendingNotificationsCount =
     role === 'landlord'
@@ -192,14 +193,14 @@ function NotificationDropdown({ role }) {
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ListItemAvatar>
                           <Avatar
-                            alt={notification?.landlord.first_name}
-                            src={notification?.landlord.avatar}
+                            alt={notification?.from.first_name}
+                            src={notification?.from.avatar}
                           />
                         </ListItemAvatar>
                         <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
                           <Typography variant="subtitle1">
-                            {notification?.landlord?.first_name}{' '}
-                            {notification?.landlord?.last_name}
+                            {notification?.from?.first_name}{' '}
+                            {notification?.from?.last_name}
                           </Typography>
                           <Typography
                             variant="body2"
@@ -261,8 +262,8 @@ function NotificationDropdown({ role }) {
                           />
                           <Box display="flex" alignItems="center" marginTop={1}>
                             <Avatar
-                              alt={notification?.user?.first_name}
-                              src={notification?.user?.avatar}
+                              alt={notification?.from?.first_name}
+                              src={notification?.from?.avatar}
                               sx={{ marginLeft: '28px', marginRight: '12px' }}
                             />
                             <Typography
@@ -270,9 +271,9 @@ function NotificationDropdown({ role }) {
                               fontWeight="bold"
                               sx={{ marginRight: 'auto' }}
                             >
-                              {`${notification?.user?.first_name} ${notification?.user?.last_name}`}
+                              {`${notification?.from?.first_name} ${notification?.from?.last_name}`}
                             </Typography>
-                            <Typography variant="caption" color="textSecondary">
+                            <Typography variant="caption" color="textSecondary" sx={{ml:1}}>
                               {getTimeDisplay(notification?.created_at)}
                             </Typography>
                           </Box>

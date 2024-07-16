@@ -209,12 +209,12 @@ function UserNotifications() {
               }}
             >
               <Avatar
-                alt={notification.landlord.first_name}
-                src={notification.landlord.avatar}
+                alt={notification.from.first_name}
+                src={notification.from.avatar}
               />
               <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
                 <Typography variant="subtitle1">
-                  {`${notification.landlord.first_name} ${notification.landlord.last_name}`}
+                  {`${notification.from.first_name} ${notification.from.last_name}`}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {getTimeDisplay(notification.created_at)}
