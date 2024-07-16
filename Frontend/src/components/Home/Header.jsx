@@ -388,9 +388,13 @@ const underlineAnimation = keyframes`
                 to="/register"
                 color="inherit"
                 sx={{
-                  color: '#cdd0d8',
+                  color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
+                  '&:hover': {
+                      color:'#fff',
+                      backgroundColor: '#EE2027',
+                    },
                 }}
               >
                 Register
@@ -400,9 +404,13 @@ const underlineAnimation = keyframes`
                 to="/login"
                 color="inherit"
                 sx={{
-                  color: '#cdd0d8',
+                  color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
+                   '&:hover': {
+                      color:'#fff',
+                      backgroundColor: '#EE2027',
+                    },
                 }}
               >
                 Log in
@@ -412,7 +420,7 @@ const underlineAnimation = keyframes`
         )}
         {isSmallScreen && (
           <IconButton color="inherit" onClick={handleDrawerOpen}>
-            <MenuIcon />
+            <MenuIcon sx={{color:'#000'}}/>
           </IconButton>
         )}
       </Toolbar>
@@ -427,14 +435,31 @@ const underlineAnimation = keyframes`
             onClick={handleDrawerClose}
             sx={{
               fontSize: '1.1rem',
-              color: isActiveLink('/', '') ? '#60B2F0' : '#cdd0d8',
+              color: '#000',
               textTransform: 'none',
-              backgroundColor: isActiveLink('/', '')
-                ? '#34495E'
-                : 'transparent',
-              '&:hover': {
-                backgroundColor: '#34495E',
-              },
+              // backgroundColor: isActiveLink('/', '')
+              //   ? '#34495E'
+              //   : 'transparent',
+              backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '80%',
+                  },
+                },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                  },
             }}
           >
             <ListItemText primary="Home" />
@@ -450,15 +475,30 @@ const underlineAnimation = keyframes`
                 onClick={handleDrawerClose}
                 sx={{
                   fontSize: '1.1rem',
-                  color: isActiveLink('/properties', 'lt=rent')
-                    ? '#60B2F0'
-                    : '#cdd0d8',
+                  color: '#000',
                   textTransform: 'none',
-                  backgroundColor: isActiveLink('/properties', 'lt=rent')
-                    ? '#34495E'
-                    : 'transparent',
-                  '&:hover': {
-                    backgroundColor: '#34495E',
+                  // backgroundColor: isActiveLink('/properties', 'lt=rent')
+                  //   ? '#34495E'
+                  //   : 'transparent',
+                  backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '80%',
+                  },
+                },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
                   },
                 }}
               >
@@ -473,15 +513,30 @@ const underlineAnimation = keyframes`
                 onClick={handleDrawerClose}
                 sx={{
                   fontSize: '1.1rem',
-                  color: isActiveLink('/properties', 'lt=buy')
-                    ? '#60B2F0'
-                    : '#cdd0d8',
+                  color: '#000',
                   textTransform: 'none',
-                  backgroundColor: isActiveLink('/properties', 'lt=buy')
-                    ? '#34495E'
-                    : 'transparent',
-                  '&:hover': {
-                    backgroundColor: '#34495E',
+                  // backgroundColor: isActiveLink('/properties', 'lt=buy')
+                  //   ? '#34495E'
+                  //   : 'transparent',
+                 backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '80%',
+                  },
+                },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
                   },
                 }}
               >
@@ -498,16 +553,34 @@ const underlineAnimation = keyframes`
               onClick={handleDrawerClose}
               sx={{
                 fontSize: '1.1rem',
-                color: isActiveLink('/myproperties', '')
-                  ? '#60B2F0'
-                  : '#cdd0d8',
+                color: '#000',
                 textTransform: 'none',
-                backgroundColor: isActiveLink('/myproperties', '')
-                  ? '#34495E'
-                  : 'transparent',
+                // backgroundColor: isActiveLink('/myproperties', '')
+                //   ? '#34495E'
+                //   : 'transparent',
+                // '&:hover': {
+                //   backgroundColor: '#34495E',
+                // },
+                backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: '#34495E',
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '80%',
+                  },
                 },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                  },
               }}
             >
               <ListItemText primary="My Properties" />
@@ -522,14 +595,34 @@ const underlineAnimation = keyframes`
             onClick={handleDrawerClose}
             sx={{
               fontSize: '1.1rem',
-              color: isActiveLink('/about', '') ? '#60B2F0' : '#cdd0d8',
+              color: '#000',
               textTransform: 'none',
-              backgroundColor: isActiveLink('/about', '')
-                ? '#34495E'
-                : 'transparent',
-              '&:hover': {
-                backgroundColor: '#34495E',
-              },
+              // backgroundColor: isActiveLink('/about', '')
+              //   ? '#34495E'
+              //   : 'transparent',
+              // '&:hover': {
+              //   backgroundColor: '#34495E',
+              // },
+              backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent', // Remove hover background
+                  '&::after': {
+                    width: '80%',
+                  },
+                },
+                 position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/about', '') ? '100%' : '0',
+                    height: '2px',
+                    backgroundColor: '#EE2027',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                  },
             }}
           >
             <ListItemText primary="About" />
@@ -596,7 +689,10 @@ const underlineAnimation = keyframes`
                 component={Link}
                 to="/login"
                 onClick={handleDrawerClose}
-                sx={{ fontSize: '1.1rem' }}
+                sx={{ fontSize: '1.1rem','&:hover': {
+                      color:'#fff',
+                      backgroundColor: '#EE2027',
+                    }, }}
               >
                 <ListItemText primary="Login" />
               </ListItem>
@@ -605,7 +701,12 @@ const underlineAnimation = keyframes`
                 component={Link}
                 to="/register"
                 onClick={handleDrawerClose}
-                sx={{ fontSize: '1.1rem' }}
+                sx={{ fontSize: '1.1rem',
+                  '&:hover': {
+                      color:'#fff',
+                      backgroundColor: '#EE2027',
+                    },
+                 }}
               >
                 <ListItemText primary="Register" />
               </ListItem>

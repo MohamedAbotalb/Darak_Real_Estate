@@ -25,7 +25,7 @@ function Footer() {
     <Box
       className="footer"
       sx={{
-        backgroundColor: '#2b3d4f',
+        backgroundColor: '#161616',
         color: '#cdd0d8',
         padding: '20px',
       }}
@@ -112,7 +112,7 @@ function Footer() {
                           aria-label="subscribe"
                           onClick={handleSubscribe}
                         >
-                          <SendIcon />
+                          <SendIcon sx={{color:'#EE2027'}}/>
                         </IconButton>
                       </InputAdornment>
                     ),

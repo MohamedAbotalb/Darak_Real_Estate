@@ -75,6 +75,31 @@ const CustomButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
   textTransform: 'none',
   fontWeight: 'bold',
+  backgroundColor: 'transparent',
+  color: '#000',
+  boxShadow: 'none', // Ensuring no box shadow
+  position: 'relative',
+  overflow: 'hidden',
+  '&:hover': {
+    backgroundColor: 'transparent',
+    color: '#000',
+    boxShadow: 'none', // Ensuring no box shadow on hover
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    width: '90%',
+    height: '2px',
+    backgroundColor: '#EE2027', // Setting underline color
+    bottom: 0,
+    left: 0,
+    transform: 'scaleX(0)',
+    transformOrigin: 'left', // Start animation from left
+    transition: 'transform 0.3s ease',
+  },
+  '&:hover::after': {
+    transform: 'scaleX(1)',
+  },
 }));
 
 const textContent = {
@@ -92,12 +117,12 @@ const textContent = {
 const cardContent = [
   {
     title: 'Buy A New Home',
-    description: 'Explore diverse properties and expert guidance for a seamless buying experience.',
+    description: 'Explore diverse properties and expert guidance .',
     image: 'buy-home.png',
   },
   {
     title: 'Rent A Home',
-    description: 'Explore a diverse variety of listings tailored precisely to suit your unique lifestyle needs.',
+    description: 'Explore a diverse variety of listings tailored precisely .',
     image: 'rent-home.png',
   },
   {
@@ -111,7 +136,7 @@ const WhyChooseUs = () => {
   return (
     <RootContainer>
       <TextSection>
-        <Typography variant="h6" color="secondary" gutterBottom>
+        <Typography variant="h6" color="#EE2027" gutterBottom>
           WHY CHOOSE US
         </Typography>
         <Typography variant="h4" gutterBottom>
@@ -130,7 +155,7 @@ const WhyChooseUs = () => {
             </Box>
           ))}
         </Box>
-        <CustomButton variant="contained" color="primary" endIcon={<ArrowForwardIcon />}>
+        <CustomButton variant="contained" color="primary" endIcon={<ArrowForwardIcon/>}>
           {textContent.buttonText}
         </CustomButton>
       </TextSection>
@@ -148,9 +173,7 @@ const WhyChooseUs = () => {
               <Typography variant="body2" paragraph>
                 {card.description}
               </Typography>
-              <Button variant="text" color="primary" endIcon={<ArrowForwardIcon />}>
-                Learn More
-              </Button>
+              
             </CustomCardContent>
           </CustomCard>
         ))}

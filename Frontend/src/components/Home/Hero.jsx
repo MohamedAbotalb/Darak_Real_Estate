@@ -110,7 +110,7 @@ function Hero() {
           <Box
             sx={{
               height: '80vh',
-              width: '100vw',
+              // width: '100vw',
               backgroundImage: 'url(hero1.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -121,7 +121,7 @@ function Hero() {
           <Box
             sx={{
               height: '80vh',
-              width: '100vw',
+              // width: '100vw',
               backgroundImage: 'url(hero2.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -132,7 +132,7 @@ function Hero() {
           <Box
             sx={{
               height: '80vh',
-              width: '100vw',
+              // width: '100vw',
               backgroundImage: 'url(hero3.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -154,7 +154,7 @@ function Hero() {
           color: '#fff',
         }}
       >
-        <PropertySearch sx={{ marginTop: '300px' }} />
+        <PropertySearch sx={{ marginTop: '280px' }} />
       </Box>
     </Box>
   );
