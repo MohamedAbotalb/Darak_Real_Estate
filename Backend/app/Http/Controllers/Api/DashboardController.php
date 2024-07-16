@@ -18,7 +18,7 @@ class DashboardController extends Controller
     {
         $counts = [
             'users' => User::count(),
-            'properties' => Property::count(),
+            'properties' => Property::where('status', 'accepted')->count(),
             'property_types' => PropertyType::count(),
             'user_reports' => ReportUser::count(),
             'property_reports' => ReportProperty::count(),
