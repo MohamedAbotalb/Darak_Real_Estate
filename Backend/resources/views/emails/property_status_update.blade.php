@@ -25,7 +25,7 @@
                 @endif
                 
                 <p>Thank you for using our service.</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@
                 <p style="text-transform: capitalize">Hi {{ $property->user->first_name }},</p>
                 <p>Your property update for {{ $property->title }} has been rejected.</p>
                 <p>Thank you!</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

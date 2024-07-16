@@ -21,7 +21,7 @@
                     @endforeach
                 </ul>
                 <p>Thank you!</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>
