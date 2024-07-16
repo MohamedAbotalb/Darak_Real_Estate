@@ -15,7 +15,7 @@
                 <p style="text-transform: capitalize">Hi {{ $landlord->first_name }},</p>
                 <p>Your update for the property "{{ $property->title }}" has been approved.</p>
                 <p>Thank you!</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

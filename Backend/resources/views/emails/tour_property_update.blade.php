@@ -16,7 +16,7 @@
                 <p>The property {{ $property->title }} you requested a tour for has been updated.</p>
                 <p>Please review the updated details of the property and make sure it still meets your requirements.</p>
                 <p>Thank you!</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

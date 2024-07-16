@@ -17,7 +17,7 @@
                 <p><strong>Reason:</strong></p>
                 <p>{{ $messageContent }}</p>
                 <p>Thank you for understanding.</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

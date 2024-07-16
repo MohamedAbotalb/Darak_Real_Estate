@@ -14,7 +14,7 @@
             <div style="margin: 0; padding: 15px; background-color: #ffffff;">
                 <p>Hi {{ $landlord->first_name }},</p>
                 <p>The tour request for your property, {{ $property->title }}, has been cancelled by the user: {{ $user->first_name}} {{$user->last_name}}.</p>
-                <p>Best regards,<br>The RentEZ Team</p>
+                <p>Best regards,<br>Darak Team</p>
             </div>
         </div>
     </div>
