@@ -9,7 +9,7 @@ class AmenityRepository implements AmenityRepositoryInterface
 {
     public function getAllAmenities()
     {
-        return Amenity::all();
+        return Amenity::where('availability','available')->get();
     }
 
     public function createAmenity(array $data)
@@ -19,7 +19,7 @@ class AmenityRepository implements AmenityRepositoryInterface
 
     public function findAmenityBySlug(string $slug)
     {
-        return Amenity::where('slug', $slug)->first();
+        return Amenity::where('availability','available')->where('slug', $slug)->first();
     }
 
     public function updateAmenity(string $slug, array $data)

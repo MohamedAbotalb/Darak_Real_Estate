@@ -2,10 +2,13 @@
 
 namespace App\Repositories;
 
+use App\Mail\PropertyUpdateApprovedMail;
+use App\Mail\PropertyUpdateRejectedMail;
 use App\Models\Location;
 use App\Models\Notification;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Models\PropertyUpdate;
 use App\Models\User;
 use App\Repositories\Contracts\PropertyRepositoryInterface;
 use App\Utils\ImageUpload;
@@ -19,7 +22,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 {
     public function getAllProperties()
     {
-        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        return Property::with('images', 'location', 'amenities', 'propertyType', 'user')->where('status','accepted')->get();
     }
 
     public function getPropertyBySlug(string $slug)
@@ -31,15 +34,25 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         return Property::with('location', 'images', 'amenities', 'propertyType')
             ->where('listing_type', $listing_type)
+            ->where('status','accepted')
             ->latest()
             ->take(6)
             ->get();
     }
-    public function getAcceptedProperties(int $perPage)
+    public function getAcceptedProperties()
     {
         $properties = Property::where('status', 'accepted')
-            ->with('images', 'location', 'amenities', 'propertyType', 'user')
-            ->paginate($perPage);
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        if ($properties->isEmpty()) {
+            return null;
+        }
+
+        return $properties;
+    }
+    public function getPendingProperties()
+    {
+        $properties = Property::where('status', 'pending')
+            ->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
         if ($properties->isEmpty()) {
             return null;
         }
@@ -146,7 +159,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function searchProperties(array $filters)
     {
-        $query = Property::with('images', 'location', 'amenities', 'propertyType', 'user');
+        $query = Property::where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user');
 
         if (isset($filters['property_type'])) {
             $query->where('property_type_id', $filters['property_type']);
@@ -193,51 +206,41 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function showUserProperties(int $id)
     {
-        return Property::where('user_id', $id)->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        return Property::where('user_id', $id)->where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
-    public function updateProperty(array $data, string $slug)
+    public function updateProperty(array $data, int $id)
     {
-        DB::beginTransaction();
+        return DB::transaction(function () use ($data, $id) {
+            $property = Property::find($id);
 
-        try {
-            $property = Property::where('slug', $slug)->first();
-            $property->update($data);
-            if (isset($data['city']) && isset($data['state']) && isset($data['street'])) {
-                $location = Location::updateOrCreate(
-                    [
-                        'city' => $data['city'],
-                        'state' => $data['state'],
-                        'street' => $data['street']
-                    ],
-                    $data
-                );
-
-                $property->location_id = $location->id;
+            if (!$property) {
+                return null;
             }
 
-            if (isset($data['images'])) {
-                $uploadedImages = ImageUpload::uploadImages($data['images'], 'images/properties');
-                foreach ($uploadedImages as $uploadedImage) {
-                    PropertyImage::create([
-                        'property_id' => $property->id,
-                        'image' => $uploadedImage,
-                    ]);
-                }
+            PropertyUpdate::create([
+                'property_id' => $property->id,
+                'data' => $data,
+            ]);
+
+            $admin = User::where('role', 'admin')->first();
+
+            if (!$admin) {
+                return null;
             }
 
-            if (isset($data['amenities'])) {
-                $property->amenities()->sync($data['amenities']);
-            }
+            Notification::create([
+                'from_user_id' => Auth::id(),
+                'to_user_id' => $admin->id,
+                'property_id' => $property->id,
+                'message' => 'Property update requires approval',
+                'type' => 'update_request',
+                'date' => now(),
+            ]);
 
-            $property->load('location', 'propertyType', 'user', 'images', 'amenities', 'user');
-
-            DB::commit();
             return $property;
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new \Exception('Failed to update property: ' . $e->getMessage());
-        }
+        });
     }
+
     public function delete(int $id)
     {
         $property = Property::find($id);

@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Repositories\Contracts\PropertyUpdatesRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\UserRepository;
 use App\Repositories\WishlistRepository;
@@ -28,6 +29,7 @@ use App\Repositories\Contracts\ImageRepositoryInterface;
 use App\Repositories\Contracts\ReasonReportRepositoryInterface;
 use App\Repositories\Contracts\ReviewRepositoryInterface;
 use App\Repositories\Contracts\ReactionRepositoryInterface;
+use App\Repositories\PropertyUpdatesRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -51,6 +53,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ReasonReportRepositoryInterface::class, ReasonReportRepository::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
         $this->app->bind(ReactionRepositoryInterface::class, ReactionRepository::class);
+        $this->app->bind(PropertyUpdatesRepositoryInterface::class, PropertyUpdatesRepository::class);
+
     }
 
     /**

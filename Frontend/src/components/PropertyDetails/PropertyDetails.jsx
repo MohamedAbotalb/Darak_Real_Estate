@@ -101,7 +101,10 @@ function PropertyDetails() {
     );
 
   return (
-    <Container sx={{ my: 4 }}>
+    <Container
+      sx={{ my: 4, ...(user?.role === 'admin' ? { marginTop: '100px' } : {}) }}
+    >
+      {' '}
       <Card sx={{ width: '100%' }}>
         <Box>
           <Grid container spacing={1}>
@@ -411,36 +414,39 @@ function PropertyDetails() {
                   justifyContent="space-around"
                   sx={{ mt: 3 }}
                 >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleRequestTourClick}
-                    disabled={
-                      user?.role === 'landlord' &&
-                      property.user?.id === user?.id
-                    }
-                  >
-                    Request a tour
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleReportClick}
-                    disabled={
-                      user?.role === 'landlord' &&
-                      property.user?.id === user?.id
-                    }
-                  >
-                    Report Listing
-                  </Button>
-                  {user && <AddToWishlistButton property={property} />}
+                  {!user?.role === 'admin' && (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleRequestTourClick}
+                        disabled={
+                          user?.role === 'landlord' &&
+                          property.user?.id === user?.id
+                        }
+                      >
+                        Request a tour
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={handleReportClick}
+                        disabled={
+                          user?.role === 'landlord' &&
+                          property.user?.id === user?.id
+                        }
+                      >
+                        Report Listing
+                      </Button>
+                      {user && <AddToWishlistButton property={property} />}
+                    </>
+                  )}
                 </Box>
               </Grid>
             </Grid>
           </CardContent>
         </Box>
       </Card>
-
       {/* Tour Request Form */}
       {property.id && (
         <TourRequestForm
@@ -457,7 +463,7 @@ function PropertyDetails() {
         userData={property.user}
       />
       {/* review */}
-      {property?.listing_type === 'rent' && (
+      {property?.listing_type === 'rent' && user?.role !== 'admin' && (
         <ReviewSection
           propertyId={property.id}
           propertyTitle={property.title}
