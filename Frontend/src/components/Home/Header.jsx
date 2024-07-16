@@ -47,6 +47,7 @@ function Header() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
+  const AdminImage = 'logo.jpg';
 const underlineAnimation = keyframes`
   from {
     width: 0;
@@ -110,7 +111,7 @@ const underlineAnimation = keyframes`
       sx={{ backgroundColor: '#ffffff' }}
     >
       <Toolbar>
-        <Typography
+        {/* <Typography
           variant="h4"
           className="title"
           component={Link}
@@ -118,7 +119,28 @@ const underlineAnimation = keyframes`
           sx={{ color: '#cdd0d8', textDecoration: 'none', marginRight: 3 }}
         >
           RentEZ
-        </Typography>
+        </Typography> */}
+         <Box
+    component={Link}
+    to="/"
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      marginRight: 3,
+      textDecoration: 'none',
+    }}
+  >
+    <img
+      src={AdminImage}
+      alt="RentEZ"
+      style={{
+        height: 'auto',
+        maxHeight: '50px', // Adjust the height as per your requirement
+        maxWidth: '100%', // Ensure the image doesn't exceed the container's width
+      }}
+    />
+  </Box>
+
         <Box sx={{ flexGrow: 1 }} />
         {!isSmallScreen && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

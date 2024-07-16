@@ -39,6 +39,7 @@ import { red, grey } from '@mui/material/colors';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
+// import defaultImage from 'logo.jpg';
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
@@ -67,7 +68,7 @@ function LandlordNotifications() {
   const [filter, setFilter] = useState('all');
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
- 
+  const AdminImage='logo.jpg';
   const [declineMessage, setDeclineMessage] = useState('');
   const [validationError, setValidationError] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
@@ -358,70 +359,94 @@ function LandlordNotifications() {
                   position: 'relative',
                 }}
               >
+                 
                 {/* Top row: Profile image, fromname, and notification time */}
                 <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '10px',
-                    position: 'relative',
-                  }}
-                >
-                  
-                  {/* Colorful circle */}
-                  <Box
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      backgroundColor: getNotificationCircleColor(
-                        notification.status
-                      ),
-                      position: 'absolute',
-                      top: '5px',
-                      left: '8px',
-                    }}
-                  />
-                  <Box display="flex" alignItems="center" marginTop={3}>
-                    <Avatar
-                      alt={notification.from.first_name}
-                      src={notification.from.avatar}
-                      sx={{ marginLeft: '28px', marginRight: '12px' }}
-                    />
-                    <Typography
-                      variant="subtitle1"
-                      fontWeight="bold"
-                      sx={{ marginRight: 'auto' }}
-                    >
-                      {`${notification.from.first_name} ${notification.from.last_name}`}
-                    </Typography>
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      sx={{ marginLeft: { xs: '10px' } }}
-                    >
-                      {getTimeDisplay(notification.created_at)}
-                    </Typography>
-                  </Box>
-                  
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: '5px',
-                      right: '5px',
-                    }}
-                  >
-                    <IconButton
-                      size="small"
-                      aria-label="delete notification"
-                      onClick={() => handleDelete(notification.id)}
-                      onMouseEnter={(e) => handleMouseEnter(e, red[500])}
-                      onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
+    position: 'relative',
+  }}
+>
+  {notification.type === 'status_change' ? (
+    <Box display="flex" alignItems="center" marginTop={3}>
+      <Avatar
+        alt={'admin'}
+        src={AdminImage}
+        sx={{ marginLeft: '28px', marginRight: '12px' }}
+      />
+      <Typography
+        variant="subtitle1"
+        fontWeight="bold"
+        sx={{ marginRight: 'auto' }}
+      >
+        {`Darak Team`}
+      </Typography>
+      <Typography
+        variant="body"
+        color="textSecondary"
+        sx={{ marginLeft: { xs: '10px' } }}
+      >
+        {getTimeDisplay(notification.created_at)}
+      </Typography>
+    </Box>
+  ) : (
+    <>
+      {/* Colorful circle */}
+      <Box
+        style={{
+          width: '20px',
+          height: '20px',
+          borderRadius: '50%',
+          backgroundColor: getNotificationCircleColor(notification.status),
+          position: 'absolute',
+          top: '5px',
+          left: '8px',
+        }}
+      />
+      <Box display="flex" alignItems="center" marginTop={3}>
+        <Avatar
+          alt={notification.from.first_name}
+          src={notification.from.avatar}
+          sx={{ marginLeft: '28px', marginRight: '12px' }}
+        />
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          sx={{ marginRight: 'auto' }}
+        >
+          {`${notification.from.first_name} ${notification.from.last_name}`}
+        </Typography>
+        <Typography
+          variant="body"
+          color="textSecondary"
+          sx={{ marginLeft: { xs: '10px' } }}
+        >
+          {getTimeDisplay(notification.created_at)}
+        </Typography>
+      </Box>
+    </>
+  )}
+  <Box
+    sx={{
+      position: 'absolute',
+      top: '5px',
+      right: '5px',
+    }}
+  >
+    <IconButton
+      size="small"
+      aria-label="delete notification"
+      onClick={() => handleDelete(notification.id)}
+      onMouseEnter={(e) => handleMouseEnter(e, red[500])}
+      onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
+    >
+      <CloseIcon />
+    </IconButton>
+  </Box>
+</Box>
+
 
                 {/* Second row: Notification message and dates */}
                 <Typography
