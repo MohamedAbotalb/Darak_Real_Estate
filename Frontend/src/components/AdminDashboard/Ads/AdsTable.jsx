@@ -184,6 +184,10 @@ function PropertyTable() {
   const [page, setPage] = useState(1);
   const [filterType, setFilterType] = useState('Accepted');
   const rowsPerPage = 6;
+  const [openAcceptConfirm, setOpenAcceptConfirm] = useState(false);
+  const [openRejectConfirm, setOpenRejectConfirm] = useState(false);
+  const [selectedAcceptId, setSelectedAcceptId] = useState(null);
+  const [selectedRejectId, setSelectedRejectId] = useState(null);
 
   useEffect(() => {
     if (filterType === 'Accepted') {
@@ -251,19 +255,43 @@ function PropertyTable() {
     }
   };
 
-  const handleAccept = async (propertyId) => {
+  const handleOpenAcceptConfirm = (id) => {
+    setSelectedAcceptId(id);
+    setOpenAcceptConfirm(true);
+  };
+
+  const handleOpenRejectConfirm = (id) => {
+    setSelectedRejectId(id);
+    setOpenRejectConfirm(true);
+  };
+
+  const handleCloseAcceptConfirm = () => {
+    setOpenAcceptConfirm(false);
+    setSelectedAcceptId(null);
+  };
+
+  const handleCloseRejectConfirm = () => {
+    setOpenRejectConfirm(false);
+    setSelectedRejectId(null);
+  };
+
+  const handleAccept = async () => {
     try {
-      await dispatch(acceptProperty(propertyId)).unwrap();
+      dispatch(acceptProperty(selectedAcceptId)).unwrap();
       successToast('Property accepted successfully');
+      dispatch(fetchPendingProperties());
+      handleCloseAcceptConfirm();
     } catch (error) {
       errorToast('Failed to accept this property');
     }
   };
 
-  const handleReject = async (propertyId) => {
+  const handleReject = async () => {
     try {
-      await dispatch(rejectProperty(propertyId)).unwrap();
+      dispatch(rejectProperty(selectedRejectId)).unwrap();
       successToast('Property rejected successfully');
+      dispatch(fetchPendingProperties());
+      handleCloseRejectConfirm();
     } catch (error) {
       errorToast('Failed to reject this property');
     }
@@ -332,8 +360,8 @@ function PropertyTable() {
                   <StyledTableCell>Description</StyledTableCell>
                   <StyledTableCell>Rooms</StyledTableCell>
                   <StyledTableCell>Bathrooms</StyledTableCell>
-                  <StyledTableCell>Area(Sqm)</StyledTableCell>
-                  <StyledTableCell>Price(EGP)</StyledTableCell>
+                  <StyledTableCell>Area (Sqm)</StyledTableCell>
+                  <StyledTableCell>Price (EGP)</StyledTableCell>
                   <StyledTableCell>Actions</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -370,11 +398,11 @@ function PropertyTable() {
                         <>
                           <AcceptPropertyButton
                             propertyId={property.id}
-                            onAccept={handleAccept}
+                            onAccept={handleOpenAcceptConfirm}
                           />
                           <RejectPropertyButton
                             propertyId={property.id}
-                            onReject={handleReject}
+                            onReject={handleOpenRejectConfirm}
                           />
                         </>
                       )}
@@ -384,6 +412,7 @@ function PropertyTable() {
               </TableBody>
             </Table>
           </TableContainer>
+          {/* Pagination */}
           <Box display="flex" justifyContent="center" mt={2}>
             <Pagination
               count={Math.ceil(filteredProperties.length / rowsPerPage)}
@@ -394,6 +423,8 @@ function PropertyTable() {
               color="primary"
             />
           </Box>
+
+          {/* Description Dialog */}
           <Dialog
             open={openDescriptionDialog}
             onClose={handleCloseDescriptionDialog}
@@ -408,12 +439,50 @@ function PropertyTable() {
               </Button>
             </DialogActions>
           </Dialog>
+
+          {/* Delete Confirmation Modal */}
           <DeleteConfirmationModal
             item="Ad"
             isOpen={openConfirm}
             handleClose={handleCloseConfirm}
             handleConfirm={handleDelete}
           />
+
+          {/* Accept Confirmation Dialog */}
+          <Dialog open={openAcceptConfirm} onClose={handleCloseAcceptConfirm}>
+            <DialogTitle>Confirm Accept</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2">
+                Are you sure you want to accept this property?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseAcceptConfirm} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleAccept} color="primary">
+                Accept
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Reject Confirmation Dialog */}
+          <Dialog open={openRejectConfirm} onClose={handleCloseRejectConfirm}>
+            <DialogTitle>Confirm Reject</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2">
+                Are you sure you want to reject this property?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseRejectConfirm} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleReject} color="primary">
+                Reject
+              </Button>
+            </DialogActions>
+          </Dialog>
         </>
       )}
     </>
