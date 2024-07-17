@@ -23,6 +23,11 @@ class AmenityController extends Controller
         return AmenityResource::collection($amenities);
     }
 
+    public function getAvailableAmenities()
+    {
+        $amenities = $this->amenityRepository->getAvailableAmenities();
+        return AmenityResource::collection($amenities);
+    }
     public function store(AmenityRequest $request)
     {
         $amenity = $this->amenityRepository->createAmenity($request->validated());

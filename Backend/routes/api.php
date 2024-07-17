@@ -131,6 +131,7 @@ Route::prefix('dashboard')->group(function () {
 // Amenity Admin Page ROUTE
 Route::prefix('amenities')->group(function () {
     Route::get('/', [AmenityController::class, 'index']);
+    Route::get('/available-amenities', [AmenityController::class, 'getAvailableAmenities']);
     Route::post('/', [AmenityController::class, 'store']);
     Route::put('/availability/{id}', [AmenityController::class, 'updateAvailability']);
     Route::get('/{slug}', [AmenityController::class, 'show']);
