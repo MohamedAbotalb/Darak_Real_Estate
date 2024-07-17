@@ -105,6 +105,7 @@ Route::prefix('properties')->group(function(){
 });
 Route::prefix('property-updates')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [PropertyUpdateController::class, 'index']);
+    Route::get('/{id}', [PropertyUpdateController::class, 'show']);
     Route::post('/accepted/{id}', [PropertyUpdateController::class, 'approve']);
     Route::post('/rejected/{id}', [PropertyUpdateController::class, 'reject']);
 });
