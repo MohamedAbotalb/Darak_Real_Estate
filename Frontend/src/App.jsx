@@ -29,7 +29,7 @@ import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
 import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
-import AddPropertyPage from 'pages/AddProperty';
+import PropertyFormPage from 'pages/PropertyForm';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
@@ -62,7 +62,7 @@ function App() {
             path="add-property"
             element={
               <ProtectedRoute
-                element={<AddPropertyPage />}
+                element={<PropertyFormPage />}
                 roles={['landlord']}
               />
             }
@@ -71,7 +71,7 @@ function App() {
             path="edit-property/:slug"
             element={
               <ProtectedRoute
-                element={<AddPropertyPage />}
+                element={<PropertyFormPage />}
                 roles={['landlord']}
               />
             }
