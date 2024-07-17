@@ -21,18 +21,14 @@ import Loader from 'components/Loader';
 function MyProperties() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const properties = useSelector(
-    (state) => state.userProperties.userProperties
+  const { userProperties, isLoading } = useSelector(
+    (state) => state.userProperties
   );
-  const isLoading = useSelector((state) => state.userProperties.isLoading);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchUserProperties())
-      .unwrap()
-      .then(() => {})
-      .catch(() => {});
+    dispatch(fetchUserProperties()).unwrap();
   }, [dispatch]);
 
   const handleAddProperty = () => {
@@ -84,8 +80,8 @@ function MyProperties() {
           </Button>
         </Box>
         <Grid container spacing={3}>
-          {properties && properties.length > 0 ? (
-            properties.map((property) => (
+          {userProperties && userProperties.length > 0 ? (
+            userProperties.map((property) => (
               <Grid item xs={12} sm={6} md={4} key={property.id}>
                 <PropertyCard
                   property={property}
