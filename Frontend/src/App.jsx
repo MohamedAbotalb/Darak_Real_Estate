@@ -23,11 +23,12 @@ import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
 import RegisterPage from 'pages/Auth/Register';
 import LoginPage from 'pages/Auth/Login';
+import AdminLoginPage from 'pages/Auth/AdminLogin';
 import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
 import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
-import AddPropertyPage from 'components/AddProperty';
+import AddPropertyPage from 'pages/AddProperty';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
@@ -106,6 +107,7 @@ function App() {
         </Route>
 
         {/* authenticated admin dashboard routes */}
+        <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route
           path="/admin"
           element={
