@@ -96,9 +96,9 @@ Route::prefix('properties')->group(function(){
     Route::get('latest-rent',[PropertyController::class,'showLatestRent']);
     Route::get('latest-buy',[PropertyController::class,'showLatestBuy']);
     Route::get('/{slug}',[PropertyController::class,'show']);
+    Route::put('/{slug}',[PropertyController::class,'update'])->middleware('auth:sanctum');
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
-    Route::put('/{id}',[PropertyController::class,'update'])->middleware('auth:sanctum');
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
     Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
 });
