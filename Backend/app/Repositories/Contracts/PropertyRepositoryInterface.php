@@ -13,7 +13,7 @@ interface PropertyRepositoryInterface
     public function createProperty(array $data);
     public function searchProperties(array $filters);
     public function showUserProperties(int $id);
-    public function updateProperty(array $data, int $id);
+    public function updateProperty(array $data, string $slug);
     public function delete(int $id);
 
 }

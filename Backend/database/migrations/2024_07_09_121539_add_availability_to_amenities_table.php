@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('amenities', function (Blueprint $table) {
-            $table->enum('availability', ['available', 'unavailable'])->default('unavailable');
+            $table->enum('availability', ['available', 'unavailable'])->default('available');
         });
     }
 

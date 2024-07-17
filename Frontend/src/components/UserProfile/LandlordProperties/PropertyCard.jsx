@@ -8,7 +8,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-// import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import defaultImage from 'assets/images/image1.jpg';
 
@@ -72,9 +72,9 @@ function PropertyCard({ property, onEdit, onDelete }) {
     <StyledCard>
       <SliderWrapper>
         <ActionButtonWrapper>
-          {/* <IconButton size="small" onClick={onEdit}>
+          <IconButton size="small" onClick={onEdit}>
             <EditIcon color="primary" />
-          </IconButton> */}
+          </IconButton>
           <IconButton size="small" onClick={onDelete}>
             <DeleteIcon color="error" />
           </IconButton>
@@ -90,7 +90,11 @@ function PropertyCard({ property, onEdit, onDelete }) {
         >
           {images.length > 0 ? (
             images.map((img) => (
-              <StyledImage key={img.id} src={img.image} alt={property.title} />
+              <StyledImage
+                key={img.id}
+                src={`http://127.0.0.1:8000/${img.image}`}
+                alt={property.title}
+              />
             ))
           ) : (
             <StyledImage src={defaultImage} alt={property.title} />
