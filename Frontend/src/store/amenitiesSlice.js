@@ -4,6 +4,7 @@ import {
   addAmenity as addAmenityService,
   deleteAmenity as deleteAmenityService,
   updateAmenity as updateAmenityService,
+  updateAvailability as updateAvailabilityService,
 } from '../services/amenity';
 
 export const fetchAmenities = createAsyncThunk(
@@ -34,6 +35,17 @@ export const deleteAmenity = createAsyncThunk(
     return slug;
   }
 );
+
+export const updateAvailability = createAsyncThunk(
+  'amenities/updateAvailability',
+  async ({ id, availability }) => {
+    await updateAvailabilityService(id, availability);
+    return { id, availability };
+  }
+);
+
+// Exporting updateAmenityAvailability function
+export const updateAmenityAvailability = updateAvailability;
 
 const amenitiesSlice = createSlice({
   name: 'amenities',
@@ -70,6 +82,14 @@ const amenitiesSlice = createSlice({
         );
         if (index !== -1) {
           state.amenities[index] = action.payload;
+        }
+      })
+      .addCase(updateAvailability.fulfilled, (state, action) => {
+        const index = state.amenities.findIndex(
+          (amenity) => amenity.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.amenities[index].availability = action.payload.availability;
         }
       });
   },

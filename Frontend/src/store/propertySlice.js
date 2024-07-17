@@ -9,6 +9,14 @@ export const fetchProperty = createAsyncThunk(
   }
 );
 
+export const fetchProperties = createAsyncThunk(
+  'property/fetchProperties',
+  async () => {
+    const response = await axios.get('/properties');
+    return response.data.data;
+  }
+);
+
 export const addProperty = createAsyncThunk(
   'property/addProperty',
   async (propertyData, { rejectWithValue }) => {
@@ -25,7 +33,30 @@ export const addProperty = createAsyncThunk(
   }
 );
 
-// Update existing property
+export const deleteProperty = createAsyncThunk(
+  'properties/deleteProperty',
+  async (id) => {
+    await axios.delete(`/properties/${id}`);
+    return id;
+  }
+);
+
+export const fetchAcceptedProperties = createAsyncThunk(
+  'property/fetchAcceptedProperties',
+  async () => {
+    const response = await axios.get('/properties/accepted');
+    return response.data.data;
+  }
+);
+
+export const fetchPendingProperties = createAsyncThunk(
+  'property/fetchPendingProperties',
+  async () => {
+    const response = await axios.get('/properties/pending');
+    return response.data.data;
+  }
+);
+
 export const updateProperty = createAsyncThunk(
   'property/updateProperty',
   async ({ slug, propertyData }, { rejectWithValue }) => {
@@ -42,10 +73,31 @@ export const updateProperty = createAsyncThunk(
   }
 );
 
+export const acceptProperty = createAsyncThunk(
+  'property/acceptProperty',
+  async (propertyId) => {
+    const response = await axios.put(`/properties/${propertyId}/status`, {
+      status: 'accepted',
+    });
+    return response.data.data;
+  }
+);
+
+export const rejectProperty = createAsyncThunk(
+  'property/rejectProperty',
+  async (propertyId) => {
+    const response = await axios.put(`/properties/${propertyId}/status`, {
+      status: 'rejected',
+    });
+    return response.data.data;
+  }
+);
+
 const propertySlice = createSlice({
   name: 'property',
   initialState: {
     property: {},
+    properties: [],
     status: 'idle',
     error: null,
   },
@@ -69,6 +121,44 @@ const propertySlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
+      .addCase(fetchProperties.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchProperties.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = Array.isArray(action.payload)
+          ? action.payload
+          : Object.values(action.payload);
+        state.error = null;
+      })
+      .addCase(fetchProperties.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchAcceptedProperties.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAcceptedProperties.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchAcceptedProperties.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchPendingProperties.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPendingProperties.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchPendingProperties.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
       .addCase(addProperty.pending, (state) => {
         state.status = 'loading';
       })
@@ -81,7 +171,11 @@ const propertySlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      // Handle update property
+      .addCase(deleteProperty.fulfilled, (state, action) => {
+        state.properties = state.properties.filter(
+          (property) => property.id !== action.payload
+        );
+      })
       .addCase(updateProperty.pending, (state) => {
         state.status = 'loading';
       })
@@ -93,9 +187,28 @@ const propertySlice = createSlice({
       .addCase(updateProperty.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(acceptProperty.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = state.properties.map((property) =>
+          property.id === action.payload.id ? action.payload : property
+        );
+      })
+      .addCase(acceptProperty.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(rejectProperty.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.properties = state.properties.map((property) =>
+          property.id === action.payload.id ? action.payload : property
+        );
+      })
+      .addCase(rejectProperty.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });
-
 export const { clearState } = propertySlice.actions;
 export default propertySlice.reducer;

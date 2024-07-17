@@ -18,6 +18,7 @@ class AmenityResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'availability'=> $this->availability
         ];
     }
 }

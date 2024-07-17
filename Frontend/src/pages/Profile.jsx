@@ -216,6 +216,7 @@ function Profile() {
             new_password: newPassword,
           })
         );
+
         toast.success('Password changed successfully');
       } else if (editField === 'Phone') {
         await dispatch(updatePhone({ phone_number: `+2${phone}` }));

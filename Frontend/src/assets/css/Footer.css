@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #2b3d4f; /* Background color */
+  background-color: #2b3d4f;
   color: #cdd0d8;
 }
 
@@ -35,28 +35,28 @@
 
 .subscription-input {
   flex: 1;
-  background-color: #fff; /* Input field background color */
+  background-color: #fff;
 }
 
 .subscription-input:hover {
-  color: #fff; /* Input field background color */
+  color: #fff;
 }
 
 .subscription-input .MuiOutlinedInput-notchedOutline {
-  border-color: #bdbdbd; /* Input field outline color */
+  border-color: #bdbdbd;
 }
 
 .subscribe-button {
   height: 40px;
-  color: #fff; /* Text color of the button */
+  color: #fff;
 }
 
 .subscribe-button:hover {
-  background-color: #1976d2; /* Background color on hover */
+  background-color: #1976d2;
 }
 
 .footer-note {
   margin-top: 20px;
   text-align: center;
-  color: #fff; /* Text color */
+  color: #fff;
 }

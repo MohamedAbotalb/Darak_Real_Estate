@@ -21,8 +21,7 @@ class PropertyController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->query('perPage', 6);
-        $properties = $this->propertyRepository->getAllProperties($perPage);
+        $properties = $this->propertyRepository->getAllProperties();
         return PropertyResource::collection($properties);
     }
 
@@ -32,27 +31,52 @@ class PropertyController extends Controller
         return response()->json(['message' => 'Property fetched successfully', 'data' => $property], 200);
     }
 
-    public function showLatestRent($property_type_id)
+    public function showLatestRent()
     {
-        return $this->showLatestProperties($property_type_id, 'rent');
+        return $this->showLatestProperties('rent');
     }
 
-    public function showLatestBuy($property_type_id)
+    public function showLatestBuy()
     {
-        return $this->showLatestProperties($property_type_id, 'buy');
+        return $this->showLatestProperties('buy');
     }
 
-    private function showLatestProperties($property_type_id, $listing_type)
+    private function showLatestProperties($listing_type)
     {
-        $latestProperties = $this->propertyRepository->getLatestProperties($property_type_id, $listing_type);
+        $latestProperties = $this->propertyRepository->getLatestProperties($listing_type);
 
         if ($latestProperties->isEmpty()) {
-            return response()->json(['message' => 'No properties found for ' . $listing_type . ' in this category'], 404);
+            return response()->json(['message' => 'No properties found for ' . $listing_type ], 404);
         }
 
         return response()->json(['message' => 'Latest ' . $listing_type . ' properties fetched successfully', 'properties' => PropertyResource::collection($latestProperties)], 200);
     }
+    public function showAcceptedProperties()
+    {
+        $properties = $this->propertyRepository->getAcceptedProperties();
+        if (!$properties) {
+            return response()->json(['message' => 'No accepted properties found.'], 404);
+        }
+        return PropertyResource::collection($properties);
+    }
+    public function showpendingProperties()
+    {
+        $properties = $this->propertyRepository->getPendingProperties();
+        if (!$properties) {
+            return response()->json(['message' => 'No accepted properties found.'], 404);
+        }
+        return PropertyResource::collection($properties);
+    }
+    public function changePropertyStatus(Request $request, $propertyId)
+    {
+        $status = $request->input('status');
 
+        $updatedProperty = $this->propertyRepository->updateStatus($propertyId, $status);
+        if (!$updatedProperty) {
+            return response()->json(['message' => 'Property not found', 'property' => $updatedProperty]);
+        }
+        return response()->json(['message' => 'Property status updated successfully.', 'property' => $updatedProperty]);
+    }
     public function store(StorePropertyRequest $request)
     {
         try {
@@ -65,7 +89,7 @@ class PropertyController extends Controller
 
     public function search(Request $request)
     {
-        $filters = $request->only(['property_type', 'listing_type', 'city','num_of_rooms','num_of_bathrooms','min_price','max_price','amenities']);
+        $filters = $request->only(['property_type', 'listing_type', 'city', 'num_of_rooms', 'num_of_bathrooms', 'min_price', 'max_price', 'amenities']);
         $properties = $this->propertyRepository->searchProperties($filters);
 
         if ($properties->isEmpty()) {
@@ -74,32 +98,30 @@ class PropertyController extends Controller
 
         return response()->json(['data' => PropertyResource::collection($properties)]);
     }
-    public function showUserProperties(){
-        $properties=$this->propertyRepository->showUserProperties(Auth::id());
+    public function showUserProperties()
+    {
+        $properties = $this->propertyRepository->showUserProperties(Auth::id());
         if ($properties->isEmpty()) {
             return response()->json(['message' => 'No Result found'], 404);
         }
         return response()->json(['data' => PropertyResource::collection($properties)]);
-
     }
-    public function update(UpdatePropertyRequest $request, $slug)
+    public function update(UpdatePropertyRequest $request, $id)
     {
-        try {
-            $validatedData = $request->validated(); 
     
-            $property = $this->propertyRepository->updateProperty($validatedData, $slug);
-    
+            $validatedData = $request->validated();
+            $property = $this->propertyRepository->updateProperty($validatedData, $id);
+            if(!$property){ 
+                return response()->json(['message' => 'Property or admin not found'], 400); 
+            }
             return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update property', 'error' => $e->getMessage()], 500);
-        }
     }
-    public function deleteProperty($propertyId){
-        $deleted=$this->propertyRepository->delete($propertyId);
-        if($deleted){
+    public function deleteProperty($propertyId)
+    {
+        $deleted = $this->propertyRepository->delete($propertyId);
+        if ($deleted) {
             return response()->json(['message' => 'property deleted successfuly'], 200);
-        }
-        else{
+        } else {
             return response()->json(['message' => 'property not found'], 200);
         }
     }

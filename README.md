@@ -23,6 +23,7 @@ The Real Estate E-Commerce platform offers three views: Landlord, Renter, and Ad
 - User Management: Manage users and there reviews.
 - Property types Mangemnt: Crud operations for manage Categories.
 - Report Management: take actions on the reports that submitted by renters
+- Property Approval : accept or reject (add , edit) properties requests
 
 <h2>Technologies Used</h2>
 <h4>Backend:</h4>

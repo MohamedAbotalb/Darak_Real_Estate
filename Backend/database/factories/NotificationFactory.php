@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,10 +19,11 @@ class NotificationFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->randomElement(User::where('role', 'user')->pluck('id')->toArray()),
-            'landlord_id' => $this->faker->randomElement(User::where('role', 'landlord')->pluck('id')->toArray()),
+            'from_user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'to_user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
+            'property_id'=>Property::pluck('id')->random(),
             'message' => $this->faker->sentence(),
-            'type' => $this->faker->randomElement(['request', 'confirmation', 'cancelation']),
+            'type' => $this->faker->randomElement(['request','confirmation','cancelation','property_request','status_change']),
             'date' => $this->faker->dateTime(),
         ];
     }

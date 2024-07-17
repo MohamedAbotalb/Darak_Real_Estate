@@ -11,7 +11,7 @@ class Property extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['title', 'slug', 'description', 'num_of_rooms', 'num_of_bathrooms', 'area', 'price', 'location_id', 'property_type_id', 'user_id', 'availability', 'listing_type'];
+    protected $fillable = ['title', 'slug', 'description', 'num_of_rooms', 'num_of_bathrooms','status', 'area', 'price', 'location_id', 'property_type_id', 'user_id', 'availability', 'listing_type'];
     protected $dates=['deleted_at'];
     public function location()
     {
