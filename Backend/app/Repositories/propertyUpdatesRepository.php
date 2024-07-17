@@ -25,6 +25,18 @@ class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
 
         return $pendingUpdates;
     }
+    public function show($id)
+    {
+        $propertyUpdate = PropertyUpdate::where('status', 'pending')
+            ->with('property')
+            ->find($id);
+
+        if (!$propertyUpdate) {
+            return null;
+        }
+
+        return $propertyUpdate;
+    }
     public function approvePropertyUpdate(int $propertyUpdateId)
     {
         $propertyUpdate = PropertyUpdate::find($propertyUpdateId);
@@ -51,24 +63,23 @@ class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
             'date' => now(),
         ]);
         $tourDates = TourDate::where('approved', true)
-        ->where('date', '>', now())
-        ->whereHas('tour', function ($query) use ($property) {
-            $query->where('property_id', $property->id);
-        })
-        ->get();
+            ->where('date', '>', now())
+            ->whereHas('tour', function ($query) use ($property) {
+                $query->where('property_id', $property->id);
+            })
+            ->get();
 
-    foreach ($tourDates as $tourDate) {
-        $user = $tourDate->tour->user;
-        Notification::create([
-            'from_user_id' => Auth::id(),
-            'to_user_id' => $user->id,
-            'property_id' => $property->id,
-            'message' => "Hello $user->first_name, the property '{$property->title}' you requested a tour for has been updated.",
-            'type' => 'tour_property_update',
-            'date' => now(),
-        ]);
-        Mail::to($user->email)->send(new TourPropertyUpdateMail($property, $user));
-
+        foreach ($tourDates as $tourDate) {
+            $user = $tourDate->tour->user;
+            Notification::create([
+                'from_user_id' => Auth::id(),
+                'to_user_id' => $user->id,
+                'property_id' => $property->id,
+                'message' => "Hello $user->first_name, the property '{$property->title}' you requested a tour for has been updated.",
+                'type' => 'tour_property_update',
+                'date' => now(),
+            ]);
+            Mail::to($user->email)->send(new TourPropertyUpdateMail($property, $user));
         }
         return $property;
     }
