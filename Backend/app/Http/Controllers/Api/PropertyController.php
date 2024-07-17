@@ -59,7 +59,7 @@ class PropertyController extends Controller
         }
         return PropertyResource::collection($properties);
     }
-    public function showpendingProperties()
+    public function showPendingProperties()
     {
         $properties = $this->propertyRepository->getPendingProperties();
         if (!$properties) {
@@ -106,16 +106,16 @@ class PropertyController extends Controller
         }
         return response()->json(['data' => PropertyResource::collection($properties)]);
     }
-    public function update(UpdatePropertyRequest $request, $id)
+    public function update(UpdatePropertyRequest $request, $slug)
     {
-    
-            $validatedData = $request->validated();
-            $property = $this->propertyRepository->updateProperty($validatedData, $id);
-            if(!$property){ 
-                return response()->json(['message' => 'Property or admin not found'], 400); 
-            }
-            return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
+        $validatedData = $request->validated();
+        $property = $this->propertyRepository->updateProperty($validatedData, $slug);
+        if(!$property){ 
+            return response()->json(['message' => 'Property or admin not found'], 400); 
+        }
+        return response()->json(['message' => 'Property updated successfully', 'data' => new PropertyResource($property)], 200);
     }
+
     public function deleteProperty($propertyId)
     {
         $deleted = $this->propertyRepository->delete($propertyId);
