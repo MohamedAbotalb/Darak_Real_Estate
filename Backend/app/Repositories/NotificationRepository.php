@@ -15,7 +15,7 @@ class NotificationRepository implements NotificationRepositoryInterface
         if ($landlord && $landlord->role === 'landlord') {
             return Notification::where('to_user_id', $landlordId)
                 ->whereIn('type', ['request','deleted-tour','status_change','property_update_approved','property_update_rejected'])
-                ->with(['fromUser', 'toUser', 'tour.tourDates'])
+                ->with(['fromUser', 'toUser', 'tour.tourDates','property'])
                 ->get();
         }
 
@@ -29,7 +29,7 @@ class NotificationRepository implements NotificationRepositoryInterface
         if ($user && $user->role === 'user') {
             return Notification::where('to_user_id', $userId)
                 ->whereIn('type', ['confirmation', 'cancelation','tour_property_update'])
-                ->with(['fromUser', 'toUser', 'tour.tourDates'])
+                ->with(['fromUser', 'toUser', 'tour.tourDates','property'])
                 ->get();
         }
 
