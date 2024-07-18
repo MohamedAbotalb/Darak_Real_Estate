@@ -22,7 +22,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { FavoriteBorder } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { logout, setCredentials } from 'store/Auth/authSlice';
@@ -122,7 +122,7 @@ function Header() {
         >
           <img
             src={AdminImage}
-            alt="RentEZ"
+            alt="Darak"
             style={{
               height: 'auto',
               maxHeight: '50px',
@@ -408,20 +408,6 @@ function Header() {
               <MenuItem onClick={handleClose} component={Link} to="/profile">
                 {t('Profile')}
               </MenuItem>
-              {user?.role === 'user' && (
-                <MenuItem onClick={handleClose} component={Link} to="/mytours">
-                  {t('My Tours')}
-                </MenuItem>
-              )}
-              {user?.role === 'landlord' && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/myproperties"
-                >
-                  {t('My Properties')}
-                </MenuItem>
-              )}
               <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
             </Menu>
           </Box>
