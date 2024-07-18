@@ -206,7 +206,7 @@ class PropertyRepository implements PropertyRepositoryInterface
 
     public function showUserProperties(int $id)
     {
-        return Property::where('user_id', $id)->where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
+        return Property::where('user_id', $id)->whereIn('status',['accepted','pending'])->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
     public function updateProperty(array $data, string $slug)
     {
