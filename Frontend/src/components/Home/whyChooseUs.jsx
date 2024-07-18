@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';

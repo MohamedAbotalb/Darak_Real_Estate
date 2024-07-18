@@ -49,6 +49,18 @@ const ActionButtonWrapper = styled(Box)({
   gap: '4px',
 });
 
+const StatusLabel = styled(Box)(({ status }) => ({
+  position: 'absolute',
+  top: '8px',
+  left: '8px',
+  zIndex: 1,
+  backgroundColor: status === 'accepted' ? 'green' : 'orange',
+  color: 'white',
+  padding: '4px 8px',
+  borderRadius: '4px',
+  fontWeight: 'bold',
+}));
+
 const CardLink = styled(Link)({
   textDecoration: 'none',
   color: 'inherit',
@@ -73,6 +85,9 @@ function PropertyCard({ property, onEdit, onDelete }) {
   return (
     <StyledCard>
       <SliderWrapper>
+        <StatusLabel status={property.status}>
+          {property.status === 'accepted' ? t('Approved') : t('Pending')}
+        </StatusLabel>
         <ActionButtonWrapper>
           <IconButton size="small" onClick={onEdit}>
             <EditIcon color="primary" />
@@ -174,6 +189,7 @@ PropertyCard.propTypes = {
         image: PropTypes.string.isRequired,
       })
     ),
+    status: PropTypes.string.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
