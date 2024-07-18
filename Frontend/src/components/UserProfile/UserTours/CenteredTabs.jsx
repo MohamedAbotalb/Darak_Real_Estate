@@ -4,12 +4,14 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchToursByStatus } from 'store/tourSlice';
+import { useTranslation } from 'react-i18next';
 import TabPanel from './TabPanel';
 import DeclinedTours from './DeclinedTours';
 import PendingTours from './PendingTours';
 import ApprovedTours from './ApprovedTours';
 
 function CenteredTabs() {
+  const { t } = useTranslation();
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const { tours, isLoading } = useSelector((state) => state.tours);
@@ -26,9 +28,9 @@ function CenteredTabs() {
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <Tabs value={value} onChange={handleChange} centered>
-        <Tab label="Declined Tours" />
-        <Tab label="Pending Tours" />
-        <Tab label="Approved Tours" />
+        <Tab label={t('Declined Tours')} />
+        <Tab label={t('Pending Tours')} />
+        <Tab label={t('Approved Tours')} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <DeclinedTours tours={tours} isLoading={isLoading} />
