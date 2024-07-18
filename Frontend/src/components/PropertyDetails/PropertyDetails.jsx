@@ -23,6 +23,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { useTranslation } from 'react-i18next';
 import { fetchProperty } from 'store/propertyDetailsSlice';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
@@ -37,6 +38,7 @@ import ReviewList from 'components/AdminDashboard/ReviewList';
 function PropertyDetails() {
   const { slug } = useParams();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const { property, status } = useSelector((state) => state.property);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -96,7 +98,7 @@ function PropertyDetails() {
         display="flex"
         alignItems="center"
       >
-        <Typography variant="h5">No property found</Typography>
+        <Typography variant="h5">{t('No property found')}</Typography>
       </Box>
     );
 
@@ -136,7 +138,7 @@ function PropertyDetails() {
                     }}
                     onClick={handleImageSliderOpen}
                   >
-                    Show All Images
+                    {t('Show All Images')}
                   </Button>
                 </Box>
               )}
@@ -209,30 +211,30 @@ function PropertyDetails() {
                         >
                           {property.price
                             ? property.price.toLocaleString()
-                            : 'Price not available'}{' '}
+                            : t('Price not available')}{' '}
                           {property.listing_type === 'buy'
-                            ? 'EGP'
-                            : 'EGP/month'}
+                            ? t('EGP')
+                            : t('EGP/month')}
                         </Typography>
                       </Grid>
                       <Grid item display="flex" alignItems="center">
                         <BedIcon color="primary" />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
-                          {property.num_of_rooms} Bedrooms
+                          {property.num_of_rooms} {t('Bedrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
                         <BathtubIcon color="primary" />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
-                          {property.num_of_bathrooms} Bathrooms
+                          {property.num_of_bathrooms} {t('Bathrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
                         <SquareFootIcon color="primary" />
                         <Typography variant="body1" sx={{ ml: 1 }}>
-                          {property.area} sqm
+                          {property.area} {t('sqm')}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -252,7 +254,7 @@ function PropertyDetails() {
                           color="textSecondary"
                           sx={{ fontSize: 16 }}
                         >
-                          Property Type:
+                          {t('Property Type')}:
                           <span style={{ fontWeight: 'bold' }}>
                             {property.property_type.name}
                           </span>
@@ -266,7 +268,7 @@ function PropertyDetails() {
                     {property.location && (
                       <>
                         <Typography variant="h6" gutterBottom>
-                          Location
+                          {t('Location')}
                         </Typography>
                         <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
                           <LocationOnIcon color="primary" sx={{ mr: 2 }} />
@@ -285,7 +287,7 @@ function PropertyDetails() {
 
                     {/* Description */}
                     <Typography variant="h6" gutterBottom>
-                      Description
+                      {t('Description')}
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2, width: '60%' }}>
                       {property.description}
@@ -297,7 +299,7 @@ function PropertyDetails() {
                     {property.amenities && (
                       <>
                         <Typography variant="h6" gutterBottom>
-                          Amenities
+                          {t('Amenities')}
                         </Typography>
                         <Box
                           display="flex"
@@ -324,7 +326,6 @@ function PropertyDetails() {
                         </Box>
                       </>
                     )}
-
                     {/* review */}
                     {/* {property?.listing_type === 'rent' &&
                       user?.role === 'user' && (
@@ -363,7 +364,7 @@ function PropertyDetails() {
                   <Card>
                     <CardContent>
                       <Typography variant="h6" align="center" gutterBottom>
-                        Managing Landlord
+                        {t('Managing Landlord')}
                       </Typography>
                       <Box
                         display="flex"
@@ -425,7 +426,7 @@ function PropertyDetails() {
                           property.user?.id === user?.id
                         }
                       >
-                        Request a tour
+                        {t('Request a tour')}
                       </Button>
                       <Button
                         variant="outlined"
@@ -436,7 +437,7 @@ function PropertyDetails() {
                           property.user?.id === user?.id
                         }
                       >
-                        Report Listing
+                        {t('Report Listing')}
                       </Button>
                       {user && <AddToWishlistButton property={property} />}
                     </>

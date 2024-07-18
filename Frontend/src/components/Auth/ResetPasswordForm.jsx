@@ -21,9 +21,11 @@ import {
 import { clearState } from 'store/Auth/authSlice';
 import { resetPassword } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
+import { useTranslation } from 'react-i18next';
 import ResetPasswordSchema from 'components/Auth/Validation/ResetPasswordSchema';
 
 function ResetPasswordForm() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
@@ -68,12 +70,12 @@ function ResetPasswordForm() {
   return (
     <Container sx={{ my: 10 }}>
       <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }} gutterBottom>
-        Reset Your Password
+        {t('Reset Your Password')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box mb={2}>
           <TextField
-            label="Password"
+            label={t('Password')}
             {...register('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -97,7 +99,7 @@ function ResetPasswordForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Confirm Password"
+            label={t('Confirm Password')}
             {...register('passwordConfirmation')}
             type={showConfirmPassword ? 'text' : 'password'}
             fullWidth
@@ -127,7 +129,7 @@ function ResetPasswordForm() {
           sx={{ height: 40 }}
           disabled={isLoading}
         >
-          Submit
+          {t('Submit')}
         </Button>
       </form>
     </Container>

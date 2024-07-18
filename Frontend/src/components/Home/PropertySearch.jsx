@@ -8,6 +8,7 @@ import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -47,6 +48,7 @@ const SearchButton = styled(IconButton)({
 });
 
 function PropertySearch() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
@@ -95,10 +97,10 @@ function PropertySearch() {
               displayEmpty
             >
               <MenuItem value="" disabled>
-                <em>Rent, Buy</em>
+                <em>{t('Rent, Buy')}</em>
               </MenuItem>
-              <MenuItem value="rent">Rent</MenuItem>
-              <MenuItem value="buy">Buy</MenuItem>
+              <MenuItem value="rent">{t('Rent')}</MenuItem>
+              <MenuItem value="buy">{t('Buy')}</MenuItem>
             </Select>
           </SearchFormControl>
 
@@ -109,7 +111,7 @@ function PropertySearch() {
               displayEmpty
             >
               <MenuItem value="" disabled>
-                <em>Location</em>
+                <em>{t('Location')}</em>
               </MenuItem>
               {locations.map((location) => (
                 <MenuItem key={location.id} value={location.city}>
@@ -126,7 +128,7 @@ function PropertySearch() {
               displayEmpty
             >
               <MenuItem value="" disabled>
-                <em>Property Type</em>
+                <em>{t('Property Type')}</em>
               </MenuItem>
               {propertyTypes.map((type) => (
                 <MenuItem key={type.id} value={type.id}>

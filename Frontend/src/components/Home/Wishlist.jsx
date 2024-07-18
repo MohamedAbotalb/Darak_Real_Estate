@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from 'components/Home/PropertyCard';
 import Loader from 'components/Loader';
@@ -16,6 +17,7 @@ import Loader from 'components/Loader';
 const ITEMS_PER_PAGE = 6;
 
 function Wishlist() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.list);
   const status = useSelector((state) => state.wishlist.status);
@@ -69,17 +71,17 @@ function Wishlist() {
         mb={4}
       >
         <Typography variant="h5" mb={{ xs: 2, sm: 0 }}>
-          Saved Wishlist
+          {t('Saved Wishlist')}
         </Typography>
         <Box display="flex" justifyContent="center" alignItems="center">
           <Typography variant="h6" mr={2}>
-            Category
+            {t('Category')}
           </Typography>
           <FormControl variant="outlined" margin="normal" sx={{ width: 150 }}>
             <Select value={filter} onChange={handleFilterChange}>
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="rent">Rent</MenuItem>
-              <MenuItem value="buy">Buy</MenuItem>
+              <MenuItem value="all">{t('All')}</MenuItem>
+              <MenuItem value="rent">{t('Rent')}</MenuItem>
+              <MenuItem value="buy">{t('Buy')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -95,11 +97,12 @@ function Wishlist() {
           textAlign="center"
         >
           <Typography variant="h4" mb={1} color="text.secondary">
-            No Saved Properties
+            {t('No Saved Properties')}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Click on a heart to save a property and all your favorites will
-            appear here.
+            {t(
+              'Click on a heart to save a property and all your favorites will appear here'
+            )}
           </Typography>
         </Box>
       ) : (

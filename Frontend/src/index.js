@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import App from 'App';
 import reduxStore from 'store/index';
 import 'index.css';
+import './i18n';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
