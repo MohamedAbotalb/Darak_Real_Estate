@@ -25,19 +25,20 @@ import moment from 'moment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import Loader from 'components/Loader';
 import SvgIcon from '@mui/material/SvgIcon';
-
+import { styled } from '@mui/system';
 function NotificationDropdown({ role }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const { notifications, status } = useSelector((state) => state.notifications);
+  const AdminImage = 'logo.jpg';
   const NotificationOutlineIcon = () => (
-  <SvgIcon viewBox="0 0 24 24" sx={{ color: '#000'}}>
-    {/* Your SVG path or content here */}
-    <path d="M10 21H14C14 22.1 13.1 23 12 23S10 22.1 10 21M21 19V20H3V19L5 17V11C5 7.9 7 5.2 10 4.3V4C10 2.9 10.9 2 12 2S14 2.9 14 4V4.3C17 5.2 19 7.9 19 11V17L21 19M17 11C17 8.2 14.8 6 12 6S7 8.2 7 11V18H17V11Z" />
-  </SvgIcon>
-);
+    <SvgIcon viewBox="0 0 24 24" sx={{ color: '#000' }}>
+      {/* Your SVG path or content here */}
+      <path d="M10 21H14C14 22.1 13.1 23 12 23S10 22.1 10 21M21 19V20H3V19L5 17V11C5 7.9 7 5.2 10 4.3V4C10 2.9 10.9 2 12 2S14 2.9 14 4V4.3C17 5.2 19 7.9 19 11V17L21 19M17 11C17 8.2 14.8 6 12 6S7 8.2 7 11V18H17V11Z" />
+    </SvgIcon>
+  );
   useEffect(() => {
     if (role === 'user') {
       dispatch(fetchUserNotificationsAsync());
@@ -51,7 +52,7 @@ function NotificationDropdown({ role }) {
   // const lastFourNotifications = sortedNotifications.slice(
   //   Math.max(notifications.length - 4, 0)
   // );
-const lastFourNotifications = sortedNotifications.slice(0, 4);
+  const lastFourNotifications = sortedNotifications.slice(0, 4);
 
   const pendingNotificationsCount =
     role === 'landlord'
@@ -114,17 +115,24 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
     return moment(timestamp).format('MMMM DD, YYYY hh:mm A');
   };
 
+  const CustomBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#ed2128', // Custom color
+    color: '#fff', // Text color
+  },
+}));
+
   return (
     <>
       <IconButton
         aria-label="show notifications"
         color="inherit"
         onClick={handleMenuOpen}
-      sx={{  backgroundColor: 'transparent'}}
+        sx={{ backgroundColor: 'transparent' }}
       >
-        <Badge badgeContent={pendingNotificationsCount} color="error">
-          <NotificationOutlineIcon  />
-        </Badge>
+         <CustomBadge badgeContent={pendingNotificationsCount}>
+      <NotificationOutlineIcon />
+    </CustomBadge>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -245,45 +253,86 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
                         }}
                       >
                         {/* Top row: Profile image, username, and notification time */}
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          {/* Colorful circle */}
-                          <Box
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '50%',
-                              backgroundColor: getNotificationCircleColor(
-                                notification?.status
-                              ),
-                              position: 'absolute',
-                              top: '12px',
-                              left: '12px',
-                            }}
-                          />
-                          <Box display="flex" alignItems="center" marginTop={1}>
-                            <Avatar
-                              alt={notification?.from?.first_name}
-                              src={notification?.from?.avatar}
-                              sx={{ marginLeft: '28px', marginRight: '12px' }}
-                            />
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="bold"
-                              sx={{ marginRight: 'auto' }}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '10px',
+                            position: 'relative',
+                          }}
+                        >
+                          {notification.type === 'status_change' ? (
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              marginTop={3}
                             >
-                              {`${notification?.from?.first_name} ${notification?.from?.last_name}`}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary" sx={{ml:1}}>
-                              {getTimeDisplay(notification?.created_at)}
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              position: 'absolute',
-                              top: '5px',
-                              right: '5px',
-                            }}
-                          />
+                              <Avatar
+                                alt={'admin'}
+                                src={AdminImage}
+                                sx={{ marginLeft: '28px', marginRight: '12px' }}
+                              />
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                sx={{ marginRight: 'auto' }}
+                              >
+                                {`Darak Team`}
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                color="textSecondary"
+                                sx={{ marginLeft: { xs: '10px' } }}
+                              >
+                                {getTimeDisplay(notification.created_at)}
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <>
+                              {/* Colorful circle */}
+                              <Box
+                                style={{
+                                  width: '20px',
+                                  height: '20px',
+                                  borderRadius: '50%',
+                                  backgroundColor: getNotificationCircleColor(
+                                    notification.status
+                                  ),
+                                  position: 'absolute',
+                                  top: '5px',
+                                  left: '8px',
+                                }}
+                              />
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                marginTop={3}
+                              >
+                                <Avatar
+                                  alt={notification.from.first_name}
+                                  src={notification.from.avatar}
+                                  sx={{
+                                    marginLeft: '28px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight="bold"
+                                  sx={{ marginRight: 'auto' }}
+                                >
+                                  {`${notification.from.first_name} ${notification.from.last_name}`}
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  color="textSecondary"
+                                  sx={{ marginLeft: { xs: '10px' } }}
+                                >
+                                  {getTimeDisplay(notification.created_at)}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
                         </Box>
 
                         {/* Second row: Notification message and dates */}
@@ -297,7 +346,8 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
                         >
                           {notification?.message}
                         </Typography>
-
+                           {notification.type !== 'status_change' && (
+                  <>
                         <Box
                           sx={{
                             display: 'flex',
@@ -316,6 +366,7 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
                             alignItems: 'center',
                           }}
                         >
+                          
                           <DateRangeIcon
                             sx={{
                               marginRight: '5px',
@@ -357,6 +408,7 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
                             </Typography>
                           </Box>
                         </Box>
+</>)}
                       </Paper>
                     </Box>
                   )}
@@ -370,9 +422,9 @@ const lastFourNotifications = sortedNotifications.slice(0, 4);
             sx={{
               alignSelf: 'center',
               marginTop: '8px',
-              backgroundColor: '#2C3E50',
+              backgroundColor: '#EE2027',
               '&:hover': {
-                backgroundColor: '#3b536b',
+                backgroundColor: '#ee363c',
               },
             }}
           >

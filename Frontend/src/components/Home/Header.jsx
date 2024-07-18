@@ -5,7 +5,6 @@ import { keyframes } from '@emotion/react';
 import {
   AppBar,
   Toolbar,
-  Typography,
   Button,
   IconButton,
   Box,
@@ -47,8 +46,8 @@ function Header() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
-  const AdminImage = 'logo.jpg';
-const underlineAnimation = keyframes`
+  const AdminImage = 'logo.png';
+  const underlineAnimation = keyframes`
   from {
     width: 0;
   }
@@ -107,39 +106,30 @@ const underlineAnimation = keyframes`
   return (
     <AppBar
       position="fixed"
-      // className="header"
-      sx={{ backgroundColor: '#ffffff' }}
+      sx={{ backgroundColor: '#fff' }}
     >
       <Toolbar>
-        {/* <Typography
-          variant="h4"
-          className="title"
+        <Box
           component={Link}
           to="/"
-          sx={{ color: '#cdd0d8', textDecoration: 'none', marginRight: 3 }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            marginRight: 3,
+            textDecoration: 'none',
+            width:'100px'
+          }}
         >
-          RentEZ
-        </Typography> */}
-         <Box
-    component={Link}
-    to="/"
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      marginRight: 3,
-      textDecoration: 'none',
-    }}
-  >
-    <img
-      src={AdminImage}
-      alt="RentEZ"
-      style={{
-        height: 'auto',
-        maxHeight: '50px', // Adjust the height as per your requirement
-        maxWidth: '100%', // Ensure the image doesn't exceed the container's width
-      }}
-    />
-  </Box>
+          <img
+            src={AdminImage}
+            alt="RentEZ"
+            style={{
+              height: 'auto',
+              maxHeight: '50px', 
+              maxWidth: '100%', 
+            }}
+          />
+        </Box>
 
         <Box sx={{ flexGrow: 1 }} />
         {!isSmallScreen && (
@@ -152,12 +142,9 @@ const underlineAnimation = keyframes`
               color="inherit"
               sx={{
                 fontSize: '1.1rem',
-                color:  '#000' ,
+                color: '#000',
                 textTransform: 'none',
-                // backgroundColor: isActiveLink('/', '')
-                //   ? '#34495E'
-                //   : 'transparent',
-                 backgroundColor: 'transparent',
+                backgroundColor: 'transparent',
                 '&:hover': {
                   backgroundColor: 'transparent',
                   '&::after': {
@@ -170,12 +157,14 @@ const underlineAnimation = keyframes`
                   display: 'block',
                   width: isActiveLink('/', '') ? '100%' : '0',
                   height: '2px',
-                  backgroundColor: '#EE2027',
+                  backgroundColor: '#ed2128',
                   position: 'absolute',
                   bottom: 0,
                   left: 0,
                   transition: 'width 0.3s ease-in-out',
-                  animation: isActiveLink('/', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                  animation: isActiveLink('/', '')
+                    ? `${underlineAnimation} 0.3s forwards`
+                    : 'none',
                 },
                 margin: '0 10px',
               }}
@@ -184,28 +173,7 @@ const underlineAnimation = keyframes`
             </Button>
             {user?.role !== 'landlord' ? (
               <>
-                {/* <Button
-                  component={NavLink}
-                  to="/properties?lt=rent"
-                  isActive={() => isActiveLink('/properties', 'lt=rent')}
-                  color="inherit"
-                  sx={{
-                    fontSize: '1.1rem',
-                    color: isActiveLink('/properties', 'lt=rent')
-                      ? '#60B2F0'
-                      : '#cdd0d8',
-                    textTransform: 'none',
-                    backgroundColor: isActiveLink('/properties', 'lt=rent')
-                      ? '#34495E'
-                      : 'transparent',
-                    '&:hover': {
-                      backgroundColor: '#34495E',
-                    },
-                    margin: '0 10px',
-                  }}
-                >
-                  Rent
-                </Button> */}
+                
                 <Button
                   component={NavLink}
                   to="/properties?lt=rent"
@@ -213,30 +181,34 @@ const underlineAnimation = keyframes`
                   color="inherit"
                   sx={{
                     fontSize: '1.1rem',
-                    color: '#000' ,
+                    color: '#000',
                     textTransform: 'none',
                     backgroundColor: 'transparent',
                     '&:hover': {
-                      backgroundColor: 'transparent', // Remove hover background
+                      backgroundColor: 'transparent', 
                       '&::after': {
                         width: '100%',
                       },
                     },
                     '&:focus': {
-                      backgroundColor: 'transparent', // Remove focus background
+                      backgroundColor: 'transparent',
                     },
                     position: 'relative',
                     '&::after': {
                       content: '""',
                       display: 'block',
-                      width: isActiveLink('/properties', 'lt=rent') ? '100%' : '0',
+                      width: isActiveLink('/properties', 'lt=rent')
+                        ? '100%'
+                        : '0',
                       height: '2px',
-                      backgroundColor: '#EE2027',
+                      backgroundColor: '#ed2128',
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
                       transition: 'width 0.3s ease-in-out',
-                      animation: isActiveLink('/properties', 'lt=rent') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                      animation: isActiveLink('/properties', 'lt=rent')
+                        ? `${underlineAnimation} 0.3s forwards`
+                        : 'none',
                     },
                     margin: '0 10px',
                   }}
@@ -253,30 +225,32 @@ const underlineAnimation = keyframes`
                     color: '#000',
                     textTransform: 'none',
                     backgroundColor: 'transparent',
-                    // backgroundColor: isActiveLink('/properties', 'lt=buy')
-                    //   ? '#34495E'
-                    //   : 'transparent',
+                    
                     '&:hover': {
-                      backgroundColor: 'transparent', // Remove hover background
+                      backgroundColor: 'transparent', 
                       '&::after': {
                         width: '100%',
                       },
                     },
                     '&:focus': {
-                      backgroundColor: 'transparent', // Remove focus background
+                      backgroundColor: 'transparent', 
                     },
                     position: 'relative',
                     '&::after': {
                       content: '""',
                       display: 'block',
-                      width: isActiveLink('/properties', 'lt=buy') ? '100%' : '0',
+                      width: isActiveLink('/properties', 'lt=buy')
+                        ? '100%'
+                        : '0',
                       height: '2px',
-                      backgroundColor: '#EE2027',
+                      backgroundColor: '#ed2128',
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
                       transition: 'width 0.3s ease-in-out',
-                      animation: isActiveLink('/properties', 'lt=buy') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                      animation: isActiveLink('/properties', 'lt=buy')
+                        ? `${underlineAnimation} 0.3s forwards`
+                        : 'none',
                     },
                     margin: '0 10px',
                   }}
@@ -295,15 +269,12 @@ const underlineAnimation = keyframes`
                   color: '#000',
                   textTransform: 'none',
                   backgroundColor: 'transparent',
-                  // backgroundColor: isActiveLink('/myproperties', '')
-                  //   ? '#34495E'
-                  //   : 'transparent',
-
+                  
                   '&:hover': {
-                     backgroundColor: 'transparent', // Remove hover background
+                    backgroundColor: 'transparent', 
                     '&::after': {
-                        width: '100%',
-                      },
+                      width: '100%',
+                    },
                   },
                   position: 'relative',
                   '&::after': {
@@ -311,12 +282,14 @@ const underlineAnimation = keyframes`
                     display: 'block',
                     width: isActiveLink('/myproperties', '') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#EE2027',
+                    backgroundColor: '#ed2128',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
                     transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/myproperties', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                    animation: isActiveLink('/myproperties', '')
+                      ? `${underlineAnimation} 0.3s forwards`
+                      : 'none',
                   },
                   margin: '0 10px',
                 }}
@@ -333,29 +306,29 @@ const underlineAnimation = keyframes`
                 fontSize: '1.1rem',
                 color: '#000',
                 textTransform: 'none',
-                // backgroundColor: isActiveLink('/about', '')
-                //   ? '#34495E'
-                //   : 'transparent',
+                
                 backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
+                  backgroundColor: 'transparent', 
                   '&::after': {
                     width: '100%',
                   },
                 },
-                 position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    display: 'block',
-                    width: isActiveLink('/about', '') ? '100%' : '0',
-                    height: '2px',
-                    backgroundColor: '#EE2027',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
-                  },
+                position: 'relative',
+                '&::after': {
+                  content: '""',
+                  display: 'block',
+                  width: isActiveLink('/about', '') ? '100%' : '0',
+                  height: '2px',
+                  backgroundColor: '#ed2128',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  transition: 'width 0.3s ease-in-out',
+                  animation: isActiveLink('/about', '')
+                    ? `${underlineAnimation} 0.3s forwards`
+                    : 'none',
+                },
                 margin: '0 10px',
               }}
             >
@@ -367,12 +340,12 @@ const underlineAnimation = keyframes`
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {' '}
-            <IconButton color="inherit" >
+            <IconButton color="inherit">
               <NotificationDropdown role={user?.role} />
             </IconButton>
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
-                <FavoriteBorder sx={{ color: '#000' }}/>
+                <FavoriteBorder sx={{ color: '#000' }} />
               </Badge>
             </IconButton>
             <IconButton
@@ -382,7 +355,7 @@ const underlineAnimation = keyframes`
               aria-controls="profile-menu"
               aria-haspopup="true"
             >
-              <AccountCircleIcon sx={{ color: '#EE2027' }}/>
+              <AccountCircleIcon sx={{ color: '#ccc8c8' }} />
             </IconButton>
             <Menu
               id="profile-menu"
@@ -414,9 +387,9 @@ const underlineAnimation = keyframes`
                   textTransform: 'none',
                   fontSize: '1.1rem',
                   '&:hover': {
-                      color:'#fff',
-                      backgroundColor: '#EE2027',
-                    },
+                    color: '#000',
+                    backgroundColor: '#ed2128',
+                  },
                 }}
               >
                 Register
@@ -429,10 +402,10 @@ const underlineAnimation = keyframes`
                   color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
-                   '&:hover': {
-                      color:'#fff',
-                      backgroundColor: '#EE2027',
-                    },
+                  '&:hover': {
+                    color: '#000',
+                    backgroundColor: '#ed2128',
+                  },
                 }}
               >
                 Log in
@@ -442,7 +415,7 @@ const underlineAnimation = keyframes`
         )}
         {isSmallScreen && (
           <IconButton color="inherit" onClick={handleDrawerOpen}>
-            <MenuIcon sx={{color:'#000'}}/>
+            <MenuIcon sx={{ color: '#000' }} />
           </IconButton>
         )}
       </Toolbar>
@@ -457,31 +430,31 @@ const underlineAnimation = keyframes`
             onClick={handleDrawerClose}
             sx={{
               fontSize: '1.1rem',
-              color: '#000',
+              color: '#ed2128',
               textTransform: 'none',
-              // backgroundColor: isActiveLink('/', '')
-              //   ? '#34495E'
-              //   : 'transparent',
+              
               backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
-                  '&::after': {
-                    width: '80%',
-                  },
+              '&:hover': {
+                backgroundColor: 'transparent', 
+                '&::after': {
+                  width: '80%',
                 },
-                 position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    display: 'block',
-                    width: isActiveLink('/about', '') ? '100%' : '0',
-                    height: '2px',
-                    backgroundColor: '#EE2027',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
-                  },
+              },
+              position: 'relative',
+              '&::after': {
+                content: '""',
+                display: 'block',
+                width: isActiveLink('/about', '') ? '100%' : '0',
+                height: '2px',
+                backgroundColor: '#ed2128',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                transition: 'width 0.3s ease-in-out',
+                animation: isActiveLink('/about', '')
+                  ? `${underlineAnimation} 0.3s forwards`
+                  : 'none',
+              },
             }}
           >
             <ListItemText primary="Home" />
@@ -499,28 +472,28 @@ const underlineAnimation = keyframes`
                   fontSize: '1.1rem',
                   color: '#000',
                   textTransform: 'none',
-                  // backgroundColor: isActiveLink('/properties', 'lt=rent')
-                  //   ? '#34495E'
-                  //   : 'transparent',
+                  
                   backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
-                  '&::after': {
-                    width: '80%',
+                  '&:hover': {
+                    backgroundColor: 'transparent', 
+                    '&::after': {
+                      width: '80%',
+                    },
                   },
-                },
-                 position: 'relative',
+                  position: 'relative',
                   '&::after': {
                     content: '""',
                     display: 'block',
                     width: isActiveLink('/about', '') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#EE2027',
+                    backgroundColor: '#ed2128',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
                     transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                    animation: isActiveLink('/about', '')
+                      ? `${underlineAnimation} 0.3s forwards`
+                      : 'none',
                   },
                 }}
               >
@@ -537,28 +510,28 @@ const underlineAnimation = keyframes`
                   fontSize: '1.1rem',
                   color: '#000',
                   textTransform: 'none',
-                  // backgroundColor: isActiveLink('/properties', 'lt=buy')
-                  //   ? '#34495E'
-                  //   : 'transparent',
-                 backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
-                  '&::after': {
-                    width: '80%',
+                  
+                  backgroundColor: 'transparent',
+                  '&:hover': {
+                    backgroundColor: 'transparent', 
+                    '&::after': {
+                      width: '80%',
+                    },
                   },
-                },
-                 position: 'relative',
+                  position: 'relative',
                   '&::after': {
                     content: '""',
                     display: 'block',
                     width: isActiveLink('/about', '') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#EE2027',
+                    backgroundColor: '#ed2128',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
                     transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
+                    animation: isActiveLink('/about', '')
+                      ? `${underlineAnimation} 0.3s forwards`
+                      : 'none',
                   },
                 }}
               >
@@ -577,32 +550,29 @@ const underlineAnimation = keyframes`
                 fontSize: '1.1rem',
                 color: '#000',
                 textTransform: 'none',
-                // backgroundColor: isActiveLink('/myproperties', '')
-                //   ? '#34495E'
-                //   : 'transparent',
-                // '&:hover': {
-                //   backgroundColor: '#34495E',
-                // },
+                
                 backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
+                  backgroundColor: 'transparent', 
                   '&::after': {
                     width: '80%',
                   },
                 },
-                 position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    display: 'block',
-                    width: isActiveLink('/about', '') ? '100%' : '0',
-                    height: '2px',
-                    backgroundColor: '#EE2027',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
-                  },
+                position: 'relative',
+                '&::after': {
+                  content: '""',
+                  display: 'block',
+                  width: isActiveLink('/about', '') ? '100%' : '0',
+                  height: '2px',
+                  backgroundColor: '#ed2128',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  transition: 'width 0.3s ease-in-out',
+                  animation: isActiveLink('/about', '')
+                    ? `${underlineAnimation} 0.3s forwards`
+                    : 'none',
+                },
               }}
             >
               <ListItemText primary="My Properties" />
@@ -619,32 +589,29 @@ const underlineAnimation = keyframes`
               fontSize: '1.1rem',
               color: '#000',
               textTransform: 'none',
-              // backgroundColor: isActiveLink('/about', '')
-              //   ? '#34495E'
-              //   : 'transparent',
-              // '&:hover': {
-              //   backgroundColor: '#34495E',
-              // },
+              
               backgroundColor: 'transparent',
-                '&:hover': {
-                  backgroundColor: 'transparent', // Remove hover background
-                  '&::after': {
-                    width: '80%',
-                  },
+              '&:hover': {
+                backgroundColor: 'transparent',
+                '&::after': {
+                  width: '80%',
                 },
-                 position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    display: 'block',
-                    width: isActiveLink('/about', '') ? '100%' : '0',
-                    height: '2px',
-                    backgroundColor: '#EE2027',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/about', '') ? `${underlineAnimation} 0.3s forwards` : 'none',
-                  },
+              },
+              position: 'relative',
+              '&::after': {
+                content: '""',
+                display: 'block',
+                width: isActiveLink('/about', '') ? '100%' : '0',
+                height: '2px',
+                backgroundColor: '#ed2128',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                transition: 'width 0.3s ease-in-out',
+                animation: isActiveLink('/about', '')
+                  ? `${underlineAnimation} 0.3s forwards`
+                  : 'none',
+              },
             }}
           >
             <ListItemText primary="About" />
@@ -711,10 +678,13 @@ const underlineAnimation = keyframes`
                 component={Link}
                 to="/login"
                 onClick={handleDrawerClose}
-                sx={{ fontSize: '1.1rem','&:hover': {
-                      color:'#fff',
-                      backgroundColor: '#EE2027',
-                    }, }}
+                sx={{
+                  fontSize: '1.1rem',
+                  '&:hover': {
+                    color: '#000',
+                    backgroundColor: '#ed2128',
+                  },
+                }}
               >
                 <ListItemText primary="Login" />
               </ListItem>
@@ -723,12 +693,13 @@ const underlineAnimation = keyframes`
                 component={Link}
                 to="/register"
                 onClick={handleDrawerClose}
-                sx={{ fontSize: '1.1rem',
+                sx={{
+                  fontSize: '1.1rem',
                   '&:hover': {
-                      color:'#fff',
-                      backgroundColor: '#EE2027',
-                    },
-                 }}
+                    color: '#000',
+                    backgroundColor: '#ed2128',
+                  },
+                }}
               >
                 <ListItemText primary="Register" />
               </ListItem>

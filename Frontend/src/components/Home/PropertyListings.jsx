@@ -14,33 +14,33 @@ import { styled } from '@mui/system';
 const StyledSlider = styled(Slider)(({ theme }) => ({
   '.slider-container': {
     width: '100%',
-    maxWidth: '1200px', /* Adjust according to your design */
+    maxWidth: '1200px' ,
     margin: '0 auto',
-    padding: '0 20px', /* Adjust padding to center slides */
-    overflow: 'hidden'
+    padding: '0 20px' ,
+    overflow: 'hidden',
   },
   '.slick-slide': {
-    padding: '0 15px', // Adjust the padding to add space between the cards
+    padding: '0 15px', 
     boxSizing: 'border-box',
-    height: '500px'
+    height: 'auto',
   },
   '.slick-list': {
-    margin: '0 -15px', // Adjust the margin to compensate for the padding
+    margin: '0 -15px', 
   },
   '.slick-prev, .slick-next': {
     zIndex: 1,
-    width: '50px', // Increase width to give some space
-    height: '50px', // Increase height to give some space
+    width: '50px', 
+    height: '50px', 
   },
   '.slick-prev:before, .slick-next:before': {
-    fontSize: '30px', // Adjust the arrow size
-    color: '#2b3d4f', // Adjust the arrow color
+    fontSize: '30px', 
+    color: '#ed2128', 
   },
   '.slick-prev': {
-    left: '-60px', // Adjust position of the left arrow
+    left: '-60px', 
   },
   '.slick-next': {
-    right: '-60px', // Adjust position of the right arrow
+    right: '-60px', 
   },
 }));
 
@@ -48,7 +48,7 @@ function PropertyListings({ type }) {
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);
-
+const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
   useEffect(() => {
     dispatch(fetchWishlist());
   }, [dispatch]);
@@ -87,13 +87,13 @@ function PropertyListings({ type }) {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 3,
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: '0px',
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1130,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
@@ -102,27 +102,36 @@ function PropertyListings({ type }) {
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 800,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
         },
       },
+     
     ],
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} py={4}>
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ color: '#2b3d4f', mb: '0' }}
-        >
-          Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
-        </Typography>
+    // <Container >
+      <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} pt={1.5} pb={4}  mt={5}>
+         <Typography
+      variant="h4"
+      align="center"
+      gutterBottom
+      sx={{ color: '#000', mb: '30px' }}
+    >
+      Latest Properties For{' '}
+      <Typography
+     component="span"
+        variant="inherit"
+       
+        sx={{ color: '#ed2128' }}
+      >
+        {formattedType}
+      </Typography>
+    </Typography>
         {propertiesStatus === 'failed' ? (
           <Typography variant="body1" align="center">
             No properties found for the selected category.
@@ -137,7 +146,7 @@ function PropertyListings({ type }) {
           </StyledSlider>
         )}
       </Box>
-    </Container>
+    // </Container>
   );
 }
 

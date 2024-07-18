@@ -173,7 +173,11 @@ function ReviewSection({ propertyId, propertyTitle }) {
               padding: '2px',
             }}
           >
-            <ReviewForm propertyId={propertyId} ownerId={property.user.id} onReviewAdded={refreshAverageRating} />
+            <ReviewForm
+              propertyId={propertyId}
+              ownerId={property.user.id}
+              onReviewAdded={refreshAverageRating}
+            />
           </Box>
         </DialogTitle>
       </Dialog>

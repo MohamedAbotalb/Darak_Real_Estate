@@ -23,7 +23,7 @@ import {
   Pagination,
   IconButton,
   Paper,
-  TextField
+  TextField,
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
@@ -68,7 +68,7 @@ function LandlordNotifications() {
   const [filter, setFilter] = useState('all');
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
-  const AdminImage='logo.jpg';
+  const AdminImage = 'logo.jpg';
   const [declineMessage, setDeclineMessage] = useState('');
   const [validationError, setValidationError] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
@@ -76,13 +76,13 @@ function LandlordNotifications() {
   const notificationsPerPage = 5;
 
   const predefinedReasons = [
-  "Scheduling conflict",
-  "Property is no longer available",
-  "Unsuitable for the requested tour",
-  "Other"
-];
+    'Scheduling conflict',
+    'Property is no longer available',
+    'Unsuitable for the requested tour',
+    'Other',
+  ];
 
-   useEffect(() => {
+  useEffect(() => {
     if (selectedNotification) {
       setSelectedReason('');
       setCustomReason('');
@@ -104,30 +104,35 @@ function LandlordNotifications() {
     setOpenDeclineConfirmation(true);
   };
 
-  
   const validateMessage = (message) => {
     if (/^\d/.test(message)) {
-      return "Message cannot start with a number.";
+      return 'Message cannot start with a number.';
     }
     if (message.length < 10) {
-      return "Message must be at least 10 characters long.";
+      return 'Message must be at least 10 characters long.';
     }
     return '';
   };
 
-
-     const handleDecline = () => {
-    const error = validateMessage(selectedReason === "Other" ? customReason : selectedReason);
+  const handleDecline = () => {
+    const error = validateMessage(
+      selectedReason === 'Other' ? customReason : selectedReason
+    );
     if (error) {
       setValidationError(error);
       return;
     }
-    
+
     if (selectedNotification) {
       setSubmitting(true);
-      const reason = selectedReason === "Other" ? customReason : selectedReason;
+      const reason = selectedReason === 'Other' ? customReason : selectedReason;
       const fullMessage = `${defaultMessage} ${reason}`;
-      dispatch(declineTourAsync({ tourId: selectedNotification.tour_id, message: fullMessage }))
+      dispatch(
+        declineTourAsync({
+          tourId: selectedNotification.tour_id,
+          message: fullMessage,
+        })
+      )
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
@@ -152,7 +157,7 @@ function LandlordNotifications() {
 
   const handleReasonChange = (e) => {
     setSelectedReason(e.target.value);
-    if (e.target.value !== "Other") {
+    if (e.target.value !== 'Other') {
       setValidationError('');
     }
   };
@@ -167,13 +172,11 @@ function LandlordNotifications() {
     }
   };
 
-
   const handleMessageChange = (e) => {
     const { value } = e.target;
     setDeclineMessage(value);
     setValidationError(validateMessage(value));
   };
-
 
   const handleApproveDate = () => {
     if (selectedNotification && selectedDate) {
@@ -302,17 +305,19 @@ function LandlordNotifications() {
         justifyContent: 'center',
         marginRight: 3,
         marginLeft: 3,
-        // marginTop: '60px',
       }}
     >
-      <Typography variant="h4" gutterBottom>
-        Notifications
-      </Typography>
-      <Divider />
       <Box
-        sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 2,
+        }}
       >
-        <FormControl sx={{ minWidth: 120 }}>
+        <Typography variant="h6" gutterBottom>
+          Notifications
+        </Typography>
+        <FormControl sx={{ minWidth: 150, mt: '2px' }}>
           <InputLabel id="filter-label">Filter</InputLabel>
           <Select
             labelId="filter-label"
@@ -359,94 +364,94 @@ function LandlordNotifications() {
                   position: 'relative',
                 }}
               >
-                 
                 {/* Top row: Profile image, fromname, and notification time */}
                 <Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px',
-    position: 'relative',
-  }}
->
-  {notification.type === 'status_change' ? (
-    <Box display="flex" alignItems="center" marginTop={3}>
-      <Avatar
-        alt={'admin'}
-        src={AdminImage}
-        sx={{ marginLeft: '28px', marginRight: '12px' }}
-      />
-      <Typography
-        variant="subtitle1"
-        fontWeight="bold"
-        sx={{ marginRight: 'auto' }}
-      >
-        {`Darak Team`}
-      </Typography>
-      <Typography
-        variant="body"
-        color="textSecondary"
-        sx={{ marginLeft: { xs: '10px' } }}
-      >
-        {getTimeDisplay(notification.created_at)}
-      </Typography>
-    </Box>
-  ) : (
-    <>
-      {/* Colorful circle */}
-      <Box
-        style={{
-          width: '20px',
-          height: '20px',
-          borderRadius: '50%',
-          backgroundColor: getNotificationCircleColor(notification.status),
-          position: 'absolute',
-          top: '5px',
-          left: '8px',
-        }}
-      />
-      <Box display="flex" alignItems="center" marginTop={3}>
-        <Avatar
-          alt={notification.from.first_name}
-          src={notification.from.avatar}
-          sx={{ marginLeft: '28px', marginRight: '12px' }}
-        />
-        <Typography
-          variant="subtitle1"
-          fontWeight="bold"
-          sx={{ marginRight: 'auto' }}
-        >
-          {`${notification.from.first_name} ${notification.from.last_name}`}
-        </Typography>
-        <Typography
-          variant="body"
-          color="textSecondary"
-          sx={{ marginLeft: { xs: '10px' } }}
-        >
-          {getTimeDisplay(notification.created_at)}
-        </Typography>
-      </Box>
-    </>
-  )}
-  <Box
-    sx={{
-      position: 'absolute',
-      top: '5px',
-      right: '5px',
-    }}
-  >
-    <IconButton
-      size="small"
-      aria-label="delete notification"
-      onClick={() => handleDelete(notification.id)}
-      onMouseEnter={(e) => handleMouseEnter(e, red[500])}
-      onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
-    >
-      <CloseIcon />
-    </IconButton>
-  </Box>
-</Box>
-
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                    position: 'relative',
+                  }}
+                >
+                  {notification.type === 'status_change' ? (
+                    <Box display="flex" alignItems="center" marginTop={3}>
+                      <Avatar
+                        alt={'admin'}
+                        src={AdminImage}
+                        sx={{ marginLeft: '28px', marginRight: '12px' }}
+                      />
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{ marginRight: 'auto' }}
+                      >
+                        {`Darak Team`}
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        sx={{ marginLeft: { xs: '10px' } }}
+                      >
+                        {getTimeDisplay(notification.created_at)}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <>
+                      {/* Colorful circle */}
+                      <Box
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: getNotificationCircleColor(
+                            notification.status
+                          ),
+                          position: 'absolute',
+                          top: '5px',
+                          left: '8px',
+                        }}
+                      />
+                      <Box display="flex" alignItems="center" marginTop={3}>
+                        <Avatar
+                          alt={notification.from.first_name}
+                          src={notification.from.avatar}
+                          sx={{ marginLeft: '28px', marginRight: '12px' }}
+                        />
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ marginRight: 'auto' }}
+                        >
+                          {`${notification.from.first_name} ${notification.from.last_name}`}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          color="textSecondary"
+                          sx={{ marginLeft: { xs: '10px' } }}
+                        >
+                          {getTimeDisplay(notification.created_at)}
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '5px',
+                      right: '5px',
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      aria-label="delete notification"
+                      onClick={() => handleDelete(notification.id)}
+                      onMouseEnter={(e) => handleMouseEnter(e, red[500])}
+                      onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
 
                 {/* Second row: Notification message and dates */}
                 <Typography
@@ -459,101 +464,108 @@ function LandlordNotifications() {
                 >
                   {notification.message}
                 </Typography>
-                  {notification.type !== 'status_change' &&(
-                    <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'column', md: 'row' },
-                    textAlign: { xs: 'center', sm: 'center', md: 'left' },
-                    marginBottom: '8px',
-                    marginLeft: { xs: '0', md: '75px' },
-                    alignItems: 'center',
-                  }}
-                >
-                  <DateRangeIcon
-                    sx={{
-                      marginRight: '5px',
-
-                      color: getNotificationCircleColor(notification.status),
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ display: 'flex', flexWrap: 'wrap' }}
+                {notification.type !== 'status_change' && (
+                  <>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: {
+                          xs: 'column',
+                          sm: 'column',
+                          md: 'row',
+                        },
+                        textAlign: { xs: 'center', sm: 'center', md: 'left' },
+                        marginBottom: '8px',
+                        marginLeft: { xs: '0', md: '75px' },
+                        alignItems: 'center',
+                      }}
                     >
-                      {notification.tour &&
-                        notification.tour.dates.map((date, index) => (
-                          <React.Fragment key={date.id}>
-                            <Typography
-                              variant="body2"
-                              style={{
-                                color:
-                                  date.approved === 1 ? 'green' : 'inherit',
-                                marginLeft: index > 0 ? '10px' : '0px',
-                              }}
-                            >
-                              {moment(date.date).format(
-                                'MMMM DD, YYYY hh:mm A'
-                              )}
-                            </Typography>
-                          </React.Fragment>
-                        ))}
-                    </Typography>
-                  </Box>
-                </Box>
-                {/* Third row: Action buttons */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: {
-                      xs: 'center',
-                      sm: 'center',
-                      md: 'center',
-                    },
-                    alignItems: 'center',
-                    gap: '18px',
-                    marginTop: '5px',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleDeclineConfirmation(notification)}
-                    disabled={notification.status !== 'pending'}
-                    sx={{
-                      backgroundColor: '#B32231',
-                      '&:hover': {
-                        backgroundColor: '#be2736',
-                      },
-                    }}
-                    startIcon={<DeclineIcon />}
-                  >
-                    Decline
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleApprove(notification)}
-                    disabled={notification.status !== 'pending'}
-                    sx={{
-                      backgroundColor: '#187429',
-                      '&:hover': {
-                        backgroundColor: '#1c832f',
-                      },
-                    }}
-                    startIcon={<ApproveIcon />}
-                  >
-                    Approve
-                  </Button>
-                </Box>
-                </>)}
+                      <DateRangeIcon
+                        sx={{
+                          marginRight: '5px',
+
+                          color: getNotificationCircleColor(
+                            notification.status
+                          ),
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          sx={{ display: 'flex', flexWrap: 'wrap' }}
+                        >
+                          {notification.tour &&
+                            notification.tour.dates.map((date, index) => (
+                              <React.Fragment key={date.id}>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    color:
+                                      date.approved === 1 ? 'green' : 'inherit',
+                                    marginLeft: index > 0 ? '10px' : '0px',
+                                  }}
+                                >
+                                  {moment(date.date).format(
+                                    'MMMM DD, YYYY hh:mm A'
+                                  )}
+                                </Typography>
+                              </React.Fragment>
+                            ))}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    {/* Third row: Action buttons */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: {
+                          xs: 'center',
+                          sm: 'center',
+                          md: 'center',
+                        },
+                        alignItems: 'center',
+                        gap: '18px',
+                        marginTop: '5px',
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleDeclineConfirmation(notification)}
+                        disabled={notification.status !== 'pending'}
+                        sx={{
+                          backgroundColor: '#B32231',
+                          '&:hover': {
+                            backgroundColor: '#be2736',
+                          },
+                        }}
+                        startIcon={<DeclineIcon />}
+                      >
+                        Decline
+                      </Button>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleApprove(notification)}
+                        disabled={notification.status !== 'pending'}
+                        sx={{
+                          backgroundColor: '#187429',
+                          '&:hover': {
+                            backgroundColor: '#1c832f',
+                          },
+                        }}
+                        startIcon={<ApproveIcon />}
+                      >
+                        Approve
+                      </Button>
+                    </Box>
+                  </>
+                )}
               </Paper>
             </Box>
           ))}
@@ -607,7 +619,7 @@ function LandlordNotifications() {
         </DialogActions>
       </Dialog>
 
-<Dialog
+      <Dialog
         open={openDeclineConfirmation}
         onClose={() => setOpenDeclineConfirmation(false)}
       >
@@ -630,7 +642,7 @@ function LandlordNotifications() {
                 </MenuItem>
               ))}
             </Select>
-            {selectedReason === "Other" && (
+            {selectedReason === 'Other' && (
               <TextField
                 autoFocus
                 margin="dense"
@@ -643,9 +655,15 @@ function LandlordNotifications() {
                 helperText={validationError}
               />
             )}
-            {validationError && <FormHelperText error>{validationError}</FormHelperText>}
+            {validationError && (
+              <FormHelperText error>{validationError}</FormHelperText>
+            )}
           </FormControl>
-          <Typography variant="body2" color="textSecondary" style={{ marginTop: '8px' }}>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            style={{ marginTop: '8px' }}
+          >
             {defaultMessage}
           </Typography>
         </DialogContent>
@@ -656,7 +674,11 @@ function LandlordNotifications() {
           >
             Cancel
           </Button>
-          <Button onClick={handleDecline} color="error" disabled={submitting || !!validationError}>
+          <Button
+            onClick={handleDecline}
+            color="error"
+            disabled={submitting || !!validationError}
+          >
             Decline
           </Button>
         </DialogActions>

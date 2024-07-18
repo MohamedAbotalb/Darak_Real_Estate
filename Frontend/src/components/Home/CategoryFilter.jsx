@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, ButtonBase } from '@mui/material';
+import { Box, Typography, ButtonBase, Container } from '@mui/material';
 import { styled } from '@mui/system';
 import Slider from 'react-slick';
 import { fetchCategories } from 'store/home/categoriesSlice';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import VillaIcon from '@mui/icons-material/Villa';
@@ -19,8 +19,8 @@ const iconMapping = {
   Villa: <VillaIcon style={{ fontSize: 80 }} />,
   Studio: <StudioIcon style={{ fontSize: 80 }} />,
   Office: <OfficeIcon style={{ fontSize: 80 }} />,
-  House: <TownhouseIcon style={{ fontSize: 80 }} />,
-  Commercial: <CommercialIcon style={{ fontSize: 80 }} />
+  House: <TownhouseIcon style={{ fontSize: 80}} />,
+  Commercial: <CommercialIcon style={{ fontSize: 80 }} />,
 };
 
 const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
@@ -29,7 +29,7 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: active ? '#EE2027' : '#fff',
+  backgroundColor: active ? '#ed2128' : '#f7f7f7',
   color: active ? '#fff' : '#000',
   padding: theme.spacing(0.5),
   margin: theme.spacing(1),
@@ -38,7 +38,7 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   height: '200px',
   boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   '&:hover': {
-    backgroundColor: '#EE2027',
+    backgroundColor: '#ed2128',
     color: '#fff',
   },
   textAlign: 'center',
@@ -51,11 +51,11 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     boxSizing: 'border-box',
-    padding: '0 10px', // Adjust padding to add space between slides
+    padding: '0 10px', 
   },
   '.slick-list': {
-    margin: '0 -10px', // Adjust margin to compensate for padding
-    overflow: 'hidden', // Ensure overflow is hidden
+    margin: '0 -10px', 
+    overflow: 'hidden', 
   },
   '& .slick-prev, & .slick-next': {
     zIndex: 1,
@@ -68,7 +68,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     justifyContent: 'center',
   },
   '& .slick-prev:before, & .slick-next:before': {
-    color: '#EE2027',
+    color: '#ed2128',
     fontSize: '35px',
   },
 }));
@@ -89,18 +89,18 @@ const ArrowWrapper = styled(Box)({
 
 const ViewAllLink = styled('a')(({ theme }) => ({
   textDecoration: 'none',
-  color: '#000000', // Fallback color
+  color: '#000000', 
   fontSize: '18px',
   fontWeight: 'bold',
   '&:hover': {
-    color: '#000000', // Fallback color
+    color: '#000000', 
   },
   '&::after': {
     content: '""',
     display: 'block',
     width: '0',
     height: '2px',
-    background: '#EE2027', // Fallback color
+    background: '#ed2128', 
     transition: 'width 0.3s',
   },
   '&:hover::after': {
@@ -111,8 +111,8 @@ const ViewAllLink = styled('a')(({ theme }) => ({
 const CategoryFilter = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const categories = useSelector(state => state.categories.list);
-  const status = useSelector(state => state.categories.status);
+  const categories = useSelector((state) => state.categories.list);
+  const status = useSelector((state) => state.categories.status);
   const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const CategoryFilter = () => {
       {
         breakpoint: 800,
         settings: {
-          slidesToShow:  categories.length < 3 ? categories.length : 3,
+          slidesToShow: categories.length < 3 ? categories.length : 3,
           slidesToScroll: 1,
         },
       },
@@ -186,17 +186,37 @@ const CategoryFilter = () => {
   };
 
   return (
-    <Box position="relative" p={2}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-        <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }} color="#EE2027">
+    // <Box position="relative" p={2}>
+    <Container>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={1}
+        mt={6}
+      >
+        <Typography
+          sx={{ fontSize: '16px', fontWeight: 'bold' }}
+          color="#ed2128"
+        >
           PROPERTY TYPE
         </Typography>
       </Box>
-      <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        mb={3}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Typography variant="h5">Try Searching For</Typography>
         <ViewAllLink href="/all-services">View All Services →</ViewAllLink>
       </Box>
-      <Box display="flex" justifyContent="center" alignItems="center" position="relative">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        position="relative"
+      >
         <StyledSlider {...settings}>
           {categories.map((category) => (
             <div key={category.id}>
@@ -206,13 +226,16 @@ const CategoryFilter = () => {
               >
                 {iconMapping[category.name] || <ApartmentIcon />}
                 <Typography variant="h6">{category.name}</Typography>
-                <Typography variant="body2">{category.properties.length} Properties</Typography>
+                <Typography variant="body2">
+                  {category.properties.length} Properties
+                </Typography>
               </StyledButton>
             </div>
           ))}
         </StyledSlider>
       </Box>
-    </Box>
+      </Container>
+    // </Box>
   );
 };
 

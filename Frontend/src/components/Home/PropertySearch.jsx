@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Box, IconButton, MenuItem, Select, FormControl, TextField } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  TextField,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
@@ -34,6 +41,26 @@ const SearchFormControl = styled(FormControl)(({ theme, first }) => ({
     borderTopLeftRadius: first ? '30px' : '0px',
     borderBottomLeftRadius: first ? '30px' : '0px',
   },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#c4c4c4', 
+    },
+    '&:hover fieldset': {
+      borderColor: '#c4c4c4', 
+    },
+    '&.Mui-focused fieldset': {
+      border: 'solid 1px #000', 
+    },
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#c4c4c4', 
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#c4c4c4', 
+  },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'solid 1px #000', 
+  },
 }));
 
 const SearchButton = styled(IconButton)({
@@ -43,11 +70,11 @@ const SearchButton = styled(IconButton)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#EE2027',
+  backgroundColor: '#ed2128',
   color: '#fff',
   borderRadius: '0 30px 30px 0',
   '&:hover': {
-    backgroundColor: '#f03137',
+    backgroundColor: '#e21118',
   },
 });
 
@@ -60,7 +87,6 @@ const LoadingOverlay = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  // backgroundColor: 'rgba(255, 255, 255, 0.7)',
   zIndex: 1,
 });
 
@@ -70,13 +96,16 @@ function PropertySearch() {
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
   const locations = useSelector((state) => state.locations.data || []);
   const locationsStatus = useSelector((state) => state.locations.status);
-  const propertyTypesStatus = useSelector((state) => state.propertyTypes.status);
+  const propertyTypesStatus = useSelector(
+    (state) => state.propertyTypes.status
+  );
 
   const [listingType, setListingType] = useState('rent');
   const [propertyType, setPropertyType] = useState('');
   const [city, setCity] = useState('');
 
-  const isLoading = locationsStatus === 'loading' || propertyTypesStatus === 'loading';
+  const isLoading =
+    locationsStatus === 'loading' || propertyTypesStatus === 'loading';
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -101,7 +130,7 @@ function PropertySearch() {
       {isLoading && (
         <LoadingOverlay>
           <Loader />
-         </LoadingOverlay>
+        </LoadingOverlay>
       )}
       <SearchFormControl first>
         <TextField
