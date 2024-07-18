@@ -10,8 +10,11 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 function AvatarDialog({ isOpen, onClose, onChange }) {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -21,19 +24,22 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
           alignItems: 'center',
         }}
       >
-        Edit Avatar
+        {t('Edit Avatar')}
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Upload a new avatar image.</DialogContentText>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onChange}
-          style={{ marginTop: '16px' }}
-        />
+        <DialogContentText>{t('Upload a new avatar image.')}</DialogContentText>
+        <Button variant="contained" component="label" sx={{ mt: 1 }}>
+          {t('Choose File')}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onChange}
+            style={{ display: 'none' }}
+          />
+        </Button>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
         <Button
@@ -47,7 +53,7 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
             },
           }}
         >
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button
           onClick={onClose}
@@ -59,7 +65,7 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
             },
           }}
         >
-          Apply
+          {t('Apply')}
         </Button>
       </DialogActions>
     </Dialog>

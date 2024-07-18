@@ -11,8 +11,10 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave, errors }) {
+  const { t } = useTranslation();
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -22,17 +24,19 @@ function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave, errors }) {
           alignItems: 'center',
         }}
       >
-        Edit phone number
+        {t('Edit phone number')}
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Edit your phone number below.</DialogContentText>
+        <DialogContentText>
+          {t('Edit your phone number below.')}
+        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
-          label="Phone number"
+          label={t('Phone Number')}
           type="text"
           fullWidth
           variant="outlined"
@@ -45,7 +49,7 @@ function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave, errors }) {
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button
           onClick={onSave}
@@ -53,7 +57,7 @@ function PhoneDialog({ isOpen, onClose, phone, setPhone, onSave, errors }) {
           variant="contained"
           sx={{ backgroundColor: '#70B5F9' }}
         >
-          Apply
+          {t('Apply')}
         </Button>
       </DialogActions>
     </Dialog>

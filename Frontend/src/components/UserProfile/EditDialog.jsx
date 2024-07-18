@@ -10,6 +10,7 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 function EditDialog({
   isOpen,
@@ -21,6 +22,8 @@ function EditDialog({
   onSave,
   errors,
 }) {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -30,7 +33,7 @@ function EditDialog({
           alignItems: 'center',
         }}
       >
-        Edit name
+        {t('Edit name')}
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
@@ -39,7 +42,7 @@ function EditDialog({
         <TextField
           autoFocus
           margin="dense"
-          label="First name"
+          label={t('First Name')}
           type="text"
           fullWidth
           variant="outlined"
@@ -51,7 +54,7 @@ function EditDialog({
         />
         <TextField
           margin="dense"
-          label="Last name"
+          label={t('Last Name')}
           type="text"
           fullWidth
           variant="outlined"
@@ -63,7 +66,7 @@ function EditDialog({
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button
           onClick={onSave}
@@ -71,7 +74,7 @@ function EditDialog({
           variant="contained"
           sx={{ backgroundColor: '#70B5F9' }}
         >
-          Apply
+          {t('Apply')}
         </Button>
       </DialogActions>
     </Dialog>
