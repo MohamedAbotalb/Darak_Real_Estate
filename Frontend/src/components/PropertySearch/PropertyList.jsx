@@ -10,8 +10,10 @@ import {
   useTheme,
   Pagination,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 function PropertyList() {
+  const { t } = useTranslation();
   const { properties, status } = useSelector((state) => state.propertySearch);
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
@@ -58,7 +60,7 @@ function PropertyList() {
         my={4}
       >
         <Typography variant="h5" textAlign="center">
-          No properties found for these filters
+          {t('No properties found for these filters')}
         </Typography>
       </Box>
     );

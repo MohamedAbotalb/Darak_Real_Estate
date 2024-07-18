@@ -29,11 +29,12 @@ import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import governorates from 'assets/governorates.json';
 import cities from 'assets/cities.json';
 import { addProperty, clearState } from 'store/propertySlice';
-import { fetchAmenities } from '../store/amenitiesSlice';
-import { fetchPropertyTypes } from '../store/propertyTypesSlice';
+import { fetchAmenities } from 'store/amenitiesSlice';
+import { fetchPropertyTypes } from 'store/propertyTypesSlice';
 import validationSchema from '../utils/validationSchema';
 
 const FormWrapper = styled('div')({
@@ -62,6 +63,7 @@ const DeleteButton = styled(IconButton)({
 function AddProperty() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -104,22 +106,18 @@ function AddProperty() {
 
   const onSubmit = (data) => {
     const formData = new FormData();
-
-    // Append other fields
     Object.entries(data).forEach(([key, value]) => {
       if (key !== 'images' && key !== 'amenities') {
         formData.append(key, value);
       }
     });
 
-    // Append images
     if (data.images) {
       data.images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
       });
     }
 
-    // Append amenities as an array
     if (Array.isArray(data.amenities)) {
       data.amenities.forEach((amenity, index) => {
         formData.append(`amenities[${index}]`, amenity);
@@ -133,7 +131,7 @@ function AddProperty() {
   useEffect(() => {
     if (isSubmitting) {
       if (status === 'succeeded') {
-        toast.success('Property added successfully!');
+        toast.success(t('Property added successfully!'));
         reset();
         setSelectedImages([]);
         dispatch(clearState());
@@ -141,7 +139,7 @@ function AddProperty() {
         navigate('/myproperties');
       }
       if (status === 'failed') {
-        toast.error(error || 'Failed to add property!');
+        toast.error(error || t('Failed to add property!'));
         dispatch(clearState());
         setIsSubmitting(false);
       }
@@ -164,14 +162,14 @@ function AddProperty() {
     <FormWrapper>
       <Card sx={{ maxWidth: 700, width: '100%', boxShadow: 5 }}>
         <Typography variant="h4" gutterBottom align="center" padding={3}>
-          Add Property
+          {t('Add Property')}
         </Typography>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  label="Title"
+                  label={t('Title')}
                   fullWidth
                   {...register('title')}
                   error={!!errors.title}
@@ -180,7 +178,7 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  label="Description"
+                  label={t('Description')}
                   fullWidth
                   multiline
                   rows={4}
@@ -192,18 +190,20 @@ function AddProperty() {
               <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.state}>
                   <InputLabel id="state-label" htmlFor="state">
-                    State
+                    {t('State')}
                   </InputLabel>
                   <Select
                     labelId="state-label"
                     id="state"
                     {...register('state')}
-                    label="State"
+                    label={t('State')}
                     defaultValue=""
                   >
                     {governorates.map((gov) => (
                       <MenuItem key={gov.id} value={gov.id}>
-                        {gov.governorate_name_en}
+                        {i18n.language === 'ar'
+                          ? gov.governorate_name_ar
+                          : gov.governorate_name_en}
                       </MenuItem>
                     ))}
                   </Select>
@@ -217,19 +217,21 @@ function AddProperty() {
               <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.city}>
                   <InputLabel id="city-label" htmlFor="city">
-                    City
+                    {t('City')}
                   </InputLabel>
                   <Select
                     labelId="city-label"
                     id="city"
                     {...register('city')}
-                    label="City"
+                    label={t('City')}
                     defaultValue=""
                     disabled={!selectedState}
                   >
                     {cityOptions.map((city) => (
                       <MenuItem key={city.id} value={city.city_name_en}>
-                        {city.city_name_en}
+                        {i18n.language === 'ar'
+                          ? city.city_name_ar
+                          : city.city_name_en}
                       </MenuItem>
                     ))}
                   </Select>
@@ -240,7 +242,7 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Street"
+                  label={t('Street')}
                   id="street"
                   fullWidth
                   {...register('street')}
@@ -250,7 +252,7 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Area"
+                  label={t('Area')}
                   type="number"
                   id="area"
                   fullWidth
@@ -259,11 +261,10 @@ function AddProperty() {
                   helperText={errors.area?.message}
                 />
               </Grid>
-
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.property_type_id}>
                   <InputLabel id="type-label" htmlFor="property_type_id">
-                    Type
+                    {t('Type')}
                   </InputLabel>
                   <Controller
                     name="property_type_id"
@@ -274,16 +275,16 @@ function AddProperty() {
                         labelId="type-label"
                         id="property_type_id"
                         {...field}
-                        label="Type"
+                        label={t('Type')}
                       >
                         {propertyTypesStatus === 'loading' && (
                           <MenuItem value="" disabled>
-                            Loading types...
+                            {t('Loading types...')}
                           </MenuItem>
                         )}
                         {propertyTypesStatus === 'failed' && (
                           <MenuItem value="" disabled>
-                            Error loading types
+                            {t('Error loading types')}
                           </MenuItem>
                         )}
                         {propertyTypesStatus === 'succeeded' &&
@@ -304,7 +305,7 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Rooms"
+                  label={t('Rooms')}
                   type="number"
                   id="num_of_rooms"
                   fullWidth
@@ -315,7 +316,7 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Bathrooms"
+                  label={t('Bathrooms')}
                   type="number"
                   id="num_of_bathrooms"
                   fullWidth
@@ -326,10 +327,10 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl component="fieldset" error={!!errors.amenities}>
-                  <FormLabel component="legend">Amenities</FormLabel>
+                  <FormLabel component="legend">{t('Amenities')}</FormLabel>
                   <FormGroup row>
                     {status === 'loading' && (
-                      <Typography>Loading amenities...</Typography>
+                      <Typography>{t('Loading amenities...')}</Typography>
                     )}
                     {status === 'failed' && (
                       <Typography color="error">{error}</Typography>
@@ -358,19 +359,19 @@ function AddProperty() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl component="fieldset" error={!!errors.listing_type}>
-                  <FormLabel component="legend">Listing Type</FormLabel>
+                  <FormLabel component="legend">{t('Listing Type')}</FormLabel>
                   <RadioGroup row defaultValue="Rent">
                     <FormControlLabel
                       value="rent"
                       {...register('listing_type')}
                       control={<Radio />}
-                      label="Rent"
+                      label={t('Rent')}
                     />
                     <FormControlLabel
                       value="buy"
                       {...register('listing_type')}
                       control={<Radio />}
-                      label="Sell"
+                      label={t('Sell')}
                     />
                   </RadioGroup>
                   {errors.listing_type && (
@@ -383,7 +384,9 @@ function AddProperty() {
               <Grid item xs={12}>
                 <TextField
                   label={
-                    selectedListingType === 'rent' ? 'Price / month' : 'Price'
+                    selectedListingType === 'rent'
+                      ? t('Price / month')
+                      : t('Price')
                   }
                   type="number"
                   id="price"
@@ -409,13 +412,13 @@ function AddProperty() {
                     component="span"
                     fullWidth
                   >
-                    Upload Images
+                    {t('Upload Images')}
                   </Button>
                 </label>
                 {selectedImages.length > 0 && (
                   <Box mt={2}>
                     <Typography variant="subtitle1">
-                      Selected Images:
+                      {t('Selected Images')}:
                     </Typography>
                     <Grid container spacing={2}>
                       {selectedImages.map((image, index) => (
@@ -471,14 +474,14 @@ function AddProperty() {
                   color="primary"
                   sx={{ mr: 2 }}
                 >
-                  Add
+                  {t('Add')}
                 </Button>
                 <Button
                   type="reset"
                   variant="contained"
                   onClick={() => setSelectedImages([])}
                 >
-                  Reset
+                  {t('Reset')}
                 </Button>
               </Grid>
             </Grid>

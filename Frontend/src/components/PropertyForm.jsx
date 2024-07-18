@@ -29,6 +29,7 @@ import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { errorToast, successToast } from 'utils/toast';
+import { useTranslation } from 'react-i18next';
 import governorates from 'assets/governorates.json';
 import cities from 'assets/cities.json';
 import {
@@ -39,7 +40,7 @@ import {
 } from 'store/propertySlice';
 import { fetchAmenities } from 'store/amenitiesSlice';
 import { fetchPropertyTypes } from 'store/propertyTypesSlice';
-import validationSchema from 'utils/validationSchema';
+import useValidationSchema from 'utils/validationSchema';
 
 const FormWrapper = styled('div')({
   display: 'flex',
@@ -69,6 +70,8 @@ function PropertyForm() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const isEditMode = Boolean(slug);
+  const { t, i18n } = useTranslation();
+  const validationSchema = useValidationSchema();
 
   const {
     register,
@@ -204,7 +207,7 @@ function PropertyForm() {
     if (isSubmitting) {
       if (status === 'succeeded') {
         successToast(
-          `Property ${isEditMode ? 'updated' : 'added'} successfully!`
+          t(`Property ${isEditMode ? 'updated' : 'added'} successfully!`)
         );
         reset();
         setSelectedImages([]);
@@ -215,7 +218,7 @@ function PropertyForm() {
       }
       if (status === 'failed') {
         errorToast(
-          error || `Failed to ${isEditMode ? 'update' : 'add'} property!`
+          error || t(`Failed to ${isEditMode ? 'update' : 'add'} property!`)
         );
         dispatch(clearState());
         setIsSubmitting(false);
@@ -244,14 +247,14 @@ function PropertyForm() {
     <FormWrapper>
       <Card sx={{ maxWidth: 700, width: '100%', boxShadow: 5 }}>
         <Typography variant="h4" gutterBottom align="center" padding={3}>
-          {isEditMode ? 'Edit Property' : 'Add Property'}
+          {isEditMode ? t('Edit Property') : t('Add Property')}
         </Typography>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  label="Title"
+                  label={t('Title')}
                   fullWidth
                   {...register('title')}
                   error={!!errors.title}
@@ -260,7 +263,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  label="Description"
+                  label={t('Description')}
                   fullWidth
                   multiline
                   rows={4}
@@ -272,7 +275,7 @@ function PropertyForm() {
               <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.state}>
                   <InputLabel id="state-label" htmlFor="state">
-                    State
+                    {t('State')}
                   </InputLabel>
                   <Controller
                     name="state"
@@ -283,7 +286,7 @@ function PropertyForm() {
                         labelId="state-label"
                         id="state"
                         {...field}
-                        label="State"
+                        label={t('State')}
                         defaultValue=""
                       >
                         {governorates.map((gov) => (
@@ -291,7 +294,9 @@ function PropertyForm() {
                             key={gov.id}
                             value={gov.governorate_name_en}
                           >
-                            {gov.governorate_name_en}
+                            {i18n.language === 'ar'
+                              ? gov.governorate_name_ar
+                              : gov.governorate_name_en}
                           </MenuItem>
                         ))}
                       </Select>
@@ -307,7 +312,7 @@ function PropertyForm() {
               <Grid item xs={6} md={3}>
                 <FormControl fullWidth error={!!errors.city}>
                   <InputLabel id="city-label" htmlFor="city">
-                    City
+                    {t('City')}
                   </InputLabel>
                   <Controller
                     name="city"
@@ -318,12 +323,14 @@ function PropertyForm() {
                         labelId="city-label"
                         id="city"
                         {...field}
-                        label="City"
+                        label={t('City')}
                         disabled={!selectedState}
                       >
                         {cityOptions.map((city) => (
                           <MenuItem key={city.id} value={city.city_name_en}>
-                            {city.city_name_en}
+                            {i18n.language === 'ar'
+                              ? city.city_name_ar
+                              : city.city_name_en}
                           </MenuItem>
                         ))}
                       </Select>
@@ -336,7 +343,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Street"
+                  label={t('Street')}
                   fullWidth
                   {...register('street')}
                   error={!!errors.street}
@@ -345,7 +352,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Area"
+                  label={t('Area')}
                   type="number"
                   fullWidth
                   {...register('area')}
@@ -356,7 +363,7 @@ function PropertyForm() {
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.property_type_id}>
                   <InputLabel id="type-label" htmlFor="property_type_id">
-                    Type
+                    {t('Type')}
                   </InputLabel>
                   <Controller
                     name="property_type_id"
@@ -367,16 +374,16 @@ function PropertyForm() {
                         labelId="type-label"
                         id="property_type_id"
                         {...field}
-                        label="Type"
+                        label={t('Type')}
                       >
                         {propertyTypesStatus === 'loading' && (
                           <MenuItem value="" disabled>
-                            Loading types...
+                            {t('Loading types...')}
                           </MenuItem>
                         )}
                         {propertyTypesStatus === 'failed' && (
                           <MenuItem value="" disabled>
-                            Error loading types
+                            {t('Error loading types')}
                           </MenuItem>
                         )}
                         {propertyTypesStatus === 'succeeded' &&
@@ -397,7 +404,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Rooms"
+                  label={t('Rooms')}
                   type="number"
                   fullWidth
                   {...register('num_of_rooms')}
@@ -407,7 +414,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Bathrooms"
+                  label={t('Bathrooms')}
                   type="number"
                   fullWidth
                   {...register('num_of_bathrooms')}
@@ -417,7 +424,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl component="fieldset" error={!!errors.amenities}>
-                  <FormLabel component="legend">Amenities</FormLabel>
+                  <FormLabel component="legend">{t('Amenities')}</FormLabel>
                   <FormGroup row>
                     <Controller
                       name="amenities"
@@ -457,7 +464,7 @@ function PropertyForm() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Listing Type</FormLabel>
+                  <FormLabel component="legend">{t('Listing Type')}</FormLabel>
                   <Controller
                     name="listing_type"
                     control={control}
@@ -467,12 +474,12 @@ function PropertyForm() {
                         <FormControlLabel
                           value="buy"
                           control={<Radio />}
-                          label="Buy"
+                          label={t('Sell')}
                         />
                         <FormControlLabel
                           value="rent"
                           control={<Radio />}
-                          label="Rent"
+                          label={t('Rent')}
                         />
                       </RadioGroup>
                     )}
@@ -487,7 +494,9 @@ function PropertyForm() {
               <Grid item xs={12}>
                 <TextField
                   label={
-                    selectedListingType === 'rent' ? 'Price / month' : 'Price'
+                    selectedListingType === 'rent'
+                      ? t('Price / month')
+                      : t('Price')
                   }
                   type="number"
                   fullWidth
@@ -512,13 +521,13 @@ function PropertyForm() {
                     component="span"
                     fullWidth
                   >
-                    Upload Images
+                    {t('Upload Images')}
                   </Button>
                 </label>
                 {(selectedImages.length > 0 || existingImages.length > 0) && (
                   <Box mt={2}>
                     <Typography variant="subtitle1">
-                      Selected Images:
+                      {t('Selected Images')}:
                     </Typography>
                     <Grid container spacing={2}>
                       {existingImages.map((image, index) => (
@@ -594,14 +603,14 @@ function PropertyForm() {
                   color="primary"
                   sx={{ mr: 2 }}
                 >
-                  {isEditMode ? 'Update' : 'Add'}
+                  {isEditMode ? t('Update') : t('Add')}
                 </Button>
                 <Button
                   type="reset"
                   variant="contained"
                   onClick={() => setSelectedImages([])}
                 >
-                  Reset
+                  {t('Reset')}
                 </Button>
               </Grid>
             </Grid>
