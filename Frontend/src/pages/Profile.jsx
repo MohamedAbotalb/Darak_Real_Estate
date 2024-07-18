@@ -12,7 +12,7 @@ import DeleteDialog from 'components/UserProfile/DeleteDialog';
 import ProfileDetails from 'components/UserProfile/ProfileDetails';
 import {
   fetchUser,
-  updateUser,
+  updateName,
   updatePassword,
   updatePhone,
   updateAvatar,
@@ -119,27 +119,25 @@ function Profile() {
     setOpenDeleteDialog(false);
   };
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+  const handleAvatarChange = async (file) => {
     if (file) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          await dispatch(updateAvatar({ avatar: e.target.result }));
-          dispatch(setCredentials({ ...user, avatar: e.target.result }));
-          toast.success(t('Avatar updated successfully'));
-          setOpenAvatarDialog(false);
-        } catch (error) {
-          toast.error(t('Failed to update avatar'));
-        }
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      try {
+        const response = await dispatch(updateAvatar(formData)).unwrap();
+        dispatch(setCredentials({ ...user, avatar: response.avatar }));
+        toast.success('Avatar updated successfully');
+        setOpenAvatarDialog(false);
+      } catch (error) {
+        toast.error('Failed to update avatar');
+      }
     }
   };
 
   const handleDeleteAccount = async () => {
     try {
-      await dispatch(deleteUser(user.id));
+      dispatch(deleteUser(user.id));
       dispatch(logout());
       toast.success(t('Account deleted successfully'));
       navigate('/login');
@@ -155,7 +153,7 @@ function Profile() {
       if (editField === 'Name') {
         const schema = validationSchema.pick(['firstName', 'lastName']);
         try {
-          await schema.validate({ firstName, lastName }, { abortEarly: false });
+          schema.validate({ firstName, lastName }, { abortEarly: false });
           setErrors({});
         } catch (err) {
           const validationErrors = {};
@@ -171,7 +169,7 @@ function Profile() {
           'confirmPassword',
         ]);
         try {
-          await schema.validate(
+          schema.validate(
             { newPassword, confirmPassword },
             { abortEarly: false }
           );
@@ -187,7 +185,7 @@ function Profile() {
       } else if (editField === 'Phone') {
         const schema = validationSchema.pick(['phone']);
         try {
-          await schema.validate({ phone }, { abortEarly: false });
+          schema.validate({ phone }, { abortEarly: false });
           setErrors({});
         } catch (err) {
           const validationErrors = {};
@@ -200,15 +198,13 @@ function Profile() {
       }
     };
 
-    await validate();
+    validate();
 
     if (!valid) return;
 
     try {
       if (editField === 'Name') {
-        await dispatch(
-          updateUser({ first_name: firstName, last_name: lastName })
-        );
+        dispatch(updateName({ first_name: firstName, last_name: lastName }));
         dispatch(
           setCredentials({
             ...user,
@@ -218,7 +214,7 @@ function Profile() {
         );
         toast.success(t('Profile updated successfully'));
       } else if (editField === 'Password') {
-        await dispatch(
+        dispatch(
           updatePassword({
             current_password: currentPassword,
             new_password: newPassword,
@@ -227,7 +223,7 @@ function Profile() {
 
         toast.success(t('Password changed successfully'));
       } else if (editField === 'Phone') {
-        await dispatch(updatePhone({ phone_number: `+2${phone}` }));
+        dispatch(updatePhone({ phone_number: `+2${phone}` }));
         dispatch(setCredentials({ ...user, phone_number: `+2${phone}` }));
         toast.success(t('Phone number updated successfully'));
       }
@@ -281,7 +277,8 @@ function Profile() {
       <AvatarDialog
         isOpen={openAvatarDialog}
         onClose={handleDialogClose}
-        onChange={handleAvatarChange}
+        onSave={handleAvatarChange}
+        currentAvatar={user?.avatar}
       />
       <PhoneDialog
         isOpen={openPhoneDialog}

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import secureLocalStorage from 'react-secure-storage';
 import {
   getUserDetails,
-  updateUserDetails,
+  updateUserName,
   updateUserPassword,
   updateUserPhone,
   updateUserAvatar,
@@ -14,10 +14,10 @@ export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
   return response.data;
 });
 
-export const updateUser = createAsyncThunk(
-  'user/updateUser',
-  async (userData) => {
-    const response = await updateUserDetails(userData);
+export const updateName = createAsyncThunk(
+  'user/updateName',
+  async (userName) => {
+    const response = await updateUserName(userName);
     secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   }
@@ -86,15 +86,15 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       })
-      .addCase(updateUser.pending, (state) => {
+      .addCase(updateName.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(updateName.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
       })
-      .addCase(updateUser.rejected, (state, action) => {
+      .addCase(updateName.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       })

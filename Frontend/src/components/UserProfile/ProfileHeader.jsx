@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Avatar, IconButton, Paper, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-function ProfileHeader({ avatar, user, onEditAvatar }) {
+function ProfileHeader({ user, onEditAvatar }) {
+  const avatarSrc = user?.avatar
+    ? `http://127.0.0.1:8000/${user.avatar}`
+    : null;
+
   return (
     <Paper
       elevation={3}
@@ -24,7 +28,7 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
             mx: 'auto',
             mb: 3,
           }}
-          src={avatar}
+          src={avatarSrc}
         />
         <IconButton
           sx={{
@@ -57,7 +61,6 @@ function ProfileHeader({ avatar, user, onEditAvatar }) {
 }
 
 ProfileHeader.propTypes = {
-  avatar: PropTypes.string.isRequired,
   user: PropTypes.shape({
     first_name: PropTypes.string,
     last_name: PropTypes.string,
