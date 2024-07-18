@@ -38,7 +38,7 @@ export default function NavBar() {
           to="/"
           sx={{ color: '#cdd0d8', textDecoration: 'none' }}
         >
-          RentEZ Admin Dashboard
+          Darak Admin Dashboard
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         {user && (

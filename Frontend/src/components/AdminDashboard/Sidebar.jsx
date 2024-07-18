@@ -30,7 +30,7 @@ function Sidebar() {
             className="nav-link"
             activeClassName="active-link"
           >
-            User Reports
+            User Complaints
           </NavLink>
         </li>
         <li>
@@ -39,7 +39,7 @@ function Sidebar() {
             className="nav-link"
             activeClassName="active-link"
           >
-            Property Reports
+            Property Issues
           </NavLink>
         </li>
         <li>
@@ -75,7 +75,7 @@ function Sidebar() {
             className="nav-link"
             activeClassName="active-link"
           >
-            Ads
+            Property Ads
           </NavLink>
         </li>
       </ul>
