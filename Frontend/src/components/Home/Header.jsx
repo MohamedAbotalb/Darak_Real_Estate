@@ -49,6 +49,7 @@ function Header() {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
   const AdminImage = 'logo.png';
+  const { t } = useTranslation();
   const underlineAnimation = keyframes`
   from {
     width: 0;
@@ -106,10 +107,7 @@ function Header() {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{ backgroundColor: '#fff' }}
-    >
+    <AppBar position="fixed" sx={{ backgroundColor: '#fff' }}>
       <Toolbar>
         <Box
           component={Link}
@@ -119,7 +117,7 @@ function Header() {
             alignItems: 'center',
             marginRight: 3,
             textDecoration: 'none',
-            width:'100px'
+            width: '100px',
           }}
         >
           <img
@@ -127,8 +125,8 @@ function Header() {
             alt="RentEZ"
             style={{
               height: 'auto',
-              maxHeight: '50px', 
-              maxWidth: '100%', 
+              maxHeight: '50px',
+              maxWidth: '100%',
             }}
           />
         </Box>
@@ -175,7 +173,6 @@ function Header() {
             </Button>
             {user?.role !== 'landlord' ? (
               <>
-                
                 <Button
                   component={NavLink}
                   to="/properties?lt=rent"
@@ -187,7 +184,7 @@ function Header() {
                     textTransform: 'none',
                     backgroundColor: 'transparent',
                     '&:hover': {
-                      backgroundColor: 'transparent', 
+                      backgroundColor: 'transparent',
                       '&::after': {
                         width: '100%',
                       },
@@ -227,15 +224,15 @@ function Header() {
                     color: '#000',
                     textTransform: 'none',
                     backgroundColor: 'transparent',
-                    
+
                     '&:hover': {
-                      backgroundColor: 'transparent', 
+                      backgroundColor: 'transparent',
                       '&::after': {
                         width: '100%',
                       },
                     },
                     '&:focus': {
-                      backgroundColor: 'transparent', 
+                      backgroundColor: 'transparent',
                     },
                     position: 'relative',
                     '&::after': {
@@ -271,9 +268,9 @@ function Header() {
                   color: '#000',
                   textTransform: 'none',
                   backgroundColor: 'transparent',
-                  
+
                   '&:hover': {
-                    backgroundColor: 'transparent', 
+                    backgroundColor: 'transparent',
                     '&::after': {
                       width: '100%',
                     },
@@ -308,10 +305,10 @@ function Header() {
                 fontSize: '1.1rem',
                 color: '#000',
                 textTransform: 'none',
-                
+
                 backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', 
+                  backgroundColor: 'transparent',
                   '&::after': {
                     width: '100%',
                   },
@@ -435,10 +432,10 @@ function Header() {
               fontSize: '1.1rem',
               color: '#ed2128',
               textTransform: 'none',
-              
+
               backgroundColor: 'transparent',
               '&:hover': {
-                backgroundColor: 'transparent', 
+                backgroundColor: 'transparent',
                 '&::after': {
                   width: '80%',
                 },
@@ -475,10 +472,10 @@ function Header() {
                   fontSize: '1.1rem',
                   color: '#000',
                   textTransform: 'none',
-                  
+
                   backgroundColor: 'transparent',
                   '&:hover': {
-                    backgroundColor: 'transparent', 
+                    backgroundColor: 'transparent',
                     '&::after': {
                       width: '80%',
                     },
@@ -513,10 +510,10 @@ function Header() {
                   fontSize: '1.1rem',
                   color: '#000',
                   textTransform: 'none',
-                  
+
                   backgroundColor: 'transparent',
                   '&:hover': {
-                    backgroundColor: 'transparent', 
+                    backgroundColor: 'transparent',
                     '&::after': {
                       width: '80%',
                     },
@@ -553,10 +550,10 @@ function Header() {
                 fontSize: '1.1rem',
                 color: '#000',
                 textTransform: 'none',
-                
+
                 backgroundColor: 'transparent',
                 '&:hover': {
-                  backgroundColor: 'transparent', 
+                  backgroundColor: 'transparent',
                   '&::after': {
                     width: '80%',
                   },
@@ -592,7 +589,7 @@ function Header() {
               fontSize: '1.1rem',
               color: '#000',
               textTransform: 'none',
-              
+
               backgroundColor: 'transparent',
               '&:hover': {
                 backgroundColor: 'transparent',

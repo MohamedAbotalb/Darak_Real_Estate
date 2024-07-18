@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography, ButtonBase, Container } from '@mui/material';
 import { styled } from '@mui/system';
@@ -19,7 +20,7 @@ const iconMapping = {
   Villa: <VillaIcon style={{ fontSize: 80 }} />,
   Studio: <StudioIcon style={{ fontSize: 80 }} />,
   Office: <OfficeIcon style={{ fontSize: 80 }} />,
-  House: <TownhouseIcon style={{ fontSize: 80}} />,
+  House: <TownhouseIcon style={{ fontSize: 80 }} />,
   Commercial: <CommercialIcon style={{ fontSize: 80 }} />,
 };
 
@@ -51,11 +52,11 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     boxSizing: 'border-box',
-    padding: '0 10px', 
+    padding: '0 10px',
   },
   '.slick-list': {
-    margin: '0 -10px', 
-    overflow: 'hidden', 
+    margin: '0 -10px',
+    overflow: 'hidden',
   },
   '& .slick-prev, & .slick-next': {
     zIndex: 1,
@@ -89,18 +90,18 @@ const ArrowWrapper = styled(Box)({
 
 const ViewAllLink = styled('a')(({ theme }) => ({
   textDecoration: 'none',
-  color: '#000000', 
+  color: '#000000',
   fontSize: '18px',
   fontWeight: 'bold',
   '&:hover': {
-    color: '#000000', 
+    color: '#000000',
   },
   '&::after': {
     content: '""',
     display: 'block',
     width: '0',
     height: '2px',
-    background: '#ed2128', 
+    background: '#ed2128',
     transition: 'width 0.3s',
   },
   '&:hover::after': {
@@ -108,7 +109,33 @@ const ViewAllLink = styled('a')(({ theme }) => ({
   },
 }));
 
-const CategoryFilter = () => {
+function SampleNextArrow(props) {
+  const { onClick } = props;
+  return (
+    <ArrowWrapper className="next" onClick={onClick}>
+      <div className="slick-next" />
+    </ArrowWrapper>
+  );
+}
+
+SampleNextArrow.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
+
+function SamplePrevArrow(props) {
+  const { onClick } = props;
+  return (
+    <ArrowWrapper className="prev" onClick={onClick}>
+      <div className="slick-prev" />
+    </ArrowWrapper>
+  );
+}
+
+SamplePrevArrow.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
+
+function CategoryFilter() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const categories = useSelector((state) => state.categories.list);
@@ -125,24 +152,6 @@ const CategoryFilter = () => {
     setActiveCategory(categoryType);
     navigate(`/properties?pt=${categoryType}`);
   };
-
-  function SampleNextArrow(props) {
-    const { onClick } = props;
-    return (
-      <ArrowWrapper className="next" onClick={onClick}>
-        <div className="slick-next" />
-      </ArrowWrapper>
-    );
-  }
-
-  function SamplePrevArrow(props) {
-    const { onClick } = props;
-    return (
-      <ArrowWrapper className="prev" onClick={onClick}>
-        <div className="slick-prev" />
-      </ArrowWrapper>
-    );
-  }
 
   const settings = {
     dots: false,
@@ -186,7 +195,6 @@ const CategoryFilter = () => {
   };
 
   return (
-    // <Box position="relative" p={2}>
     <Container>
       <Box
         display="flex"
@@ -234,9 +242,8 @@ const CategoryFilter = () => {
           ))}
         </StyledSlider>
       </Box>
-      </Container>
-    // </Box>
+    </Container>
   );
-};
+}
 
 export default CategoryFilter;

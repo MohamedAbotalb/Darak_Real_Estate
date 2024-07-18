@@ -37,17 +37,16 @@ const CardSection = styled(Box)(({ theme }) => ({
 }));
 
 const CustomCard = styled(Card)(({ theme }) => ({
-  color:'#000',
+  color: '#000',
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2),
   borderRadius: '15px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  marginBottom:'15px',
+  marginBottom: '15px',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    
   },
 }));
 
@@ -79,25 +78,25 @@ const CustomButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
   backgroundColor: 'transparent',
   color: '#000',
-  boxShadow: 'none', 
+  boxShadow: 'none',
   position: 'relative',
   overflow: 'hidden',
-  borderRadius:'0',
+  borderRadius: '0',
   '&:hover': {
     backgroundColor: 'transparent',
     color: '#000',
-    boxShadow: 'none', 
+    boxShadow: 'none',
   },
   '&::after': {
     content: '""',
     position: 'absolute',
     width: '100%',
     height: '2px',
-    backgroundColor: '#ed2128', 
+    backgroundColor: '#ed2128',
     bottom: 0,
     left: 0,
     transform: 'scaleX(0)',
-    transformOrigin: 'left', 
+    transformOrigin: 'left',
     transition: 'transform 0.3s ease',
   },
   '&:hover::after': {
@@ -137,7 +136,7 @@ const cardContent = [
   },
 ];
 
-const WhyChooseUs = () => {
+function WhyChooseUs() {
   return (
     <RootContainer>
       <TextSection>
@@ -161,9 +160,10 @@ const WhyChooseUs = () => {
                 marginBottom: '20px',
               }}
             >
-              <CheckCircleIcon  sx={{ marginRight: '8px', color:"#178551"}} />
-              <Typography  fontWeight="bold" fontSize="12px">{feature}</Typography>
-
+              <CheckCircleIcon sx={{ marginRight: '8px', color: '#178551' }} />
+              <Typography fontWeight="bold" fontSize="12px">
+                {feature}
+              </Typography>
             </Box>
           ))}
         </Box>
@@ -195,6 +195,6 @@ const WhyChooseUs = () => {
       </CardSection>
     </RootContainer>
   );
-};
+}
 
 export default WhyChooseUs;

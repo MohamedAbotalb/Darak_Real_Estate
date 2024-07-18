@@ -10,37 +10,38 @@ import Loader from 'components/Loader';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { styled } from '@mui/system';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
   '.slider-container': {
     width: '100%',
-    maxWidth: '1200px' ,
+    maxWidth: '1200px',
     margin: '0 auto',
-    padding: '0 20px' ,
+    padding: '0 20px',
     overflow: 'hidden',
   },
   '.slick-slide': {
-    padding: '0 15px', 
+    padding: '0 15px',
     boxSizing: 'border-box',
     height: 'auto',
   },
   '.slick-list': {
-    margin: '0 -15px', 
+    margin: '0 -15px',
   },
   '.slick-prev, .slick-next': {
     zIndex: 1,
-    width: '50px', 
-    height: '50px', 
+    width: '50px',
+    height: '50px',
   },
   '.slick-prev:before, .slick-next:before': {
-    fontSize: '30px', 
-    color: '#ed2128', 
+    fontSize: '30px',
+    color: '#ed2128',
   },
   '.slick-prev': {
-    left: '-60px', 
+    left: '-60px',
   },
   '.slick-next': {
-    right: '-60px', 
+    right: '-60px',
   },
 }));
 
@@ -49,7 +50,7 @@ function PropertyListings({ type }) {
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);
-const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
+  const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
   useEffect(() => {
     dispatch(fetchWishlist());
   }, [dispatch]);
@@ -110,43 +111,41 @@ const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
           initialSlide: 1,
         },
       },
-     
     ],
   };
 
   return (
     // <Container >
-      <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} pt={1.5} pb={4}  mt={5}>
-         <Typography
-      variant="h4"
-      align="center"
-      gutterBottom
-      sx={{ color: '#000', mb: '30px' }}
-    >
-      Latest Properties For{' '}
+    <Box mx={{ xs: 2, sm: 4 }} px={{ xs: 2, sm: 4 }} pt={1.5} pb={4} mt={5}>
       <Typography
-     component="span"
-        variant="inherit"
-       
-        sx={{ color: '#ed2128' }}
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ color: '#000', mb: '30px' }}
       >
-        {formattedType}
+        Latest Properties For{' '}
+        <Typography
+          component="span"
+          variant="inherit"
+          sx={{ color: '#ed2128' }}
+        >
+          {formattedType}
+        </Typography>
       </Typography>
-    </Typography>
-        {propertiesStatus === 'failed' ? (
-          <Typography variant="body1" align="center">
-            No properties found for the selected category.
-          </Typography>
-        ) : (
-          <StyledSlider {...settings}>
-            {properties.map((property) => (
-              <Box key={property.id} px={1} py={1}>
-                <PropertyCard property={property} />
-              </Box>
-            ))}
-          </StyledSlider>
-        )}
-      </Box>
+      {propertiesStatus === 'failed' ? (
+        <Typography variant="body1" align="center">
+          No properties found for the selected category.
+        </Typography>
+      ) : (
+        <StyledSlider {...settings}>
+          {properties.map((property) => (
+            <Box key={property.id} px={1} py={1}>
+              <PropertyCard property={property} />
+            </Box>
+          ))}
+        </StyledSlider>
+      )}
+    </Box>
     // </Container>
   );
 }

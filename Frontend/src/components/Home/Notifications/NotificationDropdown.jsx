@@ -26,6 +26,16 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import Loader from 'components/Loader';
 import SvgIcon from '@mui/material/SvgIcon';
 import { styled } from '@mui/system';
+
+function NotificationOutlineIcon() {
+  return (
+    <SvgIcon viewBox="0 0 24 24" sx={{ color: '#000' }}>
+      {/* Your SVG path or content here */}
+      <path d="M10 21H14C14 22.1 13.1 23 12 23S10 22.1 10 21M21 19V20H3V19L5 17V11C5 7.9 7 5.2 10 4.3V4C10 2.9 10.9 2 12 2S14 2.9 14 4V4.3C17 5.2 19 7.9 19 11V17L21 19M17 11C17 8.2 14.8 6 12 6S7 8.2 7 11V18H17V11Z" />
+    </SvgIcon>
+  );
+}
+
 function NotificationDropdown({ role }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,12 +43,7 @@ function NotificationDropdown({ role }) {
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const { notifications, status } = useSelector((state) => state.notifications);
   const AdminImage = 'logo.jpg';
-  const NotificationOutlineIcon = () => (
-    <SvgIcon viewBox="0 0 24 24" sx={{ color: '#000' }}>
-      {/* Your SVG path or content here */}
-      <path d="M10 21H14C14 22.1 13.1 23 12 23S10 22.1 10 21M21 19V20H3V19L5 17V11C5 7.9 7 5.2 10 4.3V4C10 2.9 10.9 2 12 2S14 2.9 14 4V4.3C17 5.2 19 7.9 19 11V17L21 19M17 11C17 8.2 14.8 6 12 6S7 8.2 7 11V18H17V11Z" />
-    </SvgIcon>
-  );
+
   useEffect(() => {
     if (role === 'user') {
       dispatch(fetchUserNotificationsAsync());
@@ -116,11 +121,11 @@ function NotificationDropdown({ role }) {
   };
 
   const CustomBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: '#ed2128', // Custom color
-    color: '#fff', // Text color
-  },
-}));
+    '& .MuiBadge-badge': {
+      backgroundColor: '#ed2128', // Custom color
+      color: '#fff', // Text color
+    },
+  }));
 
   return (
     <>
@@ -130,9 +135,9 @@ function NotificationDropdown({ role }) {
         onClick={handleMenuOpen}
         sx={{ backgroundColor: 'transparent' }}
       >
-         <CustomBadge badgeContent={pendingNotificationsCount}>
-      <NotificationOutlineIcon />
-    </CustomBadge>
+        <CustomBadge badgeContent={pendingNotificationsCount}>
+          <NotificationOutlineIcon />
+        </CustomBadge>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -268,7 +273,7 @@ function NotificationDropdown({ role }) {
                               marginTop={3}
                             >
                               <Avatar
-                                alt={'admin'}
+                                alt="admin"
                                 src={AdminImage}
                                 sx={{ marginLeft: '28px', marginRight: '12px' }}
                               />
@@ -277,7 +282,7 @@ function NotificationDropdown({ role }) {
                                 fontWeight="bold"
                                 sx={{ marginRight: 'auto' }}
                               >
-                                {`Darak Team`}
+                                Darak Team
                               </Typography>
                               <Typography
                                 variant="body"
@@ -346,69 +351,68 @@ function NotificationDropdown({ role }) {
                         >
                           {notification?.message}
                         </Typography>
-                           {notification.type !== 'status_change' && (
-                  <>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: {
-                              xs: 'column',
-                              sm: 'column',
-                              md: 'row',
-                            },
-                            textAlign: {
-                              xs: 'center',
-                              sm: 'center',
-                              md: 'left',
-                            },
-                            marginBottom: '16px',
-                            marginLeft: { xs: '0', md: '75px' },
-                            alignItems: 'center',
-                          }}
-                        >
-                          
-                          <DateRangeIcon
-                            sx={{
-                              marginRight: '5px',
-
-                              color: getNotificationCircleColor(
-                                notification.status
-                              ),
-                            }}
-                          />
+                        {notification.type !== 'status_change' && (
                           <Box
                             sx={{
                               display: 'flex',
+                              flexDirection: {
+                                xs: 'column',
+                                sm: 'column',
+                                md: 'row',
+                              },
+                              textAlign: {
+                                xs: 'center',
+                                sm: 'center',
+                                md: 'left',
+                              },
+                              marginBottom: '16px',
+                              marginLeft: { xs: '0', md: '75px' },
+                              alignItems: 'center',
                             }}
                           >
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              sx={{ display: 'flex', flexWrap: 'wrap' }}
+                            <DateRangeIcon
+                              sx={{
+                                marginRight: '5px',
+
+                                color: getNotificationCircleColor(
+                                  notification.status
+                                ),
+                              }}
+                            />
+                            <Box
+                              sx={{
+                                display: 'flex',
+                              }}
                             >
-                              {notification.tour &&
-                                notification.tour.dates.map((date, index) => (
-                                  <React.Fragment key={date.id}>
-                                    <Typography
-                                      variant="body2"
-                                      style={{
-                                        color:
-                                          date.approved === 1
-                                            ? 'green'
-                                            : 'inherit',
-                                        marginLeft: index > 0 ? '10px' : '0px',
-                                      }}
-                                    >
-                                      {moment(date.date).format(
-                                        'MMMM DD, YYYY hh:mm A'
-                                      )}
-                                    </Typography>
-                                  </React.Fragment>
-                                ))}
-                            </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ display: 'flex', flexWrap: 'wrap' }}
+                              >
+                                {notification.tour &&
+                                  notification.tour.dates.map((date, index) => (
+                                    <React.Fragment key={date.id}>
+                                      <Typography
+                                        variant="body2"
+                                        style={{
+                                          color:
+                                            date.approved === 1
+                                              ? 'green'
+                                              : 'inherit',
+                                          marginLeft:
+                                            index > 0 ? '10px' : '0px',
+                                        }}
+                                      >
+                                        {moment(date.date).format(
+                                          'MMMM DD, YYYY hh:mm A'
+                                        )}
+                                      </Typography>
+                                    </React.Fragment>
+                                  ))}
+                              </Typography>
+                            </Box>
                           </Box>
-                        </Box>
-</>)}
+                        )}
                       </Paper>
                     </Box>
                   )}

@@ -44,23 +44,23 @@ const SearchFormControl = styled(FormControl)(({ theme, first }) => ({
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: '#c4c4c4', 
+      borderColor: '#c4c4c4',
     },
     '&:hover fieldset': {
-      borderColor: '#c4c4c4', 
+      borderColor: '#c4c4c4',
     },
     '&.Mui-focused fieldset': {
-      border: 'solid 1px #000', 
+      border: 'solid 1px #000',
     },
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#c4c4c4', 
+    borderColor: '#c4c4c4',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#c4c4c4', 
+    borderColor: '#c4c4c4',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'solid 1px #000', 
+    borderColor: 'solid 1px #000',
   },
 }));
 

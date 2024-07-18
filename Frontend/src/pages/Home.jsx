@@ -7,24 +7,20 @@ import WhyChooseUs from 'components/Home/whyChooseUs';
 
 function Home() {
   return (
-    <Box className="home" sx={{backgroundColor: '#fff'}}>
+    <Box className="home" sx={{ backgroundColor: '#fff' }}>
       <Hero />
       <Container>
         <CategoryFilter />
-      
-        
-        <PropertyListings type={'rent'} />
-        
-        <PropertyListings type={'sell'} />
 
-       
+        <PropertyListings type="rent" />
+
+        <PropertyListings type="sell" />
       </Container>
-      <Box sx={{backgroundColor: '#f7f7f7', mt:5}}>
-        <Container >
+      <Box sx={{ backgroundColor: '#f7f7f7', mt: 5 }}>
+        <Container>
           <WhyChooseUs />
         </Container>
       </Box>
-       
     </Box>
   );
 }

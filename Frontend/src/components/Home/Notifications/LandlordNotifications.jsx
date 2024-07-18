@@ -24,6 +24,7 @@ import {
   IconButton,
   Paper,
   TextField,
+  FormHelperText,
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
@@ -376,7 +377,7 @@ function LandlordNotifications() {
                   {notification.type === 'status_change' ? (
                     <Box display="flex" alignItems="center" marginTop={3}>
                       <Avatar
-                        alt={'admin'}
+                        alt="admin"
                         src={AdminImage}
                         sx={{ marginLeft: '28px', marginRight: '12px' }}
                       />
@@ -385,7 +386,7 @@ function LandlordNotifications() {
                         fontWeight="bold"
                         sx={{ marginRight: 'auto' }}
                       >
-                        {`Darak Team`}
+                        Darak Team
                       </Typography>
                       <Typography
                         variant="body"
@@ -637,7 +638,7 @@ function LandlordNotifications() {
               label="Reason"
             >
               {predefinedReasons.map((reason, index) => (
-                <MenuItem key={index} value={reason}>
+                <MenuItem key={reason} value={reason}>
                   {reason}
                 </MenuItem>
               ))}

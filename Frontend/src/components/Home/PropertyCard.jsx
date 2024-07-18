@@ -66,7 +66,11 @@ function PropertyCard({ property }) {
         <Carousel showThumbs={false} showStatus={false}>
           {images.length > 0 ? (
             images.map((img) => (
-              <StyledImage key={img.id} src={baseImgUrl+img.image} alt={property.title} />
+              <StyledImage
+                key={img.id}
+                src={baseImgUrl + img.image}
+                alt={property.title}
+              />
             ))
           ) : (
             <StyledImage src={defaultImage} alt={property.title} />
@@ -91,7 +95,11 @@ function PropertyCard({ property }) {
             {getPriceDisplay()}
           </Typography>
           {/* <Typography variant="body2">{property.title}</Typography> */}
-          <Typography variant="body2" color="text.secondary" style={{ overflowWrap: 'break-word' }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ overflowWrap: 'break-word' }}
+          >
             {property.title.split(' ').slice(0, 4).join(' ')}
             {property.title.split(' ').length > 4 ? '...' : ''}
           </Typography>
@@ -99,8 +107,7 @@ function PropertyCard({ property }) {
           <Box display="flex" alignItems="center" my={1}>
             <LocationOnIcon color="action" />
             <Typography variant="body2" color="text.secondary" ml={0.5}>
-             {property.location.state},{' '}
-              {property.location.city}
+              {property.location.state}, {property.location.city}
             </Typography>
           </Box>
           <Box display="flex">

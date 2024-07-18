@@ -20,7 +20,7 @@ export const fetchLandlordNotifications = async () => {
 
 export const declineTourRequest = async (tourId, message) => {
   const url = `/tours/${tourId}/decline`;
-  const body = { message }; 
+  const body = { message };
   try {
     const response = await axiosInstance.post(url, body);
     return response.data;
