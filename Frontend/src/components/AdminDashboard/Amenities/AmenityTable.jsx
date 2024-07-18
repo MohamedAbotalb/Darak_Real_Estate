@@ -14,7 +14,6 @@ import {
   TableRow,
   Paper,
   Button,
-  Pagination,
   Box,
   InputBase,
   alpha,
@@ -29,6 +28,7 @@ import AddAmenityButton from 'components/AdminDashboard/Amenities/AddAmenityButt
 import EditAmenityButton from 'components/AdminDashboard/Amenities/EditAmenityButton';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 import { errorToast, successToast } from 'utils/toast';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -256,13 +256,11 @@ function AmenityTable() {
               mt: 2,
             }}
           >
-            <Pagination
-              count={Math.ceil(filteredAmenities.length / rowsPerPage)}
-              page={page}
-              onChange={handleChangePage}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
+            <CustomPagination
+              totalItems={filteredAmenities.length}
+              itemsPerPage={rowsPerPage}
+              currentPage={page}
+              onPageChange={handleChangePage}
             />
           </Box>
         </>

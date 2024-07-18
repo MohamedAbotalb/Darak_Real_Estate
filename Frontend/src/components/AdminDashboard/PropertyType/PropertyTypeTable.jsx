@@ -9,7 +9,6 @@ import {
   TableRow,
   Paper,
   Button,
-  Pagination,
   Box,
   InputBase,
   alpha,
@@ -27,8 +26,8 @@ import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import EditPropertyTypeButton from 'components/AdminDashboard/PropertyType/EditPropertyTypeButton';
 import AddPropertyTypeButton from 'components/AdminDashboard/PropertyType/AddPropertyTypeButton';
-import ShowDetailsModal from 'components/AdminDashboard/PropertyType/showDetailsModal';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,7 +95,6 @@ function PropertyTypeTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -134,16 +132,6 @@ function PropertyTypeTable() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-  };
-
-  const handleOpenDetails = (slug) => {
-    setSelectedSlug(slug);
-    setDetailsOpen(true);
-  };
-
-  const handleCloseDetails = () => {
-    setDetailsOpen(false);
-    setSelectedSlug(null);
   };
 
   return (
@@ -209,17 +197,6 @@ function PropertyTypeTable() {
                         {type.name}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        <Button
-                          variant="contained"
-                          onClick={() => handleOpenDetails(type.slug)}
-                          sx={{
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            mr: 1,
-                          }}
-                        >
-                          Show
-                        </Button>
                         <EditPropertyTypeButton type={type} />
                         <Button
                           variant="contained"
@@ -236,13 +213,11 @@ function PropertyTypeTable() {
             </Table>
           </TableContainer>
           <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={Math.ceil(filteredPropertyTypes.length / rowsPerPage)}
-              page={page}
-              onChange={handleChangePage}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
+            <CustomPagination
+              totalItems={filteredPropertyTypes.length}
+              itemsPerPage={rowsPerPage}
+              currentPage={page}
+              onPageChange={handleChangePage}
             />
           </Box>
         </>
@@ -253,12 +228,6 @@ function PropertyTypeTable() {
         isOpen={openConfirm}
         handleClose={handleCloseConfirm}
         handleConfirm={handleDelete}
-      />
-
-      <ShowDetailsModal
-        typeSlug={selectedSlug}
-        isOpen={detailsOpen}
-        handleClose={handleCloseDetails}
       />
     </>
   );
