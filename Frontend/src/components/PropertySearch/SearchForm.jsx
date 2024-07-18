@@ -5,6 +5,7 @@ import { Box, IconButton, MenuItem, Select, FormControl } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
@@ -45,6 +46,7 @@ const SearchButton = styled(IconButton)({
 });
 
 function SearchForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -102,7 +104,7 @@ function SearchForm() {
 
   const handleSearch = () => {
     if (parseInt(minPrice, 10) > parseInt(maxPrice, 10)) {
-      toast.error('Min price should be less than or equal to max price');
+      toast.error(t('Min price should be less than or equal to max price'));
       return;
     }
 
@@ -183,10 +185,10 @@ function SearchForm() {
               displayEmpty
             >
               <MenuItem value="" disabled>
-                <em>Rent, Buy</em>
+                <em>{t('Rent, Buy')}</em>
               </MenuItem>
-              <MenuItem value="rent">Rent</MenuItem>
-              <MenuItem value="buy">Buy</MenuItem>
+              <MenuItem value="rent">{t('Rent')}</MenuItem>
+              <MenuItem value="buy">{t('Buy')}</MenuItem>
             </Select>
           </SearchFormControl>
 
@@ -198,7 +200,7 @@ function SearchForm() {
               MenuProps={menuProps}
             >
               <MenuItem value="">
-                <em>Location</em>
+                <em>{t('Location')}</em>
               </MenuItem>
               {locations.map((loc) => (
                 <MenuItem key={loc.id} value={loc.city}>
@@ -215,7 +217,7 @@ function SearchForm() {
               displayEmpty
             >
               <MenuItem value="">
-                <em>Property Type</em>
+                <em>{t('Property Type')}</em>
               </MenuItem>
               {propertyTypes.map((type) => (
                 <MenuItem key={type.id} value={type.id}>
@@ -233,7 +235,7 @@ function SearchForm() {
               MenuProps={menuProps}
             >
               <MenuItem value="">
-                <em>Bedrooms</em>
+                <em>{t('Bedrooms')}</em>
               </MenuItem>
               {[1, 2, 3, 4, 5, 6, 7].map((opt) => (
                 <MenuItem key={opt} value={opt}>
@@ -252,7 +254,7 @@ function SearchForm() {
               MenuProps={menuProps}
             >
               <MenuItem value="">
-                <em>Bathrooms</em>
+                <em>{t('Bathrooms')}</em>
               </MenuItem>
               {[1, 2, 3, 4, 5, 6, 7].map((opt) => (
                 <MenuItem key={opt} value={opt}>
@@ -271,7 +273,7 @@ function SearchForm() {
               MenuProps={menuProps}
             >
               <MenuItem value="">
-                <em>Min Price</em>
+                <em>{t('Min Price')}</em>
               </MenuItem>
               {filteredMinPriceOptions.map((price) => (
                 <MenuItem key={price} value={price}>
@@ -289,7 +291,7 @@ function SearchForm() {
               MenuProps={menuProps}
             >
               <MenuItem value="">
-                <em>Max Price</em>
+                <em>{t('Max Price')}</em>
               </MenuItem>
               {filteredMaxPriceOptions.map((price) => (
                 <MenuItem key={price} value={price}>

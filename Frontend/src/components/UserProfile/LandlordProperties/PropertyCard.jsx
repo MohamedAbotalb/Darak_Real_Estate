@@ -8,9 +8,10 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-// import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import defaultImage from 'assets/images/image1.jpg';
+import { useTranslation } from 'react-i18next';
 
 const StyledCard = styled(Card)({
   width: '100%',
@@ -55,6 +56,7 @@ const CardLink = styled(Link)({
 });
 
 function PropertyCard({ property, onEdit, onDelete }) {
+  const { t } = useTranslation();
   const images = property.images || [];
 
   const formatPrice = (price) => {
@@ -63,18 +65,18 @@ function PropertyCard({ property, onEdit, onDelete }) {
 
   const getPriceDisplay = () => {
     if (property.listing_type === 'renting') {
-      return `${formatPrice(property.price)} EGP/month`;
+      return `${formatPrice(property.price)} ${t('EGP/month')}`;
     }
-    return `${formatPrice(property.price)} EGP`;
+    return `${formatPrice(property.price)} ${t('EGP')}`;
   };
 
   return (
     <StyledCard>
       <SliderWrapper>
         <ActionButtonWrapper>
-          {/* <IconButton size="small" onClick={onEdit}>
+          <IconButton size="small" onClick={onEdit}>
             <EditIcon color="primary" />
-          </IconButton> */}
+          </IconButton>
           <IconButton size="small" onClick={onDelete}>
             <DeleteIcon color="error" />
           </IconButton>
@@ -90,7 +92,11 @@ function PropertyCard({ property, onEdit, onDelete }) {
         >
           {images.length > 0 ? (
             images.map((img) => (
-              <StyledImage key={img.id} src={img.image} alt={property.title} />
+              <StyledImage
+                key={img.id}
+                src={`http://127.0.0.1:8000/${img.image}`}
+                alt={property.title}
+              />
             ))
           ) : (
             <StyledImage src={defaultImage} alt={property.title} />
@@ -135,7 +141,7 @@ function PropertyCard({ property, onEdit, onDelete }) {
             <Box display="flex" alignItems="center" ml={2}>
               <SquareFootIcon color="action" />
               <Typography variant="body2" color="text.secondary" ml={0.5}>
-                {Number.parseInt(property.area, 10)} sqm
+                {Number.parseInt(property.area, 10)} {t('sqm')}
               </Typography>
             </Box>
           </Box>

@@ -33,6 +33,8 @@ import {
   clearNotifications,
 } from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from 'components/Home/Notifications/NotificationDropdown';
+import LanguageSelector from 'components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -169,7 +171,7 @@ function Header() {
                 margin: '0 10px',
               }}
             >
-              Home
+              {t('Home')}
             </Button>
             {user?.role !== 'landlord' ? (
               <>
@@ -213,7 +215,7 @@ function Header() {
                     margin: '0 10px',
                   }}
                 >
-                  Rent
+                  {t('Rent')}
                 </Button>
                 <Button
                   component={NavLink}
@@ -255,7 +257,7 @@ function Header() {
                     margin: '0 10px',
                   }}
                 >
-                  Buy
+                  {t('Buy')}
                 </Button>
               </>
             ) : (
@@ -294,7 +296,7 @@ function Header() {
                   margin: '0 10px',
                 }}
               >
-                My Properties
+                {t('My Properties')}
               </Button>
             )}
             <Button
@@ -332,11 +334,12 @@ function Header() {
                 margin: '0 10px',
               }}
             >
-              About
+              {t('About')}
             </Button>
           </Box>
         )}
         <Box sx={{ flexGrow: 1 }} />
+        <LanguageSelector />
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {' '}
@@ -364,14 +367,14 @@ function Header() {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose} component={Link} to="/profile">
-                Profile
+                {t('Profile')}
               </MenuItem>
               {user?.role === 'user' && (
                 <MenuItem onClick={handleClose} component={Link} to="/mytours">
-                  My Tours
+                  {t('My Tours')}
                 </MenuItem>
               )}
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
             </Menu>
           </Box>
         ) : (
@@ -392,7 +395,7 @@ function Header() {
                   },
                 }}
               >
-                Register
+                {t('Register')}
               </Button>
               <Button
                 component={Link}
@@ -408,7 +411,7 @@ function Header() {
                   },
                 }}
               >
-                Log in
+                {t('Log in')}
               </Button>
             </Box>
           )
@@ -535,7 +538,7 @@ function Header() {
                   },
                 }}
               >
-                <ListItemText primary="Buy" />
+                <ListItemText primary={t('Buy')} />
               </ListItem>
             </>
           ) : (
@@ -575,7 +578,7 @@ function Header() {
                 },
               }}
             >
-              <ListItemText primary="My Properties" />
+              <ListItemText primary={t('My Properties')} />
             </ListItem>
           )}
           <ListItem
@@ -614,7 +617,7 @@ function Header() {
               },
             }}
           >
-            <ListItemText primary="About" />
+            <ListItemText primary={t('About')} />
           </ListItem>
           {isLoggedIn ? (
             <>
@@ -660,7 +663,7 @@ function Header() {
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Profile" />
+                <ListItemText primary={t('Profile')} />
               </ListItem>
               <ListItem
                 button
@@ -668,7 +671,7 @@ function Header() {
                 sx={{ fontSize: '1.1rem' }}
               >
                 {' '}
-                <ListItemText primary="Logout" />
+                <ListItemText primary={t('Logout')} />
               </ListItem>
             </>
           ) : (
@@ -686,7 +689,7 @@ function Header() {
                   },
                 }}
               >
-                <ListItemText primary="Login" />
+                <ListItemText primary={t('Log in')} />
               </ListItem>
               <ListItem
                 button
@@ -701,7 +704,7 @@ function Header() {
                   },
                 }}
               >
-                <ListItemText primary="Register" />
+                <ListItemText primary={t('Register')} />
               </ListItem>
             </>
           )}

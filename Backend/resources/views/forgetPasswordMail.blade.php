@@ -22,7 +22,7 @@
                 </a>
                 <p style="margin-top: 30px;">Or you can copy the link below to your browser</p>
                 <p>{{ $data['url'] }}</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

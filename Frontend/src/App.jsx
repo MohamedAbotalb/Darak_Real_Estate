@@ -24,11 +24,12 @@ import NotFoundPage from 'pages/NotFound';
 import ForbiddenPage from 'pages/Forbidden';
 import RegisterPage from 'pages/Auth/Register';
 import LoginPage from 'pages/Auth/Login';
+import AdminLoginPage from 'pages/Auth/AdminLogin';
 import ForgetPasswordPage from 'pages/Auth/ForgetPassword';
 import ResetPasswordPage from 'pages/Auth/ResetPassword';
 import HomePage from 'pages/Home';
 import AboutPage from 'pages/About';
-import AddPropertyPage from 'components/AddProperty';
+import PropertyFormPage from 'pages/PropertyForm';
 import ProfilePage from 'pages/Profile';
 import MyProperties from 'pages/MyProperties';
 import MyTours from 'pages/MyTours';
@@ -62,7 +63,7 @@ function App() {
             path="add-property"
             element={
               <ProtectedRoute
-                element={<AddPropertyPage />}
+                element={<PropertyFormPage />}
                 roles={['landlord']}
               />
             }
@@ -71,7 +72,7 @@ function App() {
             path="edit-property/:slug"
             element={
               <ProtectedRoute
-                element={<AddPropertyPage />}
+                element={<PropertyFormPage />}
                 roles={['landlord']}
               />
             }
@@ -108,6 +109,7 @@ function App() {
         </Route>
 
         {/* authenticated admin dashboard routes */}
+        <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route
           path="/admin"
           element={

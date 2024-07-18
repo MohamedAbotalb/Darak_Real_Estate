@@ -208,10 +208,10 @@ class PropertyRepository implements PropertyRepositoryInterface
     {
         return Property::where('user_id', $id)->where('status','accepted')->with('images', 'location', 'amenities', 'propertyType', 'user')->get();
     }
-    public function updateProperty(array $data, int $id)
+    public function updateProperty(array $data, string $slug)
     {
-        return DB::transaction(function () use ($data, $id) {
-            $property = Property::find($id);
+        return DB::transaction(function () use ($data, $slug) {
+            $property = Property::find($slug);
 
             if (!$property) {
                 return null;

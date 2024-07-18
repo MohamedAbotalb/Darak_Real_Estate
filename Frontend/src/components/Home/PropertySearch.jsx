@@ -15,6 +15,7 @@ import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 
 const SearchContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -91,6 +92,7 @@ const LoadingOverlay = styled(Box)({
 });
 
 function PropertySearch() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);

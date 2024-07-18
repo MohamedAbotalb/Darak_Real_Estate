@@ -23,19 +23,24 @@ import {
   IconButton,
   Box,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { errorToast, successToast } from 'utils/toast';
 import { useTranslation } from 'react-i18next';
 import governorates from 'assets/governorates.json';
 import cities from 'assets/cities.json';
-import { addProperty, clearState } from 'store/propertySlice';
+import {
+  addProperty,
+  updateProperty,
+  clearState,
+  fetchProperty,
+} from 'store/propertySlice';
 import { fetchAmenities } from 'store/amenitiesSlice';
 import { fetchPropertyTypes } from 'store/propertyTypesSlice';
-import validationSchema from '../utils/validationSchema';
+import useValidationSchema from 'utils/validationSchema';
 
 const FormWrapper = styled('div')({
   display: 'flex',
@@ -60,10 +65,14 @@ const DeleteButton = styled(IconButton)({
   },
 });
 
-function AddProperty() {
+function PropertyForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { slug } = useParams();
+  const isEditMode = Boolean(slug);
   const { t, i18n } = useTranslation();
+  const validationSchema = useValidationSchema();
+
   const {
     register,
     handleSubmit,
@@ -80,17 +89,23 @@ function AddProperty() {
   const { propertyTypes, status: propertyTypesStatus } = useSelector(
     (state) => state.propertyTypes
   );
+  const { property, status: propertyStatus } = useSelector(
+    (state) => state.property
+  );
 
   const [cityOptions, setCityOptions] = useState([]);
   const selectedState = watch('state');
   const selectedListingType = watch('listing_type');
   const [selectedImages, setSelectedImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const baseImageURL = 'http://127.0.0.1:8000/';
 
   useEffect(() => {
     if (selectedState) {
       const filteredCities = cities.filter(
-        (city) => city.governorate_id === selectedState
+        (city) => city.governorate_name === selectedState
       );
       setCityOptions(filteredCities);
       setValue('city', '');
@@ -102,49 +117,114 @@ function AddProperty() {
   useEffect(() => {
     dispatch(fetchAmenities());
     dispatch(fetchPropertyTypes());
-  }, [dispatch]);
+
+    if (isEditMode) {
+      dispatch(fetchProperty(slug));
+    }
+  }, [dispatch, slug, isEditMode]);
+
+  useEffect(() => {
+    if (
+      isEditMode &&
+      propertyStatus === 'succeeded' &&
+      property.location.state
+    ) {
+      // Populate the form with the fetched property data
+      const fields = [
+        'title',
+        'description',
+        'state',
+        'city',
+        'street',
+        'area',
+        'property_type_id',
+        'num_of_rooms',
+        'num_of_bathrooms',
+        'listing_type',
+        'price',
+      ];
+      fields.forEach((field) => {
+        if (field === 'state') setValue(field, property.location.state);
+        else if (field === 'city') setValue(field, property.location.city);
+        else if (field === 'street') setValue(field, property.location.street);
+        else if (field === 'property_type_id')
+          setValue(field, property.property_type.id);
+        else setValue(field, property[field]);
+      });
+      setExistingImages(property.images || []);
+
+      // Set city options based on the fetched state
+      const filteredCities = cities.filter(
+        (city) => city.governorate_name === property.location.state
+      );
+      setCityOptions(filteredCities);
+
+      // Set default city value in the form
+      setValue('city', property.location.city || '');
+
+      // Set default values for amenities
+      const selectedAmenities = property.amenities.map((amenity) => amenity.id);
+      setValue('amenities', selectedAmenities);
+
+      // Set default value for listing_type
+      setValue('listing_type', property.listing_type);
+    }
+  }, [property, propertyStatus, setValue, isEditMode]);
 
   const onSubmit = (data) => {
     const formData = new FormData();
+
+    // Append other fields
     Object.entries(data).forEach(([key, value]) => {
       if (key !== 'images' && key !== 'amenities') {
         formData.append(key, value);
       }
     });
 
+    // Append new images
     if (data.images) {
       data.images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
       });
     }
 
+    // Append amenities as an array
     if (Array.isArray(data.amenities)) {
       data.amenities.forEach((amenity, index) => {
         formData.append(`amenities[${index}]`, amenity);
       });
     }
-
     setIsSubmitting(true);
-    dispatch(addProperty(formData));
+
+    if (isEditMode) {
+      dispatch(updateProperty({ slug, propertyData: formData }));
+    } else {
+      dispatch(addProperty(formData));
+    }
   };
 
   useEffect(() => {
     if (isSubmitting) {
       if (status === 'succeeded') {
-        toast.success(t('Property added successfully!'));
+        successToast(
+          t(`Property ${isEditMode ? 'updated' : 'added'} successfully!`)
+        );
         reset();
         setSelectedImages([]);
+        setExistingImages([]);
         dispatch(clearState());
         setIsSubmitting(false);
         navigate('/myproperties');
       }
       if (status === 'failed') {
-        toast.error(error || t('Failed to add property!'));
+        errorToast(
+          error || t(`Failed to ${isEditMode ? 'update' : 'add'} property!`)
+        );
         dispatch(clearState());
         setIsSubmitting(false);
       }
     }
-  }, [status, error, dispatch, reset, isSubmitting]);
+  }, [status, error, dispatch, reset, isSubmitting, isEditMode, navigate]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -158,11 +238,16 @@ function AddProperty() {
     setValue('images', updatedImages);
   };
 
+  const handleRemoveExistingImage = (index) => {
+    const updatedImages = existingImages.filter((_, i) => i !== index);
+    setExistingImages(updatedImages);
+  };
+
   return (
     <FormWrapper>
       <Card sx={{ maxWidth: 700, width: '100%', boxShadow: 5 }}>
         <Typography variant="h4" gutterBottom align="center" padding={3}>
-          {t('Add Property')}
+          {isEditMode ? t('Edit Property') : t('Add Property')}
         </Typography>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -192,21 +277,31 @@ function AddProperty() {
                   <InputLabel id="state-label" htmlFor="state">
                     {t('State')}
                   </InputLabel>
-                  <Select
-                    labelId="state-label"
-                    id="state"
-                    {...register('state')}
-                    label={t('State')}
+                  <Controller
+                    name="state"
+                    control={control}
                     defaultValue=""
-                  >
-                    {governorates.map((gov) => (
-                      <MenuItem key={gov.id} value={gov.id}>
-                        {i18n.language === 'ar'
-                          ? gov.governorate_name_ar
-                          : gov.governorate_name_en}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    render={({ field }) => (
+                      <Select
+                        labelId="state-label"
+                        id="state"
+                        {...field}
+                        label={t('State')}
+                        defaultValue=""
+                      >
+                        {governorates.map((gov) => (
+                          <MenuItem
+                            key={gov.id}
+                            value={gov.governorate_name_en}
+                          >
+                            {i18n.language === 'ar'
+                              ? gov.governorate_name_ar
+                              : gov.governorate_name_en}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
                   {errors.state && (
                     <Typography color="error">
                       {errors.state.message}
@@ -219,22 +314,28 @@ function AddProperty() {
                   <InputLabel id="city-label" htmlFor="city">
                     {t('City')}
                   </InputLabel>
-                  <Select
-                    labelId="city-label"
-                    id="city"
-                    {...register('city')}
-                    label={t('City')}
+                  <Controller
+                    name="city"
+                    control={control}
                     defaultValue=""
-                    disabled={!selectedState}
-                  >
-                    {cityOptions.map((city) => (
-                      <MenuItem key={city.id} value={city.city_name_en}>
-                        {i18n.language === 'ar'
-                          ? city.city_name_ar
-                          : city.city_name_en}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    render={({ field }) => (
+                      <Select
+                        labelId="city-label"
+                        id="city"
+                        {...field}
+                        label={t('City')}
+                        disabled={!selectedState}
+                      >
+                        {cityOptions.map((city) => (
+                          <MenuItem key={city.id} value={city.city_name_en}>
+                            {i18n.language === 'ar'
+                              ? city.city_name_ar
+                              : city.city_name_en}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
                   {errors.city && (
                     <Typography color="error">{errors.city.message}</Typography>
                   )}
@@ -243,7 +344,6 @@ function AddProperty() {
               <Grid item xs={12} md={6}>
                 <TextField
                   label={t('Street')}
-                  id="street"
                   fullWidth
                   {...register('street')}
                   error={!!errors.street}
@@ -254,7 +354,6 @@ function AddProperty() {
                 <TextField
                   label={t('Area')}
                   type="number"
-                  id="area"
                   fullWidth
                   {...register('area')}
                   error={!!errors.area}
@@ -307,7 +406,6 @@ function AddProperty() {
                 <TextField
                   label={t('Rooms')}
                   type="number"
-                  id="num_of_rooms"
                   fullWidth
                   {...register('num_of_rooms')}
                   error={!!errors.num_of_rooms}
@@ -318,7 +416,6 @@ function AddProperty() {
                 <TextField
                   label={t('Bathrooms')}
                   type="number"
-                  id="num_of_bathrooms"
                   fullWidth
                   {...register('num_of_bathrooms')}
                   error={!!errors.num_of_bathrooms}
@@ -329,53 +426,66 @@ function AddProperty() {
                 <FormControl component="fieldset" error={!!errors.amenities}>
                   <FormLabel component="legend">{t('Amenities')}</FormLabel>
                   <FormGroup row>
-                    {status === 'loading' && (
-                      <Typography>{t('Loading amenities...')}</Typography>
-                    )}
-                    {status === 'failed' && (
-                      <Typography color="error">{error}</Typography>
-                    )}
-                    {status === 'succeeded' &&
-                      amenities.map((amenity) => (
-                        <FormControlLabel
-                          key={amenity.id}
-                          control={
-                            <Checkbox
-                              {...register('amenities')}
-                              value={amenity.id}
-                            />
-                          }
-                          label={amenity.name}
-                          style={{ marginRight: 8 }}
-                        />
-                      ))}
+                    <Controller
+                      name="amenities"
+                      control={control}
+                      defaultValue={[]}
+                      render={({ field }) =>
+                        amenities.map((amenity) => (
+                          <FormControlLabel
+                            key={amenity.id}
+                            control={
+                              <Checkbox
+                                checked={field.value.includes(amenity.id)}
+                                onChange={() => {
+                                  const newValue = field.value.includes(
+                                    amenity.id
+                                  )
+                                    ? field.value.filter(
+                                        (id) => id !== amenity.id
+                                      )
+                                    : [...field.value, amenity.id];
+                                  field.onChange(newValue);
+                                }}
+                              />
+                            }
+                            label={amenity.name}
+                          />
+                        ))
+                      }
+                    />
                   </FormGroup>
                   {errors.amenities && (
-                    <Typography color="error">
+                    <Typography variant="body2" color="error">
                       {errors.amenities.message}
                     </Typography>
                   )}
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <FormControl component="fieldset" error={!!errors.listing_type}>
+                <FormControl component="fieldset">
                   <FormLabel component="legend">{t('Listing Type')}</FormLabel>
-                  <RadioGroup row defaultValue="Rent">
-                    <FormControlLabel
-                      value="rent"
-                      {...register('listing_type')}
-                      control={<Radio />}
-                      label={t('Rent')}
-                    />
-                    <FormControlLabel
-                      value="buy"
-                      {...register('listing_type')}
-                      control={<Radio />}
-                      label={t('Sell')}
-                    />
-                  </RadioGroup>
+                  <Controller
+                    name="listing_type"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <RadioGroup {...field} row>
+                        <FormControlLabel
+                          value="buy"
+                          control={<Radio />}
+                          label={t('Sell')}
+                        />
+                        <FormControlLabel
+                          value="rent"
+                          control={<Radio />}
+                          label={t('Rent')}
+                        />
+                      </RadioGroup>
+                    )}
+                  />
                   {errors.listing_type && (
-                    <Typography color="error">
+                    <Typography variant="body2" color="error">
                       {errors.listing_type.message}
                     </Typography>
                   )}
@@ -389,7 +499,6 @@ function AddProperty() {
                       : t('Price')
                   }
                   type="number"
-                  id="price"
                   fullWidth
                   {...register('price')}
                   error={!!errors.price}
@@ -415,14 +524,34 @@ function AddProperty() {
                     {t('Upload Images')}
                   </Button>
                 </label>
-                {selectedImages.length > 0 && (
+                {(selectedImages.length > 0 || existingImages.length > 0) && (
                   <Box mt={2}>
                     <Typography variant="subtitle1">
                       {t('Selected Images')}:
                     </Typography>
                     <Grid container spacing={2}>
+                      {existingImages.map((image, index) => (
+                        <Grid item key={image.id} xs={12} md={4}>
+                          <ImageContainer>
+                            <Card>
+                              <CardMedia
+                                component="img"
+                                height="200"
+                                image={baseImageURL + image.image}
+                                alt={image.name}
+                              />
+                              <DeleteButton
+                                color="secondary"
+                                onClick={() => handleRemoveExistingImage(index)}
+                              >
+                                <RemoveCircleOutline />
+                              </DeleteButton>
+                            </Card>
+                          </ImageContainer>
+                        </Grid>
+                      ))}
                       {selectedImages.map((image, index) => (
-                        <Grid item key={image.name} xs={12} md={4}>
+                        <Grid item key={image.id} xs={12} md={4}>
                           <ImageContainer>
                             <Card>
                               <CardMedia
@@ -474,7 +603,7 @@ function AddProperty() {
                   color="primary"
                   sx={{ mr: 2 }}
                 >
-                  {t('Add')}
+                  {isEditMode ? t('Update') : t('Add')}
                 </Button>
                 <Button
                   type="reset"
@@ -492,4 +621,4 @@ function AddProperty() {
   );
 }
 
-export default AddProperty;
+export default PropertyForm;

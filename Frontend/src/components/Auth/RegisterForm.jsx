@@ -27,8 +27,10 @@ import { clearState } from 'store/Auth/authSlice';
 import { register } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import RegisterSchema from 'components/Auth/Validation/RegisterSchema';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function RegisterForm() {
+  const { t } = useTranslation(); // Initialize useTranslation hook
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -85,12 +87,12 @@ function RegisterForm() {
   return (
     <Container sx={{ my: 10 }}>
       <Typography variant="h5" sx={{ mb: 3 }} gutterBottom>
-        Register New Account
+        {t('Register New Account')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box my={2}>
           <TextField
-            label="First Name"
+            label={t('First Name')}
             {...registerForm('firstName')}
             fullWidth
             error={!!errors.firstName}
@@ -106,7 +108,7 @@ function RegisterForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Last Name"
+            label={t('Last Name')}
             {...registerForm('lastName')}
             fullWidth
             error={!!errors.lastName}
@@ -122,7 +124,7 @@ function RegisterForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Email"
+            label={t('Email')}
             {...registerForm('email')}
             type="email"
             fullWidth
@@ -139,7 +141,7 @@ function RegisterForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Password"
+            label={t('Password')}
             {...registerForm('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -163,7 +165,7 @@ function RegisterForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Confirm Password"
+            label={t('Confirm Password')}
             {...registerForm('passwordConfirmation')}
             type={showConfirmPassword ? 'text' : 'password'}
             fullWidth
@@ -187,7 +189,7 @@ function RegisterForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Phone Number"
+            label={t('Phone Number')}
             {...registerForm('phoneNumber')}
             fullWidth
             error={!!errors.phoneNumber}
@@ -210,7 +212,7 @@ function RegisterForm() {
                 value="landlord"
               />
             }
-            label="I am a Landlord"
+            label={t('I am a Landlord')}
           />
         </Box>
         <Button
@@ -221,10 +223,10 @@ function RegisterForm() {
           sx={{ height: 40 }}
           disabled={isLoading}
         >
-          Register
+          {t('Register')}
         </Button>
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          Already have an account?{' '}
+          {t('Already Have an Account')}{' '}
           <Link
             to="/login"
             style={{
@@ -233,7 +235,7 @@ function RegisterForm() {
               fontWeight: 'bold',
             }}
           >
-            Login here
+            {t('Login here')}
           </Link>
         </Typography>
       </form>

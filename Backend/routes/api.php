@@ -96,14 +96,15 @@ Route::prefix('properties')->group(function(){
     Route::get('latest-rent',[PropertyController::class,'showLatestRent']);
     Route::get('latest-buy',[PropertyController::class,'showLatestBuy']);
     Route::get('/{slug}',[PropertyController::class,'show']);
+    Route::put('/{slug}',[PropertyController::class,'update'])->middleware('auth:sanctum');
     Route::post('/',[PropertyController::class,'store'])->middleware('auth:sanctum');
     Route::get('/search/filter',[PropertyController::class,'search']);
-    Route::put('/{id}',[PropertyController::class,'update'])->middleware('auth:sanctum');
     Route::delete('/{id}',[PropertyController::class,'deleteProperty']);
     Route::put('/{propertyId}/status', [PropertyController::class, 'changePropertyStatus'])->middleware('admin','auth:sanctum');
 });
 Route::prefix('property-updates')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [PropertyUpdateController::class, 'index']);
+    Route::get('/{id}', [PropertyUpdateController::class, 'show']);
     Route::post('/accepted/{id}', [PropertyUpdateController::class, 'approve']);
     Route::post('/rejected/{id}', [PropertyUpdateController::class, 'reject']);
 });
@@ -129,6 +130,7 @@ Route::prefix('dashboard')->group(function () {
 // Amenity Admin Page ROUTE
 Route::prefix('amenities')->group(function () {
     Route::get('/', [AmenityController::class, 'index']);
+    Route::get('/available-amenities', [AmenityController::class, 'getAvailableAmenities']);
     Route::post('/', [AmenityController::class, 'store']);
     Route::put('/availability/{id}', [AmenityController::class, 'updateAvailability']);
     Route::get('/{slug}', [AmenityController::class, 'show']);

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->integer('num_of_rooms');
             $table->integer('num_of_bathrooms');
-            $table->float('area');
+            $table->integer('area');
             $table->integer('price');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('property_type_id');

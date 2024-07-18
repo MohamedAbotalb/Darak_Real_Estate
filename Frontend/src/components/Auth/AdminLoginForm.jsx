@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { successToast, errorToast } from 'utils/toast';
+import { useNavigate } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -23,10 +23,8 @@ import { clearState } from 'store/Auth/authSlice';
 import { login } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import LoginSchema from 'components/Auth/Validation/LoginSchema';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
 
-function LoginForm() {
-  const { t } = useTranslation(); // Initialize useTranslation hook
+function AdminLoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -43,47 +41,50 @@ function LoginForm() {
 
   const [showPassword, toggleShowPassword] = useToggle(false);
 
+  const handleUnauthorizedAccess = useCallback(() => {
+    errorToast('Unauthorized access.');
+    dispatch(clearState());
+    navigate('/403');
+  }, [dispatch, navigate]);
+
   const onSubmit = (data) => {
     dispatch(login(data));
   };
 
-  
-
   useEffect(() => {
     if (user) {
-      if (user.role === 'admin') {
-        navigate('/admin');
+      if (user.role !== 'admin') {
+        handleUnauthorizedAccess();
       } else {
-        navigate('/');
+        successToast('Welcome back to Admin Dashboard');
+        navigate('/admin/overview');
       }
     }
     if (error) {
-      toast.error(error, { position: 'top-right' });
-    }
-
-    if (successMessage) {
-      toast.success(successMessage, { position: 'top-right' });
-      if (user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      errorToast(error);
     }
 
     return () => {
       dispatch(clearState());
     };
-  }, [error, successMessage, user, navigate, dispatch]);
+  }, [
+    error,
+    successMessage,
+    user,
+    navigate,
+    dispatch,
+    handleUnauthorizedAccess,
+  ]);
 
   return (
     <Container sx={{ my: 5 }}>
       <Typography variant="h4" sx={{ my: 4 }} gutterBottom>
-        {t('Log in')}
+        Admin Log in
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box mb={2}>
           <TextField
-            label={t('Email')}
+            label="Email"
             {...loginForm('email')}
             type="email"
             fullWidth
@@ -100,7 +101,7 @@ function LoginForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label={t('Password')}
+            label="Password"
             {...loginForm('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -122,18 +123,6 @@ function LoginForm() {
             }}
           />
         </Box>
-        <Typography variant="body2" sx={{ my: 3, fontSize: 15 }}>
-          <Link
-            to="/forget-password"
-            style={{
-              textDecoration: 'none',
-              color: '#1976d2',
-              fontWeight: 'bold',
-            }}
-          >
-            {t('Forgot Password?')}
-          </Link>
-        </Typography>
         <Button
           type="submit"
           variant="contained"
@@ -142,24 +131,11 @@ function LoginForm() {
           sx={{ height: 40 }}
           disabled={isLoading}
         >
-          {t('login')}
+          Login
         </Button>
-        <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          {t("Don't have an account?")}{' '}
-          <Link
-            to="/register"
-            style={{
-              textDecoration: 'none',
-              color: '#1976d2',
-              fontWeight: 'bold',
-            }}
-          >
-            {t('Register here')}
-          </Link>
-        </Typography>
       </form>
     </Container>
   );
 }
 
-export default LoginForm;
+export default AdminLoginForm;

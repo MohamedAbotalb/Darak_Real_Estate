@@ -1,18 +1,23 @@
 import React from 'react';
 import { Box, Typography, Button, Container, Grid } from '@mui/material';
 import logo from 'assets/images/logo-auth.png';
+import { useTranslation } from 'react-i18next';
 
 function AboutUs() {
+  const { t } = useTranslation();
+
   return (
     <Container sx={{ my: 11 }}>
       <Grid container spacing={4} alignItems="center">
         {/* Left Content */}
         <Grid item xs={12} md={6}>
           <Typography variant="overline" display="block" gutterBottom>
-            Dolore dolore voluptate aliqua ut mi
+            {t(
+              'We strive to make the process of buying, selling, and renting properties as easy and efficient as possible.'
+            )}
           </Typography>
           <Typography variant="h4" gutterBottom>
-            About us
+            {t('About us')}
             <Box
               component="span"
               sx={{
@@ -26,13 +31,12 @@ function AboutUs() {
             />
           </Typography>
           <Typography variant="body1" paragraph>
-            Labore proident nisi fugiat nostrud sint mollit aliqua ipsum ad
-            veniam cupidatat ullamco ullamco et. Aliqua tempor do consectetur
-            reprehenderit Lorem aliqua commodo occaecat deserunt. Do eiusmod
-            incididunt.
+            {t(
+              'Our website offers a comprehensive platform for property listings, providing users with a seamless experience to find their desired homes and properties.'
+            )}
           </Typography>
           <Button variant="contained" color="primary">
-            Learn more
+            {t('Learn more')}
           </Button>
         </Grid>
 

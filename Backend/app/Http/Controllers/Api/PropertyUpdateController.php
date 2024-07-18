@@ -24,6 +24,15 @@ class PropertyUpdateController extends Controller
 
         return response()->json(PropertyUpdateResource::collection($pendingUpdates));
     }
+    public function show($id)
+    {
+        $pendingUpdates=$this->propertyUpdatesRepository->show($id);
+        if (!$pendingUpdates) {
+            return response()->json(['message' => 'property not found.'], 404);
+        }
+
+        return response()->json(new PropertyUpdateResource($pendingUpdates));
+    }
     public function approve($id)
     {
         $property = $this->propertyUpdatesRepository->approvePropertyUpdate($id);

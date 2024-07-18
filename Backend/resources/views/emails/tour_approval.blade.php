@@ -16,7 +16,7 @@
                 <p>Your tour request for the property {{ $property->title }} has been approved by the landlord.</p>
                 <p><strong>Accepted Date:</strong>  {{ $tourDate['date'] }}</p>
                 <p>Thank you!</p>
-                <p>The RentEZ Team</p>
+                <p>Darak Team</p>
             </div>
         </div>
     </div>

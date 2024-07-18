@@ -16,8 +16,10 @@ import { Email as EmailIcon } from '@mui/icons-material';
 import { clearState } from 'store/Auth/authSlice';
 import { forgetPassword } from 'store/Auth/authActions';
 import ForgetPasswordSchema from 'components/Auth/Validation/ForgetPasswordSchema';
+import { useTranslation } from 'react-i18next';
 
 function ForgetPasswordForm() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -55,7 +57,7 @@ function ForgetPasswordForm() {
   return (
     <Container sx={{ my: 5 }}>
       <Typography variant="h4" sx={{ my: 4, textAlign: 'center' }} gutterBottom>
-        Forget Your Password?
+        {t('Forget Your Password?')}
       </Typography>
       <Typography
         variant="p"
@@ -63,12 +65,14 @@ function ForgetPasswordForm() {
         sx={{ my: 4, textAlign: 'center' }}
         gutterBottom
       >
-        Enter you email address we will send you a link to reset you password
+        {t(
+          'Enter you email address we will send you a link to reset you password'
+        )}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box mb={2}>
           <TextField
-            label="Email"
+            label={t('Email')}
             {...forgetPasswordForm('email')}
             type="email"
             fullWidth
@@ -91,10 +95,10 @@ function ForgetPasswordForm() {
           sx={{ height: 40 }}
           disabled={isLoading}
         >
-          Submit
+          {t('Submit')}
         </Button>
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          Remembered your password?{' '}
+          {t('Remembered your password?')}{' '}
           <Link
             to="/login"
             style={{
@@ -103,7 +107,7 @@ function ForgetPasswordForm() {
               fontWeight: 'bold',
             }}
           >
-            Login here
+            {t('Login here')}
           </Link>
         </Typography>
       </form>

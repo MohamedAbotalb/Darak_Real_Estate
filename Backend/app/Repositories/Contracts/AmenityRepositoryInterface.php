@@ -7,6 +7,7 @@ use App\Models\Amenity;
 interface AmenityRepositoryInterface
 {
     public function getAllAmenities();
+    public function getAvailableAmenities();
     public function createAmenity(array $data);
     public function findAmenityBySlug(string $slug);
     public function updateAmenity(string $slug, array $data);

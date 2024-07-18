@@ -45,6 +45,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 }));
 
 function PropertyListings({ type }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);

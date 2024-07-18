@@ -13,8 +13,11 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import SendIcon from '@mui/icons-material/Send';
+import { useTranslation } from 'react-i18next';
 
 function Footer() {
+  const { t } = useTranslation();
+
   const handleSubscribe = () => {};
 
   const getCurrentYear = () => {
@@ -47,13 +50,12 @@ function Footer() {
           <Grid item xs={12} sm={6}>
             <Box className="footer-content">
               <Typography variant="h6" gutterBottom>
-                Real Estate
+                {t('Real Estate')}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero
-                nisi excepturi aliquam sint quod corrupti id obcaecati,
-                consequuntur natus nulla impedit tempore sapiente ut eos dolore
-                veritatis quaerat beatae animi.
+                {t(
+                  'Our website offers a comprehensive platform for property listings, providing users with a seamless experience to find their desired homes and properties.'
+                )}
               </Typography>
               <Box
                 sx={{
@@ -89,7 +91,7 @@ function Footer() {
               }}
             >
               <Typography variant="body2" gutterBottom>
-                Register now to get updates or promotions.
+                {t('Register now to get updates or promotions.')}
               </Typography>
               <Box
       sx={{
@@ -152,7 +154,9 @@ function Footer() {
           variant="body2"
           sx={{ marginTop: '20px', textAlign: 'center' }}
         >
-          All Rights Reserved © {getCurrentYear()} Real Estate
+          {t('All Rights Reserved © {{year}} Real Estate', {
+            year: getCurrentYear(),
+          })}
         </Typography>
       </Container>
     </Box>

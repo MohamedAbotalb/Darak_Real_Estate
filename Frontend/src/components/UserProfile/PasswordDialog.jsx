@@ -14,6 +14,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useTranslation } from 'react-i18next';
 
 function PasswordDialog({
   isOpen,
@@ -30,6 +31,7 @@ function PasswordDialog({
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { t } = useTranslation();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
@@ -49,7 +51,7 @@ function PasswordDialog({
           alignItems: 'center',
         }}
       >
-        Change password
+        {t('Change password')}
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
@@ -58,7 +60,7 @@ function PasswordDialog({
         <TextField
           autoFocus
           margin="dense"
-          label="Current password"
+          label={t('Current password')}
           type={showPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
@@ -83,7 +85,7 @@ function PasswordDialog({
         />
         <TextField
           margin="dense"
-          label="New password"
+          label={t('New password')}
           type={showNewPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
@@ -107,14 +109,14 @@ function PasswordDialog({
           }}
         />
         <DialogContentText sx={{ mb: 2 }}>
-          At least 8 characters <br />
-          Mix of letters and numbers <br />
-          Contains a special character <br />
-          Mix of uppercase and lowercase letters
+          {t('At least 8 characters')} <br />
+          {t('Mix of letters and numbers')} <br />
+          {t('Contains a special character')} <br />
+          {t('Mix of uppercase and lowercase letters')}
         </DialogContentText>
         <TextField
           margin="dense"
-          label="Confirm password"
+          label={t('Confirm password')}
           type={showConfirmPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
@@ -139,7 +141,7 @@ function PasswordDialog({
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button
           onClick={onSave}
@@ -147,7 +149,7 @@ function PasswordDialog({
           variant="contained"
           sx={{ backgroundColor: '#1E88E5' }}
         >
-          Apply
+          {t('Apply')}
         </Button>
       </DialogActions>
     </Dialog>

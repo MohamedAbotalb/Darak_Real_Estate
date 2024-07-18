@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import secureLocalStorage from 'react-secure-storage';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { errorToast } from 'utils/toast';
 
 function ProtectedRoute({ element, roles }) {
+  const { t } = useTranslation();
   const user = JSON.parse(secureLocalStorage.getItem('user'));
 
   if (!user) {
-    errorToast('You must be logged in to access this page');
+    errorToast(t('You must be logged in to access this page'));
     return <Navigate to="/login" />;
   }
 

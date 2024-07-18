@@ -9,6 +9,10 @@ class AmenityRepository implements AmenityRepositoryInterface
 {
     public function getAllAmenities()
     {
+        return Amenity::all();
+    }
+    public function getAvailableAmenities()
+    {
         return Amenity::where('availability','available')->get();
     }
 
