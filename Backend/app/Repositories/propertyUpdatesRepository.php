@@ -25,7 +25,18 @@ class PropertyUpdatesRepository implements PropertyUpdatesRepositoryInterface
 
         return $pendingUpdates;
     }
-    public function show($id)
+    public function showNewProperty($id)
+    {
+        $propertyUpdate = PropertyUpdate::where('status', 'pending')
+            ->find($id);
+
+        if (!$propertyUpdate) {
+            return null;
+        }
+
+        return $propertyUpdate;
+    }
+   public function showOldProperty($id)
     {
         $propertyUpdate = PropertyUpdate::where('status', 'pending')
             ->with('property')
