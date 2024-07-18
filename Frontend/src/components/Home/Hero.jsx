@@ -3,8 +3,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Box, Typography } from '@mui/material';
 import PropertySearch from 'components/Home/PropertySearch';
 import { Carousel } from 'react-responsive-carousel';
+import { useTranslation } from 'react-i18next';
 
 function Hero() {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -51,10 +53,10 @@ function Hero() {
         }}
       >
         <Typography variant="h2" component="h1">
-          Welcome to RentEZ
+          {t('Welcome to RentEZ')}
         </Typography>
         <Typography variant="body1" component="p" sx={{ mb: 3 }}>
-          Your ultimate destination for finding rental properties.
+          {t('Your ultimate destination for finding rental properties.')}
         </Typography>
         <PropertySearch />
       </Box>

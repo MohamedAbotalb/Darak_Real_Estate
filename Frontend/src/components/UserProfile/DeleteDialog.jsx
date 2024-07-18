@@ -10,8 +10,11 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTranslation } from 'react-i18next';
 
 function DeleteDialog({ isOpen, onClose, onDelete }) {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle
@@ -21,22 +24,22 @@ function DeleteDialog({ isOpen, onClose, onDelete }) {
           alignItems: 'center',
         }}
       >
-        Confirm Account Deletion
+        {t('Confirm Account Deletion')}
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete your account?
+          {t('Are you sure you want to delete your account?')}
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
         <Button onClick={onClose} color="primary">
-          Cancel
+          {t('Cancel')}
         </Button>
         <Button onClick={onDelete} color="error" variant="contained">
-          Delete
+          {t('Delete')}
         </Button>
       </DialogActions>
     </Dialog>

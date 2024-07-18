@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Paper, Typography, Divider, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function ProfileDetails({ user, onEditClick, onDeleteClick }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleShowClick = () => {
     if (user.role === 'user') {
@@ -17,11 +19,11 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
   return (
     <Paper elevation={3} sx={{ p: 4 }}>
       <Typography variant="h4" component="div" sx={{ mb: 3 }}>
-        Profile
+        {t('Profile')}
       </Typography>
       <Divider sx={{ mb: 3 }} />
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h6">Name</Typography>
+        <Typography variant="h6">{t('Name')}</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Name')}
@@ -32,12 +34,12 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
             },
           }}
         >
-          Edit
+          {t('Edit')}
         </Button>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
         <Typography variant="h6">
-          {user && user.role === 'user' ? 'My Tours' : 'My Properties'}
+          {user && user.role === 'user' ? t('My Tours') : t('My Properties')}
         </Typography>
         <Button
           variant="contained"
@@ -49,11 +51,11 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
             },
           }}
         >
-          Show
+          {t('Show')}
         </Button>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h6">Phone</Typography>
+        <Typography variant="h6">{t('Phone')}</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Phone')}
@@ -64,11 +66,11 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
             },
           }}
         >
-          Edit
+          {t('Edit')}
         </Button>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h6">Password</Typography>
+        <Typography variant="h6">{t('Password')}</Typography>
         <Button
           variant="contained"
           onClick={() => onEditClick('Password')}
@@ -79,15 +81,15 @@ function ProfileDetails({ user, onEditClick, onDeleteClick }) {
             },
           }}
         >
-          Edit
+          {t('Edit')}
         </Button>
       </Box>
       <Typography variant="h4" component="div" sx={{ mb: 3 }}>
-        Manage Account
+        {t('Manage Account')}
       </Typography>
       <Divider sx={{ mb: 3 }} />
       <Button color="error" variant="contained" onClick={onDeleteClick}>
-        Delete Account
+        {t('Delete Account')}
       </Button>
     </Paper>
   );

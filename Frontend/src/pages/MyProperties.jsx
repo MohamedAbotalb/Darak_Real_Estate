@@ -17,8 +17,10 @@ import { fetchUserProperties, deleteProperty } from 'store/userPropertiesSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 
 function MyProperties() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userProperties, isLoading } = useSelector(
@@ -53,11 +55,11 @@ function MyProperties() {
     dispatch(deleteProperty(selectedPropertyId))
       .unwrap()
       .then(() => {
-        toast.success('Property deleted successfully');
+        toast.success(t('Property deleted successfully'));
         handleCloseDialog();
       })
       .catch(() => {
-        toast.error('Failed to delete property');
+        toast.error(t('Failed to delete property'));
         handleCloseDialog();
       });
   };
@@ -70,13 +72,13 @@ function MyProperties() {
     <div>
       <Container maxWidth="lg" sx={{ mt: 3, mb: 4 }}>
         <Box display="flex" justifyContent="space-between" mb={2}>
-          <Typography variant="h4">My Properties</Typography>
+          <Typography variant="h4">{t('My Properties')}</Typography>
           <Button
             variant="contained"
             color="primary"
             onClick={handleAddProperty}
           >
-            + Add New Property
+            + {t('Add New Property')}
           </Button>
         </Box>
         <Grid container spacing={3}>
@@ -93,7 +95,7 @@ function MyProperties() {
           ) : (
             <Grid item xs={12}>
               <Typography variant="h6">
-                You have no properties listed yet.
+                {t('You have no properties listed yet.')}
               </Typography>
             </Grid>
           )}
@@ -105,18 +107,20 @@ function MyProperties() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete Property</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {t('Delete Property')}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this property?
+            {t('Are you sure you want to delete this property?')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button onClick={handleDeleteProperty} color="error" autoFocus>
-            Delete
+            {t('Delete')}
           </Button>
         </DialogActions>
       </Dialog>

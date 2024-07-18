@@ -1,8 +1,10 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import logo from 'assets/images/logo.png';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthWelcome() {
+  const { t } = useTranslation();
   return (
     <Box
       display="flex"
@@ -13,7 +15,7 @@ export default function AuthWelcome() {
       marginTop="30px"
     >
       <Typography variant="h4" sx={{ mb: 8 }} gutterBottom>
-        Welcome to our website!
+        {t('Welcome to our website!')}
       </Typography>
       <img
         src={logo}

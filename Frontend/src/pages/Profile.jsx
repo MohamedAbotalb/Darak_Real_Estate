@@ -20,46 +20,54 @@ import {
 } from 'store/userSlice';
 import { setCredentials, logout } from 'store/Auth/authSlice';
 import * as Yup from 'yup';
-
-const validationSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('First Name is required')
-    .min(3, 'First Name should be more than 2 characters')
-    .matches(
-      /^[A-Za-z]+$/,
-      'First Name should contain only alphabetic characters'
-    ),
-  lastName: Yup.string()
-    .required('Last Name is required')
-    .min(3, 'Last Name should be more than 2 characters')
-    .matches(
-      /^[A-Za-z]+$/,
-      'Last Name should contain only alphabetic characters'
-    ),
-  newPassword: Yup.string()
-    .min(8, 'Password must be at least 8 characters long')
-    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .matches(/[0-9]/, 'Password must contain at least one number')
-    .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      'Password must contain at least one special character'
-    ),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('newPassword'), null], 'Passwords do not match')
-    .required('Password confirmation is required'),
-  phone: Yup.string()
-    .required('Phone Number is required')
-    .matches(
-      /^01[0125][0-9]{8}$/,
-      'Phone Number must be a valid Egyptian phone number'
-    ),
-});
+import { useTranslation } from 'react-i18next';
 
 function Profile() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .required(t('First Name is required'))
+      .min(3, t('First Name should be more than 2 characters'))
+      .matches(
+        /^[A-Za-z]+$/,
+        t('First Name should contain only alphabetic characters')
+      ),
+    lastName: Yup.string()
+      .required(t('Last Name is required'))
+      .min(3, t('Last Name should be more than 2 characters'))
+      .matches(
+        /^[A-Za-z]+$/,
+        t('Last Name should contain only alphabetic characters')
+      ),
+    newPassword: Yup.string()
+      .min(8, t('Password must be at least 8 characters long'))
+      .matches(
+        /[A-Z]/,
+        t('Password must contain at least one uppercase letter')
+      )
+      .matches(
+        /[a-z]/,
+        t('Password must contain at least one lowercase letter')
+      )
+      .matches(/[0-9]/, t('Password must contain at least one number'))
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        t('Password must contain at least one special character')
+      ),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('newPassword'), null], t('Passwords do not match'))
+      .required(t('Password confirmation is required')),
+    phone: Yup.string()
+      .required(t('Phone Number is required'))
+      .matches(
+        /^01[0125][0-9]{8}$/,
+        t('Phone Number must be a valid Egyptian phone number')
+      ),
+  });
 
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
@@ -119,10 +127,10 @@ function Profile() {
         try {
           await dispatch(updateAvatar({ avatar: e.target.result }));
           dispatch(setCredentials({ ...user, avatar: e.target.result }));
-          toast.success('Avatar updated successfully');
+          toast.success(t('Avatar updated successfully'));
           setOpenAvatarDialog(false);
         } catch (error) {
-          toast.error('Failed to update avatar');
+          toast.error(t('Failed to update avatar'));
         }
       };
       reader.readAsDataURL(file);
@@ -133,10 +141,10 @@ function Profile() {
     try {
       await dispatch(deleteUser(user.id));
       dispatch(logout());
-      toast.success('Account deleted successfully');
+      toast.success(t('Account deleted successfully'));
       navigate('/login');
     } catch (error) {
-      toast.error('Failed to delete account');
+      toast.error(t('Failed to delete account'));
     }
   };
 
@@ -208,7 +216,7 @@ function Profile() {
             last_name: lastName,
           })
         );
-        toast.success('Profile updated successfully');
+        toast.success(t('Profile updated successfully'));
       } else if (editField === 'Password') {
         await dispatch(
           updatePassword({
@@ -217,15 +225,15 @@ function Profile() {
           })
         );
 
-        toast.success('Password changed successfully');
+        toast.success(t('Password changed successfully'));
       } else if (editField === 'Phone') {
         await dispatch(updatePhone({ phone_number: `+2${phone}` }));
         dispatch(setCredentials({ ...user, phone_number: `+2${phone}` }));
-        toast.success('Phone number updated successfully');
+        toast.success(t('Phone number updated successfully'));
       }
       handleDialogClose();
     } catch (error) {
-      toast.error('Failed to update profile');
+      toast.error(t('Failed to update profile'));
     }
   };
 

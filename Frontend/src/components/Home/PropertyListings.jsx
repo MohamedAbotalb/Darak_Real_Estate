@@ -8,8 +8,10 @@ import { fetchWishlist } from 'store/home/wishlistSlice';
 import PropertyCard from 'components/Home/PropertyCard';
 import CategoryFilter from 'components/Home/CategoryFilter';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 
 function PropertyListings({ type }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);
@@ -51,7 +53,7 @@ function PropertyListings({ type }) {
         alignItems="center"
         style={{ minHeight: '100vh' }}
       >
-        <Alert severity="error">Error loading categories</Alert>
+        <Alert severity="error">{t('Error loading categories')}</Alert>
       </Grid>
     );
   }
@@ -64,7 +66,8 @@ function PropertyListings({ type }) {
         gutterBottom
         sx={{ color: '#2b3d4f' }}
       >
-        Latest Properties For {type.charAt(0).toUpperCase() + type.slice(1)}
+        {t('Latest Properties For')}{' '}
+        {type.charAt(0).toUpperCase() + type.slice(1)}
       </Typography>
       <Box display="flex" justifyContent="center" mb={3}>
         <CategoryFilter
@@ -75,7 +78,7 @@ function PropertyListings({ type }) {
       </Box>
       {propertiesStatus === 'failed' ? (
         <Typography variant="body1" align="center">
-          No properties found for the selected category.
+          {t('No properties found for the selected category.')}
         </Typography>
       ) : (
         <Grid container spacing={2} justifyContent="center">

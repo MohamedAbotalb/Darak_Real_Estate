@@ -23,8 +23,10 @@ import { clearState } from 'store/Auth/authSlice';
 import { login } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import LoginSchema from 'components/Auth/Validation/LoginSchema';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function LoginForm() {
+  const { t } = useTranslation(); // Initialize useTranslation hook
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -74,12 +76,12 @@ function LoginForm() {
   return (
     <Container sx={{ my: 5 }}>
       <Typography variant="h4" sx={{ my: 4 }} gutterBottom>
-        Log in
+        {t('Log in')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box mb={2}>
           <TextField
-            label="Email"
+            label={t('Email')}
             {...loginForm('email')}
             type="email"
             fullWidth
@@ -96,7 +98,7 @@ function LoginForm() {
         </Box>
         <Box mb={2}>
           <TextField
-            label="Password"
+            label={t('Password')}
             {...loginForm('password')}
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -127,7 +129,7 @@ function LoginForm() {
               fontWeight: 'bold',
             }}
           >
-            Forgot Password?
+            {t('Forgot Password?')}
           </Link>
         </Typography>
         <Button
@@ -138,10 +140,10 @@ function LoginForm() {
           sx={{ height: 40 }}
           disabled={isLoading}
         >
-          Login
+          {t('login')}
         </Button>
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          Don&apos;t have an account?{' '}
+          {t("Don't have an account?")}{' '}
           <Link
             to="/register"
             style={{
@@ -150,7 +152,7 @@ function LoginForm() {
               fontWeight: 'bold',
             }}
           >
-            Register here
+            {t('Register here')}
           </Link>
         </Typography>
       </form>

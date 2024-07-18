@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography, Box, Pagination } from '@mui/material';
 import { fetchToursByStatus } from 'store/tourSlice';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 import TourCard from './TourCard';
 
 const ITEMS_PER_PAGE = 6;
 
 function ApprovedTours() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { tours, isLoading } = useSelector((state) => state.tours);
   const [page, setPage] = useState(1);
@@ -39,7 +41,7 @@ function ApprovedTours() {
   }
 
   if (!Array.isArray(tours) || tours.length === 0) {
-    return <Typography>No tours found</Typography>;
+    return <Typography>{t('No tours found')}</Typography>;
   }
 
   return (
