@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import logoAuth from 'assets/images/logo-auth.png';
+import logo from 'assets/images/logo.png';
 
 export default function AuthWelcome() {
   return (
@@ -16,7 +16,7 @@ export default function AuthWelcome() {
         Welcome to our website!
       </Typography>
       <img
-        src={logoAuth}
+        src={logo}
         alt="welcome"
         style={{ maxWidth: '100%', height: 'auto' }}
       />
