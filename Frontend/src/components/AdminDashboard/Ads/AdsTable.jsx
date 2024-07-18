@@ -277,7 +277,7 @@ function PropertyTable() {
 
   const handleAccept = async () => {
     try {
-      dispatch(acceptProperty(selectedAcceptId)).unwrap();
+      dispatch(acceptProperty(selectedAcceptId));
       successToast('Property accepted successfully');
       dispatch(fetchPendingProperties());
       handleCloseAcceptConfirm();
@@ -288,7 +288,7 @@ function PropertyTable() {
 
   const handleReject = async () => {
     try {
-      dispatch(rejectProperty(selectedRejectId)).unwrap();
+      dispatch(rejectProperty(selectedRejectId));
       successToast('Property rejected successfully');
       dispatch(fetchPendingProperties());
       handleCloseRejectConfirm();
@@ -358,8 +358,6 @@ function PropertyTable() {
                   <StyledTableCell>ID</StyledTableCell>
                   <StyledTableCell>Title</StyledTableCell>
                   <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Rooms</StyledTableCell>
-                  <StyledTableCell>Bathrooms</StyledTableCell>
                   <StyledTableCell>Area (Sqm)</StyledTableCell>
                   <StyledTableCell>Price (EGP)</StyledTableCell>
                   <StyledTableCell>Actions</StyledTableCell>
@@ -380,10 +378,6 @@ function PropertyTable() {
                       >
                         View
                       </Button>
-                    </StyledTableCell>
-                    <StyledTableCell>{property.num_of_rooms}</StyledTableCell>
-                    <StyledTableCell>
-                      {property.num_of_bathrooms}
                     </StyledTableCell>
                     <StyledTableCell>{property.area}</StyledTableCell>
                     <StyledTableCell>{property.price}</StyledTableCell>
@@ -440,7 +434,7 @@ function PropertyTable() {
             </DialogActions>
           </Dialog>
 
-          {/* Delete Confirmation Modal */}
+          {/* Delete Confirmation Dialog */}
           <DeleteConfirmationModal
             item="Ad"
             isOpen={openConfirm}

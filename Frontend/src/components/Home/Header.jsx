@@ -171,97 +171,52 @@ function Header() {
             >
               {t('Home')}
             </Button>
-            {user?.role !== 'landlord' ? (
-              <>
-                <Button
-                  component={NavLink}
-                  to="/properties?lt=rent"
-                  isActive={() => isActiveLink('/properties', 'lt=rent')}
-                  color="inherit"
-                  sx={{
-                    fontSize: '1.1rem',
-                    color: '#000',
-                    textTransform: 'none',
-                    backgroundColor: 'transparent',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      '&::after': {
-                        width: '100%',
-                      },
-                    },
-                    '&:focus': {
-                      backgroundColor: 'transparent',
-                    },
-                    position: 'relative',
-                    '&::after': {
-                      content: '""',
-                      display: 'block',
-                      width: isActiveLink('/properties', 'lt=rent')
-                        ? '100%'
-                        : '0',
-                      height: '2px',
-                      backgroundColor: '#ed2128',
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      transition: 'width 0.3s ease-in-out',
-                      animation: isActiveLink('/properties', 'lt=rent')
-                        ? `${underlineAnimation} 0.3s forwards`
-                        : 'none',
-                    },
-                    margin: '0 10px',
-                  }}
-                >
-                  {t('Rent')}
-                </Button>
-                <Button
-                  component={NavLink}
-                  to="/properties?lt=buy"
-                  isActive={() => isActiveLink('/properties', 'lt=buy')}
-                  color="inherit"
-                  sx={{
-                    fontSize: '1.1rem',
-                    color: '#000',
-                    textTransform: 'none',
-                    backgroundColor: 'transparent',
-
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      '&::after': {
-                        width: '100%',
-                      },
-                    },
-                    '&:focus': {
-                      backgroundColor: 'transparent',
-                    },
-                    position: 'relative',
-                    '&::after': {
-                      content: '""',
-                      display: 'block',
-                      width: isActiveLink('/properties', 'lt=buy')
-                        ? '100%'
-                        : '0',
-                      height: '2px',
-                      backgroundColor: '#ed2128',
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      transition: 'width 0.3s ease-in-out',
-                      animation: isActiveLink('/properties', 'lt=buy')
-                        ? `${underlineAnimation} 0.3s forwards`
-                        : 'none',
-                    },
-                    margin: '0 10px',
-                  }}
-                >
-                  {t('Buy')}
-                </Button>
-              </>
-            ) : (
+            <>
               <Button
                 component={NavLink}
-                to="/myproperties"
-                isActive={() => isActiveLink('/myproperties', '')}
+                to="/properties?lt=rent"
+                isActive={() => isActiveLink('/properties', 'lt=rent')}
+                color="inherit"
+                sx={{
+                  fontSize: '1.1rem',
+                  color: '#000',
+                  textTransform: 'none',
+                  backgroundColor: 'transparent',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    '&::after': {
+                      width: '100%',
+                    },
+                  },
+                  '&:focus': {
+                    backgroundColor: 'transparent',
+                  },
+                  position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: isActiveLink('/properties', 'lt=rent')
+                      ? '100%'
+                      : '0',
+                    height: '2px',
+                    backgroundColor: '#ed2128',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    transition: 'width 0.3s ease-in-out',
+                    animation: isActiveLink('/properties', 'lt=rent')
+                      ? `${underlineAnimation} 0.3s forwards`
+                      : 'none',
+                  },
+                  margin: '0 10px',
+                }}
+              >
+                {t('Rent')}
+              </Button>
+              <Button
+                component={NavLink}
+                to="/properties?lt=buy"
+                isActive={() => isActiveLink('/properties', 'lt=buy')}
                 color="inherit"
                 sx={{
                   fontSize: '1.1rem',
@@ -275,27 +230,30 @@ function Header() {
                       width: '100%',
                     },
                   },
+                  '&:focus': {
+                    backgroundColor: 'transparent',
+                  },
                   position: 'relative',
                   '&::after': {
                     content: '""',
                     display: 'block',
-                    width: isActiveLink('/myproperties', '') ? '100%' : '0',
+                    width: isActiveLink('/properties', 'lt=buy') ? '100%' : '0',
                     height: '2px',
                     backgroundColor: '#ed2128',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
                     transition: 'width 0.3s ease-in-out',
-                    animation: isActiveLink('/myproperties', '')
+                    animation: isActiveLink('/properties', 'lt=buy')
                       ? `${underlineAnimation} 0.3s forwards`
                       : 'none',
                   },
                   margin: '0 10px',
                 }}
               >
-                {t('My Properties')}
+                {t('Buy')}
               </Button>
-            )}
+            </>
             <Button
               component={NavLink}
               to="/about"
@@ -369,6 +327,15 @@ function Header() {
               {user?.role === 'user' && (
                 <MenuItem onClick={handleClose} component={Link} to="/mytours">
                   {t('My Tours')}
+                </MenuItem>
+              )}
+              {user?.role === 'landlord' && (
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/myproperties"
+                >
+                  {t('My Properties')}
                 </MenuItem>
               )}
               <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>

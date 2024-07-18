@@ -104,9 +104,10 @@ function AmenityTable() {
 
   const handleDelete = async () => {
     try {
-      dispatch(deleteAmenity(selectedSlug));
+      await dispatch(deleteAmenity(selectedSlug)).unwrap();
       successToast('Amenity deleted successfully');
       setOpenConfirm(false);
+      setSelectedSlug(null);
     } catch (error) {
       errorToast('Failed to delete the amenity');
     }
@@ -132,7 +133,7 @@ function AmenityTable() {
 
   const updateAvailability = async (id, availability) => {
     try {
-      await dispatch(updateAmenityAvailability({ id, availability }));
+      dispatch(updateAmenityAvailability({ id, availability }));
       successToast('Availability updated successfully');
     } catch (error) {
       errorToast('Failed to update availability');
@@ -268,9 +269,10 @@ function AmenityTable() {
       )}
 
       <DeleteConfirmationModal
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        onDelete={handleDelete}
+        item="amenity"
+        isOpen={openConfirm}
+        handleClose={handleCloseConfirm}
+        handleConfirm={handleDelete}
       />
     </>
   );
