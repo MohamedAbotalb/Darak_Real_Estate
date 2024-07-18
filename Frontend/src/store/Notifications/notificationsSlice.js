@@ -29,8 +29,8 @@ export const fetchLandlordNotificationsAsync = createAsyncThunk(
 
 export const declineTourAsync = createAsyncThunk(
   'notifications/declineTour',
-  async (tourId) => {
-    return declineTourRequest(tourId);
+  async ({ tourId, message }) => {
+    return declineTourRequest(tourId, message);
   }
 );
 

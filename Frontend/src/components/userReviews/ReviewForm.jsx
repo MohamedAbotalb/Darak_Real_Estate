@@ -5,12 +5,13 @@ import {
   addReviewAsync,
   fetchReviews,
 } from 'store/userReviews/userReviewsSlice';
+import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
 import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-function ReviewForm({ propertyId, ownerId }) {
+function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
   const [rate, setRate] = useState(0);
   const [content, setContent] = useState('');
   const [rateError, setRateError] = useState('');
@@ -25,7 +26,6 @@ function ReviewForm({ propertyId, ownerId }) {
     dispatch(fetchReviews(propertyId));
   }, [dispatch, propertyId]);
 
-  // Check if there's already a review for the property
   const existingReview = reviews?.find(
     (review) => review.user?.id === user?.id
   );
@@ -71,7 +71,6 @@ function ReviewForm({ propertyId, ownerId }) {
       return;
     }
 
-    // Prepare review data
     const reviewData = {
       property_id: propertyId,
       rate,
@@ -83,12 +82,11 @@ function ReviewForm({ propertyId, ownerId }) {
 
     dispatch(addReviewAsync(reviewData))
       .then(() => {
-        // Reset form fields
         setRate(0);
         setContent('');
         dispatch(fetchReviews(propertyId));
+        onReviewAdded(); // Fetch updated average rating
 
-        // Check if review was already added
         if (existingReview) {
           toast.info('Review already added. You can edit or delete it.');
         } else {
@@ -155,6 +153,7 @@ function ReviewForm({ propertyId, ownerId }) {
 ReviewForm.propTypes = {
   propertyId: PropTypes.number.isRequired,
   ownerId: PropTypes.number.isRequired,
+  onReviewAdded: PropTypes.func.isRequired,
 };
 
 export default ReviewForm;

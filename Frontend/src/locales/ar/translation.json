@@ -28,7 +28,7 @@
   "Submit": "إرسال",
   "Remembered your password?": "تذكرت كلمة المرور؟",
   "Welcome to our website!": "!مرحبًا بك في موقعنا",
-  "Reset Your Password":"إعادة تعيين كلمة المرور الخاصة بك",
+  "Reset Your Password": "إعادة تعيين كلمة المرور الخاصة بك",
   "Welcome to RentEZ": " RentEZ مرحبًا بكم في ",
   "Your ultimate destination for finding rental properties.": ".وجهتك النهائية للعثور على العقارات للإيجار",
   "Rent, Buy": "تأجير، شراء",
@@ -39,7 +39,7 @@
   "Error loading categories": "خطأ في تحميل الفئات",
   "Latest Properties For": "أحدث العقارات لـ",
   "No properties found for the selected category.": ".لم يتم العثور على عقارات للفئة المحددة",
-  "No properties found for these filters":".لم يتم العثور على عقارات  لهذه الفلاتر",
+  "No properties found for these filters": ".لم يتم العثور على عقارات  لهذه الفلاتر",
   "Bedrooms": "غرف النوم",
   "Bathrooms": "الحمامات",
   "Min Price": "الحد الأدنى للسعر",
@@ -123,7 +123,7 @@
   "Type": "نوع العقار",
   "Rooms": "الغرف",
   "Price": "السعر",
-  "Loading amenities...":"جارٍ تحميل المرافق...",
+  "Loading amenities...": "جارٍ تحميل المرافق...",
   "Listing Type": "نوع الإعلان",
   "Sell": "بيع",
   "Reset": "مسح",
@@ -141,7 +141,7 @@
   "Declined Tours": "الجولات المرفوضة",
   "Pending Tours": "الجولات المعلقة",
   "Approved Tours": "الجولات المعتمدة",
-  "No tours found":"لا توجد جولات",
+  "No tours found": "لا توجد جولات",
   "About us": "معلومات عنا",
   "Our website offers a comprehensive platform for property listings, providing users with a seamless experience to find their desired homes and properties.": "يقدم موقعنا الإلكتروني منصة شاملة لقوائم العقارات، مما يوفر للمستخدمين تجربة سلسة للعثور على المنازل والعقارات التي يرغبون فيها.",
   "We strive to make the process of buying, selling, and renting properties as easy and efficient as possible.": "نسعى لجعل عملية شراء وبيع وتأجير العقارات سهلة وفعالة قدر الإمكان.",
@@ -149,7 +149,7 @@
   "Real Estate": "العقارات",
   "Register now to get updates or promotions.": "سجل الآن للحصول على التحديثات أو العروض.",
   "Enter Email Address": "أدخل عنوان البريد الإلكتروني",
-   "All Rights Reserved © {{year}} Real Estate": "جميع الحقوق محفوظة {{year}} © العقارات",
+  "All Rights Reserved © {{year}} Real Estate": "جميع الحقوق محفوظة {{year}} © العقارات",
   "Property added successfully!": "تم إضافة العقار بنجاح!",
   "Property updated successfully!": "تم تحديث العقار بنجاح!",
   "Failed to add property!": "فشل في إضافة العقار!",
@@ -175,5 +175,3 @@
   "At least one image is required": "مطلوب صورة واحدة على الأقل",
   "You must be logged in to access this page": "يجب أن تكون مسجلاً للدخول للوصول إلى هذه الصفحة"
 }
-
-

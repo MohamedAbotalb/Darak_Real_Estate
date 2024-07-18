@@ -1,42 +1,61 @@
 import React from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import PropertySearch from 'components/Home/PropertySearch';
-import { Carousel } from 'react-responsive-carousel';
-import { useTranslation } from 'react-i18next';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function Hero() {
-  const { t } = useTranslation();
+  const settings = {
+    autoplay: true,
+    infinite: true,
+    arrows: false,
+    dots: false,
+    autoplaySpeed: 3000,
+    speed: 500,
+  };
+
   return (
     <Box
       sx={{
         position: 'relative',
-        height: '100vh',
+        height: '80vh',
         overflow: 'hidden',
       }}
     >
-      <Carousel
-        autoPlay
-        infiniteLoop
-        showArrows={false}
-        showThumbs={false}
-        showStatus={false}
-        showIndicators={false}
-        interval={3000}
-        transitionTime={500}
-      >
+      <Slider {...settings}>
         <div>
           <Box
             sx={{
-              height: '100vh',
-              backgroundImage:
-                'url(https://images.unsplash.com/photo-1448630360428-65456885c650?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvcGVydHl8ZW58MHx8MHx8fDA%3D)',
+              height: '80vh',
+              backgroundImage: 'url(hero1.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           />
         </div>
-      </Carousel>
+        <div>
+          <Box
+            sx={{
+              height: '80vh',
+              backgroundImage: 'url(hero2.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        </div>
+        <div>
+          <Box
+            sx={{
+              height: '80vh',
+              backgroundImage: 'url(hero3.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        </div>
+      </Slider>
       <Box
         sx={{
           position: 'absolute',
@@ -49,16 +68,9 @@ function Hero() {
           alignItems: 'center',
           flexDirection: 'column',
           color: '#fff',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
       >
-        <Typography variant="h2" component="h1">
-          {t('Welcome to RentEZ')}
-        </Typography>
-        <Typography variant="body1" component="p" sx={{ mb: 3 }}>
-          {t('Your ultimate destination for finding rental properties.')}
-        </Typography>
-        <PropertySearch />
+        <PropertySearch sx={{ marginTop: '280px' }} />
       </Box>
     </Box>
   );

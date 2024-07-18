@@ -8,15 +8,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import defaultImage from 'assets/images/image1.jpg';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 
 const StyledCard = styled(Card)({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  margin: '16px auto',
-  borderRadius: '16px',
+  margin: '0 auto',
+  borderRadius: '4px',
   overflow: 'hidden',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   position: 'relative',
@@ -30,7 +29,7 @@ const SliderWrapper = styled(Box)({
 });
 
 const StyledImage = styled('img')({
-  height: 300,
+  height: 250,
   width: '100%',
   objectFit: 'cover',
 });
@@ -52,7 +51,7 @@ const CardLink = styled(Link)({
 
 function PropertyCard({ property }) {
   const images = property.images || [];
-
+  const defaultImage = 'bedroom1.jpg';
   const getPriceDisplay = () => {
     const formattedPrice = property.price.toLocaleString();
     if (property.listing_type === 'rent') {
@@ -92,18 +91,26 @@ function PropertyCard({ property }) {
               {property.property_type.name}
             </Typography>
           </Box>
-          <Typography gutterBottom variant="h5" component="div" mb={2}>
+          <Typography gutterBottom variant="h5" component="div" mb={1}>
             {getPriceDisplay()}
           </Typography>
-          <Typography variant="body2">{property.title}</Typography>
-          <Box display="flex" alignItems="center" my={4}>
+          {/* <Typography variant="body2">{property.title}</Typography> */}
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ overflowWrap: 'break-word' }}
+          >
+            {property.title.split(' ').slice(0, 4).join(' ')}
+            {property.title.split(' ').length > 4 ? '...' : ''}
+          </Typography>
+
+          <Box display="flex" alignItems="center" my={1}>
             <LocationOnIcon color="action" />
             <Typography variant="body2" color="text.secondary" ml={0.5}>
-              {property.location.street}, {property.location.state},{' '}
-              {property.location.city}
+              {property.location.state}, {property.location.city}
             </Typography>
           </Box>
-          <Box display="flex" mt={2}>
+          <Box display="flex">
             <Box display="flex" alignItems="center" mr={2}>
               <BedIcon color="action" />
               <Typography variant="body2" color="text.secondary" ml={0.5}>

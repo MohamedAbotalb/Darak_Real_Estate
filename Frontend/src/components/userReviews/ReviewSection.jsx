@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
+import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
 import ReviewForm from './ReviewForm';
 import ReviewsList from './ReviewsList';
 import AverageRating from './AverageRating';
@@ -26,6 +27,10 @@ function ReviewSection({ propertyId, propertyTitle }) {
 
   const handleCloseForm = () => {
     setOpenForm(false);
+  };
+
+  const refreshAverageRating = () => {
+    dispatch(fetchAverageRatingAsync(propertyId));
   };
 
   return (
@@ -77,15 +82,21 @@ function ReviewSection({ propertyId, propertyTitle }) {
               padding: '2px',
             }}
           >
-            <ReviewForm propertyId={propertyId} ownerId={property.user.id} />
+            <ReviewForm
+              propertyId={propertyId}
+              ownerId={property.user.id}
+              onReviewAdded={refreshAverageRating}
+            />
           </Box>
         </DialogTitle>
       </Dialog>
     </Box>
   );
 }
+
 ReviewSection.propTypes = {
   propertyId: PropTypes.number.isRequired,
   propertyTitle: PropTypes.string.isRequired,
 };
+
 export default ReviewSection;
