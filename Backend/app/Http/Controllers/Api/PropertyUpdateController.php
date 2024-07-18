@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PropertyUpdateOldDataResource;
 use App\Http\Resources\PropertyUpdateResource;
 use App\Repositories\Contracts\PropertyUpdatesRepositoryInterface;
 use Illuminate\Http\Request;
@@ -17,21 +18,31 @@ class PropertyUpdateController extends Controller
     }
     public function index()
     {
-        $pendingUpdates=$this->propertyUpdatesRepository->index();
+        $pendingUpdates = $this->propertyUpdatesRepository->index();
         if (!$pendingUpdates) {
             return response()->json(['message' => 'No pending property updates found.'], 404);
         }
 
         return response()->json(PropertyUpdateResource::collection($pendingUpdates));
     }
-    public function show($id)
+    public function showNewProperty($id)
     {
-        $pendingUpdates=$this->propertyUpdatesRepository->show($id);
+        $pendingUpdates = $this->propertyUpdatesRepository->showNewProperty($id);
         if (!$pendingUpdates) {
             return response()->json(['message' => 'property not found.'], 404);
         }
 
         return response()->json(new PropertyUpdateResource($pendingUpdates));
+    }
+    public function showOldProperty($id)
+    {
+        $oldData = $this->propertyUpdatesRepository->showOldProperty($id);
+
+        if (!$oldData) {
+            return response()->json(['message' => 'Property update not found or not pending'], 404);
+        }
+
+        return response()->json(new PropertyUpdateOldDataResource($oldData), 200);
     }
     public function approve($id)
     {
