@@ -9,6 +9,7 @@ import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
+import { useTranslation } from 'react-i18next';
 
 const StyledCard = styled(Card)({
   width: '100%',
@@ -50,14 +51,15 @@ const CardLink = styled(Link)({
 });
 
 function PropertyCard({ property }) {
+  const { t } = useTranslation();
   const images = property.images || [];
   const defaultImage = 'bedroom1.jpg';
   const getPriceDisplay = () => {
     const formattedPrice = property.price.toLocaleString();
     if (property.listing_type === 'rent') {
-      return `${formattedPrice} EGP/month`;
+      return `${formattedPrice} ${t('EGP/month')}`;
     }
-    return `${formattedPrice} EGP`;
+    return `${formattedPrice} ${t('EGP')}`;
   };
   const baseImgUrl = 'http://127.0.0.1:8000/';
   return (
@@ -126,7 +128,7 @@ function PropertyCard({ property }) {
             <Box display="flex" alignItems="center" ml={2}>
               <SquareFootIcon color="action" />
               <Typography variant="body2" color="text.secondary" ml={0.5}>
-                {Number.parseInt(property.area, 10)} sqm
+                {Number.parseInt(property.area, 10)} {t('sqm')}
               </Typography>
             </Box>
           </Box>

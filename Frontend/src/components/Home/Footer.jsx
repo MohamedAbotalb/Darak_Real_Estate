@@ -102,7 +102,7 @@ function Footer() {
                 }}
               >
                 <TextField
-                  label="Enter Email Address"
+                  label={t('Enter Email Address')}
                   variant="outlined"
                   size="small"
                   className="subscription-input"

@@ -14,6 +14,7 @@ import StudioIcon from '@mui/icons-material/Business';
 import OfficeIcon from '@mui/icons-material/Work';
 import TownhouseIcon from '@mui/icons-material/Home';
 import CommercialIcon from '@mui/icons-material/Domain';
+import { useTranslation } from 'react-i18next';
 
 const iconMapping = {
   Apartment: <ApartmentIcon style={{ fontSize: 80 }} />,
@@ -136,6 +137,7 @@ SamplePrevArrow.propTypes = {
 };
 
 function CategoryFilter() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const categories = useSelector((state) => state.categories.list);
@@ -207,7 +209,7 @@ function CategoryFilter() {
           sx={{ fontSize: '16px', fontWeight: 'bold' }}
           color="#ed2128"
         >
-          PROPERTY TYPE
+          {t('PROPERTY TYPE')}
         </Typography>
       </Box>
       <Box
@@ -216,8 +218,10 @@ function CategoryFilter() {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography variant="h5">Try Searching For</Typography>
-        <ViewAllLink href="/all-services">View All Services →</ViewAllLink>
+        <Typography variant="h5">{t('Try Searching For')}</Typography>
+        <ViewAllLink href="/all-services">
+          {t('View All Services')} →
+        </ViewAllLink>
       </Box>
       <Box
         display="flex"
@@ -235,7 +239,7 @@ function CategoryFilter() {
                 {iconMapping[category.name] || <ApartmentIcon />}
                 <Typography variant="h6">{category.name}</Typography>
                 <Typography variant="body2">
-                  {category.properties.length} Properties
+                  {category.properties.length} {t('Properties')}
                 </Typography>
               </StyledButton>
             </div>
