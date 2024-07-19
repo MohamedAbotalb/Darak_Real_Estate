@@ -10,7 +10,7 @@ import Loader from 'components/Loader';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { styled } from '@mui/system';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { useTranslation } from 'react-i18next';
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
   '.slider-container': {
@@ -80,7 +80,7 @@ function PropertyListings({ type }) {
         alignItems="center"
         style={{ minHeight: '100vh' }}
       >
-        <Alert severity="error">Error loading properties</Alert>
+        <Alert severity="error">{t('Error loading properties')}</Alert>
       </Grid>
     );
   }
@@ -123,7 +123,7 @@ function PropertyListings({ type }) {
         gutterBottom
         sx={{ color: '#000', mb: '30px' }}
       >
-        Latest Properties For{' '}
+        {t('Latest Properties For')}{' '}
         <Typography
           component="span"
           variant="inherit"
@@ -134,7 +134,7 @@ function PropertyListings({ type }) {
       </Typography>
       {propertiesStatus === 'failed' ? (
         <Typography variant="body1" align="center">
-          No properties found for the selected category.
+          {t('No properties found for the selected category.')}
         </Typography>
       ) : (
         <StyledSlider {...settings}>

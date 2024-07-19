@@ -38,9 +38,11 @@ import MenuItem from '@mui/material/MenuItem';
 import CloseIcon from '@mui/icons-material/Close';
 import { red, grey } from '@mui/material/colors';
 import moment from 'moment';
+import 'moment/locale/ar';
+import 'moment/locale/en-gb';
 import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
-// import defaultImage from 'logo.jpg';
+import { useTranslation } from 'react-i18next';
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
@@ -56,6 +58,7 @@ const getNotificationCircleColor = (type) => {
 };
 
 function LandlordNotifications() {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { notifications, status } = useSelector((state) => state.notifications);
 
@@ -77,10 +80,10 @@ function LandlordNotifications() {
   const notificationsPerPage = 5;
 
   const predefinedReasons = [
-    'Scheduling conflict',
-    'Property is no longer available',
-    'Unsuitable for the requested tour',
-    'Other',
+    t('Scheduling conflict'),
+    t('Property is no longer available'),
+    t('Unsuitable for the requested tour'),
+    t('Other'),
   ];
 
   useEffect(() => {
@@ -95,6 +98,10 @@ function LandlordNotifications() {
     dispatch(fetchLandlordNotificationsAsync());
   }, [dispatch]);
 
+  useEffect(() => {
+    moment.locale(i18n.language === 'ar' ? 'ar' : 'en-gb');
+  }, [i18n.language]);
+
   const handleApprove = (notification) => {
     setSelectedNotification(notification);
     setOpenModal(true);
@@ -107,17 +114,17 @@ function LandlordNotifications() {
 
   const validateMessage = (message) => {
     if (/^\d/.test(message)) {
-      return 'Message cannot start with a number.';
+      return t('Message cannot start with a number.');
     }
     if (message.length < 10) {
-      return 'Message must be at least 10 characters long.';
+      return t('Message must be at least 10 characters long.');
     }
     return '';
   };
 
   const handleDecline = () => {
     const error = validateMessage(
-      selectedReason === 'Other' ? customReason : selectedReason
+      selectedReason === t('Other') ? customReason : selectedReason
     );
     if (error) {
       setValidationError(error);
@@ -126,7 +133,8 @@ function LandlordNotifications() {
 
     if (selectedNotification) {
       setSubmitting(true);
-      const reason = selectedReason === 'Other' ? customReason : selectedReason;
+      const reason =
+        selectedReason === t('Other') ? customReason : selectedReason;
       const fullMessage = `${defaultMessage} ${reason}`;
       dispatch(
         declineTourAsync({
@@ -137,7 +145,7 @@ function LandlordNotifications() {
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Declined tour', {
+            toast.success(t('Declined tour'), {
               position: 'top-right',
             });
           }
@@ -149,7 +157,7 @@ function LandlordNotifications() {
         .catch(() => {
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
-          toast.error('Failed to decline tour', {
+          toast.error(t('Failed to decline tour'), {
             position: 'top-right',
           });
         });
@@ -158,7 +166,7 @@ function LandlordNotifications() {
 
   const handleReasonChange = (e) => {
     setSelectedReason(e.target.value);
-    if (e.target.value !== 'Other') {
+    if (e.target.value !== t('Other')) {
       setValidationError('');
     }
   };
@@ -188,7 +196,7 @@ function LandlordNotifications() {
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Approved tour', {
+            toast.success(t('Approved tour'), {
               position: 'top-right',
             });
           }
@@ -198,7 +206,7 @@ function LandlordNotifications() {
         .catch(() => {
           setSubmitting(false);
           setOpenModal(false);
-          toast.error('Failed to approve tour', {
+          toast.error(t('Failed to approve tour'), {
             position: 'top-right',
           });
         });
@@ -216,7 +224,7 @@ function LandlordNotifications() {
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Notification removed successfully', {
+            toast.success(t('Notification removed successfully'), {
               position: 'top-right',
             });
           }
@@ -224,7 +232,7 @@ function LandlordNotifications() {
         })
         .catch(() => {
           setOpenDeleteConfirmation(false);
-          toast.error('Failed to remove notification', {
+          toast.error(t('Failed to remove notification'), {
             position: 'top-right',
           });
         });
@@ -292,7 +300,7 @@ function LandlordNotifications() {
         alignItems="center"
         height="100vh"
       >
-        Not FOUND ANY NOTIFICATION
+        {t('Not FOUND ANY NOTIFICATION')}
       </Box>
     );
   }
@@ -316,21 +324,21 @@ function LandlordNotifications() {
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Notifications
+          {t('Notifications')}
         </Typography>
         <FormControl sx={{ minWidth: 150, mt: '2px' }}>
-          <InputLabel id="filter-label">Filter</InputLabel>
+          <InputLabel id="filter-label">{t('Filter')}</InputLabel>
           <Select
             labelId="filter-label"
             id="filter-select"
             value={filter}
-            label="Filter"
+            label={t('Filter')}
             onChange={handleFilterChange}
           >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="approved">Declined</MenuItem>
-            <MenuItem value="declined">Approved</MenuItem>
-            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="all">{t('All')}</MenuItem>
+            <MenuItem value="approved">{t('Approved')}</MenuItem>
+            <MenuItem value="declined">{t('Declined')}</MenuItem>
+            <MenuItem value="pending">{t('Pending')}</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -386,7 +394,7 @@ function LandlordNotifications() {
                         fontWeight="bold"
                         sx={{ marginRight: 'auto' }}
                       >
-                        Darak Team
+                        {t('Darak Team')}
                       </Typography>
                       <Typography
                         variant="body"
@@ -444,7 +452,7 @@ function LandlordNotifications() {
                   >
                     <IconButton
                       size="small"
-                      aria-label="delete notification"
+                      aria-label={t('delete notification')}
                       onClick={() => handleDelete(notification.id)}
                       onMouseEnter={(e) => handleMouseEnter(e, red[500])}
                       onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
@@ -511,9 +519,11 @@ function LandlordNotifications() {
                                     marginLeft: index > 0 ? '10px' : '0px',
                                   }}
                                 >
-                                  {moment(date.date).format(
-                                    'MMMM DD, YYYY hh:mm A'
-                                  )}
+                                  {moment(date.date)
+                                    .locale(
+                                      i18n.language === 'ar' ? 'ar' : 'en-gb'
+                                    )
+                                    .format('MMMM DD, YYYY hh:mm A')}
                                 </Typography>
                               </React.Fragment>
                             ))}
@@ -547,7 +557,7 @@ function LandlordNotifications() {
                         }}
                         startIcon={<DeclineIcon />}
                       >
-                        Decline
+                        {t('Decline')}
                       </Button>
                       <Button
                         variant="contained"
@@ -562,7 +572,7 @@ function LandlordNotifications() {
                         }}
                         startIcon={<ApproveIcon />}
                       >
-                        Approve
+                        {t('Approve')}
                       </Button>
                     </Box>
                   </>
@@ -584,7 +594,7 @@ function LandlordNotifications() {
         />
       </Box>
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <DialogTitle>Select a Date</DialogTitle>
+        <DialogTitle>{t('Select a Date')}</DialogTitle>
         <DialogContent>
           {selectedNotification && (
             <List>
@@ -608,14 +618,14 @@ function LandlordNotifications() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button
             onClick={handleApproveDate}
             color="primary"
             disabled={!selectedDate || submitting}
           >
-            Approve
+            {t('Approve')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -624,18 +634,18 @@ function LandlordNotifications() {
         open={openDeclineConfirmation}
         onClose={() => setOpenDeclineConfirmation(false)}
       >
-        <DialogTitle>Decline Tour</DialogTitle>
+        <DialogTitle>{t('Decline Tour')}</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to decline this tour request?
+            {t('Are you sure you want to decline this tour request?')}
           </Typography>
           <FormControl fullWidth margin="normal">
-            <InputLabel id="reason-select-label">Reason</InputLabel>
+            <InputLabel id="reason-select-label">{t('Reason')}</InputLabel>
             <Select
               labelId="reason-select-label"
               value={selectedReason}
               onChange={handleReasonChange}
-              label="Reason"
+              label={t('Reason')}
             >
               {predefinedReasons.map((reason, index) => (
                 <MenuItem key={reason} value={reason}>
@@ -647,7 +657,7 @@ function LandlordNotifications() {
               <TextField
                 autoFocus
                 margin="dense"
-                label="Other Reason"
+                label={t('Other Reason')}
                 fullWidth
                 variant="outlined"
                 value={customReason}
@@ -673,14 +683,14 @@ function LandlordNotifications() {
             onClick={() => setOpenDeclineConfirmation(false)}
             color="primary"
           >
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button
             onClick={handleDecline}
             color="error"
             disabled={submitting || !!validationError}
           >
-            Decline
+            {t('Decline')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -689,10 +699,10 @@ function LandlordNotifications() {
         open={openDeleteConfirmation}
         onClose={() => setOpenDeleteConfirmation(false)}
       >
-        <DialogTitle>Delete Notification</DialogTitle>
+        <DialogTitle>{t('Delete Notification')}</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this notification?
+            {t('Are you sure you want to delete this notification?')}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -700,10 +710,10 @@ function LandlordNotifications() {
             onClick={() => setOpenDeleteConfirmation(false)}
             color="primary"
           >
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button onClick={handleConfirmDelete} color="primary">
-            Delete
+            {t('Delete')}
           </Button>
         </DialogActions>
       </Dialog>

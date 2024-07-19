@@ -1,9 +1,6 @@
 import * as yup from 'yup';
-import { useTranslation } from 'react-i18next';
 
-const useValidationSchema = () => {
-  const { t } = useTranslation();
-
+const useValidationSchema = (t) => {
   return yup.object().shape({
     title: yup
       .string()

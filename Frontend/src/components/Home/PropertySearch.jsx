@@ -138,7 +138,7 @@ function PropertySearch() {
         <TextField
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          placeholder="search by City"
+          placeholder={t('search by City')}
           variant="outlined"
           InputProps={{
             style: { borderRadius: '30px 0 0 30px', paddingLeft: '8px' },
@@ -153,7 +153,7 @@ function PropertySearch() {
           displayEmpty
         >
           <MenuItem value="">
-            <em>Property Type</em>
+            <em>{t('Property Type')}</em>
           </MenuItem>
           {propertyTypes.map((type) => (
             <MenuItem key={type.id} value={type.id}>
@@ -169,8 +169,8 @@ function PropertySearch() {
           onChange={(e) => setListingType(e.target.value)}
           displayEmpty
         >
-          <MenuItem value="rent">Rent</MenuItem>
-          <MenuItem value="buy">Buy</MenuItem>
+          <MenuItem value="rent">{t('Rent')}</MenuItem>
+          <MenuItem value="buy">{t('Buy')}</MenuItem>
         </Select>
       </SearchFormControl>
 

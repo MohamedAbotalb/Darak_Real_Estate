@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   fetchUserNotificationsAsync,
   fetchLandlordNotificationsAsync,
@@ -22,6 +23,8 @@ import {
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { green, red, orange } from '@mui/material/colors';
 import moment from 'moment';
+import 'moment/locale/ar';
+import 'moment/locale/en-gb';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import Loader from 'components/Loader';
 import SvgIcon from '@mui/material/SvgIcon';
@@ -37,6 +40,7 @@ function NotificationOutlineIcon() {
 }
 
 function NotificationDropdown({ role }) {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -51,6 +55,11 @@ function NotificationDropdown({ role }) {
       dispatch(fetchLandlordNotificationsAsync());
     }
   }, [dispatch, role]);
+
+  useEffect(() => {
+    moment.locale(i18n.language === 'ar' ? 'ar' : 'en-gb');
+  }, [i18n.language]);
+
   const sortedNotifications = [...notifications].sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
@@ -164,7 +173,7 @@ function NotificationDropdown({ role }) {
               height="100px"
             >
               <Typography variant="body2" color="error">
-                No notifications found.
+                {t('No notifications found')}.
               </Typography>
             </Box>
           )}
@@ -176,7 +185,7 @@ function NotificationDropdown({ role }) {
               height="100px"
             >
               <Typography variant="body2" color="textSecondary">
-                No notifications found.
+                {t('No notifications found')}.
               </Typography>
             </Box>
           )}
@@ -220,9 +229,9 @@ function NotificationDropdown({ role }) {
                             color="textSecondary"
                             sx={{ mb: 1 }}
                           >
-                            {moment(notification?.created_at).format(
-                              'MMMM DD, YYYY hh:mm A'
-                            )}
+                            {moment(notification?.created_at)
+                              .locale(i18n.language === 'ar' ? 'ar' : 'en-gb')
+                              .format('MMMM DD, YYYY hh:mm A')}{' '}
                           </Typography>
                           <Typography variant="body1">
                             {notification?.message}
@@ -432,7 +441,7 @@ function NotificationDropdown({ role }) {
               },
             }}
           >
-            Show All
+            {t('Show All')}
           </Button>
         </Box>
       </Menu>
