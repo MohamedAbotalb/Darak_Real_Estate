@@ -10,7 +10,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Pagination,
   Box,
   InputBase,
   alpha,
@@ -37,6 +36,7 @@ import {
 import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -316,7 +316,7 @@ function PropertyTable() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Ads
+            Property Ads
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -408,13 +408,11 @@ function PropertyTable() {
           </TableContainer>
           {/* Pagination */}
           <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={Math.ceil(filteredProperties.length / rowsPerPage)}
-              page={page}
-              onChange={handleChangePage}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
+            <CustomPagination
+              totalItems={filteredProperties.length}
+              itemsPerPage={rowsPerPage}
+              currentPage={page}
+              onPageChange={handleChangePage}
             />
           </Box>
 

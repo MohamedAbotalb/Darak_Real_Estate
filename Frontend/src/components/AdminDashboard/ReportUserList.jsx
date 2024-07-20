@@ -16,7 +16,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Pagination,
   InputBase,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,6 +28,7 @@ import {
 import { successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -231,7 +231,7 @@ function ReportUserList() {
                       onClick={() => handleDeleteReport(report.id)}
                       style={{ marginRight: '7px' }}
                     >
-                      Delete Report
+                      Delete Complaint Reason
                     </Button>
                     <Button
                       variant="contained"
@@ -254,13 +254,11 @@ function ReportUserList() {
             padding: '10px 20px',
           }}
         >
-          <Pagination
-            count={Math.ceil(filteredReports.length / rowsPerPage)}
-            page={page}
-            onChange={handleChangePage}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
+          <CustomPagination
+            totalItems={filteredReports.length}
+            itemsPerPage={rowsPerPage}
+            currentPage={page}
+            onPageChange={handleChangePage}
           />
         </div>
       </div>
@@ -288,7 +286,7 @@ function ReportUserList() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            User Reports
+            User Complaints
           </Typography>
         </Box>
         <Box display="flex">

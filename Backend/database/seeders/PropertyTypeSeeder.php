@@ -20,6 +20,9 @@ class PropertyTypeSeeder extends Seeder
                 ['name' => 'Apartment'],
                 ['name' => 'Villa'],
                 ['name' => 'House'],
+                ['name' => 'Duplix'],
+                ['name' => 'Townhome'],
+                ['name' => 'Chalet'],
             ];
     
             foreach ($property_types as &$prop) {

@@ -22,7 +22,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { FavoriteBorder } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import secureLocalStorage from 'react-secure-storage';
 import { logout, setCredentials } from 'store/Auth/authSlice';
@@ -122,7 +122,7 @@ function Header() {
         >
           <img
             src={AdminImage}
-            alt="RentEZ"
+            alt="Darak"
             style={{
               height: 'auto',
               maxHeight: '50px',
@@ -253,6 +253,90 @@ function Header() {
               >
                 {t('Buy')}
               </Button>
+              {user?.role === 'landlord' && (
+                <Button
+                  component={NavLink}
+                  to="/myproperties"
+                  isActive={() => isActiveLink('/myproperties')}
+                  color="inherit"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: '#000',
+                    textTransform: 'none',
+                    backgroundColor: 'transparent',
+
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      '&::after': {
+                        width: '100%',
+                      },
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent',
+                    },
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      display: 'block',
+                      width: isActiveLink('/myproperties') ? '100%' : '0',
+                      height: '2px',
+                      backgroundColor: '#ed2128',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      transition: 'width 0.3s ease-in-out',
+                      animation: isActiveLink('/myproperties')
+                        ? `${underlineAnimation} 0.3s forwards`
+                        : 'none',
+                    },
+                    margin: '0 10px',
+                  }}
+                >
+                  {t('My Properties')}
+                </Button>
+              )}
+              {user?.role === 'user' && (
+                <Button
+                  component={NavLink}
+                  to="/mytours"
+                  isActive={() => isActiveLink('/mytours')}
+                  color="inherit"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: '#000',
+                    textTransform: 'none',
+                    backgroundColor: 'transparent',
+
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      '&::after': {
+                        width: '100%',
+                      },
+                    },
+                    '&:focus': {
+                      backgroundColor: 'transparent',
+                    },
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      display: 'block',
+                      width: isActiveLink('/mytours') ? '100%' : '0',
+                      height: '2px',
+                      backgroundColor: '#ed2128',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      transition: 'width 0.3s ease-in-out',
+                      animation: isActiveLink('/mytours')
+                        ? `${underlineAnimation} 0.3s forwards`
+                        : 'none',
+                    },
+                    margin: '0 10px',
+                  }}
+                >
+                  {t('My Tours')}
+                </Button>
+              )}
             </>
             <Button
               component={NavLink}
@@ -325,20 +409,6 @@ function Header() {
               <MenuItem onClick={handleClose} component={Link} to="/profile">
                 {t('Profile')}
               </MenuItem>
-              {user?.role === 'user' && (
-                <MenuItem onClick={handleClose} component={Link} to="/mytours">
-                  {t('My Tours')}
-                </MenuItem>
-              )}
-              {user?.role === 'landlord' && (
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/myproperties"
-                >
-                  {t('My Properties')}
-                </MenuItem>
-              )}
               <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
             </Menu>
           </Box>

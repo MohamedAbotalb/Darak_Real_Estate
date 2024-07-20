@@ -71,7 +71,6 @@ function PropertyForm() {
   const { slug } = useParams();
   const isEditMode = Boolean(slug);
   const { t, i18n } = useTranslation();
-  const validationSchema = useValidationSchema();
 
   const {
     register,
@@ -82,7 +81,7 @@ function PropertyForm() {
     watch,
     setValue,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(useValidationSchema(t)),
   });
 
   const { amenities, status, error } = useSelector((state) => state.amenities);
@@ -224,7 +223,7 @@ function PropertyForm() {
         setIsSubmitting(false);
       }
     }
-  }, [status, error, dispatch, reset, isSubmitting, isEditMode, navigate]);
+  }, [status, error, dispatch, t, reset, isSubmitting, isEditMode, navigate]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -242,6 +241,11 @@ function PropertyForm() {
     const updatedImages = existingImages.filter((_, i) => i !== index);
     setExistingImages(updatedImages);
   };
+  useEffect(() => {
+    reset({
+      ...watch(),
+    });
+  }, [i18n.language, reset]);
 
   return (
     <FormWrapper>

@@ -33,7 +33,6 @@ import Loader from 'components/Loader';
 import ReportModal from 'components/ReportModal';
 import ReviewSection from 'components/userReviews/ReviewSection';
 import ImageSliderModal from 'components/PropertyDetails/ImageSliderModal';
-import ReviewList from 'components/AdminDashboard/ReviewList';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -326,7 +325,6 @@ function PropertyDetails() {
                         </Box>
                       </>
                     )}
-                   
                   </Grid>
                 </Grid>
               </Grid>
@@ -388,7 +386,6 @@ function PropertyDetails() {
                   justifyContent="space-around"
                   sx={{ mt: 3 }}
                 >
-                  {!user?.role === 'admin' && (
                   <>
                     <Button
                       variant="contained"
@@ -414,7 +411,6 @@ function PropertyDetails() {
                     </Button>
                     {user && <AddToWishlistButton property={property} />}
                   </>
-                  )} 
                 </Box>
               </Grid>
             </Grid>
@@ -437,7 +433,7 @@ function PropertyDetails() {
         userData={property.user}
       />
       {/* review */}
-      {property?.listing_type === 'rent' && user?.role !== 'admin' && (
+      {property?.listing_type === 'rent' && (
         <ReviewSection
           propertyId={property.id}
           propertyTitle={property.title}

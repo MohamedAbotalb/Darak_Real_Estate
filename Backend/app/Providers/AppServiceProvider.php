@@ -1,6 +1,13 @@
 <?php
 
 namespace App\Providers;
+
+use App\Models\Property;
+use App\Models\PropertyUpdate;
+use App\Models\Tour;
+use App\Observers\PropertyObserver;
+use App\Observers\PropertyUpdateObserver;
+use App\Observers\TourObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Property::observe(PropertyObserver::class);
+        Tour::observe(TourObserver::class);
+        PropertyUpdate::observe(PropertyUpdateObserver::class);
+
     }
 }

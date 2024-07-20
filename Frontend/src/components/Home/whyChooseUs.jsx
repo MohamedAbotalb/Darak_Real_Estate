@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -7,6 +8,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import { styled } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 
 const RootContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -108,44 +110,49 @@ const CustomButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const textContent = {
-  title: 'Discover What Sets Our Real Estate Expertise Apart',
-  subtitle:
-    'At Homeya, our unwavering commitment lies in crafting unparalleled real estate journeys. Our seasoned professionals, armed with extensive market knowledge, walk alongside you through every phase of your property endeavor. We prioritize understanding your unique aspirations, tailoring our expertise to match your vision.',
-  features: [
-    'Transparent Partnerships',
-    'Customized Solutions',
-    'Proven Expertise',
-    'Local Area Knowledge',
-  ],
-  buttonText: 'Contact Us',
-};
-
-const cardContent = [
-  {
-    title: 'Buy A New Home',
-    description: 'Explore diverse properties and expert guidance .',
-    image: 'buy-home.png',
-  },
-  {
-    title: 'Rent A Home',
-    description: 'Explore a diverse variety of listings tailored precisely .',
-    image: 'rent-home.png',
-  },
-  {
-    title: 'Sell A Home',
-    description:
-      "Showcasing your property's best features for a successful sale.",
-    image: 'sell-home.png',
-  },
-];
-
 function WhyChooseUs() {
+  const { t } = useTranslation();
+  const textContent = {
+    title: t('Discover What Sets Our Real Estate Expertise Apart'),
+    subtitle: t(
+      'At Homeya, our unwavering commitment lies in crafting unparalleled real estate journeys. Our seasoned professionals, armed with extensive market knowledge, walk alongside you through every phase of your property endeavor. We prioritize understanding your unique aspirations, tailoring our expertise to match your vision.'
+    ),
+    features: [
+      t('Transparent Partnerships'),
+      t('Customized Solutions'),
+      t('Proven Expertise'),
+      t('Local Area Knowledge'),
+    ],
+    buttonText: t('Contact Us'),
+  };
+
+  const cardContent = [
+    {
+      title: t('Buy A New Home'),
+      description: t('Explore diverse properties and expert guidance .'),
+      image: 'buy-home.png',
+    },
+    {
+      title: t('Rent A Home'),
+      description: t(
+        'Explore a diverse variety of listings tailored precisely .'
+      ),
+      image: 'rent-home.png',
+    },
+    {
+      title: t('Sell A Home'),
+      description: t(
+        "Showcasing your property's best features for a successful sale."
+      ),
+      image: 'sell-home.png',
+    },
+  ];
+
   return (
     <RootContainer>
       <TextSection>
         <Typography variant="h6" color="#ed2128" gutterBottom>
-          WHY CHOOSE US
+          {t('WHY CHOOSE US')}
         </Typography>
         <Typography variant="h4" gutterBottom color="#000">
           {textContent.title}

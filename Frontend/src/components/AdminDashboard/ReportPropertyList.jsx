@@ -16,7 +16,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Pagination,
   InputBase,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,6 +28,7 @@ import {
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
 import { successToast, errorToast } from 'utils/toast';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -130,10 +130,10 @@ function ReportPropertyList() {
   const handleConfirmDelete = async () => {
     try {
       if (deleteType === 'report') {
-        await dispatch(deleteReport(deleteId));
+        dispatch(deleteReport(deleteId));
         successToast('Report deleted successfully');
       } else if (deleteType === 'property') {
-        await dispatch(deleteProperty(deleteId));
+        dispatch(deleteProperty(deleteId));
         successToast('Property deleted successfully');
       }
       setOpenDeleteDialog(false);
@@ -227,7 +227,7 @@ function ReportPropertyList() {
                       onClick={() => handleDeleteReport(report.id)}
                       style={{ marginRight: '7px' }}
                     >
-                      Delete Report
+                      Delete Issue
                     </Button>
                     <Button
                       variant="contained"
@@ -250,13 +250,11 @@ function ReportPropertyList() {
             padding: '10px 20px',
           }}
         >
-          <Pagination
-            count={Math.ceil(filteredReports.length / rowsPerPage)}
-            page={page}
-            onChange={handleChangePage}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
+          <CustomPagination
+            totalItems={filteredReports.length}
+            itemsPerPage={rowsPerPage}
+            currentPage={page}
+            onPageChange={handleChangePage}
           />
         </div>
       </div>
@@ -284,7 +282,7 @@ function ReportPropertyList() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Property Reports
+            Property Issues
           </Typography>
         </Box>
         <Box display="flex" justifyContent="center">

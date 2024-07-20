@@ -11,7 +11,6 @@ import {
   TableRow,
   Paper,
   InputBase,
-  Pagination,
   Button,
   Dialog,
   DialogTitle,
@@ -27,6 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { fetchReviews } from 'store/reviewsSlice';
 import Loader from 'components/Loader';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -252,13 +252,11 @@ function ReviewList() {
               padding: '10px 20px',
             }}
           >
-            <Pagination
-              count={Math.ceil(filteredReviews.length / rowsPerPage)}
-              page={page}
-              onChange={handleChangePage}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
+            <CustomPagination
+              totalItems={filteredReviews.length}
+              itemsPerPage={rowsPerPage}
+              currentPage={page}
+              onPageChange={handleChangePage}
             />
           </Box>
           <Dialog open={openContentDialog} onClose={handleCloseContentDialog}>
