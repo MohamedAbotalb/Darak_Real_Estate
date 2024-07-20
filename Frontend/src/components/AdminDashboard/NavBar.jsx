@@ -22,7 +22,7 @@ export default function NavBar() {
   const handleLogout = () => {
     dispatch(logout());
     setIsLoggedIn(false);
-    navigate('/');
+    navigate('/admin-login');
   };
 
   return (
