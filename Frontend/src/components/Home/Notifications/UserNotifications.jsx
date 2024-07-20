@@ -4,8 +4,14 @@ import {
   fetchUserNotificationsAsync,
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
-import { Divider } from '@mui/material';
-import { Box, Paper, Avatar, Typography, Link as MuiLink } from '@mui/material';
+import {
+  Divider,
+  Box,
+  Paper,
+  Avatar,
+  Typography,
+  Link as MuiLink,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -107,11 +113,6 @@ function UserNotifications() {
 
   const handleChangePage = (event, value) => {
     setCurrentPage(value);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
-    setCurrentPage(1);
   };
 
   const parseMessage = (message, additionalText, property) => {

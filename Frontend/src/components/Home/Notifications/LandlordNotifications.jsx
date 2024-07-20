@@ -81,6 +81,7 @@ function LandlordNotifications() {
   const [customReason, setCustomReason] = useState('');
   const notificationsPerPage = 5;
   const [typeFilter, setTypeFilter] = useState('all');
+  const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
   const predefinedReasons = [
     t('Scheduling conflict'),
     t('Property is no longer available'),
@@ -406,7 +407,7 @@ function LandlordNotifications() {
             <MenuItem value="approved">{t('Approved')}</MenuItem>
             <MenuItem value="declined">{t('Declined')}</MenuItem>
             <MenuItem value="pending">{t('Pending')}</MenuItem>
-             <MenuItem value="status_change">Status Change</MenuItem>
+            <MenuItem value="status_change">Status Change</MenuItem>
             <MenuItem value="property_update_approved">
               Property Update Approved
             </MenuItem>
@@ -541,7 +542,7 @@ function LandlordNotifications() {
                 </Box>
 
                 {/* Second row: Notification message and dates */}
-                
+
                 <Typography
                   variant="body2"
                   sx={{

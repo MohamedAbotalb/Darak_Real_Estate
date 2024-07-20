@@ -100,7 +100,9 @@ function NotificationDropdown({ role }) {
       navigate('/landlord-notifications');
     }
   };
-
+  const getTimeDisplay = (timestamp) => {
+    return moment(timestamp).format('MMMM DD, YYYY hh:mm A');
+  };
   const CenteredButton = styled(Button)(({ theme }) => ({
     position: 'relative',
     width: '70px',
@@ -223,10 +225,6 @@ function NotificationDropdown({ role }) {
       default:
         return '#FFFFFF';
     }
-  };
-
-  const getTimeDisplay = (timestamp) => {
-    return moment(timestamp).format('MMMM DD, YYYY hh:mm A');
   };
 
   const CustomBadge = styled(Badge)(({ theme }) => ({
