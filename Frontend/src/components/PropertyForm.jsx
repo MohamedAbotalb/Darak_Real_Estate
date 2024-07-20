@@ -224,7 +224,7 @@ function PropertyForm() {
         setIsSubmitting(false);
       }
     }
-  }, [status, error, dispatch, reset, isSubmitting, isEditMode, navigate]);
+  }, [status, error, dispatch, reset, isSubmitting, isEditMode, navigate, t]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
