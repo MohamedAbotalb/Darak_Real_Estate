@@ -35,7 +35,10 @@ function LanguageSelector() {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }} sx={{ marginRight: '24px' }}>
+    <Box
+      sx={{ display: 'flex', alignItems: 'center' }}
+      sx={{ marginRight: '24px' }}
+    >
       <IconButton
         edge="end"
         color="inherit"
@@ -55,7 +58,7 @@ function LanguageSelector() {
           },
         }}
       >
-        <GlobeAltIcon sx={{color:'#000'}} />
+        <GlobeAltIcon sx={{ color: '#000' }} />
       </IconButton>
       <Menu
         id="language-menu"

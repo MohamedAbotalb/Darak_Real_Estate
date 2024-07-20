@@ -378,14 +378,12 @@ function Header() {
           </Box>
         )}
         <Box sx={{ flexGrow: 1 }} />
-        
-        <LanguageSelector  />
+
+        <LanguageSelector />
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {' '}
-            
-              <NotificationDropdown role={user?.role} />
-            
+            <NotificationDropdown role={user?.role} />
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
                 <FavoriteBorder sx={{ color: '#000' }} />
@@ -424,13 +422,13 @@ function Header() {
                   color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
-                                      borderRadius:'12px',
-                    padding: '5px 10px',
+                  borderRadius: '12px',
+                  padding: '5px 10px',
                   '&:hover': {
                     color: '#fff',
                     backgroundColor: '#ed2128',
-                    borderRadius:'12px',
-                    padding: '5px 10px'
+                    borderRadius: '12px',
+                    padding: '5px 10px',
                   },
                 }}
               >
@@ -444,13 +442,13 @@ function Header() {
                   color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
-                  borderRadius:'12px',
+                  borderRadius: '12px',
                   padding: '5px 10px',
                   '&:hover': {
                     color: '#fff',
                     backgroundColor: '#ed2128',
-                    borderRadius:'12px',
-                    padding: '5px 10px'
+                    borderRadius: '12px',
+                    padding: '5px 10px',
                   },
                 }}
               >
@@ -727,7 +725,7 @@ function Header() {
                 sx={{
                   fontSize: '1.1rem',
                   '&:hover': {
-                    padding:'15px',
+                    padding: '15px',
                     color: '#000',
                     backgroundColor: '#ed2128',
                   },

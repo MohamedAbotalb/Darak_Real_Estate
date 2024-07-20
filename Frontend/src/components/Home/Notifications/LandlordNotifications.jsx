@@ -239,7 +239,7 @@ function LandlordNotifications() {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
- const handleTypeFilterChange = (event) => {
+  const handleTypeFilterChange = (event) => {
     setTypeFilter(event.target.value);
   };
   const handlePageChange = (event, value) => {
@@ -262,19 +262,21 @@ function LandlordNotifications() {
     }
     return notificationTime.format('MMMM DD, YYYY hh:mm A');
   };
-  
-const filteredNotifications = notifications
-  ? notifications.filter((notification) => {
-      if (filter === 'all') return true;
-      if (filter === 'pending') {
-        return notification.status === 'pending' && notification.type === 'request';
-      }
-      if (filter === 'approved' || filter === 'declined') {
-        return notification.status === filter;
-      }
-      return notification.type === filter;
-    })
-  : [];
+
+  const filteredNotifications = notifications
+    ? notifications.filter((notification) => {
+        if (filter === 'all') return true;
+        if (filter === 'pending') {
+          return (
+            notification.status === 'pending' && notification.type === 'request'
+          );
+        }
+        if (filter === 'approved' || filter === 'declined') {
+          return notification.status === filter;
+        }
+        return notification.type === filter;
+      })
+    : [];
 
   const sortedNotifications = filteredNotifications
     ? [...filteredNotifications].sort(
@@ -287,63 +289,62 @@ const filteredNotifications = notifications
     startIndex,
     startIndex + notificationsPerPage
   );
-const StyledLink = styled(MuiLink)(({ theme }) => ({
-  textDecoration: 'none', // Remove underline
-  '&:hover': {
-    color:'#2d45c9', // Optional: Underline on hover
-  },
-   '&::after': {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    height: '2px',
-    backgroundColor: '#EE2027', // Bottom border color
-    transform: 'scaleX(0)', // Initial scale
-    transformOrigin: 'bottom left',
-    transition: 'transform 0.3s ease-in-out',
-  },
-}));
+  const StyledLink = styled(MuiLink)(({ theme }) => ({
+    textDecoration: 'none', // Remove underline
+    '&:hover': {
+      color: '#2d45c9', // Optional: Underline on hover
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      width: '100%',
+      height: '2px',
+      backgroundColor: '#EE2027', // Bottom border color
+      transform: 'scaleX(0)', // Initial scale
+      transformOrigin: 'bottom left',
+      transition: 'transform 0.3s ease-in-out',
+    },
+  }));
 
-const parseMessage = (message, additionalText, property) => {
-  if (!message || !property) return message;
+  const parseMessage = (message, additionalText, property) => {
+    if (!message || !property) return message;
 
-  const propertyTitle = property.title;
-  const propertySlug = property.slug;
+    const propertyTitle = property.title;
+    const propertySlug = property.slug;
 
-  // Check if the message contains " at "
-  const splitMessage = message.split(' at ');
+    // Check if the message contains " at "
+    const splitMessage = message.split(' at ');
 
-  // If the message does not contain " at ", return the message with additional text
-  if (splitMessage.length === 1) {
+    // If the message does not contain " at ", return the message with additional text
+    if (splitMessage.length === 1) {
+      return (
+        <>
+          {message} <br />
+          {additionalText}{' '}
+          <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+            {propertyTitle}
+          </StyledLink>
+        </>
+      );
+    }
+
+    // If the message contains " at ", split and format accordingly
+    const [firstPart, datePart] = splitMessage;
+    const formattedDate = getTimeDisplay(datePart);
+
     return (
       <>
-        {message} <br />
+        {firstPart} at <span style={{ color: 'green' }}>{formattedDate}</span>
+        <br />
         {additionalText}{' '}
         <StyledLink component={Link} to={`/properties/${propertySlug}`}>
           {propertyTitle}
         </StyledLink>
       </>
     );
-  }
-
-  // If the message contains " at ", split and format accordingly
-  const [firstPart, datePart] = splitMessage;
-  const formattedDate = getTimeDisplay(datePart);
-
-  return (
-    <>
-      {firstPart} at{' '}
-      <span style={{ color: 'green' }}>{formattedDate}</span>
-      <br />
-      {additionalText}{' '}
-      <StyledLink component={Link} to={`/properties/${propertySlug}`}>
-        {propertyTitle}
-      </StyledLink>
-    </>
-  );
-};
+  };
 
   if (status === 'loading') {
     return (
@@ -391,26 +392,6 @@ const parseMessage = (message, additionalText, property) => {
         <Typography variant="h6" gutterBottom>
           {t('Notifications')}
         </Typography>
-       
-         <FormControl sx={{ minWidth: 150, mt: '2px' }}>
-  <InputLabel id="filter-label">Filter</InputLabel>
-  <Select
-    labelId="filter-label"
-    id="filter-select"
-    value={filter}
-    label="Filter"
-    onChange={handleFilterChange}
-  >
-    <MenuItem value="all">All</MenuItem>
-    <MenuItem value="pending">Pending</MenuItem>
-    <MenuItem value="approved">Approved</MenuItem>
-    <MenuItem value="declined">Declined</MenuItem>
-    <MenuItem value="status_change">Status Change</MenuItem>
-    <MenuItem value="property_update_approved">Property Update Approved</MenuItem>
-    <MenuItem value="deleted-tour">Deleted Tour</MenuItem>
-    <MenuItem value="property_update_rejected">Property Update Reject</MenuItem>
-  </Select>
-</FormControl>
 
         <FormControl sx={{ minWidth: 150, mt: '2px' }}>
           <InputLabel id="filter-label">{t('Filter')}</InputLabel>
@@ -425,6 +406,14 @@ const parseMessage = (message, additionalText, property) => {
             <MenuItem value="approved">{t('Approved')}</MenuItem>
             <MenuItem value="declined">{t('Declined')}</MenuItem>
             <MenuItem value="pending">{t('Pending')}</MenuItem>
+             <MenuItem value="status_change">Status Change</MenuItem>
+            <MenuItem value="property_update_approved">
+              Property Update Approved
+            </MenuItem>
+            <MenuItem value="deleted-tour">Deleted Tour</MenuItem>
+            <MenuItem value="property_update_rejected">
+              Property Update Reject
+            </MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -494,19 +483,21 @@ const parseMessage = (message, additionalText, property) => {
                   ) : (
                     <>
                       {/* Colorful circle */}
-                      {notification.type === 'request' &&( <Box
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: '50%',
-                          backgroundColor: getNotificationCircleColor(
-                            notification.status
-                          ),
-                          position: 'absolute',
-                          top: '5px',
-                          left: '8px',
-                        }}
-                      />)}
+                      {notification.type === 'request' && (
+                        <Box
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            backgroundColor: getNotificationCircleColor(
+                              notification.status
+                            ),
+                            position: 'absolute',
+                            top: '5px',
+                            left: '8px',
+                          }}
+                        />
+                      )}
                       <Box display="flex" alignItems="center" marginTop={3}>
                         <Avatar
                           alt={notification.from.first_name}
@@ -550,7 +541,8 @@ const parseMessage = (message, additionalText, property) => {
                 </Box>
 
                 {/* Second row: Notification message and dates */}
-                {/* <Typography
+                
+                <Typography
                   variant="body2"
                   sx={{
                     marginBottom: '8px',
@@ -558,22 +550,12 @@ const parseMessage = (message, additionalText, property) => {
                     textAlign: { xs: 'center', md: 'left', lg: 'left' },
                   }}
                 >
-                  {notification.message}
-                </Typography> */}
-                <Typography
-                                  variant="body2"
-                                   sx={{
-                    marginBottom: '8px',
-                    marginLeft: { xs: '0', md: '85px' },
-                    textAlign: { xs: 'center', md: 'left', lg: 'left' },
-                  }}
-                                >
-                                 {parseMessage(
-                                    notification.message,
-                                    'check here ',
-                                    notification.property
-                                  )}
-                                </Typography>
+                  {parseMessage(
+                    notification.message,
+                    'check here ',
+                    notification.property
+                  )}
+                </Typography>
                 {notification.type === 'request' && (
                   <>
                     <Box

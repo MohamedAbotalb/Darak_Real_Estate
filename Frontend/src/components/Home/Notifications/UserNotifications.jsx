@@ -90,13 +90,13 @@ function UserNotifications() {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  
-  const filteredNotifications = notifications
-  ? sortedNotifications.filter((notification) => 
-      filterType === 'all' || notification.type === filterType
-    )
-  : [];
 
+  const filteredNotifications = notifications
+    ? sortedNotifications.filter(
+        (notification) =>
+          filterType === 'all' || notification.type === filterType
+      )
+    : [];
 
   const currentNotifications = filteredNotifications.slice(
     indexOfFirstItem,
@@ -167,34 +167,36 @@ function UserNotifications() {
         marginLeft: 3,
       }}
     >
-       <Box
+      <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
           marginBottom: 2,
         }}
       >
-      <Typography variant="h6" gutterBottom>
-        Notifications
-      </Typography>
-      
+        <Typography variant="h6" gutterBottom>
+          Notifications
+        </Typography>
+
         <FormControl sx={{ minWidth: 120 }}>
-  <InputLabel id="filter-type-label">Type</InputLabel>
-  <Select
-    labelId="filter-type-label"
-    id="filter-type-select"
-    value={filterType}
-    label="Type"
-    onChange={(event) => setFilterType(event.target.value)}
-  >
-    <MenuItem value="all">All</MenuItem>
-    <MenuItem value="confirmation">Approved</MenuItem>
-    <MenuItem value="cancellation">Declined</MenuItem>
-    <MenuItem value="tour_property_update">Tour Property Update</MenuItem>
-  </Select>
-</FormControl>
-</Box>
-      
+          <InputLabel id="filter-type-label">Type</InputLabel>
+          <Select
+            labelId="filter-type-label"
+            id="filter-type-select"
+            value={filterType}
+            label="Type"
+            onChange={(event) => setFilterType(event.target.value)}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="confirmation">Approved</MenuItem>
+            <MenuItem value="cancellation">Declined</MenuItem>
+            <MenuItem value="tour_property_update">
+              Tour Property Update
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
       {currentNotifications.length === 0 ? (
         <Typography
           variant="body1"

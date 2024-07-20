@@ -102,107 +102,104 @@ function NotificationDropdown({ role }) {
   };
 
   const CenteredButton = styled(Button)(({ theme }) => ({
-  position: 'relative',
-  width: '70px',
-  margin: '0 auto', // Center the button horizontally
-  backgroundColor: 'transparent',
-  color: '#000', // Text color
-  border: 'none', // Remove default border
-  fontWeight: 'bold',
-  textTransform: 'none', // Preserve text case
-  display: 'block', // Ensure it’s a block element for centering
-  textAlign: 'center', // Center text inside button
-  padding:'0',
-  // Remove default focus styles if needed
-  '&:focus': {
-    outline: 'none',
-  },
+    position: 'relative',
+    width: '70px',
+    margin: '0 auto', // Center the button horizontally
+    backgroundColor: 'transparent',
+    color: '#000', // Text color
+    border: 'none', // Remove default border
+    fontWeight: 'bold',
+    textTransform: 'none', // Preserve text case
+    display: 'block', // Ensure it’s a block element for centering
+    textAlign: 'center', // Center text inside button
+    padding: '0',
+    // Remove default focus styles if needed
+    '&:focus': {
+      outline: 'none',
+    },
 
-  // Hover styles
-  '&:hover': {
-    backgroundColor: 'transparent', // Adjust text color on hover
-  },
+    // Hover styles
+    '&:hover': {
+      backgroundColor: 'transparent', // Adjust text color on hover
+    },
 
-  // Bottom border animation
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    height: '2px',
-    backgroundColor: '#EE2027', // Bottom border color
-    transform: 'scaleX(0)', // Initial scale
-    transformOrigin: 'bottom left',
-    transition: 'transform 0.3s ease-in-out',
-  },
+    // Bottom border animation
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      width: '100%',
+      height: '2px',
+      backgroundColor: '#EE2027', // Bottom border color
+      transform: 'scaleX(0)', // Initial scale
+      transformOrigin: 'bottom left',
+      transition: 'transform 0.3s ease-in-out',
+    },
 
-  // Bottom border animation on hover
-  '&:hover::after': {
-    transform: 'scaleX(1)', // Animate to full width
-    transformOrigin: 'bottom left',
-  },
-}));
+    // Bottom border animation on hover
+    '&:hover::after': {
+      transform: 'scaleX(1)', // Animate to full width
+      transformOrigin: 'bottom left',
+    },
+  }));
 
+  const StyledLink = styled(MuiLink)(({ theme }) => ({
+    textDecoration: 'none', // Remove underline
+    '&:hover': {
+      color: '#2d45c9', // Optional: Underline on hover
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      width: '100%',
+      height: '2px',
+      backgroundColor: '#EE2027', // Bottom border color
+      transform: 'scaleX(0)', // Initial scale
+      transformOrigin: 'bottom left',
+      transition: 'transform 0.3s ease-in-out',
+    },
+  }));
 
+  const parseMessage = (message, additionalText, property) => {
+    if (!message || !property) return message;
 
-const StyledLink = styled(MuiLink)(({ theme }) => ({
-  textDecoration: 'none', // Remove underline
-  '&:hover': {
-    color:'#2d45c9', // Optional: Underline on hover
-  },
-   '&::after': {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    height: '2px',
-    backgroundColor: '#EE2027', // Bottom border color
-    transform: 'scaleX(0)', // Initial scale
-    transformOrigin: 'bottom left',
-    transition: 'transform 0.3s ease-in-out',
-  },
-}));
+    const propertyTitle = property.title;
+    const propertySlug = property.slug;
 
-const parseMessage = (message, additionalText, property) => {
-  if (!message || !property) return message;
+    // Check if the message contains " at "
+    const splitMessage = message.split(' at ');
 
-  const propertyTitle = property.title;
-  const propertySlug = property.slug;
+    // If the message does not contain " at ", return the message with additional text
+    if (splitMessage.length === 1) {
+      return (
+        <>
+          {message} <br />
+          {additionalText}{' '}
+          <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+            {propertyTitle}
+          </StyledLink>
+        </>
+      );
+    }
 
-  // Check if the message contains " at "
-  const splitMessage = message.split(' at ');
+    // If the message contains " at ", split and format accordingly
+    const [firstPart, datePart] = splitMessage;
+    const formattedDate = getTimeDisplay(datePart);
 
-  // If the message does not contain " at ", return the message with additional text
-  if (splitMessage.length === 1) {
     return (
       <>
-        {message} <br />
+        {firstPart} at <span style={{ color: 'green' }}>{formattedDate}</span>
+        <br />
         {additionalText}{' '}
         <StyledLink component={Link} to={`/properties/${propertySlug}`}>
           {propertyTitle}
         </StyledLink>
       </>
     );
-  }
-
-  // If the message contains " at ", split and format accordingly
-  const [firstPart, datePart] = splitMessage;
-  const formattedDate = getTimeDisplay(datePart);
-
-  return (
-    <>
-      {firstPart} at{' '}
-      <span style={{ color: 'green' }}>{formattedDate}</span>
-      <br />
-      {additionalText}{' '}
-      <StyledLink component={Link} to={`/properties/${propertySlug}`}>
-        {propertyTitle}
-      </StyledLink>
-    </>
-  );
-};
+  };
 
   const getBorderColor = (tourStatusBorder) => {
     switch (tourStatusBorder) {
@@ -299,15 +296,14 @@ const parseMessage = (message, additionalText, property) => {
                   key={notification?.id}
                   disablePadding
                   onClick={() => handleNotificationClick(notification)}
-                  sx={{ mb: 1,width:'500px'}}
+                  sx={{ mb: 1, width: '500px' }}
                 >
                   {role === 'user' ? (
                     <Paper
-                       sx={{
-                        
+                      sx={{
                         padding: 2,
                         borderRadius: 2.5,
-                        marginBottom:2,
+                        marginBottom: 2,
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                         borderRight: `18px solid ${getBorderColor(notification?.tour?.status)}`,
                         width: '100%',
@@ -405,7 +401,7 @@ const parseMessage = (message, additionalText, property) => {
                                   variant="body2"
                                   sx={{ marginTop: '8px' }}
                                 >
-                                 {parseMessage(
+                                  {parseMessage(
                                     notification.message,
                                     'request another tour ',
                                     notification.property
@@ -453,68 +449,81 @@ const parseMessage = (message, additionalText, property) => {
                             position: 'relative',
                           }}
                         >
-                           {notification.type !== 'request' &&
-                  notification.type !== 'deleted-tour' ? (
-                    <Box display="flex" alignItems="center" marginTop={3}>
-                      <Avatar
-                        alt="admin"
-                        src={AdminImage}
-                        sx={{ marginLeft: '28px', marginRight: '12px' }}
-                      />
-                      <Typography
-                        variant="subtitle1"
-                        fontWeight="bold"
-                        sx={{ marginRight: 'auto' }}
-                      >
-                        Darak Team
-                      </Typography>
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        sx={{ marginLeft: { xs: '10px' } }}
-                      >
-                        {getTimeDisplay(notification.created_at)}
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <>
-                      {/* Colorful circle */}
-                      {notification.type === 'request' &&( <Box
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: '50%',
-                          backgroundColor: getNotificationCircleColor(
-                            notification.status
-                          ),
-                          position: 'absolute',
-                          top: '5px',
-                          left: '8px',
-                        }}
-                      />)}
-                      <Box display="flex" alignItems="center" marginTop={3}>
-                        <Avatar
-                          alt={notification.from.first_name}
-                          src={notification.from.avatar}
-                          sx={{ marginLeft: '28px', marginRight: '12px' }}
-                        />
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight="bold"
-                          sx={{ marginRight: 'auto' }}
-                        >
-                          {`${notification.from.first_name} ${notification.from.last_name}`}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          color="textSecondary"
-                          sx={{ marginLeft: { xs: '10px' } }}
-                        >
-                          {getTimeDisplay(notification.created_at)}
-                        </Typography>
-                      </Box>
-                    </>
-                  )}
+                          {notification.type !== 'request' &&
+                          notification.type !== 'deleted-tour' ? (
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              marginTop={3}
+                            >
+                              <Avatar
+                                alt="admin"
+                                src={AdminImage}
+                                sx={{ marginLeft: '28px', marginRight: '12px' }}
+                              />
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                sx={{ marginRight: 'auto' }}
+                              >
+                                Darak Team
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                color="textSecondary"
+                                sx={{ marginLeft: { xs: '10px' } }}
+                              >
+                                {getTimeDisplay(notification.created_at)}
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <>
+                              {/* Colorful circle */}
+                              {notification.type === 'request' && (
+                                <Box
+                                  style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    backgroundColor: getNotificationCircleColor(
+                                      notification.status
+                                    ),
+                                    position: 'absolute',
+                                    top: '5px',
+                                    left: '8px',
+                                  }}
+                                />
+                              )}
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                marginTop={3}
+                              >
+                                <Avatar
+                                  alt={notification.from.first_name}
+                                  src={notification.from.avatar}
+                                  sx={{
+                                    marginLeft: '28px',
+                                    marginRight: '12px',
+                                  }}
+                                />
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight="bold"
+                                  sx={{ marginRight: 'auto' }}
+                                >
+                                  {`${notification.from.first_name} ${notification.from.last_name}`}
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  color="textSecondary"
+                                  sx={{ marginLeft: { xs: '10px' } }}
+                                >
+                                  {getTimeDisplay(notification.created_at)}
+                                </Typography>
+                              </Box>
+                            </>
+                          )}
                         </Box>
 
                         {/* Second row: Notification message and dates */}
@@ -597,11 +606,9 @@ const parseMessage = (message, additionalText, property) => {
               ))}
             </List>
           )}
-          <CenteredButton
-      onClick={handleShowAllNotifications}
-    >
-      Show All
-    </CenteredButton>
+          <CenteredButton onClick={handleShowAllNotifications}>
+            Show All
+          </CenteredButton>
         </Box>
       </Menu>
     </>
