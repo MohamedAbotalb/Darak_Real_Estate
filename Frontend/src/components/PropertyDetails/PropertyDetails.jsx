@@ -203,7 +203,7 @@ function PropertyDetails() {
                       sx={{ mb: 2 }}
                     >
                       <Grid item display="flex" alignItems="center">
-                        <PriceCheckIcon color="primary" />
+                        <PriceCheckIcon color="error" />
                         <Typography
                           variant="h5"
                           fontWeight="bold"
@@ -218,21 +218,21 @@ function PropertyDetails() {
                         </Typography>
                       </Grid>
                       <Grid item display="flex" alignItems="center">
-                        <BedIcon color="primary" />
+                        <BedIcon color="error" />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
                           {property.num_of_rooms} {t('Bedrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
-                        <BathtubIcon color="primary" />
+                        <BathtubIcon color="error" />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
                           {property.num_of_bathrooms} {t('Bathrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
-                        <SquareFootIcon color="primary" />
+                        <SquareFootIcon color="error" />
                         <Typography variant="body1" sx={{ ml: 1 }}>
                           {property.area} {t('sqm')}
                         </Typography>
@@ -248,7 +248,7 @@ function PropertyDetails() {
                     {/* Property type */}
                     {property.property_type && (
                       <Box display="flex" alignItems="center" sx={{ my: 2 }}>
-                        <HomeWorkIcon color="primary" sx={{ mr: 2 }} />
+                        <HomeWorkIcon color="error" sx={{ mr: 2 }} />
                         <Typography
                           variant="body2"
                           color="textSecondary"
@@ -271,7 +271,7 @@ function PropertyDetails() {
                           {t('Location')}
                         </Typography>
                         <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
-                          <LocationOnIcon color="primary" sx={{ mr: 2 }} />
+                          <LocationOnIcon color="error" sx={{ mr: 2 }} />
                           <Typography
                             variant="body1"
                             sx={{ fontWeight: 'lighter' }}
@@ -317,7 +317,7 @@ function PropertyDetails() {
                                   alignItems="center"
                                   sx={{ mr: 2, mb: 2 }}
                                 >
-                                  <Icon color="primary" sx={{ mr: 1 }} />
+                                  <Icon color="#ed2128" sx={{ mr: 1 }} />
                                   <Typography>{amenity.name}</Typography>
                                 </Box>
                               )
@@ -326,34 +326,7 @@ function PropertyDetails() {
                         </Box>
                       </>
                     )}
-                    {/* review */}
-                    {/* {property?.listing_type === 'rent' &&
-                      user?.role === 'user' && (
-                        <ReviewSection
-                          propertyId={property.id}
-                          propertyTitle={property.title}
-                        />
-                      )} */}
-
-                    {/* Reviews */}
-                    {/* {property.reviews && (
-                      <>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          sx={{ fontWeight: 'lighter' }}
-                        >
-                          Reviews:
-                        </Typography>
-                        <Grid container spacing={2}>
-                          {property.reviews.map((review) => (
-                            <Grid item key={review.id} xs={12} sm={6} md={4}>
-                              <ReviewList propertyId={property.id} />
-                            </Grid>
-                          ))}
-                        </Grid>
-                      </>
-                    )} */}
+                   
                   </Grid>
                 </Grid>
               </Grid>
@@ -416,32 +389,32 @@ function PropertyDetails() {
                   sx={{ mt: 3 }}
                 >
                   {!user?.role === 'admin' && (
-                    <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleRequestTourClick}
-                        disabled={
-                          user?.role === 'landlord' &&
-                          property.user?.id === user?.id
-                        }
-                      >
-                        {t('Request a tour')}
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleReportClick}
-                        disabled={
-                          user?.role === 'landlord' &&
-                          property.user?.id === user?.id
-                        }
-                      >
-                        {t('Report Listing')}
-                      </Button>
-                      {user && <AddToWishlistButton property={property} />}
-                    </>
-                  )}
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleRequestTourClick}
+                      disabled={
+                        user?.role === 'landlord' &&
+                        property.user?.id === user?.id
+                      }
+                    >
+                      {t('Request a tour')}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={handleReportClick}
+                      disabled={
+                        user?.role === 'landlord' &&
+                        property.user?.id === user?.id
+                      }
+                    >
+                      {t('Report Listing')}
+                    </Button>
+                    {user && <AddToWishlistButton property={property} />}
+                  </>
+                  )} 
                 </Box>
               </Grid>
             </Grid>

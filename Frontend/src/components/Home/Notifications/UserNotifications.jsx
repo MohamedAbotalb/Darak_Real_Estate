@@ -5,10 +5,8 @@ import {
   deleteNotificationAsync,
 } from 'store/Notifications/notificationsSlice';
 import { Divider } from '@mui/material';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import { Box, Paper, Avatar, Typography, Link as MuiLink } from '@mui/material';
+import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { green, red, orange, grey } from '@mui/material/colors';
@@ -27,12 +25,12 @@ function UserNotifications() {
   const dispatch = useDispatch();
   const notificationsState = useSelector((state) => state.notifications);
   const { notifications, status, error } = notificationsState; // Destructuring here
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState('all');
+  const [filterType, setFilterType] = useState('all');
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
   const [hoveredNotification, setHoveredNotification] = useState(null);
+  const AdminImage = 'logo.png';
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -75,7 +73,7 @@ function UserNotifications() {
       case 'declined':
         return red[500];
       default:
-        return orange[500];
+        return 'transparent';
     }
   };
   const handleMouseEnter = (e, color) => {
@@ -92,12 +90,14 @@ function UserNotifications() {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredNotifications =
-    filter === 'all'
-      ? sortedNotifications
-      : sortedNotifications.filter(
-          (notification) => notification.tour.status === filter
-        );
+  
+  const filteredNotifications = notifications
+  ? sortedNotifications.filter((notification) => 
+      filterType === 'all' || notification.type === filterType
+    )
+  : [];
+
+
   const currentNotifications = filteredNotifications.slice(
     indexOfFirstItem,
     indexOfLastItem
@@ -112,6 +112,22 @@ function UserNotifications() {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
     setCurrentPage(1);
+  };
+
+  const parseMessage = (message, additionalText, property) => {
+    if (!message || !property) return message;
+
+    const propertyTitle = property.title;
+    const propertySlug = property.slug;
+
+    return (
+      <>
+        {message} <br /> {additionalText}{' '}
+        <MuiLink component={Link} to={`/properties/${propertySlug}`}>
+          {propertyTitle}
+        </MuiLink>
+      </>
+    );
   };
 
   if (status === 'loading') {
@@ -151,28 +167,34 @@ function UserNotifications() {
         marginLeft: 3,
       }}
     >
-      <Typography variant="h4" gutterBottom>
+       <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 2,
+        }}
+      >
+      <Typography variant="h6" gutterBottom>
         Notifications
       </Typography>
-      <Divider />
-      <Box
-        sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
-      >
+      
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="filter-label">Filter</InputLabel>
-          <Select
-            labelId="filter-label"
-            id="filter-select"
-            value={filter}
-            label="Filter"
-            onChange={handleFilterChange}
-          >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="declined">Declined</MenuItem>
-            <MenuItem value="approved">Approved</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+  <InputLabel id="filter-type-label">Type</InputLabel>
+  <Select
+    labelId="filter-type-label"
+    id="filter-type-select"
+    value={filterType}
+    label="Type"
+    onChange={(event) => setFilterType(event.target.value)}
+  >
+    <MenuItem value="all">All</MenuItem>
+    <MenuItem value="confirmation">Approved</MenuItem>
+    <MenuItem value="cancellation">Declined</MenuItem>
+    <MenuItem value="tour_property_update">Tour Property Update</MenuItem>
+  </Select>
+</FormControl>
+</Box>
+      
       {currentNotifications.length === 0 ? (
         <Typography
           variant="body1"
@@ -202,25 +224,92 @@ function UserNotifications() {
                 padding: 2,
                 borderRadius: 4,
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                borderLeft: `5px solid ${getBorderColor(notification?.tour?.status)}`,
+                borderLeft: `18px  solid ${getBorderColor(notification?.tour?.status)}`,
                 display: 'flex',
                 alignItems: 'center',
                 position: 'relative',
               }}
             >
-              <Avatar
-                alt={notification.from.first_name}
-                src={notification.from.avatar}
-              />
-              <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
-                <Typography variant="subtitle1">
-                  {`${notification.from.first_name} ${notification.from.last_name}`}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {getTimeDisplay(notification.created_at)}
-                </Typography>
-                <Typography variant="body1">{notification.message}</Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '10px',
+                  position: 'relative',
+                }}
+              >
+                {notification.type === 'tour_property_update' ? (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="left"
+                    marginTop={3}
+                  >
+                    <Box display="flex" alignItems="center" width="100%">
+                      <Avatar
+                        alt="admin"
+                        src={AdminImage}
+                        sx={{ marginLeft: '28px', marginRight: '12px' }}
+                      />
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        Darak Team
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        sx={{ marginLeft: { xs: '10px' } }}
+                      >
+                        {getTimeDisplay(notification.created_at)}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        marginTop: '8px',
+                        textAlign: { xs: 'center', md: 'left', lg: 'left' },
+                        width: '100%',
+                        paddingLeft: '40px', // Adjust padding as needed
+                        paddingRight: '40px', // Adjust padding as needed
+                      }}
+                    >
+                      {parseMessage(
+                        notification.message,
+                        'check updates from here ',
+                        notification.property
+                      )}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    sx={{ marginLeft: 2, flexGrow: 1 }}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Avatar
+                        alt={notification.from.first_name}
+                        src={notification.from.avatar}
+                      />
+                      <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
+                        <Typography variant="subtitle1">
+                          {`${notification.from.first_name} ${notification.from.last_name}`}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {getTimeDisplay(notification.created_at)}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography variant="body1" sx={{ marginTop: '8px' }}>
+                      {parseMessage(
+                        notification.message,
+                        'you can make another one from here ',
+                        notification.property
+                      )}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
+
               <IconButton
                 aria-label="delete notification"
                 onClick={() => openDeleteConfirmation(notification)}

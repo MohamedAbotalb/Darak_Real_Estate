@@ -35,7 +35,7 @@ function LanguageSelector() {
   };
 
   return (
-    <Box>
+    <Box sx={{ marginRight: '24px' }}>
       <IconButton
         edge="end"
         color="inherit"
@@ -44,7 +44,7 @@ function LanguageSelector() {
         aria-haspopup="true"
         onClick={handleMenu}
       >
-        <GlobeAltIcon />
+        <GlobeAltIcon sx={{color:'#000'}} />
       </IconButton>
       <Menu
         id="language-menu"

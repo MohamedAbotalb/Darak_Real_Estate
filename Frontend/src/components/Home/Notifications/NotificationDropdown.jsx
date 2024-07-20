@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   fetchUserNotificationsAsync,
   fetchLandlordNotificationsAsync,
@@ -11,6 +11,7 @@ import {
   IconButton,
   Menu,
   ListItemAvatar,
+  Grid,
   Avatar,
   Typography,
   List,
@@ -18,8 +19,9 @@ import {
   Paper,
   Box,
   Button,
+  Link as MuiLink,
 } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+
 import { green, red, orange } from '@mui/material/colors';
 import moment from 'moment';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -42,7 +44,7 @@ function NotificationDropdown({ role }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [hoveredNotification, setHoveredNotification] = useState(null);
   const { notifications, status } = useSelector((state) => state.notifications);
-  const AdminImage = 'logo.jpg';
+  const AdminImage = 'logo.png';
 
   useEffect(() => {
     if (role === 'user') {
@@ -54,9 +56,7 @@ function NotificationDropdown({ role }) {
   const sortedNotifications = [...notifications].sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
-  // const lastFourNotifications = sortedNotifications.slice(
-  //   Math.max(notifications.length - 4, 0)
-  // );
+
   const lastFourNotifications = sortedNotifications.slice(0, 4);
 
   const pendingNotificationsCount =
@@ -92,6 +92,109 @@ function NotificationDropdown({ role }) {
     }
   };
 
+  const CenteredButton = styled(Button)(({ theme }) => ({
+  position: 'relative',
+  width: '70px',
+  margin: '0 auto', // Center the button horizontally
+  backgroundColor: 'transparent',
+  color: '#000', // Text color
+  border: 'none', // Remove default border
+  fontWeight: 'bold',
+  textTransform: 'none', // Preserve text case
+  display: 'block', // Ensure it’s a block element for centering
+  textAlign: 'center', // Center text inside button
+  padding:'0',
+  // Remove default focus styles if needed
+  '&:focus': {
+    outline: 'none',
+  },
+
+  // Hover styles
+  '&:hover': {
+    backgroundColor: 'transparent', // Adjust text color on hover
+  },
+
+  // Bottom border animation
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    height: '2px',
+    backgroundColor: '#EE2027', // Bottom border color
+    transform: 'scaleX(0)', // Initial scale
+    transformOrigin: 'bottom left',
+    transition: 'transform 0.3s ease-in-out',
+  },
+
+  // Bottom border animation on hover
+  '&:hover::after': {
+    transform: 'scaleX(1)', // Animate to full width
+    transformOrigin: 'bottom left',
+  },
+}));
+
+
+
+const StyledLink = styled(MuiLink)(({ theme }) => ({
+  textDecoration: 'none', // Remove underline
+  '&:hover': {
+    color:'#2d45c9', // Optional: Underline on hover
+  },
+   '&::after': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    height: '2px',
+    backgroundColor: '#EE2027', // Bottom border color
+    transform: 'scaleX(0)', // Initial scale
+    transformOrigin: 'bottom left',
+    transition: 'transform 0.3s ease-in-out',
+  },
+}));
+
+const parseMessage = (message, additionalText, property) => {
+  if (!message || !property) return message;
+
+  const propertyTitle = property.title;
+  const propertySlug = property.slug;
+
+  // Check if the message contains " at "
+  const splitMessage = message.split(' at ');
+
+  // If the message does not contain " at ", return the message with additional text
+  if (splitMessage.length === 1) {
+    return (
+      <>
+        {message} <br />
+        {additionalText}{' '}
+        <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+          {propertyTitle}
+        </StyledLink>
+      </>
+    );
+  }
+
+  // If the message contains " at ", split and format accordingly
+  const [firstPart, datePart] = splitMessage;
+  const formattedDate = getTimeDisplay(datePart);
+
+  return (
+    <>
+      {firstPart} at{' '}
+      <span style={{ color: 'green' }}>{formattedDate}</span>
+      <br />
+      {additionalText}{' '}
+      <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+        {propertyTitle}
+      </StyledLink>
+    </>
+  );
+};
+
   const getBorderColor = (tourStatusBorder) => {
     switch (tourStatusBorder) {
       case 'approved':
@@ -99,7 +202,7 @@ function NotificationDropdown({ role }) {
       case 'declined':
         return red[500];
       default:
-        return orange[500];
+        return 'transparent';
     }
   };
 
@@ -143,9 +246,9 @@ function NotificationDropdown({ role }) {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
-        PaperProps={{ sx: { width: 500 } }}
+        PaperProps={{ sx: { width: 600 } }}
       >
-        <Box sx={{ padding: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
           {status === 'loading' && (
             <Box
               display="flex"
@@ -187,15 +290,17 @@ function NotificationDropdown({ role }) {
                   key={notification?.id}
                   disablePadding
                   onClick={() => handleNotificationClick(notification)}
-                  sx={{ mb: 1 }}
+                  sx={{ mb: 1,width:'500px'}}
                 >
                   {role === 'user' ? (
                     <Paper
-                      sx={{
+                       sx={{
+                        
                         padding: 2,
-                        borderRadius: 3,
+                        borderRadius: 2.5,
+                        marginBottom:2,
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                        borderLeft: `5px solid ${getBorderColor(notification?.tour?.status)}`,
+                        borderRight: `18px solid ${getBorderColor(notification?.tour?.status)}`,
                         width: '100%',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
@@ -203,31 +308,104 @@ function NotificationDropdown({ role }) {
                         },
                       }}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <ListItemAvatar>
-                          <Avatar
-                            alt={notification?.from.first_name}
-                            src={notification?.from.avatar}
-                          />
-                        </ListItemAvatar>
-                        <Box sx={{ marginLeft: 2, flexGrow: 1 }}>
-                          <Typography variant="subtitle1">
-                            {notification?.from?.first_name}{' '}
-                            {notification?.from?.last_name}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            sx={{ mb: 1 }}
-                          >
-                            {moment(notification?.created_at).format(
-                              'MMMM DD, YYYY hh:mm A'
-                            )}
-                          </Typography>
-                          <Typography variant="body1">
-                            {notification?.message}
-                          </Typography>
-                        </Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          position: 'relative',
+                        }}
+                      >
+                        {notification.type === 'tour_property_update' ? (
+                          <Grid container>
+                            <Grid
+                              item
+                              xs={12}
+                              sm={2}
+                              display="flex"
+                              justifyContent="center"
+                              alignItems="center"
+                            >
+                              <Avatar
+                                alt="admin"
+                                src={AdminImage}
+                                sx={{ margin: '16px' }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={10}>
+                              <Box display="flex" flexDirection="column">
+                                <Typography
+                                  variant="subtitle1"
+                                  fontWeight="bold"
+                                >
+                                  Darak Team
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
+                                  {getTimeDisplay(notification.created_at)}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    marginTop: '8px',
+                                    textAlign: {
+                                      xs: 'center',
+                                      md: 'left',
+                                      lg: 'left',
+                                    },
+                                  }}
+                                >
+                                  {parseMessage(
+                                    notification.message,
+                                    'check updates from here ',
+                                    notification.property
+                                  )}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        ) : (
+                          <Grid container>
+                            <Grid
+                              item
+                              xs={12}
+                              sm={2}
+                              display="flex"
+                              justifyContent="center"
+                              alignItems="center"
+                            >
+                              <Avatar
+                                alt={notification.from.first_name}
+                                src={notification.from.avatar}
+                                sx={{ margin: '16px' }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={10}>
+                              <Box display="flex" flexDirection="column">
+                                <Typography variant="subtitle1">
+                                  {`${notification.from.first_name} ${notification.from.last_name}`}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
+                                  {getTimeDisplay(notification.created_at)}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  sx={{ marginTop: '8px' }}
+                                >
+                                 {parseMessage(
+                                    notification.message,
+                                    'request another tour ',
+                                    notification.property
+                                  )}
+                                </Typography>
+                              </Box>
+                            </Grid>
+                          </Grid>
+                        )}
                       </Box>
                     </Paper>
                   ) : (
@@ -250,9 +428,9 @@ function NotificationDropdown({ role }) {
                         key={notification.id}
                         elevation={3}
                         sx={{
-                          width: '100%',
+                          width: '500px',
                           padding: 2,
-                          borderRadius: 4,
+                          borderRadius: 5,
                           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                           position: 'relative',
                         }}
@@ -266,78 +444,68 @@ function NotificationDropdown({ role }) {
                             position: 'relative',
                           }}
                         >
-                          {notification.type === 'status_change' ? (
-                            <Box
-                              display="flex"
-                              alignItems="center"
-                              marginTop={3}
-                            >
-                              <Avatar
-                                alt="admin"
-                                src={AdminImage}
-                                sx={{ marginLeft: '28px', marginRight: '12px' }}
-                              />
-                              <Typography
-                                variant="subtitle1"
-                                fontWeight="bold"
-                                sx={{ marginRight: 'auto' }}
-                              >
-                                Darak Team
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                color="textSecondary"
-                                sx={{ marginLeft: { xs: '10px' } }}
-                              >
-                                {getTimeDisplay(notification.created_at)}
-                              </Typography>
-                            </Box>
-                          ) : (
-                            <>
-                              {/* Colorful circle */}
-                              <Box
-                                style={{
-                                  width: '20px',
-                                  height: '20px',
-                                  borderRadius: '50%',
-                                  backgroundColor: getNotificationCircleColor(
-                                    notification.status
-                                  ),
-                                  position: 'absolute',
-                                  top: '5px',
-                                  left: '8px',
-                                }}
-                              />
-                              <Box
-                                display="flex"
-                                alignItems="center"
-                                marginTop={3}
-                              >
-                                <Avatar
-                                  alt={notification.from.first_name}
-                                  src={notification.from.avatar}
-                                  sx={{
-                                    marginLeft: '28px',
-                                    marginRight: '12px',
-                                  }}
-                                />
-                                <Typography
-                                  variant="subtitle1"
-                                  fontWeight="bold"
-                                  sx={{ marginRight: 'auto' }}
-                                >
-                                  {`${notification.from.first_name} ${notification.from.last_name}`}
-                                </Typography>
-                                <Typography
-                                  variant="body"
-                                  color="textSecondary"
-                                  sx={{ marginLeft: { xs: '10px' } }}
-                                >
-                                  {getTimeDisplay(notification.created_at)}
-                                </Typography>
-                              </Box>
-                            </>
-                          )}
+                           {notification.type !== 'request' &&
+                  notification.type !== 'deleted-tour' ? (
+                    <Box display="flex" alignItems="center" marginTop={3}>
+                      <Avatar
+                        alt="admin"
+                        src={AdminImage}
+                        sx={{ marginLeft: '28px', marginRight: '12px' }}
+                      />
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{ marginRight: 'auto' }}
+                      >
+                        Darak Team
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        sx={{ marginLeft: { xs: '10px' } }}
+                      >
+                        {getTimeDisplay(notification.created_at)}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <>
+                      {/* Colorful circle */}
+                      {notification.type === 'request' &&( <Box
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: getNotificationCircleColor(
+                            notification.status
+                          ),
+                          position: 'absolute',
+                          top: '5px',
+                          left: '8px',
+                        }}
+                      />)}
+                      <Box display="flex" alignItems="center" marginTop={3}>
+                        <Avatar
+                          alt={notification.from.first_name}
+                          src={notification.from.avatar}
+                          sx={{ marginLeft: '28px', marginRight: '12px' }}
+                        />
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ marginRight: 'auto' }}
+                        >
+                          {`${notification.from.first_name} ${notification.from.last_name}`}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          color="textSecondary"
+                          sx={{ marginLeft: { xs: '10px' } }}
+                        >
+                          {getTimeDisplay(notification.created_at)}
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
                         </Box>
 
                         {/* Second row: Notification message and dates */}
@@ -351,7 +519,7 @@ function NotificationDropdown({ role }) {
                         >
                           {notification?.message}
                         </Typography>
-                        {notification.type !== 'status_change' && (
+                        {notification.type === 'request' && (
                           <Box
                             sx={{
                               display: 'flex',
@@ -420,20 +588,11 @@ function NotificationDropdown({ role }) {
               ))}
             </List>
           )}
-          <Button
-            variant="contained"
-            onClick={handleShowAllNotifications}
-            sx={{
-              alignSelf: 'center',
-              marginTop: '8px',
-              backgroundColor: '#EE2027',
-              '&:hover': {
-                backgroundColor: '#ee363c',
-              },
-            }}
-          >
-            Show All
-          </Button>
+          <CenteredButton
+      onClick={handleShowAllNotifications}
+    >
+      Show All
+    </CenteredButton>
         </Box>
       </Menu>
     </>

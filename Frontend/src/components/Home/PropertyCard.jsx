@@ -50,7 +50,7 @@ const CardLink = styled(Link)({
 });
 
 function PropertyCard({ property }) {
-  const images = property.images || [];
+  const images = property?.images || [];
   const defaultImage = 'bedroom1.jpg';
   const getPriceDisplay = () => {
     const formattedPrice = property.price.toLocaleString();
