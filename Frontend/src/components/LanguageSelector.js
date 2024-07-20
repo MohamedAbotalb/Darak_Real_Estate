@@ -35,7 +35,7 @@ function LanguageSelector() {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', marginRight: '24px' }}>
       <IconButton
         edge="end"
         color="inherit"
