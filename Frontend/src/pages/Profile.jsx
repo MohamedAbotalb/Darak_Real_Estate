@@ -113,6 +113,7 @@ function Profile() {
   };
 
   const handleDialogClose = () => {
+    setOpenAvatarDialog(false);
     setOpenEditDialog(false);
     setOpenPasswordDialog(false);
     setOpenPhoneDialog(false);
@@ -126,11 +127,11 @@ function Profile() {
 
       try {
         const response = await dispatch(updateAvatar(formData)).unwrap();
-        dispatch(setCredentials({ ...user, avatar: response.avatar }));
+        dispatch(setCredentials({ ...user, avatar: response.user.avatar }));
         toast.success('Avatar updated successfully');
         setOpenAvatarDialog(false);
       } catch (error) {
-        toast.error('Failed to update avatar');
+        toast.error(error || 'Failed to update avatar');
       }
     }
   };
@@ -153,7 +154,7 @@ function Profile() {
       if (editField === 'Name') {
         const schema = validationSchema.pick(['firstName', 'lastName']);
         try {
-          schema.validate({ firstName, lastName }, { abortEarly: false });
+          await schema.validate({ firstName, lastName }, { abortEarly: false });
           setErrors({});
         } catch (err) {
           const validationErrors = {};
@@ -169,7 +170,7 @@ function Profile() {
           'confirmPassword',
         ]);
         try {
-          schema.validate(
+          await schema.validate(
             { newPassword, confirmPassword },
             { abortEarly: false }
           );
@@ -185,7 +186,7 @@ function Profile() {
       } else if (editField === 'Phone') {
         const schema = validationSchema.pick(['phone']);
         try {
-          schema.validate({ phone }, { abortEarly: false });
+          await schema.validate({ phone }, { abortEarly: false });
           setErrors({});
         } catch (err) {
           const validationErrors = {};
@@ -198,7 +199,7 @@ function Profile() {
       }
     };
 
-    validate();
+    await validate();
 
     if (!valid) return;
 
@@ -220,7 +221,6 @@ function Profile() {
             new_password: newPassword,
           })
         );
-
         toast.success(t('Password changed successfully'));
       } else if (editField === 'Phone') {
         dispatch(updatePhone({ phone_number: `+2${phone}` }));
@@ -232,6 +232,8 @@ function Profile() {
       toast.error(t('Failed to update profile'));
     }
   };
+
+  const clearConfirmationText = () => {};
 
   return (
     <Box sx={{ flexGrow: 1, padding: { xs: 2, sm: 3, md: 4 } }}>
@@ -278,7 +280,6 @@ function Profile() {
         isOpen={openAvatarDialog}
         onClose={handleDialogClose}
         onSave={handleAvatarChange}
-        currentAvatar={user?.avatar}
       />
       <PhoneDialog
         isOpen={openPhoneDialog}
@@ -292,6 +293,7 @@ function Profile() {
         isOpen={openDeleteDialog}
         onClose={handleDialogClose}
         onDelete={handleDeleteAccount}
+        clearConfirmationText={clearConfirmationText}
       />
     </Box>
   );
