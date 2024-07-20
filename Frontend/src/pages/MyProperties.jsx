@@ -70,7 +70,17 @@ function MyProperties() {
 
   return (
     <div>
-      <Container maxWidth="lg" sx={{ mt: 3, mb: 4 }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          mt: 3,
+          mb: 4,
+          minHeight: '70vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {' '}
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h4">{t('My Properties')}</Typography>
           <Button

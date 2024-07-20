@@ -28,8 +28,9 @@ function Footer() {
     <Box
       className="footer"
       sx={{
-        backgroundColor: '#2b3d4f',
-        color: '#cdd0d8',
+        backgroundColor: '#101011',
+        color: '#fff',
+        fontSize: '18px',
         padding: '20px',
       }}
     >
@@ -64,7 +65,7 @@ function Footer() {
                   marginTop: '10px',
                 }}
               >
-                <IconButton color="inherit" href="#">
+                <IconButton color="inherit" href="#" sx={{ padding: '8px 0' }}>
                   <FacebookIcon />
                 </IconButton>
                 <IconButton color="inherit" href="#">
@@ -114,10 +115,32 @@ function Footer() {
                           aria-label="subscribe"
                           onClick={handleSubscribe}
                         >
-                          <SendIcon />
+                          <SendIcon sx={{ color: '#ed2128' }} />
                         </IconButton>
                       </InputAdornment>
                     ),
+                    sx: {
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'white', // Default border color
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'white', // Border color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'black', // Border color when focused
+                        },
+                      },
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'white', // Default border color
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'white', // Border color on hover
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#000', // Border color when focused
+                      },
+                    },
                   }}
                   InputLabelProps={{
                     style: { color: 'white' },

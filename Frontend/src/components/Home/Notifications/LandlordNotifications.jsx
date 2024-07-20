@@ -23,6 +23,8 @@ import {
   Pagination,
   IconButton,
   Paper,
+  TextField,
+  FormHelperText,
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
@@ -36,8 +38,11 @@ import MenuItem from '@mui/material/MenuItem';
 import CloseIcon from '@mui/icons-material/Close';
 import { red, grey } from '@mui/material/colors';
 import moment from 'moment';
+import 'moment/locale/ar';
+import 'moment/locale/en-gb';
 import { toast } from 'react-toastify';
 import Loader from 'components/Loader';
+import { useTranslation } from 'react-i18next';
 
 const getNotificationCircleColor = (type) => {
   switch (type) {
@@ -53,6 +58,7 @@ const getNotificationCircleColor = (type) => {
 };
 
 function LandlordNotifications() {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { notifications, status } = useSelector((state) => state.notifications);
 
@@ -65,12 +71,36 @@ function LandlordNotifications() {
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [filter, setFilter] = useState('all');
   const [hoveredNotification, setHoveredNotification] = useState(null);
-
+  const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
+  const AdminImage = 'logo.jpg';
+  const [declineMessage, setDeclineMessage] = useState('');
+  const [validationError, setValidationError] = useState('');
+  const [selectedReason, setSelectedReason] = useState('');
+  const [customReason, setCustomReason] = useState('');
   const notificationsPerPage = 5;
+
+  const predefinedReasons = [
+    t('Scheduling conflict'),
+    t('Property is no longer available'),
+    t('Unsuitable for the requested tour'),
+    t('Other'),
+  ];
+
+  useEffect(() => {
+    if (selectedNotification) {
+      setSelectedReason('');
+      setCustomReason('');
+      setValidationError('');
+    }
+  }, [selectedNotification]);
 
   useEffect(() => {
     dispatch(fetchLandlordNotificationsAsync());
   }, [dispatch]);
+
+  useEffect(() => {
+    moment.locale(i18n.language === 'ar' ? 'ar' : 'en-gb');
+  }, [i18n.language]);
 
   const handleApprove = (notification) => {
     setSelectedNotification(notification);
@@ -82,28 +112,79 @@ function LandlordNotifications() {
     setOpenDeclineConfirmation(true);
   };
 
+  const validateMessage = (message) => {
+    if (/^\d/.test(message)) {
+      return t('Message cannot start with a number.');
+    }
+    if (message.length < 10) {
+      return t('Message must be at least 10 characters long.');
+    }
+    return '';
+  };
+
   const handleDecline = () => {
+    const error = validateMessage(
+      selectedReason === t('Other') ? customReason : selectedReason
+    );
+    if (error) {
+      setValidationError(error);
+      return;
+    }
+
     if (selectedNotification) {
       setSubmitting(true);
-      dispatch(declineTourAsync(selectedNotification.tour_id))
+      const reason =
+        selectedReason === t('Other') ? customReason : selectedReason;
+      const fullMessage = `${defaultMessage} ${reason}`;
+      dispatch(
+        declineTourAsync({
+          tourId: selectedNotification.tour_id,
+          message: fullMessage,
+        })
+      )
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Declined tour', {
+            toast.success(t('Declined tour'), {
               position: 'top-right',
             });
           }
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
+          setSelectedReason('');
+          setCustomReason('');
         })
         .catch(() => {
           setSubmitting(false);
           setOpenDeclineConfirmation(false);
-          toast.error('Failed to decline tour', {
+          toast.error(t('Failed to decline tour'), {
             position: 'top-right',
           });
         });
     }
+  };
+
+  const handleReasonChange = (e) => {
+    setSelectedReason(e.target.value);
+    if (e.target.value !== t('Other')) {
+      setValidationError('');
+    }
+  };
+
+  const handleCustomReasonChange = (e) => {
+    const { value } = e.target;
+    setCustomReason(value);
+    if (value) {
+      setValidationError(validateMessage(value));
+    } else {
+      setValidationError('');
+    }
+  };
+
+  const handleMessageChange = (e) => {
+    const { value } = e.target;
+    setDeclineMessage(value);
+    setValidationError(validateMessage(value));
   };
 
   const handleApproveDate = () => {
@@ -115,7 +196,7 @@ function LandlordNotifications() {
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Approved tour', {
+            toast.success(t('Approved tour'), {
               position: 'top-right',
             });
           }
@@ -125,7 +206,7 @@ function LandlordNotifications() {
         .catch(() => {
           setSubmitting(false);
           setOpenModal(false);
-          toast.error('Failed to approve tour', {
+          toast.error(t('Failed to approve tour'), {
             position: 'top-right',
           });
         });
@@ -143,7 +224,7 @@ function LandlordNotifications() {
         .then((response) => {
           if (!response.error) {
             dispatch(fetchLandlordNotificationsAsync());
-            toast.success('Notification removed successfully', {
+            toast.success(t('Notification removed successfully'), {
               position: 'top-right',
             });
           }
@@ -151,7 +232,7 @@ function LandlordNotifications() {
         })
         .catch(() => {
           setOpenDeleteConfirmation(false);
-          toast.error('Failed to remove notification', {
+          toast.error(t('Failed to remove notification'), {
             position: 'top-right',
           });
         });
@@ -219,7 +300,7 @@ function LandlordNotifications() {
         alignItems="center"
         height="100vh"
       >
-        Not FOUND ANY NOTIFICATION
+        {t('Not FOUND ANY NOTIFICATION')}
       </Box>
     );
   }
@@ -233,29 +314,31 @@ function LandlordNotifications() {
         justifyContent: 'center',
         marginRight: 3,
         marginLeft: 3,
-        // marginTop: '60px',
       }}
     >
-      <Typography variant="h4" gutterBottom>
-        Notifications
-      </Typography>
-      <Divider />
       <Box
-        sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 2,
+        }}
       >
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="filter-label">Filter</InputLabel>
+        <Typography variant="h6" gutterBottom>
+          {t('Notifications')}
+        </Typography>
+        <FormControl sx={{ minWidth: 150, mt: '2px' }}>
+          <InputLabel id="filter-label">{t('Filter')}</InputLabel>
           <Select
             labelId="filter-label"
             id="filter-select"
             value={filter}
-            label="Filter"
+            label={t('Filter')}
             onChange={handleFilterChange}
           >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="approved">Declined</MenuItem>
-            <MenuItem value="declined">Approved</MenuItem>
-            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="all">{t('All')}</MenuItem>
+            <MenuItem value="approved">{t('Approved')}</MenuItem>
+            <MenuItem value="declined">{t('Declined')}</MenuItem>
+            <MenuItem value="pending">{t('Pending')}</MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -290,7 +373,7 @@ function LandlordNotifications() {
                   position: 'relative',
                 }}
               >
-                {/* Top row: Profile image, username, and notification time */}
+                {/* Top row: Profile image, fromname, and notification time */}
                 <Box
                   sx={{
                     display: 'flex',
@@ -299,41 +382,67 @@ function LandlordNotifications() {
                     position: 'relative',
                   }}
                 >
-                  {/* Colorful circle */}
-                  <Box
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      backgroundColor: getNotificationCircleColor(
-                        notification.status
-                      ),
-                      position: 'absolute',
-                      top: '5px',
-                      left: '8px',
-                    }}
-                  />
-                  <Box display="flex" alignItems="center" marginTop={3}>
-                    <Avatar
-                      alt={notification.user.first_name}
-                      src={notification.user.avatar}
-                      sx={{ marginLeft: '28px', marginRight: '12px' }}
-                    />
-                    <Typography
-                      variant="subtitle1"
-                      fontWeight="bold"
-                      sx={{ marginRight: 'auto' }}
-                    >
-                      {`${notification.user.first_name} ${notification.user.last_name}`}
-                    </Typography>
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      sx={{ marginLeft: { xs: '10px' } }}
-                    >
-                      {getTimeDisplay(notification.created_at)}
-                    </Typography>
-                  </Box>
+                  {notification.type === 'status_change' ? (
+                    <Box display="flex" alignItems="center" marginTop={3}>
+                      <Avatar
+                        alt="admin"
+                        src={AdminImage}
+                        sx={{ marginLeft: '28px', marginRight: '12px' }}
+                      />
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{ marginRight: 'auto' }}
+                      >
+                        {t('Darak Team')}
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        sx={{ marginLeft: { xs: '10px' } }}
+                      >
+                        {getTimeDisplay(notification.created_at)}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <>
+                      {/* Colorful circle */}
+                      <Box
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: getNotificationCircleColor(
+                            notification.status
+                          ),
+                          position: 'absolute',
+                          top: '5px',
+                          left: '8px',
+                        }}
+                      />
+                      <Box display="flex" alignItems="center" marginTop={3}>
+                        <Avatar
+                          alt={notification.from.first_name}
+                          src={notification.from.avatar}
+                          sx={{ marginLeft: '28px', marginRight: '12px' }}
+                        />
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ marginRight: 'auto' }}
+                        >
+                          {`${notification.from.first_name} ${notification.from.last_name}`}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          color="textSecondary"
+                          sx={{ marginLeft: { xs: '10px' } }}
+                        >
+                          {getTimeDisplay(notification.created_at)}
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
                   <Box
                     sx={{
                       position: 'absolute',
@@ -343,7 +452,7 @@ function LandlordNotifications() {
                   >
                     <IconButton
                       size="small"
-                      aria-label="delete notification"
+                      aria-label={t('delete notification')}
                       onClick={() => handleDelete(notification.id)}
                       onMouseEnter={(e) => handleMouseEnter(e, red[500])}
                       onMouseLeave={(e) => handleMouseLeave(e, grey[500])}
@@ -364,100 +473,110 @@ function LandlordNotifications() {
                 >
                   {notification.message}
                 </Typography>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'column', md: 'row' },
-                    textAlign: { xs: 'center', sm: 'center', md: 'left' },
-                    marginBottom: '8px',
-                    marginLeft: { xs: '0', md: '75px' },
-                    alignItems: 'center',
-                  }}
-                >
-                  <DateRangeIcon
-                    sx={{
-                      marginRight: '5px',
-
-                      color: getNotificationCircleColor(notification.status),
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ display: 'flex', flexWrap: 'wrap' }}
+                {notification.type !== 'status_change' && (
+                  <>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: {
+                          xs: 'column',
+                          sm: 'column',
+                          md: 'row',
+                        },
+                        textAlign: { xs: 'center', sm: 'center', md: 'left' },
+                        marginBottom: '8px',
+                        marginLeft: { xs: '0', md: '75px' },
+                        alignItems: 'center',
+                      }}
                     >
-                      {notification.tour &&
-                        notification.tour.dates.map((date, index) => (
-                          <React.Fragment key={date.id}>
-                            <Typography
-                              variant="body2"
-                              style={{
-                                color:
-                                  date.approved === 1 ? 'green' : 'inherit',
-                                marginLeft: index > 0 ? '10px' : '0px',
-                              }}
-                            >
-                              {moment(date.date).format(
-                                'MMMM DD, YYYY hh:mm A'
-                              )}
-                            </Typography>
-                          </React.Fragment>
-                        ))}
-                    </Typography>
-                  </Box>
-                </Box>
+                      <DateRangeIcon
+                        sx={{
+                          marginRight: '5px',
 
-                {/* Third row: Action buttons */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: {
-                      xs: 'center',
-                      sm: 'center',
-                      md: 'center',
-                    },
-                    alignItems: 'center',
-                    gap: '18px',
-                    marginTop: '5px',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleDeclineConfirmation(notification)}
-                    disabled={notification.status !== 'pending'}
-                    sx={{
-                      backgroundColor: '#B32231',
-                      '&:hover': {
-                        backgroundColor: '#be2736',
-                      },
-                    }}
-                    startIcon={<DeclineIcon />}
-                  >
-                    Decline
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleApprove(notification)}
-                    disabled={notification.status !== 'pending'}
-                    sx={{
-                      backgroundColor: '#187429',
-                      '&:hover': {
-                        backgroundColor: '#1c832f',
-                      },
-                    }}
-                    startIcon={<ApproveIcon />}
-                  >
-                    Approve
-                  </Button>
-                </Box>
+                          color: getNotificationCircleColor(
+                            notification.status
+                          ),
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          sx={{ display: 'flex', flexWrap: 'wrap' }}
+                        >
+                          {notification.tour &&
+                            notification.tour.dates.map((date, index) => (
+                              <React.Fragment key={date.id}>
+                                <Typography
+                                  variant="body2"
+                                  style={{
+                                    color:
+                                      date.approved === 1 ? 'green' : 'inherit',
+                                    marginLeft: index > 0 ? '10px' : '0px',
+                                  }}
+                                >
+                                  {moment(date.date)
+                                    .locale(
+                                      i18n.language === 'ar' ? 'ar' : 'en-gb'
+                                    )
+                                    .format('MMMM DD, YYYY hh:mm A')}
+                                </Typography>
+                              </React.Fragment>
+                            ))}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    {/* Third row: Action buttons */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: {
+                          xs: 'center',
+                          sm: 'center',
+                          md: 'center',
+                        },
+                        alignItems: 'center',
+                        gap: '18px',
+                        marginTop: '5px',
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleDeclineConfirmation(notification)}
+                        disabled={notification.status !== 'pending'}
+                        sx={{
+                          backgroundColor: '#B32231',
+                          '&:hover': {
+                            backgroundColor: '#be2736',
+                          },
+                        }}
+                        startIcon={<DeclineIcon />}
+                      >
+                        {t('Decline')}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => handleApprove(notification)}
+                        disabled={notification.status !== 'pending'}
+                        sx={{
+                          backgroundColor: '#187429',
+                          '&:hover': {
+                            backgroundColor: '#1c832f',
+                          },
+                        }}
+                        startIcon={<ApproveIcon />}
+                      >
+                        {t('Approve')}
+                      </Button>
+                    </Box>
+                  </>
+                )}
               </Paper>
             </Box>
           ))}
@@ -475,7 +594,7 @@ function LandlordNotifications() {
         />
       </Box>
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <DialogTitle>Select a Date</DialogTitle>
+        <DialogTitle>{t('Select a Date')}</DialogTitle>
         <DialogContent>
           {selectedNotification && (
             <List>
@@ -499,25 +618,64 @@ function LandlordNotifications() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button
             onClick={handleApproveDate}
             color="primary"
             disabled={!selectedDate || submitting}
           >
-            Approve
+            {t('Approve')}
           </Button>
         </DialogActions>
       </Dialog>
+
       <Dialog
         open={openDeclineConfirmation}
         onClose={() => setOpenDeclineConfirmation(false)}
       >
-        <DialogTitle>Decline Tour</DialogTitle>
+        <DialogTitle>{t('Decline Tour')}</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to decline this tour request?
+            {t('Are you sure you want to decline this tour request?')}
+          </Typography>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="reason-select-label">{t('Reason')}</InputLabel>
+            <Select
+              labelId="reason-select-label"
+              value={selectedReason}
+              onChange={handleReasonChange}
+              label={t('Reason')}
+            >
+              {predefinedReasons.map((reason, index) => (
+                <MenuItem key={reason} value={reason}>
+                  {reason}
+                </MenuItem>
+              ))}
+            </Select>
+            {selectedReason === 'Other' && (
+              <TextField
+                autoFocus
+                margin="dense"
+                label={t('Other Reason')}
+                fullWidth
+                variant="outlined"
+                value={customReason}
+                onChange={handleCustomReasonChange}
+                error={!!validationError}
+                helperText={validationError}
+              />
+            )}
+            {validationError && (
+              <FormHelperText error>{validationError}</FormHelperText>
+            )}
+          </FormControl>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            style={{ marginTop: '8px' }}
+          >
+            {defaultMessage}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -525,21 +683,26 @@ function LandlordNotifications() {
             onClick={() => setOpenDeclineConfirmation(false)}
             color="primary"
           >
-            Cancel
+            {t('Cancel')}
           </Button>
-          <Button onClick={handleDecline} color="error" disabled={submitting}>
-            Decline
+          <Button
+            onClick={handleDecline}
+            color="error"
+            disabled={submitting || !!validationError}
+          >
+            {t('Decline')}
           </Button>
         </DialogActions>
       </Dialog>
+
       <Dialog
         open={openDeleteConfirmation}
         onClose={() => setOpenDeleteConfirmation(false)}
       >
-        <DialogTitle>Delete Notification</DialogTitle>
+        <DialogTitle>{t('Delete Notification')}</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this notification?
+            {t('Are you sure you want to delete this notification?')}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -547,10 +710,10 @@ function LandlordNotifications() {
             onClick={() => setOpenDeleteConfirmation(false)}
             color="primary"
           >
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button onClick={handleConfirmDelete} color="primary">
-            Delete
+            {t('Delete')}
           </Button>
         </DialogActions>
       </Dialog>

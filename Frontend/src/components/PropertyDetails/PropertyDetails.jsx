@@ -33,7 +33,6 @@ import Loader from 'components/Loader';
 import ReportModal from 'components/ReportModal';
 import ReviewSection from 'components/userReviews/ReviewSection';
 import ImageSliderModal from 'components/PropertyDetails/ImageSliderModal';
-import ReviewList from 'components/AdminDashboard/ReviewList';
 
 function PropertyDetails() {
   const { slug } = useParams();
@@ -326,34 +325,6 @@ function PropertyDetails() {
                         </Box>
                       </>
                     )}
-                    {/* review */}
-                    {/* {property?.listing_type === 'rent' &&
-                      user?.role === 'user' && (
-                        <ReviewSection
-                          propertyId={property.id}
-                          propertyTitle={property.title}
-                        />
-                      )} */}
-
-                    {/* Reviews */}
-                    {/* {property.reviews && (
-                      <>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          sx={{ fontWeight: 'lighter' }}
-                        >
-                          Reviews:
-                        </Typography>
-                        <Grid container spacing={2}>
-                          {property.reviews.map((review) => (
-                            <Grid item key={review.id} xs={12} sm={6} md={4}>
-                              <ReviewList propertyId={property.id} />
-                            </Grid>
-                          ))}
-                        </Grid>
-                      </>
-                    )} */}
                   </Grid>
                 </Grid>
               </Grid>
@@ -415,33 +386,31 @@ function PropertyDetails() {
                   justifyContent="space-around"
                   sx={{ mt: 3 }}
                 >
-                  {!user?.role === 'admin' && (
-                    <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleRequestTourClick}
-                        disabled={
-                          user?.role === 'landlord' &&
-                          property.user?.id === user?.id
-                        }
-                      >
-                        {t('Request a tour')}
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleReportClick}
-                        disabled={
-                          user?.role === 'landlord' &&
-                          property.user?.id === user?.id
-                        }
-                      >
-                        {t('Report Listing')}
-                      </Button>
-                      {user && <AddToWishlistButton property={property} />}
-                    </>
-                  )}
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleRequestTourClick}
+                      disabled={
+                        user?.role === 'landlord' &&
+                        property.user?.id === user?.id
+                      }
+                    >
+                      {t('Request a tour')}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={handleReportClick}
+                      disabled={
+                        user?.role === 'landlord' &&
+                        property.user?.id === user?.id
+                      }
+                    >
+                      {t('Report Listing')}
+                    </Button>
+                    {user && <AddToWishlistButton property={property} />}
+                  </>
                 </Box>
               </Grid>
             </Grid>
@@ -464,7 +433,7 @@ function PropertyDetails() {
         userData={property.user}
       />
       {/* review */}
-      {property?.listing_type === 'rent' && user?.role !== 'admin' && (
+      {property?.listing_type === 'rent' && (
         <ReviewSection
           propertyId={property.id}
           propertyTitle={property.title}

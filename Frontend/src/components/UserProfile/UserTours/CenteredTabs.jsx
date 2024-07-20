@@ -26,7 +26,12 @@ function CenteredTabs() {
   };
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <Box
+      sx={{ width: '100%', bgcolor: 'background.paper' }}
+      height="80vh"
+      mb={2}
+      mt={2}
+    >
       <Tabs value={value} onChange={handleChange} centered>
         <Tab label={t('Declined Tours')} />
         <Tab label={t('Pending Tours')} />

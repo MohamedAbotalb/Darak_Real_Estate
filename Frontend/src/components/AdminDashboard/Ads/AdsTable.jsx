@@ -10,7 +10,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Pagination,
   Box,
   InputBase,
   alpha,
@@ -37,6 +36,7 @@ import {
 import { errorToast, successToast } from 'utils/toast';
 import Loader from 'components/Loader';
 import DeleteConfirmationModal from 'components/DeleteConfirmationModal';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -277,7 +277,7 @@ function PropertyTable() {
 
   const handleAccept = async () => {
     try {
-      dispatch(acceptProperty(selectedAcceptId)).unwrap();
+      dispatch(acceptProperty(selectedAcceptId));
       successToast('Property accepted successfully');
       dispatch(fetchPendingProperties());
       handleCloseAcceptConfirm();
@@ -288,7 +288,7 @@ function PropertyTable() {
 
   const handleReject = async () => {
     try {
-      dispatch(rejectProperty(selectedRejectId)).unwrap();
+      dispatch(rejectProperty(selectedRejectId));
       successToast('Property rejected successfully');
       dispatch(fetchPendingProperties());
       handleCloseRejectConfirm();
@@ -316,7 +316,7 @@ function PropertyTable() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <GridOnIcon sx={{ mr: 1, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'black' }}>
-            Ads
+            Property Ads
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -358,8 +358,6 @@ function PropertyTable() {
                   <StyledTableCell>ID</StyledTableCell>
                   <StyledTableCell>Title</StyledTableCell>
                   <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Rooms</StyledTableCell>
-                  <StyledTableCell>Bathrooms</StyledTableCell>
                   <StyledTableCell>Area (Sqm)</StyledTableCell>
                   <StyledTableCell>Price (EGP)</StyledTableCell>
                   <StyledTableCell>Actions</StyledTableCell>
@@ -380,10 +378,6 @@ function PropertyTable() {
                       >
                         View
                       </Button>
-                    </StyledTableCell>
-                    <StyledTableCell>{property.num_of_rooms}</StyledTableCell>
-                    <StyledTableCell>
-                      {property.num_of_bathrooms}
                     </StyledTableCell>
                     <StyledTableCell>{property.area}</StyledTableCell>
                     <StyledTableCell>{property.price}</StyledTableCell>
@@ -414,13 +408,11 @@ function PropertyTable() {
           </TableContainer>
           {/* Pagination */}
           <Box display="flex" justifyContent="center" mt={2}>
-            <Pagination
-              count={Math.ceil(filteredProperties.length / rowsPerPage)}
-              page={page}
-              onChange={handleChangePage}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
+            <CustomPagination
+              totalItems={filteredProperties.length}
+              itemsPerPage={rowsPerPage}
+              currentPage={page}
+              onPageChange={handleChangePage}
             />
           </Box>
 
@@ -440,7 +432,7 @@ function PropertyTable() {
             </DialogActions>
           </Dialog>
 
-          {/* Delete Confirmation Modal */}
+          {/* Delete Confirmation Dialog */}
           <DeleteConfirmationModal
             item="Ad"
             isOpen={openConfirm}

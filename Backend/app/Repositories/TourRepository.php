@@ -41,26 +41,10 @@ class TourRepository implements TourRepositoryInterface
                     'date' => $date,
                 ]);
             }
-
             $property = $tour->property;
-            $landlord_id = $property->user_id;
             if (!$property->id) {
                 throw new \Exception('Property ID is missing');
             }
-            Notification::create([
-                'from_user_id' => Auth::id(),
-                'to_user_id' => $landlord_id,
-                'tour_id' => $tour->id,
-                'property_id' => $data['property_id'],
-                'message' => 'Tour request for property: ' . $property->title,
-                'type' => 'request',
-                'status' => 'pending',
-                'date' => now(),
-            ]);
-            $landlord = User::find($landlord_id);
-            Mail::to($landlord->email)->send(new TourRequestMail($tour, $property, $landlord));
-
-
             return $tour->load('tourDates', 'property');
         });
     }
@@ -178,22 +162,8 @@ class TourRepository implements TourRepositoryInterface
         if (!$property) {
             return null;
         }
-
-        $landlord = $property->user;
-        $user = Auth::user();
         $tour->delete();
-        Notification::create([
-            'from_user_id' => Auth::id(),
-            'to_user_id' => $landlord->id,
-            'property_id' => $property->id,
-            'tour_id' => $id,
-            'message' => 'Tour request for property ' . $property->title . ' has been deleted by the user.',
-            'type' => 'deleted-tour',
-            'date' => now(),
-        ]);
-        Mail::to($landlord->email)->send(new TourDeleteMail($tour, $property, $landlord,$user));
-
-
+       
         return true;
     }
 

@@ -23,7 +23,7 @@ class AmenityRepository implements AmenityRepositoryInterface
 
     public function findAmenityBySlug(string $slug)
     {
-        return Amenity::where('availability','available')->where('slug', $slug)->first();
+        return Amenity::where('slug', $slug)->first();
     }
 
     public function updateAmenity(string $slug, array $data)

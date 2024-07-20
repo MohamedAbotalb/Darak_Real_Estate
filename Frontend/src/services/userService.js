@@ -1,11 +1,11 @@
 import axios from './axiosConfig';
 
-export const getUserDetails = () => {
-  return axios.get('/profile');
+export const getUserDetails = (userData) => {
+  return axios.get('/users/details', userData);
 };
 
-export const updateUserDetails = (userData) => {
-  return axios.put('/users/updateName', userData);
+export const updateUserName = (nameData) => {
+  return axios.put('/users/updateName', nameData);
 };
 
 export const updateUserPassword = (passwordData) => {
@@ -21,5 +21,5 @@ export const updateUserAvatar = (avatarData) => {
 };
 
 export const deleteUserAccount = () => {
-  return axios.delete('/users/delete');
+  return axios.delete('/users/');
 };

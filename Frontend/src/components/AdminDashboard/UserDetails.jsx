@@ -11,7 +11,6 @@ import {
   tableCellClasses,
   Paper,
   Alert,
-  Pagination,
   Typography,
   Box,
   InputBase,
@@ -22,6 +21,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import SearchIcon from '@mui/icons-material/Search';
 import Loader from 'components/Loader';
 import { fetchUsers } from 'store/userDetailsSlice';
+import CustomPagination from 'components/CustomPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -181,14 +181,11 @@ function UserDetails() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Pagination
-            count={Math.ceil(filteredUsers.length / rowsPerPage)}
-            page={page}
-            onChange={handleChangePage}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-            sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+          <CustomPagination
+            totalItems={filteredUsers.length}
+            itemsPerPage={rowsPerPage}
+            currentPage={page}
+            onPageChange={handleChangePage}
           />
         </>
       );

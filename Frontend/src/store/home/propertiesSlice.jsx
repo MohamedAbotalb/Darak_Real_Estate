@@ -3,13 +3,10 @@ import axios from 'services/axiosConfig';
 
 export const fetchProperties = createAsyncThunk(
   'properties/fetchProperties',
-  async ({ type, category }, { rejectWithValue }) => {
+  async ({ type }, { rejectWithValue }) => {
     try {
       const endpoint = type === 'rent' ? 'latest-rent' : 'latest-buy';
-      const url =
-        category && category !== 'all'
-          ? `/properties/${endpoint}/${category}`
-          : `/properties/${endpoint}/1`;
+      const url = `/properties/${endpoint}`;
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
