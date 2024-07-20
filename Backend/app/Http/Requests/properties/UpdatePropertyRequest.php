@@ -22,14 +22,14 @@ class UpdatePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'amenities' => 'nullable|array',
-            'city' => 'required|nullable|string|max:255',
-            'state' => 'required|nullable|string|max:255',
-            'street' => 'required|nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'street' => 'nullable|string|max:255',
             'num_of_rooms' => 'nullable|integer',
             'num_of_bathrooms' => 'nullable|integer',
             'area'=>'nullable|integer',

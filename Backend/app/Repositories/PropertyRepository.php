@@ -79,9 +79,6 @@ class PropertyRepository implements PropertyRepositoryInterface
         return $property;
     }
 
-
-  
-
     public function createProperty(array $data)
     {
         DB::beginTransaction();
@@ -186,7 +183,7 @@ class PropertyRepository implements PropertyRepositoryInterface
     public function updateProperty(array $data, string $slug)
     {
         return DB::transaction(function () use ($data, $slug) {
-            $property = Property::find($slug);
+            $property = Property::where('slug', $slug)->first();
 
             if (!$property) {
                 return null;
