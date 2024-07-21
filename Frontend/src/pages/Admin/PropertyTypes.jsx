@@ -1,5 +1,8 @@
-import React from 'react';
-import PropertyTypeTable from 'components/AdminDashboard/PropertyType/PropertyTypeTable';
+import React, { lazy } from 'react';
+
+const PropertyTypeTable = lazy(
+  () => import('components/AdminDashboard/PropertyType/PropertyTypeTable')
+);
 
 function PropertyTypesPage() {
   return <PropertyTypeTable />;
