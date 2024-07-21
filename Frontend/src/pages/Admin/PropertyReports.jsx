@@ -1,5 +1,8 @@
-import React from 'react';
-import ReportPropertyList from 'components/AdminDashboard/ReportPropertyList';
+import React, { lazy } from 'react';
+
+const ReportPropertyList = lazy(
+  () => import('components/AdminDashboard/ReportPropertyList')
+);
 
 function PropertyReportsPage() {
   return <ReportPropertyList />;
