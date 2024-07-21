@@ -7,3 +7,7 @@ export const successToast = (message) => {
 export const errorToast = (message) => {
   toast.error(message, { position: 'top-right' });
 };
+
+export const infoToast = (message) => {
+  toast.info(message, { position: 'top-right' });
+};
