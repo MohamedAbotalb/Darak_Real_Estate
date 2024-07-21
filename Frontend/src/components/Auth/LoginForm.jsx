@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -19,15 +19,16 @@ import {
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
+import { errorToast, successToast } from 'utils/toast';
 import { clearState } from 'store/Auth/authSlice';
 import { login } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import LoginSchema from 'components/Auth/Validation/LoginSchema';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function LoginForm() {
-  const { t } = useTranslation(); // Initialize useTranslation hook
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const {
     register: loginForm,
@@ -43,6 +44,12 @@ function LoginForm() {
 
   const [showPassword, toggleShowPassword] = useToggle(false);
 
+  const handleUnauthorizedAccess = useCallback(() => {
+    errorToast('Unauthorized access.');
+    dispatch(clearState());
+    navigate('/admin-login');
+  }, [dispatch, navigate]);
+
   const onSubmit = (data) => {
     dispatch(login(data));
   };
@@ -50,28 +57,26 @@ function LoginForm() {
   useEffect(() => {
     if (user) {
       if (user.role === 'admin') {
-        navigate('/admin');
+        handleUnauthorizedAccess();
       } else {
-        navigate('/');
+        successToast(successMessage);
+        navigate(location?.state?.prevUrl ?? '/');
       }
     }
-    if (error) {
-      toast.error(error, { position: 'top-right' });
-    }
-
-    if (successMessage) {
-      toast.success(successMessage, { position: 'top-right' });
-      if (user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-    }
+    if (error) errorToast(error);
 
     return () => {
       dispatch(clearState());
     };
-  }, [error, successMessage, user, navigate, dispatch]);
+  }, [
+    error,
+    successMessage,
+    user,
+    navigate,
+    dispatch,
+    location,
+    handleUnauthorizedAccess,
+  ]);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -125,8 +130,13 @@ function LoginForm() {
             to="/forget-password"
             style={{
               textDecoration: 'none',
-              color: '#1976d2',
+              color: '#000',
               fontWeight: 'bold',
+            }}
+            sx={{
+              '&:hover': {
+                color: 'var(--primary-color)',
+              },
             }}
           >
             {t('Forgot Password?')}
@@ -137,7 +147,13 @@ function LoginForm() {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ height: 40 }}
+          sx={{
+            height: 40,
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'var(--primary-color)',
+            },
+          }}
           disabled={isLoading}
         >
           {t('login')}
@@ -148,8 +164,13 @@ function LoginForm() {
             to="/register"
             style={{
               textDecoration: 'none',
-              color: '#1976d2',
+              color: '#000',
               fontWeight: 'bold',
+            }}
+            sx={{
+              '&:hover': {
+                color: 'var(--primary-color)',
+              },
             }}
           >
             {t('Register here')}

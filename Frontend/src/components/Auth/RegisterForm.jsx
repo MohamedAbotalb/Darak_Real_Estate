@@ -27,10 +27,10 @@ import { clearState } from 'store/Auth/authSlice';
 import { register } from 'store/Auth/authActions';
 import useToggle from 'hooks/useToggle';
 import RegisterSchema from 'components/Auth/Validation/RegisterSchema';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { useTranslation } from 'react-i18next';
 
 function RegisterForm() {
-  const { t } = useTranslation(); // Initialize useTranslation hook
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -220,7 +220,13 @@ function RegisterForm() {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ height: 40 }}
+          sx={{
+            height: 40,
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'var(--primary-color)',
+            },
+          }}
           disabled={isLoading}
         >
           {t('Register')}
@@ -231,8 +237,13 @@ function RegisterForm() {
             to="/login"
             style={{
               textDecoration: 'none',
-              color: '#1976d2',
+              color: '#000',
               fontWeight: 'bold',
+            }}
+            sx={{
+              '&:hover': {
+                color: 'var(--primary-color)',
+              },
             }}
           >
             {t('Login here')}
