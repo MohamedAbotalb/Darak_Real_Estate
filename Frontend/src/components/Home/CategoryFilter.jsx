@@ -35,7 +35,7 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: active ? '#ed2128' : '#f7f7f7',
+  backgroundColor: active ? 'var(--primary-color)' : '#f7f7f7',
   color: active ? '#fff' : '#000',
   padding: theme.spacing(0.5),
   margin: theme.spacing(1),
@@ -44,14 +44,14 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   height: '180px',
   boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   '&:hover': {
-    backgroundColor: '#ed2128',
+    backgroundColor: 'var(--primary-color)',
     color: '#fff',
   },
   textAlign: 'center',
   boxSizing: 'border-box',
 }));
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+const StyledSlider = styled(Slider)(() => ({
   width: '100%',
   '.slick-slide': {
     display: 'flex',
@@ -74,7 +74,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
     justifyContent: 'center',
   },
   '& .slick-prev:before, & .slick-next:before': {
-    color: '#ed2128',
+    color: 'var(--primary-color)',
     fontSize: '35px',
   },
 }));
@@ -93,7 +93,7 @@ const ArrowWrapper = styled(Box)({
   },
 });
 
-const ViewAllLink = styled('a')(({ theme }) => ({
+const ViewAllLink = styled('a')(() => ({
   textDecoration: 'none',
   color: '#000000',
   fontSize: '18px',
@@ -106,7 +106,7 @@ const ViewAllLink = styled('a')(({ theme }) => ({
     display: 'block',
     width: '0',
     height: '2px',
-    background: '#ed2128',
+    background: 'var(--primary-color)',
     transition: 'width 0.3s',
   },
   '&:hover::after': {
@@ -211,7 +211,7 @@ function CategoryFilter() {
       >
         <Typography
           sx={{ fontSize: '16px', fontWeight: 'bold' }}
-          color="#ed2128"
+          color="var(--primary-color)"
         >
           {t('PROPERTY TYPE')}
         </Typography>

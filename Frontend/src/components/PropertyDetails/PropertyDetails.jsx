@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Container,
   Grid,
@@ -23,7 +24,6 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import { useTranslation } from 'react-i18next';
 import { fetchProperty } from 'store/propertyDetailsSlice';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
@@ -35,8 +35,9 @@ import ReviewSection from 'components/userReviews/ReviewSection';
 import ImageSliderModal from 'components/PropertyDetails/ImageSliderModal';
 
 function PropertyDetails() {
-  const { slug } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { slug } = useParams();
   const { t } = useTranslation();
 
   const { property, status } = useSelector((state) => state.property);
@@ -65,6 +66,7 @@ function PropertyDetails() {
   }, [dispatch, property.id]);
 
   const handleRequestTourClick = () => {
+    if (!user) navigate('/login');
     setIsTourFormOpen(true);
   };
 
@@ -73,6 +75,7 @@ function PropertyDetails() {
   };
 
   const handleReportClick = () => {
+    if (!user) navigate('/login');
     setIsReportModalOpen(true);
   };
 
@@ -105,7 +108,6 @@ function PropertyDetails() {
     <Container
       sx={{ my: 4, ...(user?.role === 'admin' ? { marginTop: '100px' } : {}) }}
     >
-      {' '}
       <Card sx={{ width: '100%' }}>
         <Box>
           <Grid container spacing={1}>
@@ -134,6 +136,10 @@ function PropertyDetails() {
                       position: 'absolute',
                       bottom: '16px',
                       left: '16px',
+                      backgroundColor: '#000',
+                      '&:hover': {
+                        backgroundColor: 'var(--primary-color)',
+                      },
                     }}
                     onClick={handleImageSliderOpen}
                   >
@@ -202,7 +208,9 @@ function PropertyDetails() {
                       sx={{ mb: 2 }}
                     >
                       <Grid item display="flex" alignItems="center">
-                        <PriceCheckIcon color="error" />
+                        <PriceCheckIcon
+                          sx={{ color: 'var(--primary-color)' }}
+                        />
                         <Typography
                           variant="h5"
                           fontWeight="bold"
@@ -217,21 +225,23 @@ function PropertyDetails() {
                         </Typography>
                       </Grid>
                       <Grid item display="flex" alignItems="center">
-                        <BedIcon color="error" />
+                        <BedIcon sx={{ color: 'var(--primary-color)' }} />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
                           {property.num_of_rooms} {t('Bedrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
-                        <BathtubIcon color="error" />
+                        <BathtubIcon sx={{ color: 'var(--primary-color)' }} />
                         <Typography variant="body1" sx={{ ml: 1, mr: 1 }}>
                           {property.num_of_bathrooms} {t('Bathrooms')}
                         </Typography>
                         <Typography variant="body1" sx={{ mx: 1 }}>
                           |
                         </Typography>
-                        <SquareFootIcon color="error" />
+                        <SquareFootIcon
+                          sx={{ color: 'var(--primary-color)' }}
+                        />
                         <Typography variant="body1" sx={{ ml: 1 }}>
                           {property.area} {t('sqm')}
                         </Typography>
@@ -247,7 +257,9 @@ function PropertyDetails() {
                     {/* Property type */}
                     {property.property_type && (
                       <Box display="flex" alignItems="center" sx={{ my: 2 }}>
-                        <HomeWorkIcon color="error" sx={{ mr: 2 }} />
+                        <HomeWorkIcon
+                          sx={{ mr: 2, color: 'var(--primary-color)' }}
+                        />
                         <Typography
                           variant="body2"
                           color="textSecondary"
@@ -270,11 +282,10 @@ function PropertyDetails() {
                           {t('Location')}
                         </Typography>
                         <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
-                          <LocationOnIcon color="error" sx={{ mr: 2 }} />
-                          <Typography
-                            variant="body1"
-                            sx={{ fontWeight: 'lighter' }}
-                          >
+                          <LocationOnIcon
+                            sx={{ mr: 2, color: 'var(--primary-color)' }}
+                          />
+                          <Typography variant="body1">
                             {property.location.street}, {property.location.city}
                             , {property.location.state}
                           </Typography>
@@ -316,7 +327,12 @@ function PropertyDetails() {
                                   alignItems="center"
                                   sx={{ mr: 2, mb: 2 }}
                                 >
-                                  <Icon color="#ed2128" sx={{ mr: 1 }} />
+                                  <Icon
+                                    sx={{
+                                      mr: 1,
+                                      color: 'var(--primary-color)',
+                                    }}
+                                  />
                                   <Typography>{amenity.name}</Typography>
                                 </Box>
                               )
@@ -358,21 +374,39 @@ function PropertyDetails() {
                           <IconButton
                             href={`tel:${property.user.phone_number}`}
                             aria-label="phone"
-                            color="primary"
+                            sx={{
+                              color: 'var(--primary-color)',
+                            }}
+                            disabled={
+                              user?.role === 'landlord' &&
+                              property.user?.id === user?.id
+                            }
                           >
                             <PhoneIcon />
                           </IconButton>
                           <IconButton
                             href={`mailto:${property.user.email}`}
                             aria-label="email"
-                            color="primary"
+                            sx={{
+                              color: 'var(--primary-color)',
+                            }}
+                            disabled={
+                              user?.role === 'landlord' &&
+                              property.user?.id === user?.id
+                            }
                           >
                             <EmailIcon />
                           </IconButton>
                           <IconButton
                             href={`https://wa.me/${property.user.phone_number}`}
                             aria-label="whatsapp"
-                            color="primary"
+                            sx={{
+                              color: 'var(--primary-color)',
+                            }}
+                            disabled={
+                              user?.role === 'landlord' &&
+                              property.user?.id === user?.id
+                            }
                           >
                             <WhatsAppIcon />
                           </IconButton>
@@ -391,6 +425,12 @@ function PropertyDetails() {
                       variant="contained"
                       color="primary"
                       onClick={handleRequestTourClick}
+                      sx={{
+                        backgroundColor: '#000',
+                        '&:hover': {
+                          backgroundColor: 'var(--primary-color)',
+                        },
+                      }}
                       disabled={
                         user?.role === 'landlord' &&
                         property.user?.id === user?.id
@@ -400,8 +440,16 @@ function PropertyDetails() {
                     </Button>
                     <Button
                       variant="outlined"
-                      color="secondary"
+                      color="error"
                       onClick={handleReportClick}
+                      sx={{
+                        borderColor: 'darkgray',
+                        '&:hover': {
+                          borderColor: 'var(--primary-color)',
+                          backgroundColor: 'var(--primary-color)',
+                          color: '#fff',
+                        },
+                      }}
                       disabled={
                         user?.role === 'landlord' &&
                         property.user?.id === user?.id

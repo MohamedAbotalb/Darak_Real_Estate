@@ -196,7 +196,7 @@ function PropertyForm() {
     setIsSubmitting(true);
 
     if (isEditMode) {
-      dispatch(updateProperty({ slug, propertyData: formData }));
+      dispatch(updateProperty({ slug, formData }));
     } else {
       dispatch(addProperty(formData));
     }
@@ -223,7 +223,7 @@ function PropertyForm() {
         setIsSubmitting(false);
       }
     }
-  }, [status, error, dispatch, t, reset, isSubmitting, isEditMode, navigate]);
+  }, [status, error, dispatch, reset, isSubmitting, isEditMode, navigate, t]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -245,7 +245,7 @@ function PropertyForm() {
     reset({
       ...watch(),
     });
-  }, [i18n.language, reset]);
+  }, [i18n.language, reset, watch]);
 
   return (
     <FormWrapper>
@@ -524,6 +524,12 @@ function PropertyForm() {
                     color="primary"
                     component="span"
                     fullWidth
+                    sx={{
+                      backgroundColor: '#000',
+                      '&:hover': {
+                        backgroundColor: 'var(--primary-color)',
+                      },
+                    }}
                   >
                     {t('Upload Images')}
                   </Button>
@@ -605,7 +611,13 @@ function PropertyForm() {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  sx={{ mr: 2 }}
+                  sx={{
+                    mr: 2,
+                    backgroundColor: '#000',
+                    '&:hover': {
+                      backgroundColor: 'var(--primary-color)',
+                    },
+                  }}
                 >
                   {isEditMode ? t('Update') : t('Add')}
                 </Button>
@@ -613,6 +625,12 @@ function PropertyForm() {
                   type="reset"
                   variant="contained"
                   onClick={() => setSelectedImages([])}
+                  sx={{
+                    backgroundColor: '#000',
+                    '&:hover': {
+                      backgroundColor: 'var(--primary-color)',
+                    },
+                  }}
                 >
                   {t('Reset')}
                 </Button>

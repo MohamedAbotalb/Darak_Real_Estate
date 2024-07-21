@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dialog,
@@ -8,12 +8,38 @@ import {
   DialogContentText,
   Button,
   IconButton,
+  Avatar,
+  Box,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 
-function AvatarDialog({ isOpen, onClose, onChange }) {
+function AvatarDialog({ isOpen, onClose, onSave }) {
   const { t } = useTranslation();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const handleSave = () => {
+    if (selectedFile) {
+      onSave(selectedFile);
+    }
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -31,13 +57,19 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText>{t('Upload a new avatar image.')}</DialogContentText>
+        {preview && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Avatar src={preview} sx={{ width: 80, height: 80 }} />
+          </Box>
+        )}
         <Button variant="contained" component="label" sx={{ mt: 1 }}>
           {t('Choose File')}
           <input
             type="file"
             accept="image/*"
-            onChange={onChange}
+            onChange={handleFileChange}
             style={{ display: 'none' }}
+            id="image-upload"
           />
         </Button>
       </DialogContent>
@@ -56,7 +88,7 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
           {t('Cancel')}
         </Button>
         <Button
-          onClick={onClose}
+          onClick={handleSave}
           variant="contained"
           sx={{
             backgroundColor: '#0185B7',
@@ -75,7 +107,7 @@ function AvatarDialog({ isOpen, onClose, onChange }) {
 AvatarDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 export default AvatarDialog;

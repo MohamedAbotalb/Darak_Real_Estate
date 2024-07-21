@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -20,6 +21,31 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = User::findOrFail($attributes['id']);
         $user->update($attributes);
+        return $user;
+    }
+    public function updateName($id, array $data)
+    {
+        $user = $this->find($id);
+        $user->update($data);
+
+        return $user;
+    }
+
+    public function updatePassword($id, $newPassword)
+    {
+        $user = $this->find($id);
+        $user->update([
+            'password' => Hash::make($newPassword),
+        ]);
+    }
+
+    public function updatePhone($id, $phoneNumber)
+    {
+        $user = $this->find($id);
+        $user->update([
+            'phone_number' => $phoneNumber,
+        ]);
+
         return $user;
     }
 

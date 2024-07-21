@@ -92,7 +92,13 @@ function ForgetPasswordForm() {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ height: 40 }}
+          sx={{
+            height: 40,
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'var(--primary-color)',
+            },
+          }}
           disabled={isLoading}
         >
           {t('Submit')}
@@ -103,7 +109,7 @@ function ForgetPasswordForm() {
             to="/login"
             style={{
               textDecoration: 'none',
-              color: '#1976d2',
+              color: '#000',
               fontWeight: 'bold',
             }}
           >

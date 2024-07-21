@@ -4,6 +4,10 @@ body,
   height: 100%;
 }
 
+:root {
+  --primary-color: #e21118;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

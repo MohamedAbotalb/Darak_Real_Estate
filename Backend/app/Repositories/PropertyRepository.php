@@ -79,9 +79,6 @@ class PropertyRepository implements PropertyRepositoryInterface
         return $property;
     }
 
-
-  
-
     public function createProperty(array $data)
     {
         DB::beginTransaction();
@@ -151,9 +148,17 @@ class PropertyRepository implements PropertyRepositoryInterface
         if (isset($filters['price'])) {
             $query->where('price', $filters['price']);
         }
-        if (isset($filters['city'])) {
-            $query->join('locations', 'properties.location_id', '=', 'locations.id');
-            $query->where('locations.city', $filters['city']);
+        if (isset($filters['location'])) {
+            $searchTerms = explode(' ', $filters['location']);
+            $query->whereHas('location', function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where(function ($query) use ($term) {
+                        $query->where('city', 'like', '%' . $term . '%')
+                              ->orWhere('state', 'like', '%' . $term . '%')
+                              ->orWhere('street', 'like', '%' . $term . '%');
+                    });
+                }
+            });
         }
         if (isset($filters['min_price']) && isset($filters['max_price'])) {
             $query->whereBetween('price', [$filters['min_price'], $filters['max_price']]);
@@ -178,7 +183,7 @@ class PropertyRepository implements PropertyRepositoryInterface
     public function updateProperty(array $data, string $slug)
     {
         return DB::transaction(function () use ($data, $slug) {
-            $property = Property::find($slug);
+            $property = Property::where('slug', $slug)->first();
 
             if (!$property) {
                 return null;
