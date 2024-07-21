@@ -115,7 +115,7 @@ function Footer() {
                           aria-label="subscribe"
                           onClick={handleSubscribe}
                         >
-                          <SendIcon sx={{ color: '#ed2128' }} />
+                          <SendIcon sx={{ color: 'var(--primary-color)' }} />
                         </IconButton>
                       </InputAdornment>
                     ),
