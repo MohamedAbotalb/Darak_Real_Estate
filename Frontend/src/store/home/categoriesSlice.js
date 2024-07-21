@@ -8,7 +8,6 @@ export const fetchCategories = createAsyncThunk(
       const response = await axios.get(
         ' http://localhost:8000/api/property-types'
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw Error('Failed to fetch categories');
