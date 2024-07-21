@@ -12,6 +12,8 @@ import ProtectedRoute from 'utils/ProtectedRoute';
 import AmenitiesPage from 'pages/Admin/Amenities';
 import OverviewPage from 'pages/Admin/Overview';
 import PropertyReportsPage from 'pages/Admin/PropertyReports';
+import PropertyUpdatePage from 'pages/Admin/PropertyUpdate';
+import PropertyUpdateDetailsPage from 'pages/PropertyUpdateDetails';
 import PropertyTypesPage from 'pages/Admin/PropertyTypes';
 import ReviewsPage from 'pages/Admin/Reviews';
 import UserDetailsPage from 'pages/Admin/UserDetails';
@@ -126,6 +128,15 @@ function App() {
           <Route path="amenities" element={<AmenitiesPage />} />
           <Route path="ads" element={<Ads />} />
           <Route path="ads/:slug" element={<PropertyDetailsPage />} />
+          <Route path="property-updates" element={<PropertyUpdatePage />} />
+          <Route
+            path="property-updates/:id/old"
+            element={<PropertyUpdateDetailsPage />}
+          />
+          <Route
+            path="property-updates/:id/new"
+            element={<PropertyUpdateDetailsPage />}
+          />
         </Route>
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />

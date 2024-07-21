@@ -78,6 +78,15 @@ function Sidebar() {
             Ads
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/admin/property-updates"
+            className="nav-link"
+            activeClassName="active-link"
+          >
+            Edit Requests
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

@@ -20,6 +20,7 @@ import notificationsReducer from 'store/Notifications/notificationsSlice';
 import tourReducer from 'store/tourSlice';
 import reviewsSlice from 'store/reviewsSlice';
 import userPropertyReducer from 'store/userPropertiesSlice';
+import propertyUpdatesReducer from 'store/propertyupdateSlice';
 import userReviewsReducer from 'store/userReviews/userReviewsSlice';
 import averageRatingReducer from 'store/userReviews/averageRatingSlice';
 
@@ -35,6 +36,7 @@ const reduxStore = configureStore({
     propertyTypes: propertyTypesReducer,
     propertyType: propertyTypeReducer,
     properties: propertiesReducer,
+    propertyUpdates: propertyUpdatesReducer,
     propertySearch: propertySearchReducer,
     wishlist: wishlistReducer,
     categories: categoriesReducer,
