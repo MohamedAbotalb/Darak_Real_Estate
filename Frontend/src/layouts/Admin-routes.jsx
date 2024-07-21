@@ -16,11 +16,11 @@ function AdminRoutes() {
       <Route path="overview" element={<OverView />} />
       <Route path="user-details" element={<UserDetails />} />
       <Route path="reviews" element={<ReviewList />} />
-      <Route path="report-users" element={<ReportUserList />} />
-      <Route path="report-properties" element={<ReportPropertyList />} />
+      <Route path="user-complaints" element={<ReportUserList />} />
+      <Route path="property-issues" element={<ReportPropertyList />} />
       <Route path="property-types" element={<PropertyTypes />} />
       <Route path="amenities" element={<Amenities />} />
-      <Route path="ads" element={<Ads />} />
+      <Route path="property-ads" element={<Ads />} />
       <Route path="ads/:slug" element={<PropertyDetailsPage />} />
     </Routes>
   );

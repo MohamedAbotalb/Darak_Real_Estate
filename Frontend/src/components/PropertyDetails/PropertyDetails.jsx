@@ -105,7 +105,6 @@ function PropertyDetails() {
     <Container
       sx={{ my: 4, ...(user?.role === 'admin' ? { marginTop: '100px' } : {}) }}
     >
-      {' '}
       <Card sx={{ width: '100%' }}>
         <Box>
           <Grid container spacing={1}>
