@@ -96,18 +96,15 @@ function PropertySearch() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
-  const locations = useSelector((state) => state.locations.data || []);
-  const locationsStatus = useSelector((state) => state.locations.status);
   const propertyTypesStatus = useSelector(
     (state) => state.propertyTypes.status
   );
 
   const [listingType, setListingType] = useState('rent');
   const [propertyType, setPropertyType] = useState('');
-  const [city, setCity] = useState('');
+  const [location, setLocation] = useState('');
 
-  const isLoading =
-    locationsStatus === 'loading' || propertyTypesStatus === 'loading';
+  const isLoading = propertyTypesStatus === 'loading';
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -117,14 +114,14 @@ function PropertySearch() {
   const handleSearch = () => {
     let query = `lt=${listingType}`;
     if (propertyType) query += `&pt=${propertyType}`;
-    if (city) query += `&c=${city}`;
+    if (location) query += `&pl=${location}`;
 
     navigate({
       pathname: '/properties',
       search: `?${query}`,
     });
 
-    dispatch(fetchProperties({ propertyType, city, listingType }));
+    dispatch(fetchProperties({ propertyType, location, listingType }));
   };
 
   return (
@@ -136,9 +133,9 @@ function PropertySearch() {
       )}
       <SearchFormControl first>
         <TextField
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder={t('search by City')}
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder={t('State, City or Street')}
           variant="outlined"
           InputProps={{
             style: { borderRadius: '30px 0 0 30px', paddingLeft: '8px' },

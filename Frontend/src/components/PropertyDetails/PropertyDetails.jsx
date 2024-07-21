@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Container,
@@ -37,6 +37,7 @@ import ImageSliderModal from 'components/PropertyDetails/ImageSliderModal';
 function PropertyDetails() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { slug } = useParams();
   const { t } = useTranslation();
 
@@ -65,8 +66,12 @@ function PropertyDetails() {
     }
   }, [dispatch, property.id]);
 
+  const checkUserPresence = () => {
+    if (!user) navigate('/login', { state: { prevUrl: location.pathname } });
+  };
+
   const handleRequestTourClick = () => {
-    if (!user) navigate('/login');
+    checkUserPresence();
     setIsTourFormOpen(true);
   };
 
@@ -75,7 +80,7 @@ function PropertyDetails() {
   };
 
   const handleReportClick = () => {
-    if (!user) navigate('/login');
+    checkUserPresence();
     setIsReportModalOpen(true);
   };
 
@@ -341,6 +346,13 @@ function PropertyDetails() {
                         </Box>
                       </>
                     )}
+                    {/* review */}
+                    {property?.listing_type === 'rent' && (
+                      <ReviewSection
+                        propertyId={property.id}
+                        propertyTitle={property.title}
+                      />
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -480,13 +492,6 @@ function PropertyDetails() {
         propertyId={property.id}
         userData={property.user}
       />
-      {/* review */}
-      {property?.listing_type === 'rent' && (
-        <ReviewSection
-          propertyId={property.id}
-          propertyTitle={property.title}
-        />
-      )}
     </Container>
   );
 }
