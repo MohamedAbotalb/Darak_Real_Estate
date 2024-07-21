@@ -109,7 +109,8 @@ function PropertyCard({ property }) {
           <Box display="flex" alignItems="center" my={1}>
             <LocationOnIcon color="action" />
             <Typography variant="body2" color="text.secondary" ml={0.5}>
-              {property.location.state}, {property.location.city}
+              {property.location.state}, {property.location.city},{' '}
+              {property.location.street}
             </Typography>
           </Box>
           <Box display="flex">

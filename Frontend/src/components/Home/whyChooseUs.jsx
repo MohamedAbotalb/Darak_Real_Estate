@@ -115,7 +115,7 @@ function WhyChooseUs() {
   const textContent = {
     title: t('Discover What Sets Our Real Estate Expertise Apart'),
     subtitle: t(
-      'At Homeya, our unwavering commitment lies in crafting unparalleled real estate journeys. Our seasoned professionals, armed with extensive market knowledge, walk alongside you through every phase of your property endeavor. We prioritize understanding your unique aspirations, tailoring our expertise to match your vision.'
+      'At Darak, our unwavering commitment lies in crafting unparalleled real estate journeys. Our seasoned professionals, armed with extensive market knowledge, walk alongside you through every phase of your property endeavor. We prioritize understanding your unique aspirations, tailoring our expertise to match your vision.'
     ),
     features: [
       t('Transparent Partnerships'),

@@ -51,6 +51,7 @@ function PropertyListings({ type }) {
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);
   const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
+  const formattedTypeTranslate = t(formattedType);
   useEffect(() => {
     dispatch(fetchWishlist());
   }, [dispatch]);
@@ -128,7 +129,7 @@ function PropertyListings({ type }) {
           variant="inherit"
           sx={{ color: 'var(--primary-color)' }}
         >
-          {formattedType}
+          {formattedTypeTranslate}
         </Typography>
       </Typography>
       {propertiesStatus === 'failed' ? (

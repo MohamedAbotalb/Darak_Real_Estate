@@ -10,19 +10,22 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import VillaIcon from '@mui/icons-material/Villa';
-import StudioIcon from '@mui/icons-material/Business';
-import OfficeIcon from '@mui/icons-material/Work';
+import HouseboatIcon from '@mui/icons-material/Houseboat';
+import HouseSidingIcon from '@mui/icons-material/HouseSiding';
 import TownhouseIcon from '@mui/icons-material/Home';
+import HouseIcon from '@mui/icons-material/House';
 import CommercialIcon from '@mui/icons-material/Domain';
 import { useTranslation } from 'react-i18next';
 
 const iconMapping = {
-  Apartment: <ApartmentIcon style={{ fontSize: 80 }} />,
-  Villa: <VillaIcon style={{ fontSize: 80 }} />,
-  Studio: <StudioIcon style={{ fontSize: 80 }} />,
-  Office: <OfficeIcon style={{ fontSize: 80 }} />,
-  House: <TownhouseIcon style={{ fontSize: 80 }} />,
-  Commercial: <CommercialIcon style={{ fontSize: 80 }} />,
+  Apartment: <ApartmentIcon style={{ fontSize: 60 }} />,
+  Villa: <VillaIcon style={{ fontSize: 60 }} />,
+  House: <HouseIcon style={{ fontSize: 60 }} />,
+  Townhome: <TownhouseIcon style={{ fontSize: 60 }} />,
+  Duplix: <HouseSidingIcon style={{ fontSize: 60 }} />,
+  Chalet: <HouseboatIcon style={{ fontSize: 60 }} />,
+
+  Commercial: <CommercialIcon style={{ fontSize: 60 }} />,
 };
 
 const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
@@ -36,8 +39,8 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   padding: theme.spacing(0.5),
   margin: theme.spacing(1),
   transition: 'background-color 0.3s, color 0.3s',
-  width: '200px',
-  height: '200px',
+  width: '180px',
+  height: '180px',
   boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   '&:hover': {
     backgroundColor: 'var(--primary-color)',
@@ -158,7 +161,7 @@ function CategoryFilter() {
   const settings = {
     dots: false,
     infinite: true,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -166,7 +169,7 @@ function CategoryFilter() {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: categories.length < 5 ? categories.length : 5,
+          slidesToShow: categories.length < 3 ? categories.length : 3,
           slidesToScroll: 1,
           infinite: true,
           dots: false,
@@ -175,14 +178,14 @@ function CategoryFilter() {
       {
         breakpoint: 800,
         settings: {
-          slidesToShow: categories.length < 3 ? categories.length : 3,
+          slidesToShow: categories.length < 3 ? categories.length : 2,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 700,
         settings: {
-          slidesToShow: categories.length < 2 ? categories.length : 2,
+          slidesToShow: categories.length < 2 ? categories.length : 1,
           slidesToScroll: 1,
         },
       },
@@ -236,7 +239,9 @@ function CategoryFilter() {
                 onClick={() => handleCategoryClick(category.id)}
                 active={activeCategory === category.name ? 1 : 0}
               >
-                {iconMapping[category.name] || <ApartmentIcon />}
+                {iconMapping[category.name] || (
+                  <ApartmentIcon sx={{ fontSize: 60 }} />
+                )}
                 <Typography variant="h6">{category.name}</Typography>
                 <Typography variant="body2">
                   {category.properties.length} {t('Properties')}
