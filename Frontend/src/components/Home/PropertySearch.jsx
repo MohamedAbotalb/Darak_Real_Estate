@@ -17,7 +17,7 @@ import { fetchProperties } from 'store/propertySearchSlice';
 import Loader from 'components/Loader';
 import { useTranslation } from 'react-i18next';
 
-const SearchContainer = styled(Box)(({ theme }) => ({
+const SearchContainer = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -31,7 +31,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
 }));
 
-const SearchFormControl = styled(FormControl)(({ theme, first }) => ({
+const SearchFormControl = styled(FormControl)(({ first }) => ({
   minWidth: first ? '350px' : '150px',
   marginRight: '0px',
   '& .MuiInputBase-root': {
@@ -71,7 +71,7 @@ const SearchButton = styled(IconButton)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#ed2128',
+  backgroundColor: 'var(--primary-color)',
   color: '#fff',
   borderRadius: '0 30px 30px 0',
   '&:hover': {

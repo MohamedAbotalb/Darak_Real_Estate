@@ -126,7 +126,13 @@ function ResetPasswordForm() {
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ height: 40 }}
+          sx={{
+            height: 40,
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'var(--primary-color)',
+            },
+          }}
           disabled={isLoading}
         >
           {t('Submit')}

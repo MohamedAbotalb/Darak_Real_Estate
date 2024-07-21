@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { keyframes } from '@emotion/react';
 import {
@@ -34,7 +35,6 @@ import {
 } from 'store/Notifications/notificationsSlice';
 import NotificationDropdown from 'components/Home/Notifications/NotificationDropdown';
 import LanguageSelector from 'components/LanguageSelector';
-import { useTranslation } from 'react-i18next';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -157,7 +157,7 @@ function Header() {
                   display: 'block',
                   width: isActiveLink('/', '') ? '100%' : '0',
                   height: '2px',
-                  backgroundColor: '#ed2128',
+                  backgroundColor: 'var(--primary-color)',
                   position: 'absolute',
                   bottom: 0,
                   left: 0,
@@ -199,7 +199,7 @@ function Header() {
                       ? '100%'
                       : '0',
                     height: '2px',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
@@ -239,7 +239,7 @@ function Header() {
                     display: 'block',
                     width: isActiveLink('/properties', 'lt=buy') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
@@ -280,7 +280,7 @@ function Header() {
                       display: 'block',
                       width: isActiveLink('/myproperties') ? '100%' : '0',
                       height: '2px',
-                      backgroundColor: '#ed2128',
+                      backgroundColor: 'var(--primary-color)',
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
@@ -322,7 +322,7 @@ function Header() {
                       display: 'block',
                       width: isActiveLink('/mytours') ? '100%' : '0',
                       height: '2px',
-                      backgroundColor: '#ed2128',
+                      backgroundColor: 'var(--primary-color)',
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
@@ -361,7 +361,7 @@ function Header() {
                   display: 'block',
                   width: isActiveLink('/about', '') ? '100%' : '0',
                   height: '2px',
-                  backgroundColor: '#ed2128',
+                  backgroundColor: 'var(--primary-color)',
                   position: 'absolute',
                   bottom: 0,
                   left: 0,
@@ -396,7 +396,7 @@ function Header() {
               aria-controls="profile-menu"
               aria-haspopup="true"
             >
-              <AccountCircleIcon sx={{ color: '#ccc8c8' }} />
+              <AccountCircleIcon sx={{ color: '#000' }} />
             </IconButton>
             <Menu
               id="profile-menu"
@@ -425,10 +425,8 @@ function Header() {
                   borderRadius: '12px',
                   padding: '5px 10px',
                   '&:hover': {
-                    color: '#fff',
-                    backgroundColor: '#ed2128',
-                    borderRadius: '12px',
-                    padding: '5px 10px',
+                    color: '#000',
+                    backgroundColor: 'var(--primary-color)',
                   },
                 }}
               >
@@ -445,10 +443,8 @@ function Header() {
                   borderRadius: '12px',
                   padding: '5px 10px',
                   '&:hover': {
-                    color: '#fff',
-                    backgroundColor: '#ed2128',
-                    borderRadius: '12px',
-                    padding: '5px 10px',
+                    color: '#000',
+                    backgroundColor: 'var(--primary-color)',
                   },
                 }}
               >
@@ -474,7 +470,7 @@ function Header() {
             onClick={handleDrawerClose}
             sx={{
               fontSize: '1.1rem',
-              color: '#ed2128',
+              color: 'var(--primary-color)',
               textTransform: 'none',
 
               backgroundColor: 'transparent',
@@ -490,7 +486,7 @@ function Header() {
                 display: 'block',
                 width: isActiveLink('/about', '') ? '100%' : '0',
                 height: '2px',
-                backgroundColor: '#ed2128',
+                backgroundColor: 'var(--primary-color)',
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
@@ -530,7 +526,7 @@ function Header() {
                     display: 'block',
                     width: isActiveLink('/about', '') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
@@ -568,7 +564,7 @@ function Header() {
                     display: 'block',
                     width: isActiveLink('/about', '') ? '100%' : '0',
                     height: '2px',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
@@ -608,7 +604,7 @@ function Header() {
                   display: 'block',
                   width: isActiveLink('/about', '') ? '100%' : '0',
                   height: '2px',
-                  backgroundColor: '#ed2128',
+                  backgroundColor: 'var(--primary-color)',
                   position: 'absolute',
                   bottom: 0,
                   left: 0,
@@ -647,7 +643,7 @@ function Header() {
                 display: 'block',
                 width: isActiveLink('/about', '') ? '100%' : '0',
                 height: '2px',
-                backgroundColor: '#ed2128',
+                backgroundColor: 'var(--primary-color)',
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
@@ -722,7 +718,7 @@ function Header() {
                   '&:hover': {
                     padding: '15px',
                     color: '#000',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                   },
                 }}
               >
@@ -736,7 +732,7 @@ function Header() {
                   fontSize: '1.1rem',
                   '&:hover': {
                     color: '#000',
-                    backgroundColor: '#ed2128',
+                    backgroundColor: 'var(--primary-color)',
                   },
                 }}
               >

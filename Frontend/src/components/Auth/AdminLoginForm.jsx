@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { successToast, errorToast } from 'utils/toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -26,6 +26,7 @@ import LoginSchema from 'components/Auth/Validation/LoginSchema';
 
 function AdminLoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const {
     register: loginForm,
@@ -35,9 +36,7 @@ function AdminLoginForm() {
     resolver: yupResolver(LoginSchema),
   });
 
-  const { isLoading, error, successMessage, user } = useSelector(
-    (state) => state.auth
-  );
+  const { isLoading, error, user } = useSelector((state) => state.auth);
 
   const [showPassword, toggleShowPassword] = useToggle(false);
 
@@ -57,24 +56,15 @@ function AdminLoginForm() {
         handleUnauthorizedAccess();
       } else {
         successToast('Welcome back to Admin Dashboard');
-        navigate('/admin/overview');
+        navigate(location?.state?.prevUrl ?? '/admin/overview');
       }
     }
-    if (error) {
-      errorToast(error);
-    }
+    if (error) errorToast(error);
 
     return () => {
       dispatch(clearState());
     };
-  }, [
-    error,
-    successMessage,
-    user,
-    navigate,
-    dispatch,
-    handleUnauthorizedAccess,
-  ]);
+  }, [error, user, navigate, dispatch, handleUnauthorizedAccess, location]);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -126,9 +116,14 @@ function AdminLoginForm() {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
           fullWidth
-          sx={{ height: 40 }}
+          sx={{
+            height: 40,
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'var(--primary-color)',
+            },
+          }}
           disabled={isLoading}
         >
           Login

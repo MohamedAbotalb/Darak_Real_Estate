@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, Alert, Box, Container } from '@mui/material';
+import { Grid, Typography, Alert, Box } from '@mui/material';
 import Slider from 'react-slick';
 import { fetchProperties } from 'store/home/propertiesSlice';
 import { fetchWishlist } from 'store/home/wishlistSlice';
@@ -12,7 +12,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { styled } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+const StyledSlider = styled(Slider)(() => ({
   '.slider-container': {
     width: '100%',
     maxWidth: '1200px',
@@ -35,7 +35,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
   '.slick-prev:before, .slick-next:before': {
     fontSize: '30px',
-    color: '#ed2128',
+    color: 'var(--primary-color)',
   },
   '.slick-prev': {
     left: '-60px',
@@ -126,7 +126,7 @@ function PropertyListings({ type }) {
         <Typography
           component="span"
           variant="inherit"
-          sx={{ color: '#ed2128' }}
+          sx={{ color: 'var(--primary-color)' }}
         >
           {formattedType}
         </Typography>

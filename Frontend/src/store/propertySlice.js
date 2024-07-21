@@ -1,10 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'services/axiosConfig';
+import {
+  getAllPropertiesService,
+  getPropertyService,
+  addPropertyService,
+  updatePropertyService,
+  deletePropertyService,
+} from 'services/propertyService';
 
 export const fetchProperty = createAsyncThunk(
   'property/fetchProperty',
   async (slug) => {
-    const response = await axios.get(`/properties/${slug}`);
+    const response = await getPropertyService(slug);
     return response.data.data;
   }
 );
@@ -12,7 +19,7 @@ export const fetchProperty = createAsyncThunk(
 export const fetchProperties = createAsyncThunk(
   'property/fetchProperties',
   async () => {
-    const response = await axios.get('/properties');
+    const response = await getAllPropertiesService();
     return response.data.data;
   }
 );
@@ -21,7 +28,24 @@ export const addProperty = createAsyncThunk(
   'property/addProperty',
   async (propertyData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/properties', propertyData, {
+      const response = await addPropertyService(propertyData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || error.message);
+    }
+  }
+);
+
+export const updateProperty = createAsyncThunk(
+  'property/updateProperty',
+  async ({ slug, formData }, { rejectWithValue }) => {
+    try {
+      formData.append('_method', 'PUT');
+      const response = await updatePropertyService(slug, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -36,7 +60,7 @@ export const addProperty = createAsyncThunk(
 export const deleteProperty = createAsyncThunk(
   'properties/deleteProperty',
   async (id) => {
-    await axios.delete(`/properties/${id}`);
+    await deletePropertyService(id);
     return id;
   }
 );
@@ -54,22 +78,6 @@ export const fetchPendingProperties = createAsyncThunk(
   async () => {
     const response = await axios.get('/properties/pending');
     return response.data.data;
-  }
-);
-
-export const updateProperty = createAsyncThunk(
-  'property/updateProperty',
-  async ({ slug, propertyData }, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(`/properties/${slug}`, propertyData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message || error.message);
-    }
   }
 );
 
