@@ -15,17 +15,16 @@ import HouseSidingIcon from '@mui/icons-material/HouseSiding';
 import TownhouseIcon from '@mui/icons-material/Home';
 import HouseIcon from '@mui/icons-material/House';
 import CommercialIcon from '@mui/icons-material/Domain';
-import ChaletIcon from '@mui/icons-material/Chalet';6
 import { useTranslation } from 'react-i18next';
 
 const iconMapping = {
   Apartment: <ApartmentIcon style={{ fontSize: 60 }} />,
   Villa: <VillaIcon style={{ fontSize: 60 }} />,
-  House: <HouseIcon style={{ fontSize: 60 }}/>,
+  House: <HouseIcon style={{ fontSize: 60 }} />,
   Townhome: <TownhouseIcon style={{ fontSize: 60 }} />,
-  Duplix: <HouseSidingIcon  style={{ fontSize: 60 }} />,
+  Duplix: <HouseSidingIcon style={{ fontSize: 60 }} />,
   Chalet: <HouseboatIcon style={{ fontSize: 60 }} />,
-  
+
   Commercial: <CommercialIcon style={{ fontSize: 60 }} />,
 };
 
@@ -240,7 +239,9 @@ function CategoryFilter() {
                 onClick={() => handleCategoryClick(category.id)}
                 active={activeCategory === category.name ? 1 : 0}
               >
-                {iconMapping[category.name] || <ApartmentIcon sx={{fontSize:60}} />}
+                {iconMapping[category.name] || (
+                  <ApartmentIcon sx={{ fontSize: 60 }} />
+                )}
                 <Typography variant="h6">{category.name}</Typography>
                 <Typography variant="body2">
                   {category.properties.length} {t('Properties')}
