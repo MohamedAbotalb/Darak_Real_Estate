@@ -219,7 +219,7 @@ function PropertyTable() {
 
   const handleDelete = async () => {
     try {
-      dispatch(deleteProperty(selectedId));
+      await dispatch(deleteProperty(selectedId));
       successToast('Ad deleted successfully');
       handleCloseConfirm();
     } catch (error) {
@@ -297,6 +297,86 @@ function PropertyTable() {
     }
   };
 
+  const renderTable = () => {
+    if (paginatedProperties.length === 0) {
+      return (
+        <Typography variant="h6" align="center" sx={{ mt: 3 }}>
+          There are no{' '}
+          {filterType === 'Accepted' ? 'accepted ads' : 'pending ads'}.
+        </Typography>
+      );
+    }
+
+    return (
+      <>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell>Title</StyledTableCell>
+                <StyledTableCell>Description</StyledTableCell>
+                <StyledTableCell>Area (Sqm)</StyledTableCell>
+                <StyledTableCell>Price (EGP)</StyledTableCell>
+                <StyledTableCell>Actions</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedProperties.map((property) => (
+                <StyledTableRow key={property.id}>
+                  <StyledTableCell>{property.id}</StyledTableCell>
+                  <StyledTableCell>{property.title}</StyledTableCell>
+                  <StyledTableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() =>
+                        handleShowDescription(property.description)
+                      }
+                    >
+                      View
+                    </Button>
+                  </StyledTableCell>
+                  <StyledTableCell>{property.area}</StyledTableCell>
+                  <StyledTableCell>{property.price}</StyledTableCell>
+                  <StyledTableCell>
+                    <ShowDetailsButton slug={property.slug} />
+                    {filterType === 'Accepted' && (
+                      <DeletePropertyButton
+                        propertyId={property.id}
+                        onDelete={handleOpenConfirm}
+                      />
+                    )}
+                    {filterType === 'Pending' && (
+                      <>
+                        <AcceptPropertyButton
+                          propertyId={property.id}
+                          onAccept={handleOpenAcceptConfirm}
+                        />
+                        <RejectPropertyButton
+                          propertyId={property.id}
+                          onReject={handleOpenRejectConfirm}
+                        />
+                      </>
+                    )}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CustomPagination
+            totalItems={filteredProperties.length}
+            itemsPerPage={rowsPerPage}
+            currentPage={page}
+            onPageChange={handleChangePage}
+          />
+        </Box>
+      </>
+    );
+  };
+
   return (
     <>
       <Box
@@ -338,145 +418,76 @@ function PropertyTable() {
             aria-label="status filter"
           >
             <ToggleButton value="Accepted" aria-label="Accepted">
-              Accepted
+              Accepted Ads
             </ToggleButton>
             <ToggleButton value="Pending" aria-label="Pending">
-              Pending
+              Pending Ads
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
       </Box>
 
-      {status === 'loading' ? (
-        <Loader />
-      ) : (
-        <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell>Title</StyledTableCell>
-                  <StyledTableCell>Description</StyledTableCell>
-                  <StyledTableCell>Area (Sqm)</StyledTableCell>
-                  <StyledTableCell>Price (EGP)</StyledTableCell>
-                  <StyledTableCell>Actions</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paginatedProperties.map((property) => (
-                  <StyledTableRow key={property.id}>
-                    <StyledTableCell>{property.id}</StyledTableCell>
-                    <StyledTableCell>{property.title}</StyledTableCell>
-                    <StyledTableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>
-                          handleShowDescription(property.description)
-                        }
-                      >
-                        View
-                      </Button>
-                    </StyledTableCell>
-                    <StyledTableCell>{property.area}</StyledTableCell>
-                    <StyledTableCell>{property.price}</StyledTableCell>
-                    <StyledTableCell>
-                      <ShowDetailsButton slug={property.slug} />
-                      {filterType === 'Accepted' ? (
-                        <DeletePropertyButton
-                          propertyId={property.id}
-                          onDelete={handleOpenConfirm}
-                        />
-                      ) : (
-                        <>
-                          <AcceptPropertyButton
-                            propertyId={property.id}
-                            onAccept={handleOpenAcceptConfirm}
-                          />
-                          <RejectPropertyButton
-                            propertyId={property.id}
-                            onReject={handleOpenRejectConfirm}
-                          />
-                        </>
-                      )}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {/* Pagination */}
-          <Box display="flex" justifyContent="center" mt={2}>
-            <CustomPagination
-              totalItems={filteredProperties.length}
-              itemsPerPage={rowsPerPage}
-              currentPage={page}
-              onPageChange={handleChangePage}
-            />
-          </Box>
+      {status === 'loading' ? <Loader /> : renderTable()}
 
-          {/* Description Dialog */}
-          <Dialog
-            open={openDescriptionDialog}
-            onClose={handleCloseDescriptionDialog}
-          >
-            <DialogTitle>Description</DialogTitle>
-            <DialogContent>
-              <Typography variant="body2">{selectedDescription}</Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDescriptionDialog} color="primary">
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
+      {/* Description Dialog */}
+      <Dialog
+        open={openDescriptionDialog}
+        onClose={handleCloseDescriptionDialog}
+      >
+        <DialogTitle>Description</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">{selectedDescription}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDescriptionDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-          {/* Delete Confirmation Dialog */}
-          <DeleteConfirmationModal
-            item="Ad"
-            isOpen={openConfirm}
-            handleClose={handleCloseConfirm}
-            handleConfirm={handleDelete}
-          />
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationModal
+        item="Ad"
+        isOpen={openConfirm}
+        handleClose={handleCloseConfirm}
+        handleConfirm={handleDelete}
+      />
 
-          {/* Accept Confirmation Dialog */}
-          <Dialog open={openAcceptConfirm} onClose={handleCloseAcceptConfirm}>
-            <DialogTitle>Confirm Accept</DialogTitle>
-            <DialogContent>
-              <Typography variant="body2">
-                Are you sure you want to accept this property?
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseAcceptConfirm} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleAccept} color="primary">
-                Accept
-              </Button>
-            </DialogActions>
-          </Dialog>
+      {/* Accept Confirmation Dialog */}
+      <Dialog open={openAcceptConfirm} onClose={handleCloseAcceptConfirm}>
+        <DialogTitle>Confirm Accept</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Are you sure you want to accept this property?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAcceptConfirm} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAccept} color="primary">
+            Accept
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-          {/* Reject Confirmation Dialog */}
-          <Dialog open={openRejectConfirm} onClose={handleCloseRejectConfirm}>
-            <DialogTitle>Confirm Reject</DialogTitle>
-            <DialogContent>
-              <Typography variant="body2">
-                Are you sure you want to reject this property?
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseRejectConfirm} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleReject} color="primary">
-                Reject
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </>
-      )}
+      {/* Reject Confirmation Dialog */}
+      <Dialog open={openRejectConfirm} onClose={handleCloseRejectConfirm}>
+        <DialogTitle>Confirm Reject</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Are you sure you want to reject this property?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRejectConfirm} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleReject} color="primary">
+            Reject
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
