@@ -706,11 +706,7 @@ function Header() {
                 </ListItemIcon>
                 <ListItemText primary={t('Profile')} />
               </ListItem>
-              <ListItem
-                button
-                onClick={handleLogout}
-                sx={{ fontSize: '1.1rem' }}
-              >
+              <ListItem onClick={handleLogout} sx={{ fontSize: '1.1rem' }}>
                 {' '}
                 <ListItemText primary={t('Logout')} />
               </ListItem>
@@ -718,7 +714,6 @@ function Header() {
           ) : (
             <>
               <ListItem
-                button
                 component={Link}
                 to="/login"
                 onClick={handleDrawerClose}
@@ -734,7 +729,6 @@ function Header() {
                 <ListItemText primary={t('Log in')} />
               </ListItem>
               <ListItem
-                button
                 component={Link}
                 to="/register"
                 onClick={handleDrawerClose}
