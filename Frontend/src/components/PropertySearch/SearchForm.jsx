@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Box, IconButton, MenuItem, Select, FormControl } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import {
+  Box,
+  IconButton,
+  MenuItem,
+  Select,
+  FormControl,
+  TextField,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import { errorToast } from 'utils/toast';
 import { fetchPropertyTypes } from 'store/home/propertyTypeSlice';
 import { fetchLocations } from 'store/home/locationsSlice';
 import { fetchProperties } from 'store/propertySearchSlice';
@@ -20,7 +27,7 @@ const SearchContainer = styled(Box)(() => ({
 }));
 
 const SearchFormControl = styled(FormControl)(() => ({
-  minWidth: '120px',
+  minWidth: '100px',
   marginRight: '10px',
   '& .MuiInputBase-root': {
     backgroundColor: '#fff',
@@ -35,13 +42,10 @@ const SearchButton = styled(IconButton)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#1976d2',
+  backgroundColor: 'var(--primary-color)',
   color: '#fff',
   '&:hover': {
-    backgroundColor: '#115293',
-  },
-  '@media (max-width: 600px)': {
-    width: '100%',
+    backgroundColor: 'var(--primary-color)',
   },
 });
 
@@ -52,19 +56,17 @@ function SearchForm() {
   const location = useLocation();
 
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
-  const locations = useSelector((state) => state.locations.data || []);
-  const locationsStatus = useSelector((state) => state.locations.status);
   const typesStatus = useSelector((state) => state.propertyTypes.status);
 
   const [listingType, setListingType] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [city, setCity] = useState('');
+  const [propLocation, setPropLocation] = useState('');
   const [bedrooms, setBedrooms] = useState('');
   const [bathrooms, setBathrooms] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
-  const isLoading = locationsStatus === 'loading' || typesStatus === 'loading';
+  const isLoading = typesStatus === 'loading';
 
   useEffect(() => {
     dispatch(fetchPropertyTypes());
@@ -74,7 +76,7 @@ function SearchForm() {
     const urlParams = new URLSearchParams(location.search);
     const lt = urlParams.get('lt') || '';
     const pt = urlParams.get('pt') || '';
-    const c = urlParams.get('c') || '';
+    const pl = urlParams.get('pl') || '';
     const bdr = urlParams.get('bdr') || '';
     const btr = urlParams.get('btr') || '';
     const mnp = urlParams.get('mnp') || '';
@@ -82,7 +84,7 @@ function SearchForm() {
 
     setListingType(lt);
     setPropertyType(pt);
-    setCity(c);
+    setPropLocation(pl);
     setBedrooms(bdr);
     setBathrooms(btr);
     setMinPrice(mnp);
@@ -92,7 +94,7 @@ function SearchForm() {
     dispatch(
       fetchProperties({
         propertyType: pt,
-        city: c,
+        propLocation: pl,
         listingType: lt,
         bedrooms: bdr,
         bathrooms: btr,
@@ -104,7 +106,7 @@ function SearchForm() {
 
   const handleSearch = () => {
     if (parseInt(minPrice, 10) > parseInt(maxPrice, 10)) {
-      toast.error(t('Min price should be less than or equal to max price'));
+      errorToast(t('Min price should be less than or equal to max price'));
       return;
     }
 
@@ -112,7 +114,7 @@ function SearchForm() {
     const query = {};
     if (listingType) query.lt = listingType;
     if (propertyType) query.pt = propertyType;
-    if (city) query.c = city;
+    if (propLocation) query.pl = propLocation;
     if (bedrooms) query.bdr = bedrooms;
     if (bathrooms) query.btr = bathrooms;
     if (minPrice) query.mnp = minPrice;
@@ -131,7 +133,7 @@ function SearchForm() {
     dispatch(
       fetchProperties({
         propertyType,
-        city,
+        propLocation,
         listingType,
         bedrooms,
         bathrooms,
@@ -179,6 +181,15 @@ function SearchForm() {
       ) : (
         <>
           <SearchFormControl variant="outlined">
+            <TextField
+              value={propLocation}
+              onChange={(e) => setPropLocation(e.target.value)}
+              placeholder={t('State, City or Street')}
+              variant="outlined"
+            />
+          </SearchFormControl>
+
+          <SearchFormControl variant="outlined">
             <Select
               value={listingType}
               onChange={(e) => setListingType(e.target.value)}
@@ -189,24 +200,6 @@ function SearchForm() {
               </MenuItem>
               <MenuItem value="rent">{t('Rent')}</MenuItem>
               <MenuItem value="buy">{t('Buy')}</MenuItem>
-            </Select>
-          </SearchFormControl>
-
-          <SearchFormControl variant="outlined">
-            <Select
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              displayEmpty
-              MenuProps={menuProps}
-            >
-              <MenuItem value="">
-                <em>{t('Location')}</em>
-              </MenuItem>
-              {locations.map((loc) => (
-                <MenuItem key={loc.id} value={loc.city}>
-                  {loc.city}
-                </MenuItem>
-              ))}
             </Select>
           </SearchFormControl>
 
