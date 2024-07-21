@@ -47,7 +47,7 @@ const StyledButton = styled(ButtonBase)(({ theme, active }) => ({
   boxSizing: 'border-box',
 }));
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+const StyledSlider = styled(Slider)(() => ({
   width: '100%',
   '.slick-slide': {
     display: 'flex',
@@ -89,7 +89,7 @@ const ArrowWrapper = styled(Box)({
   },
 });
 
-const ViewAllLink = styled('a')(({ theme }) => ({
+const ViewAllLink = styled('a')(() => ({
   textDecoration: 'none',
   color: '#000000',
   fontSize: '18px',
