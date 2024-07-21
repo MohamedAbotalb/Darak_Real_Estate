@@ -39,8 +39,6 @@ function TourRequestForm({ isOpen, onClose, propertyId, slug }) {
       }),
   });
 
-  if (!user) navigate('/login');
-
   const today = format(new Date(), "yyyy-MM-dd'T'HH:mm");
   const twoWeeksFromNow = format(addDays(new Date(), 14), "yyyy-MM-dd'T'HH:mm");
 
