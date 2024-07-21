@@ -17,9 +17,8 @@ export const updateUserPhone = (phoneData) => {
 };
 
 export const updateUserAvatar = (avatarData) => {
-  return axios.put('/users/updateAvatar', avatarData);
+  return axios.post('/users/updateAvatar', avatarData);
 };
-
 export const deleteUserAccount = () => {
   return axios.delete('/users/');
 };

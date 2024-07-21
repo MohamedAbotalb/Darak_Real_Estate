@@ -43,14 +43,23 @@ export const updatePhone = createAsyncThunk(
 
 export const updateAvatar = createAsyncThunk(
   'user/updateAvatar',
-  async (avatarData) => {
-    const response = await updateUserAvatar(avatarData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
-    return response.data;
+  async (avatarData, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append('avatar', avatarData);
+      formData.append('_method', 'PUT');
+
+      const response = await updateUserAvatar(formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      secureLocalStorage.setItem('user', JSON.stringify(response.data.user));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message || error.message);
+    }
   }
 );
 
@@ -123,16 +132,15 @@ const userSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(updateAvatar.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.status = 'loading';
       })
       .addCase(updateAvatar.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
+        state.status = 'succeeded';
+        state.user = { ...state.user, avatar: action.payload.user.avatar };
       })
       .addCase(updateAvatar.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
+        state.status = 'failed';
+        state.error = action.payload;
       })
       .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;

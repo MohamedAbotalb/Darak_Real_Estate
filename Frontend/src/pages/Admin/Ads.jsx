@@ -1,5 +1,5 @@
 import React from 'react';
-import AdsTable from 'components/AdminDashboard/Ads/AdsTable';
+import AdsTable from 'components/AdminDashboard/AdsTable';
 
 function Ads() {
   return (
