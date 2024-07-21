@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AmenitiesSeeder::class);
         $this->call(LocationSeeder::class);
         $this->call(PropertySeeder::class);
+        $this->call(PropertyImageSeeder::class);
+
 
         // \App\Models\Location::factory(20)->create(); 
         // \App\Models\Property::factory(100)->create();   
