@@ -152,7 +152,7 @@ function UserNotifications() {
         alignItems="center"
         height="100vh"
       >
-        Error: {error}
+        No notificatons found
       </Box>
     );
   }
