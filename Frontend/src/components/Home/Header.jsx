@@ -397,7 +397,7 @@ function Header() {
               aria-controls="profile-menu"
               aria-haspopup="true"
             >
-              <AccountCircleIcon sx={{ color: '#ccc8c8' }} />
+              <AccountCircleIcon sx={{ color: '#000' }} />
             </IconButton>
             <Menu
               id="profile-menu"
