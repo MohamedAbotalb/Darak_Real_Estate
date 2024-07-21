@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
@@ -43,6 +43,10 @@ function ReviewSection({ propertyId, propertyTitle }) {
           mr: 2,
           mt: 2,
           height: '40px',
+          backgroundColor: '#000',
+          '&:hover': {
+            backgroundColor: 'var(--primary-color)',
+          },
         }}
       >
         Reviews

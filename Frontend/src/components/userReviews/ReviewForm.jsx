@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import {
   addReviewAsync,
   fetchReviews,
 } from 'store/userReviews/userReviewsSlice';
 import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
-import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { errorToast, successToast, infoToast } from 'utils/toast';
 
 function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
   const [rate, setRate] = useState(0);
@@ -21,6 +21,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
   const reviews = useSelector((state) => state.reviews.reviews);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     dispatch(fetchReviews(propertyId));
@@ -30,15 +31,16 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
     (review) => review.user?.id === user?.id
   );
 
+  const checkUserPresence = () => {
+    if (!user) navigate('/login', { state: { prevUrl: location.pathname } });
+  };
+
   const handleSubmit = () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
+    checkUserPresence();
 
     if (user?.role === 'landlord') {
       if (user?.id === ownerId) {
-        toast.error(
+        errorToast(
           'Property owners cannot leave reviews for their own properties.'
         );
         return;
@@ -49,7 +51,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
 
     if (rate === 0) {
       setRateError('Please provide a rating.');
-      toast.error('Please provide a rating.');
+      errorToast('Please provide a rating.');
       valid = false;
     } else {
       setRateError('');
@@ -88,14 +90,14 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
         onReviewAdded(); // Fetch updated average rating
 
         if (existingReview) {
-          toast.info('Review already added. You can edit or delete it.');
+          infoToast('Review already added. You can edit or delete it.');
         } else {
-          toast.success('Review added successfully!');
+          successToast('Review added successfully!');
         }
       })
       .catch((error) => {
         if (error) {
-          toast.error('Failed to add review. Please try again later.');
+          errorToast('Failed to add review. Please try again later.');
         }
       });
   };
@@ -128,7 +130,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
             InputProps={{
               endAdornment: (
                 <IconButton color="primary" onClick={handleSubmit}>
-                  <SendIcon />
+                  <SendIcon sx={{ color: 'var(--primary-color)' }} />
                 </IconButton>
               ),
               style: { backgroundColor: '#f8f5f5' },
