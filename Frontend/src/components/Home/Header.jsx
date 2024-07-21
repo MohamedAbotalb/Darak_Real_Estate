@@ -378,13 +378,12 @@ function Header() {
           </Box>
         )}
         <Box sx={{ flexGrow: 1 }} />
+
         <LanguageSelector />
         {isLoggedIn && !isSmallScreen ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {' '}
-            <IconButton color="inherit">
-              <NotificationDropdown role={user?.role} />
-            </IconButton>
+            <NotificationDropdown role={user?.role} />
             <IconButton color="inherit" component={Link} to="/wishlist">
               <Badge badgeContent={wishlist.length} color="error">
                 <FavoriteBorder sx={{ color: '#000' }} />
@@ -423,6 +422,8 @@ function Header() {
                   color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
+                  borderRadius: '12px',
+                  padding: '5px 10px',
                   '&:hover': {
                     color: '#000',
                     backgroundColor: 'var(--primary-color)',
@@ -439,6 +440,8 @@ function Header() {
                   color: '#000',
                   textTransform: 'none',
                   fontSize: '1.1rem',
+                  borderRadius: '12px',
+                  padding: '5px 10px',
                   '&:hover': {
                     color: '#000',
                     backgroundColor: 'var(--primary-color)',
@@ -699,11 +702,7 @@ function Header() {
                 </ListItemIcon>
                 <ListItemText primary={t('Profile')} />
               </ListItem>
-              <ListItem
-                button
-                onClick={handleLogout}
-                sx={{ fontSize: '1.1rem' }}
-              >
+              <ListItem onClick={handleLogout} sx={{ fontSize: '1.1rem' }}>
                 {' '}
                 <ListItemText primary={t('Logout')} />
               </ListItem>
@@ -711,13 +710,13 @@ function Header() {
           ) : (
             <>
               <ListItem
-                button
                 component={Link}
                 to="/login"
                 onClick={handleDrawerClose}
                 sx={{
                   fontSize: '1.1rem',
                   '&:hover': {
+                    padding: '15px',
                     color: '#000',
                     backgroundColor: 'var(--primary-color)',
                   },
@@ -726,7 +725,6 @@ function Header() {
                 <ListItemText primary={t('Log in')} />
               </ListItem>
               <ListItem
-                button
                 component={Link}
                 to="/register"
                 onClick={handleDrawerClose}

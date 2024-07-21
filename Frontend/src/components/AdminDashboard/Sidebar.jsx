@@ -26,7 +26,7 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/user-reports"
+            to="/admin/user-complaints"
             className="nav-link"
             activeClassName="active-link"
           >
@@ -35,7 +35,7 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/property-reports"
+            to="/admin/property-issues"
             className="nav-link"
             activeClassName="active-link"
           >
@@ -71,7 +71,7 @@ function Sidebar() {
         </li>
         <li>
           <NavLink
-            to="/admin/ads"
+            to="/admin/property-ads"
             className="nav-link"
             activeClassName="active-link"
           >

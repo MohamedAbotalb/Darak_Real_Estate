@@ -41,9 +41,7 @@ class UserController extends Controller
 
     public function updateName(UpdateUserRequest $request)
     {
-        $validatedData = $request->validated();
-        $validatedData['id'] = Auth::id();
-        $user = $this->userRepository->update($validatedData);
+        $user = $this->userRepository->updateName(Auth::id(), $request->validated());
         return response()->json([
             'message' => 'User name updated successfully',
             'user' => new UserResource($user)
@@ -58,25 +56,18 @@ class UserController extends Controller
             return response()->json(['error' => 'Current password is incorrect'], 400);
         }
 
-        $this->userRepository->update([
-            'id' => Auth::id(),
-            'password' => Hash::make($request->new_password),
-        ]);
+        $this->userRepository->updatePassword(Auth::id(), $request->new_password);
 
         return response()->json(['message' => 'Password updated successfully'], 200);
     }
 
     public function updatePhone(ChangePhoneNumberRequest $request)
     {
-        $user = $this->userRepository->find(Auth::id());
-        $user->phone_number = '+2' . $request->phone_number;
-        $user = $this->userRepository->update([
-            'id' => Auth::id(),
-            'phone_number' => $user->phone_number,
-        ]);
+        $user = $this->userRepository->updatePhone(Auth::id(), '+2' . $request->phone_number);
 
         return response()->json(['message' => 'Phone number updated successfully', 'user' => new UserResource($user)], 200);
     }
+
 
     public function show()
     {

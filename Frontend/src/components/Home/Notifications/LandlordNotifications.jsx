@@ -13,7 +13,6 @@ import {
   Avatar,
   Button,
   Typography,
-  Divider,
   Radio,
   FormControlLabel,
   Dialog,
@@ -25,6 +24,8 @@ import {
   Paper,
   TextField,
   FormHelperText,
+  Link,
+  Link as MuiLink,
 } from '@mui/material';
 import {
   CheckCircleOutline as ApproveIcon,
@@ -37,6 +38,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CloseIcon from '@mui/icons-material/Close';
 import { red, grey } from '@mui/material/colors';
+import { styled } from '@mui/system';
 import moment from 'moment';
 import 'moment/locale/ar';
 import 'moment/locale/en-gb';
@@ -71,14 +73,15 @@ function LandlordNotifications() {
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [filter, setFilter] = useState('all');
   const [hoveredNotification, setHoveredNotification] = useState(null);
-  const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
-  const AdminImage = 'logo.jpg';
+
+  const AdminImage = 'logo.png';
   const [declineMessage, setDeclineMessage] = useState('');
   const [validationError, setValidationError] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
   const [customReason, setCustomReason] = useState('');
   const notificationsPerPage = 5;
-
+  const [typeFilter, setTypeFilter] = useState('all');
+  const defaultMessage = `${selectedNotification?.property_name || 'the property'} you requested is declined for this reason: `;
   const predefinedReasons = [
     t('Scheduling conflict'),
     t('Property is no longer available'),
@@ -136,6 +139,7 @@ function LandlordNotifications() {
       const reason =
         selectedReason === t('Other') ? customReason : selectedReason;
       const fullMessage = `${defaultMessage} ${reason}`;
+
       dispatch(
         declineTourAsync({
           tourId: selectedNotification.tour_id,
@@ -179,12 +183,6 @@ function LandlordNotifications() {
     } else {
       setValidationError('');
     }
-  };
-
-  const handleMessageChange = (e) => {
-    const { value } = e.target;
-    setDeclineMessage(value);
-    setValidationError(validateMessage(value));
   };
 
   const handleApproveDate = () => {
@@ -242,7 +240,9 @@ function LandlordNotifications() {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
-
+  const handleTypeFilterChange = (event) => {
+    setTypeFilter(event.target.value);
+  };
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -263,10 +263,20 @@ function LandlordNotifications() {
     }
     return notificationTime.format('MMMM DD, YYYY hh:mm A');
   };
+
   const filteredNotifications = notifications
-    ? notifications.filter(
-        (notification) => filter === 'all' || notification.status === filter
-      )
+    ? notifications.filter((notification) => {
+        if (filter === 'all') return true;
+        if (filter === 'pending') {
+          return (
+            notification.status === 'pending' && notification.type === 'request'
+          );
+        }
+        if (filter === 'approved' || filter === 'declined') {
+          return notification.status === filter;
+        }
+        return notification.type === filter;
+      })
     : [];
 
   const sortedNotifications = filteredNotifications
@@ -280,6 +290,63 @@ function LandlordNotifications() {
     startIndex,
     startIndex + notificationsPerPage
   );
+  const StyledLink = styled(MuiLink)(({ theme }) => ({
+    textDecoration: 'none', // Remove underline
+    '&:hover': {
+      color: '#2d45c9', // Optional: Underline on hover
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      width: '100%',
+      height: '2px',
+      backgroundColor: '#EE2027', // Bottom border color
+      transform: 'scaleX(0)', // Initial scale
+      transformOrigin: 'bottom left',
+      transition: 'transform 0.3s ease-in-out',
+    },
+  }));
+
+  const parseMessage = (message, additionalText, property) => {
+    if (!message || !property) return message;
+
+    const propertyTitle = property.title;
+    const propertySlug = property.slug;
+
+    // Check if the message contains " at "
+    const splitMessage = message.split(' at ');
+
+    // If the message does not contain " at ", return the message with additional text
+    if (splitMessage.length === 1) {
+      return (
+        <>
+          {message} <br />
+          {additionalText}{' '}
+          <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+            {propertyTitle}
+          </StyledLink>
+        </>
+      );
+    }
+
+    // If the message contains " at ", split and format accordingly
+    const [firstPart, datePart] = splitMessage;
+    const formattedDate = getTimeDisplay(datePart);
+
+    return (
+      <>
+        {firstPart} at <span style={{ color: 'green' }}>{formattedDate}</span>
+        <br />
+        {additionalText}{' '}
+        <StyledLink component={Link} to={`/properties/${propertySlug}`}>
+          {propertyTitle}
+        </StyledLink>
+      </>
+    );
+  };
+
   if (status === 'loading') {
     return (
       <Box
@@ -326,6 +393,7 @@ function LandlordNotifications() {
         <Typography variant="h6" gutterBottom>
           {t('Notifications')}
         </Typography>
+
         <FormControl sx={{ minWidth: 150, mt: '2px' }}>
           <InputLabel id="filter-label">{t('Filter')}</InputLabel>
           <Select
@@ -339,6 +407,14 @@ function LandlordNotifications() {
             <MenuItem value="approved">{t('Approved')}</MenuItem>
             <MenuItem value="declined">{t('Declined')}</MenuItem>
             <MenuItem value="pending">{t('Pending')}</MenuItem>
+            <MenuItem value="status_change">Status Change</MenuItem>
+            <MenuItem value="property_update_approved">
+              Property Update Approved
+            </MenuItem>
+            <MenuItem value="deleted-tour">Deleted Tour</MenuItem>
+            <MenuItem value="property_update_rejected">
+              Property Update Reject
+            </MenuItem>
           </Select>
         </FormControl>
       </Box>
@@ -382,7 +458,8 @@ function LandlordNotifications() {
                     position: 'relative',
                   }}
                 >
-                  {notification.type === 'status_change' ? (
+                  {notification.type !== 'request' &&
+                  notification.type !== 'deleted-tour' ? (
                     <Box display="flex" alignItems="center" marginTop={3}>
                       <Avatar
                         alt="admin"
@@ -407,19 +484,21 @@ function LandlordNotifications() {
                   ) : (
                     <>
                       {/* Colorful circle */}
-                      <Box
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: '50%',
-                          backgroundColor: getNotificationCircleColor(
-                            notification.status
-                          ),
-                          position: 'absolute',
-                          top: '5px',
-                          left: '8px',
-                        }}
-                      />
+                      {notification.type === 'request' && (
+                        <Box
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            backgroundColor: getNotificationCircleColor(
+                              notification.status
+                            ),
+                            position: 'absolute',
+                            top: '5px',
+                            left: '8px',
+                          }}
+                        />
+                      )}
                       <Box display="flex" alignItems="center" marginTop={3}>
                         <Avatar
                           alt={notification.from.first_name}
@@ -463,6 +542,7 @@ function LandlordNotifications() {
                 </Box>
 
                 {/* Second row: Notification message and dates */}
+
                 <Typography
                   variant="body2"
                   sx={{
@@ -471,9 +551,13 @@ function LandlordNotifications() {
                     textAlign: { xs: 'center', md: 'left', lg: 'left' },
                   }}
                 >
-                  {notification.message}
+                  {parseMessage(
+                    notification.message,
+                    'check here ',
+                    notification.property
+                  )}
                 </Typography>
-                {notification.type !== 'status_change' && (
+                {notification.type === 'request' && (
                   <>
                     <Box
                       sx={{
@@ -647,7 +731,7 @@ function LandlordNotifications() {
               onChange={handleReasonChange}
               label={t('Reason')}
             >
-              {predefinedReasons.map((reason, index) => (
+              {predefinedReasons.map((reason) => (
                 <MenuItem key={reason} value={reason}>
                   {reason}
                 </MenuItem>
@@ -666,17 +750,10 @@ function LandlordNotifications() {
                 helperText={validationError}
               />
             )}
-            {validationError && (
+            {selectedReason !== 'Other' && validationError && (
               <FormHelperText error>{validationError}</FormHelperText>
             )}
           </FormControl>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            style={{ marginTop: '8px' }}
-          >
-            {defaultMessage}
-          </Typography>
         </DialogContent>
         <DialogActions>
           <Button

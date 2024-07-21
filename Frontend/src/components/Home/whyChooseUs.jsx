@@ -3,6 +3,10 @@ import React from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import HomeIcon from '@mui/icons-material/Home';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
 import { styled } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 
