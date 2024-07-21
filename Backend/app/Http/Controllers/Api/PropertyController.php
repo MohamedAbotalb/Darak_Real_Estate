@@ -63,7 +63,7 @@ class PropertyController extends Controller
     {
         $properties = $this->propertyRepository->getPendingProperties();
         if (!$properties) {
-            return response()->json(['message' => 'No accepted properties found.'], 404);
+            return response()->json(['message' => 'No pending properties found.'], 404);
         }
         return PropertyResource::collection($properties);
     }
