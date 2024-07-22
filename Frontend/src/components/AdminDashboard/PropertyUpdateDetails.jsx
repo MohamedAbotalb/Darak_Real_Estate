@@ -81,7 +81,7 @@ function PropertyUpdateDetails() {
   };
 
   return (
-    <Box sx={{ my: 4 }}>
+    <Box sx={{ mt: 10 }}>
       {/* Image Slider Modal */}
       <ImageSliderModal
         images={oldProperty?.images || []}
