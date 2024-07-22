@@ -38,6 +38,7 @@ import MyTours from 'pages/MyTours';
 import UserNotifications from 'components/Home/Notifications/UserNotifications';
 import LandlordNotifications from 'components/Home/Notifications/LandlordNotifications';
 import 'typeface-josefin-sans';
+import NewPropertyDetails from 'components/AdminDashboard/NewPropertyDetails';
 
 function App() {
   const router = createBrowserRouter(
@@ -135,7 +136,7 @@ function App() {
           />
           <Route
             path="property-updates/:id/new"
-            element={<PropertyUpdateDetailsPage />}
+            element={<NewPropertyDetails />}
           />
         </Route>
         <Route path="/403" element={<ForbiddenPage />} />

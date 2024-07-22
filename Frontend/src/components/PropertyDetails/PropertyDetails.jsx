@@ -33,6 +33,7 @@ import Loader from 'components/Loader';
 import ReportModal from 'components/ReportModal';
 import ReviewSection from 'components/userReviews/ReviewSection';
 import ImageSliderModal from 'components/PropertyDetails/ImageSliderModal';
+import AverageRating from 'components/userReviews/AverageRating';
 
 function PropertyDetails() {
   const dispatch = useDispatch();
@@ -427,6 +428,9 @@ function PropertyDetails() {
                     </CardContent>
                   </Card>
                 )}
+                <Box display="flex" justifyContent="center" sx={{ mt: 3 }}>
+                  <AverageRating propertyId={property.id} />
+                </Box>
                 <Box
                   display="flex"
                   justifyContent="space-around"
