@@ -1,12 +1,9 @@
-import React from 'react';
-import AdsTable from 'components/AdminDashboard/Ads/AdsTable';
+import React, { lazy } from 'react';
+
+const AdsTable = lazy(() => import('components/AdminDashboard/AdsTable'));
 
 function Ads() {
-  return (
-    <div>
-      <AdsTable />
-    </div>
-  );
+  return <AdsTable />;
 }
 
 export default Ads;

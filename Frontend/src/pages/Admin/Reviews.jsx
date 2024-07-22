@@ -1,5 +1,6 @@
-import React from 'react';
-import ReviewList from 'components/AdminDashboard/ReviewList';
+import React, { lazy } from 'react';
+
+const ReviewList = lazy(() => import('components/AdminDashboard/ReviewList'));
 
 function ReviewsPage() {
   return <ReviewList />;

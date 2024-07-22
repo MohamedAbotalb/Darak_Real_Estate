@@ -148,6 +148,7 @@ const propertySlice = createSlice({
       })
       .addCase(fetchAcceptedProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.properties = [];
         state.properties = action.payload;
         state.error = null;
       })
@@ -160,6 +161,7 @@ const propertySlice = createSlice({
       })
       .addCase(fetchPendingProperties.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.properties = [];
         state.properties = action.payload;
         state.error = null;
       })

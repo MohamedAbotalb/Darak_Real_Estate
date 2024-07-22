@@ -37,7 +37,7 @@ const cardsData = [
   },
   {
     key: 'properties',
-    title: 'Ads',
+    title: 'Property Ads',
     countKey: 'properties',
     icon: <HomeIcon sx={iconStyles} />,
   },
@@ -49,13 +49,13 @@ const cardsData = [
   },
   {
     key: 'user_reports',
-    title: 'User Reports',
+    title: 'User Complaints',
     countKey: 'user_reports',
     icon: <ReportIcon sx={iconStyles} />,
   },
   {
     key: 'property_reports',
-    title: 'Property Reports',
+    title: 'Property Issues',
     countKey: 'property_reports',
     icon: <ReportIcon sx={iconStyles} />,
   },

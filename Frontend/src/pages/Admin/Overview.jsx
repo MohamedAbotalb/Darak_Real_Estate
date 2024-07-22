@@ -1,5 +1,6 @@
-import React from 'react';
-import OverView from 'components/AdminDashboard/OverView';
+import React, { lazy } from 'react';
+
+const OverView = lazy(() => import('components/AdminDashboard/OverView'));
 
 function OverviewPage() {
   return <OverView />;

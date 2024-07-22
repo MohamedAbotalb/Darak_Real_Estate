@@ -1,5 +1,8 @@
-import React from 'react';
-import ReportUserList from 'components/AdminDashboard/ReportUserList';
+import React, { lazy } from 'react';
+
+const ReportUserList = lazy(
+  () => import('components/AdminDashboard/ReportUserList')
+);
 
 function UserReportsPage() {
   return <ReportUserList />;

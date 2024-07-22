@@ -1,13 +1,9 @@
-import React from 'react';
-import Wishlist from 'components/Home/Wishlist';
-import { Box } from '@mui/material';
+import React, { lazy } from 'react';
+
+const Wishlist = lazy(() => import('components/Home/Wishlist'));
 
 function WishlistPage() {
-  return (
-    <Box>
-      <Wishlist />
-    </Box>
-  );
+  return <Wishlist />;
 }
 
 export default WishlistPage;

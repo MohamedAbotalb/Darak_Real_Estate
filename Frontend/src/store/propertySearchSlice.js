@@ -6,7 +6,7 @@ export const fetchProperties = createAsyncThunk(
   async (
     {
       propertyType,
-      city,
+      propLocation,
       listingType,
       bedrooms,
       bathrooms,
@@ -18,7 +18,7 @@ export const fetchProperties = createAsyncThunk(
     try {
       const response = await getPropertiesSearch({
         params: {
-          city,
+          location: propLocation,
           property_type: propertyType,
           listing_type: listingType,
           num_of_rooms: bedrooms,

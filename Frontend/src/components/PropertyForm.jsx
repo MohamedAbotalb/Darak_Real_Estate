@@ -69,8 +69,8 @@ function PropertyForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useParams();
-  const isEditMode = Boolean(slug);
   const { t, i18n } = useTranslation();
+  const isEditMode = Boolean(slug);
 
   const {
     register,
@@ -410,6 +410,7 @@ function PropertyForm() {
                 <TextField
                   label={t('Rooms')}
                   type="number"
+                  inputProps={{ min: 0 }}
                   fullWidth
                   {...register('num_of_rooms')}
                   error={!!errors.num_of_rooms}
@@ -420,6 +421,7 @@ function PropertyForm() {
                 <TextField
                   label={t('Bathrooms')}
                   type="number"
+                  inputProps={{ min: 0 }}
                   fullWidth
                   {...register('num_of_bathrooms')}
                   error={!!errors.num_of_bathrooms}
