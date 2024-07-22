@@ -12,6 +12,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import { styled } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 
+let dir;
+
 const StyledSlider = styled(Slider)(() => ({
   '.slider-container': {
     width: '100%',
@@ -33,9 +35,18 @@ const StyledSlider = styled(Slider)(() => ({
     width: '50px',
     height: '50px',
   },
-  '.slick-prev:before, .slick-next:before': {
-    fontSize: '30px',
+
+  '.slick-prev:before': {
+    fontSize: '35px',
     color: 'var(--primary-color)',
+    position: 'absolute',
+    left: dir === 'ltr' ? '15px' : '1135px',
+  },
+  '.slick-next:before': {
+    fontSize: '35px',
+    color: 'var(--primary-color)',
+    position: 'absolute',
+    left: dir === 'ltr' ? '20px' : '-45px',
   },
   '.slick-prev': {
     left: '-60px',
@@ -46,7 +57,8 @@ const StyledSlider = styled(Slider)(() => ({
 }));
 
 function PropertyListings({ type }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  dir = i18n.dir(i18n.language);
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.properties[type] || []);
   const propertiesStatus = useSelector((state) => state.properties.status);

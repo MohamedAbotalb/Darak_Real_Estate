@@ -33,3 +33,12 @@ code {
   flex-direction: column;
   height: 100%;
 }
+
+
+body[dir='ltr'] .direction-sensitive {
+  right: 1rem;
+}
+
+/* body[dir='rtl'] .direction-sensitive {
+  left: 1rem;
+} */

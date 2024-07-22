@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
 import { CircularProgress, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import StarRating from './StarRating';
 
 function AverageRating({ propertyId }) {
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
   const { average, status, error } = useSelector(
     (state) => state.averageRating
@@ -36,7 +39,7 @@ function AverageRating({ propertyId }) {
   return (
     <Box display="flex" alignItems="center" flexDirection="column">
       <Typography variant="h6">
-        Average Rating: {averageRating.toFixed(1)}
+        {t('Average Rating')}: {averageRating.toFixed(1)}
       </Typography>
       <StarRating rating={averageRating} />
     </Box>

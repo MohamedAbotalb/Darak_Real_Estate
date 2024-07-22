@@ -16,8 +16,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { useTranslation } from 'react-i18next';
 
 function Footer() {
-  const { t } = useTranslation();
-
+  const { t, i18n } = useTranslation();
+  const dir = i18n.dir(i18n.language);
   const handleSubscribe = () => {};
 
   const getCurrentYear = () => {
@@ -109,7 +109,12 @@ function Footer() {
                   InputProps={{
                     style: { color: 'white' },
                     endAdornment: (
-                      <InputAdornment position="end">
+                      <InputAdornment
+                        position="end"
+                        sx={{
+                          marginLeft: dir === 'rtl' ? '500%' : '0',
+                        }}
+                      >
                         <IconButton
                           color="primary"
                           aria-label="subscribe"
