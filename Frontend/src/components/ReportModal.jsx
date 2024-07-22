@@ -21,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import img from 'assets/images/report.svg';
+import { useTranslation } from 'react-i18next';
 import {
   submitPropertyReport,
   fetchPropertyReasons,
@@ -67,13 +68,8 @@ const buttonStyle = {
   marginTop: '20px',
 };
 
-const validationSchema = yup.object().shape({
-  type: yup.string().required('Type is required'),
-  reason: yup.string().required('Reason is required'),
-  content: yup.string().required('Content is required'),
-});
-
 function ReportModal({ isOpen, onClose, propertyId, userData }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { reasons: propertyReasons } = useSelector(
     (state) => state.reportProperties
@@ -81,6 +77,13 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
   const { reasons: landlordReasons } = useSelector(
     (state) => state.reportUsers
   );
+
+  // Define the validation schema here
+  const validationSchema = yup.object().shape({
+    type: yup.string().required(t('Type is required')),
+    reason: yup.string().required(t('Reason is required')),
+    content: yup.string().required(t('Content is required')),
+  });
 
   const {
     control,
@@ -128,11 +131,11 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
         reportData.landlord_id = userData.id;
         await dispatch(submitLandlordReport(reportData));
       }
-      toast.success('Report submitted successfully');
+      toast.success(t('Report submitted successfully'));
       reset();
       onClose();
     } catch (error) {
-      toast.error('Failed to submit report');
+      toast.error(t('Failed to submit report'));
     }
   };
 
@@ -160,8 +163,10 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
           <Box sx={leftPanelStyle}>
             <img src={img} alt="Report" width="60%" />
             <Typography variant="body1" sx={{ mt: 2 }}>
-              Sorry to hear there is a problem with this property. Please
-              provide more details to solve this issue.
+              {t(
+                'Sorry to hear there is a problem with this property. Please provide more details to solve this issue'
+              )}
+              .
             </Typography>
           </Box>
           <Box sx={rightPanelStyle}>
@@ -171,25 +176,29 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
               component="h2"
               sx={{ mb: 1, letterSpacing: '2px' }}
             >
-              SEND REPORT
+              {t('SEND REPORT')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="user-type-label">Select report type</InputLabel>
+                <InputLabel id="user-type-label">
+                  {t('Select report type')}
+                </InputLabel>
                 <Controller
                   name="type"
                   control={control}
                   render={({ field }) => (
                     <Select
                       labelId="user-type-label"
-                      label="Select user type"
+                      label={t('Select user type')}
                       {...field}
                       error={!!errors.type}
                     >
                       <MenuItem value="report-property">
-                        Report Property
+                        {t('Report Property')}
                       </MenuItem>
-                      <MenuItem value="report-user">Report Landlord</MenuItem>
+                      <MenuItem value="report-user">
+                        {t('Report Landlord')}
+                      </MenuItem>
                     </Select>
                   )}
                 />
@@ -198,14 +207,14 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
                 )}
               </FormControl>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="reason-label">Select reason</InputLabel>
+                <InputLabel id="reason-label">{t('Select reason')}</InputLabel>
                 <Controller
                   name="reason"
                   control={control}
                   render={({ field }) => (
                     <Select
                       labelId="reason-label"
-                      label="Select reason"
+                      label={t('Select reason')}
                       {...field}
                       disabled={!selectedType}
                       error={!!errors.reason}
@@ -233,7 +242,7 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
                 control={control}
                 render={({ field }) => (
                   <TextField
-                    label="Type your message here..."
+                    label={t('Type your message here...')}
                     multiline
                     rows={4}
                     fullWidth
@@ -250,7 +259,7 @@ function ReportModal({ isOpen, onClose, propertyId, userData }) {
                 sx={buttonStyle}
                 fullWidth
               >
-                Send Report
+                {t('Send Report')}
               </Button>
             </form>
           </Box>
