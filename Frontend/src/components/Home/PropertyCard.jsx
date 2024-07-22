@@ -11,6 +11,8 @@ import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import AddToWishlistButton from 'components/Home/AddToWishlistButton';
 import { useTranslation } from 'react-i18next';
 
+let dir;
+
 const StyledCard = styled(Card)({
   width: '100%',
   display: 'flex',
@@ -38,7 +40,6 @@ const StyledImage = styled('img')({
 const WishlistButtonWrapper = styled(Box)({
   position: 'absolute',
   top: '8px',
-  right: '8px',
   zIndex: 2,
   backgroundColor: 'white',
   borderRadius: '50%',
@@ -51,7 +52,8 @@ const CardLink = styled(Link)({
 });
 
 function PropertyCard({ property }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  dir = i18n.dir(i18n.language);
   const images = property?.images || [];
   const defaultImage = 'bedroom1.jpg';
   const getPriceDisplay = () => {
@@ -78,7 +80,9 @@ function PropertyCard({ property }) {
             <StyledImage src={defaultImage} alt={property.title} />
           )}
         </Carousel>
-        <WishlistButtonWrapper>
+        <WishlistButtonWrapper
+          sx={{ ...(dir === 'ltr' ? { right: '8px' } : { left: '8px' }) }}
+        >
           <AddToWishlistButton property={property} />
         </WishlistButtonWrapper>
       </SliderWrapper>
