@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { fetchReviews } from 'store/userReviews/userReviewsSlice';
 import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
+import { useTranslation } from 'react-i18next';
 import ReviewForm from './ReviewForm';
 import ReviewsList from './ReviewsList';
 import AverageRating from './AverageRating';
@@ -19,6 +20,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
   const { property } = useSelector((state) => state.property);
   const [openForm, setOpenForm] = useState(false);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const handleOpenForm = () => {
     setOpenForm(true);
@@ -49,7 +51,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
           },
         }}
       >
-        Reviews
+        {t('Reviews')}
       </Button>
       <Dialog
         open={openForm}
@@ -61,7 +63,7 @@ function ReviewSection({ propertyId, propertyTitle }) {
         <DialogTitle>
           <Box display="flex" justifyContent="space-between">
             <Box>
-              Add Review for{' '}
+              {t('Add Review for')}{' '}
               <Typography component="span" color="error">
                 {propertyTitle}
               </Typography>

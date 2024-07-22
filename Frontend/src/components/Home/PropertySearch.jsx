@@ -17,6 +17,8 @@ import { fetchProperties } from 'store/propertySearchSlice';
 import Loader from 'components/Loader';
 import { useTranslation } from 'react-i18next';
 
+let dir;
+
 const SearchContainer = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
@@ -38,9 +40,9 @@ const SearchFormControl = styled(FormControl)(({ first }) => ({
     backgroundColor: '#fff',
     color: '#000',
     height: '56px',
-    borderRadius: '0',
-    borderTopLeftRadius: first ? '30px' : '0px',
-    borderBottomLeftRadius: first ? '30px' : '0px',
+    ...(dir === 'ltr'
+      ? { borderRadius: first ? '30px 0 0 30px' : '' }
+      : { borderRadius: first ? '0 30px 30px 0' : '' }),
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -73,7 +75,6 @@ const SearchButton = styled(IconButton)({
   justifyContent: 'center',
   backgroundColor: 'var(--primary-color)',
   color: '#fff',
-  borderRadius: '0 30px 30px 0',
   '&:hover': {
     backgroundColor: '#e21118',
   },
@@ -92,7 +93,9 @@ const LoadingOverlay = styled(Box)({
 });
 
 function PropertySearch() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  dir = i18n.dir(i18n.language);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { propertyTypes } = useSelector((state) => state.propertyTypes || []);
@@ -137,9 +140,6 @@ function PropertySearch() {
           onChange={(e) => setLocation(e.target.value)}
           placeholder={t('State, City or Street')}
           variant="outlined"
-          InputProps={{
-            style: { borderRadius: '30px 0 0 30px', paddingLeft: '8px' },
-          }}
         />
       </SearchFormControl>
 
@@ -171,7 +171,16 @@ function PropertySearch() {
         </Select>
       </SearchFormControl>
 
-      <SearchButton variant="contained" color="primary" onClick={handleSearch}>
+      <SearchButton
+        sx={{
+          ...(dir === 'ltr'
+            ? { borderRadius: '0 30px 30px 0' }
+            : { borderRadius: '30px 0 0 30px' }),
+        }}
+        variant="contained"
+        color="primary"
+        onClick={handleSearch}
+      >
         <SearchIcon />
       </SearchButton>
     </SearchContainer>
