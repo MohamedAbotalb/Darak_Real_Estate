@@ -49,7 +49,7 @@ function Header() {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
   const AdminImage = 'logo.png';
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const underlineAnimation = keyframes`
   from {
     width: 0;
@@ -79,6 +79,11 @@ function Header() {
       }
     }
   }, [dispatch, user]);
+
+  useEffect(() => {
+    const dir = i18n.dir(i18n.language);
+    document.documentElement.dir = dir;
+  }, [i18n, i18n.language]);
 
   const handleProfileClick = (event) => {
     setAnchorEl(event.currentTarget);

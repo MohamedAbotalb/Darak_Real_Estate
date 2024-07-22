@@ -17,6 +17,7 @@ import HouseIcon from '@mui/icons-material/House';
 import CommercialIcon from '@mui/icons-material/Domain';
 import { useTranslation } from 'react-i18next';
 
+let dir;
 const iconMapping = {
   Apartment: <ApartmentIcon style={{ fontSize: 60 }} />,
   Villa: <VillaIcon style={{ fontSize: 60 }} />,
@@ -117,7 +118,10 @@ function SampleNextArrow(props) {
   const { onClick } = props;
   return (
     <ArrowWrapper className="next" onClick={onClick}>
-      <div className="slick-next" />
+      <div
+        // sx={{...(dir === 'ltr' ? { right: '8px' } : { left: '8px' }) }}
+        className={`${dir === 'ltr' ? 'slick-next' : 'slick-prev'}`}
+      />
     </ArrowWrapper>
   );
 }
@@ -130,7 +134,7 @@ function SamplePrevArrow(props) {
   const { onClick } = props;
   return (
     <ArrowWrapper className="prev" onClick={onClick}>
-      <div className="slick-prev" />
+      <div className={`${dir === 'ltr' ? 'slick-prev' : 'slick-next'}`} />
     </ArrowWrapper>
   );
 }
@@ -140,7 +144,8 @@ SamplePrevArrow.propTypes = {
 };
 
 function CategoryFilter() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  dir = i18n.dir(i18n.language);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const categories = useSelector((state) => state.categories.list);

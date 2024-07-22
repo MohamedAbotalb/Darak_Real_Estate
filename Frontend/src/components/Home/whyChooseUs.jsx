@@ -3,12 +3,15 @@ import React from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HomeIcon from '@mui/icons-material/Home';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import { styled } from '@mui/system';
 import { useTranslation } from 'react-i18next';
+
+let dir;
 
 const RootContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -111,7 +114,8 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 function WhyChooseUs() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  dir = i18n.dir(i18n.language);
   const textContent = {
     title: t('Discover What Sets Our Real Estate Expertise Apart'),
     subtitle: t(
@@ -149,7 +153,7 @@ function WhyChooseUs() {
   ];
 
   return (
-    <RootContainer>
+    <RootContainer sx={{ gap: '40px' }}>
       <TextSection>
         <Typography variant="h6" color="#ed2128" gutterBottom>
           {t('WHY CHOOSE US')}
@@ -181,7 +185,13 @@ function WhyChooseUs() {
         {/* <CustomButton
           variant="contained"
           color="primary"
-          endIcon={<ArrowForwardIcon />}
+          endIcon={
+            dir === 'rtl' ? (
+              <ArrowBackIcon sx={{ margin: '0 5px' }} />
+            ) : (
+              <ArrowForwardIcon />
+            )
+          }
         >
           {textContent.buttonText}
         </CustomButton> */}

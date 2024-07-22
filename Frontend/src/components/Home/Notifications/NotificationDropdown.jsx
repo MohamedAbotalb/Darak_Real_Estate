@@ -605,7 +605,7 @@ function NotificationDropdown({ role }) {
             </List>
           )}
           <CenteredButton onClick={handleShowAllNotifications}>
-            Show All
+            {t('Show All')}
           </CenteredButton>
         </Box>
       </Menu>

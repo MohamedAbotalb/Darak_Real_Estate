@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Box, Rating, Typography, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { useTranslation } from 'react-i18next';
 import {
   addReviewAsync,
   fetchReviews,
@@ -12,6 +13,8 @@ import { fetchAverageRatingAsync } from 'store/userReviews/averageRatingSlice';
 import { errorToast, successToast, infoToast } from 'utils/toast';
 
 function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
+  const { t, i18n } = useTranslation();
+  const dir = i18n.dir(i18n.language);
   const [rate, setRate] = useState(0);
   const [content, setContent] = useState('');
   const [rateError, setRateError] = useState('');
@@ -41,7 +44,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
     if (user?.role === 'landlord') {
       if (user?.id === ownerId) {
         errorToast(
-          'Property owners cannot leave reviews for their own properties.'
+          t('Property owners cannot leave reviews for their own properties.')
         );
         return;
       }
@@ -50,8 +53,8 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
     let valid = true;
 
     if (rate === 0) {
-      setRateError('Please provide a rating.');
-      errorToast('Please provide a rating.');
+      setRateError(t('Please provide a rating.'));
+      errorToast(t('Please provide a rating.'));
       valid = false;
     } else {
       setRateError('');
@@ -59,10 +62,10 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
 
     if (content.trim() !== '') {
       if (content.trim().length < 4) {
-        setContentError('Comment must be at least 4 characters long.');
+        setContentError(t('Comment must be at least 4 characters long.'));
         valid = false;
       } else if (/^\d/.test(content.trim())) {
-        setContentError('Comment cannot start with a number.');
+        setContentError(t('Comment cannot start with a number.'));
         valid = false;
       } else {
         setContentError('');
@@ -90,14 +93,14 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
         onReviewAdded(); // Fetch updated average rating
 
         if (existingReview) {
-          infoToast('Review already added. You can edit or delete it.');
+          infoToast(t('Review already added. You can edit or delete it.'));
         } else {
-          successToast('Review added successfully!');
+          successToast(t('Review added successfully!'));
         }
       })
       .catch((error) => {
         if (error) {
-          errorToast('Failed to add review. Please try again later.');
+          errorToast(t('Failed to add review. Please try again later.'));
         }
       });
   };
@@ -106,7 +109,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
     <Box display="flex" alignItems="center" gap={2}>
       {!existingReview ? (
         <Box flex={1} display="flex" flexDirection="column" gap={2}>
-          <Typography variant="h6">Leave a Review</Typography>
+          <Typography variant="h6">{t('Leave a Review')}</Typography>
           <Box display="flex" alignItems="center" gap={2}>
             <Rating
               name="rate"
@@ -120,7 +123,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
             )}
           </Box>
           <TextField
-            label="Review"
+            label={t('Review')}
             multiline
             rows={4}
             value={content}
@@ -129,7 +132,11 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
             fullWidth
             InputProps={{
               endAdornment: (
-                <IconButton color="primary" onClick={handleSubmit}>
+                <IconButton
+                  sx={{ position: 'absolute', right: '0', bottom: '0' }}
+                  color="primary"
+                  onClick={handleSubmit}
+                >
                   <SendIcon sx={{ color: 'var(--primary-color)' }} />
                 </IconButton>
               ),
@@ -145,7 +152,7 @@ function ReviewForm({ propertyId, ownerId, onReviewAdded }) {
         </Box>
       ) : (
         <Box>
-          <Typography variant="h6">Thank you for your review</Typography>
+          <Typography variant="h6">{t('Thank you for your review')}</Typography>
         </Box>
       )}
     </Box>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   fetchReviews,
   deleteReviewAsync,
@@ -31,6 +32,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { toast } from 'react-toastify';
 
 function ReviewsList({ propertyId }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.reviews.reviews);
   const user = useSelector((state) => state.auth.user);
@@ -63,7 +65,7 @@ function ReviewsList({ propertyId }) {
     setOpenDeleteDialog(false);
     dispatch(deleteReviewAsync(reviewToDelete)).then(() => {
       dispatch(fetchReviews(propertyId));
-      toast.success('Review deleted successfully.');
+      toast.success(t('Review deleted successfully.'));
     });
   };
 
@@ -90,8 +92,8 @@ function ReviewsList({ propertyId }) {
 
     // Validate rate
     if (editedRating === 0) {
-      toast.error('Please provide a rating.');
-      setRateError('Please provide a rating.');
+      toast.error(t('Please provide a rating.'));
+      setRateError(t('Please provide a rating.'));
       valid = false;
     } else {
       setRateError('');
@@ -100,10 +102,10 @@ function ReviewsList({ propertyId }) {
     // Validate content
     if (editedContent !== null && editedContent.trim() !== '') {
       if (editedContent.trim().length < 4) {
-        setContentError('Comment must be at least 4 characters long.');
+        setContentError(t('Comment must be at least 4 characters long.'));
         valid = false;
       } else if (/^\d/.test(editedContent.trim())) {
-        setContentError('Comment cannot start with a number.');
+        setContentError(t('Comment cannot start with a number.'));
         valid = false;
       } else {
         setContentError('');
@@ -134,7 +136,7 @@ function ReviewsList({ propertyId }) {
       setEditedContent('');
       setEditedRating(0);
       setEditedPropertyId(null);
-      toast.success('Review updated successfully.');
+      toast.success(t('Review updated successfully.'));
     });
   };
 
@@ -236,13 +238,13 @@ function ReviewsList({ propertyId }) {
                               onClick={() => handleEditClick(review)}
                               color="primary"
                             >
-                              Edit
+                              {t('Edit')}
                             </MenuItem>
                             <MenuItem
                               onClick={() => handleDelete(review.id)}
                               color="error"
                             >
-                              Delete
+                              {t('Delete')}
                             </MenuItem>
                           </Menu>
                         </>
@@ -334,7 +336,7 @@ function ReviewsList({ propertyId }) {
       </List>
       {reviews && visibleReviews < reviews.length && (
         <Button variant="contained" color="primary" onClick={loadMore}>
-          Load More
+          {t('Load More')}
         </Button>
       )}
 
@@ -345,18 +347,18 @@ function ReviewsList({ propertyId }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete Review?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t('Delete Review?')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this review?
+            {t('Are you sure you want to delete this review?')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} color="primary">
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button onClick={handleConfirmDelete} color="error">
-            Delete
+            {t('Delete')}
           </Button>
         </DialogActions>
       </Dialog>
