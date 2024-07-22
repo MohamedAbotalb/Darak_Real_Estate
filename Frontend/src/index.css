@@ -35,7 +35,6 @@ code {
   height: 100%;
 }
 
-
 body[dir='ltr'] .direction-sensitive {
   right: 1rem;
 }
