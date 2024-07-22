@@ -178,13 +178,13 @@ function WhyChooseUs() {
             </Box>
           ))}
         </Box>
-        <CustomButton
+        {/* <CustomButton
           variant="contained"
           color="primary"
           endIcon={<ArrowForwardIcon />}
         >
           {textContent.buttonText}
-        </CustomButton>
+        </CustomButton> */}
       </TextSection>
 
       <CardSection>

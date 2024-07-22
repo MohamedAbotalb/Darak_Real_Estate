@@ -222,9 +222,9 @@ function CategoryFilter() {
         alignItems="center"
       >
         <Typography variant="h5">{t('Try Searching For')}</Typography>
-        <ViewAllLink href="/all-services">
+        {/* <ViewAllLink href="/all-services">
           {t('View All Services')} →
-        </ViewAllLink>
+        </ViewAllLink> */}
       </Box>
       <Box
         display="flex"
