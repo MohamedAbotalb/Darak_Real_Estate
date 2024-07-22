@@ -37,12 +37,16 @@ function ReviewSection({ propertyId, propertyTitle }) {
     <Box>
       <Button
         variant="contained"
-        color="primary"
         onClick={handleOpenForm}
         sx={{
+          backgroundColor: '#000',
+          color: '#fff',
           mr: 2,
           mt: 2,
           height: '40px',
+          '&:hover': {
+            backgroundColor: 'var(--primary-color)',
+          },
         }}
       >
         Reviews
@@ -55,11 +59,17 @@ function ReviewSection({ propertyId, propertyTitle }) {
         PaperProps={{ style: { padding: '16px' } }}
       >
         <DialogTitle>
-          Add Review for{' '}
-          <Typography component="span" color="primary">
-            {propertyTitle}
-          </Typography>
-          <AverageRating propertyId={propertyId} />
+          <Box display="flex" justifyContent="space-between">
+            <Box>
+              Add Review for{' '}
+              <Typography component="span" color="error">
+                {propertyTitle}
+              </Typography>
+            </Box>
+            <Typography component="span">
+              <AverageRating propertyId={propertyId} />
+            </Typography>
+          </Box>
         </DialogTitle>
         <DialogContent
           style={{

@@ -33,14 +33,7 @@ function AverageRating({ propertyId }) {
     return <Typography variant="h6">No average rating available</Typography>;
   }
 
-  return (
-    <Box display="flex" alignItems="center" flexDirection="column">
-      <Typography variant="h6">
-        Average Rating: {averageRating.toFixed(1)}
-      </Typography>
-      <StarRating rating={averageRating} />
-    </Box>
-  );
+  return <StarRating rating={averageRating} />;
 }
 
 AverageRating.propTypes = {

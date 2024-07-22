@@ -29,11 +29,26 @@ export const rejectPropertyUpdate = createAsyncThunk(
 );
 
 // Fetch new property details by update ID
+// export const fetchNewProperty = createAsyncThunk(
+//   'propertyUpdates/fetchNewProperty',
+//   async (id) => {
+//     const response = await axios.get(`/property-updates/${id}/new`);
+//     console.log('id',id,'newProperty',newProperty,'response.data',response.data)
+//     return { id: response.data.id, newProperty: response.data.new_data };
+//   }
+// );
 export const fetchNewProperty = createAsyncThunk(
   'propertyUpdates/fetchNewProperty',
-  async (id) => {
-    const response = await axios.get(`/property-updates/${id}/new`);
-    return { id, newProperty: response.data.new_data };
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/property-updates/${id}/new`);
+      console.log('Response:', response); // Log the entire response
+      console.log('New Property Data:', response.data.new_data); // Log specific data
+      return { id, newProperty: response.data.new_data };
+    } catch (error) {
+      console.error('Fetch new property failed:', error);
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -42,7 +57,7 @@ export const fetchOldProperty = createAsyncThunk(
   'propertyUpdates/fetchOldProperty',
   async (id) => {
     const response = await axios.get(`/property-updates/${id}/old`);
-    return { id, oldProperty: response.data.old_data };
+    return { id: response.data.id, oldProperty: response.data.old_data };
   }
 );
 
