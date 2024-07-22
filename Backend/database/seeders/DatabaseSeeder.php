@@ -11,11 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call(UserSeeder::class);
-        // $this->call(PropertyTypeSeeder::class);  
-        // $this->call(AmenitiesSeeder::class);
-        // $this->call(LocationSeeder::class);
-        // $this->call(PropertySeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(PropertyTypeSeeder::class);  
+        $this->call(AmenitiesSeeder::class);
+        $this->call(LocationSeeder::class);
+        $this->call(PropertySeeder::class);
         $this->call(PropertyImageSeeder::class);
 
 
